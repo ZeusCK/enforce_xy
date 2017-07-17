@@ -8,7 +8,7 @@ class CommonController extends Controller {
    /**
     * 日志模块
     * @var string
-    */ 
+    */
     protected $logContent;
 	/**
 	 * 格式化easyui-tree数据格式
@@ -98,8 +98,47 @@ class CommonController extends Controller {
      * @param  array $finfos 所有子集
      * @param  string $dbc     模型
      * @param  array $l_arr  0-id  1-fid
+     * @return array 父级数据
      */
     public function getParentData($finfos,$dbc,$l_arr)
+    {
+        if(empty($finfos)) return false;
+
+        $db = D($dbc);
+        $datas = array();
+        if(empty($allId)) static $allId = array();
+        //需要查询的上级集合
+        $pids = array();
+        foreach ($finfos as $value) {
+            if(!in_array($value[$l_arr[1]],$pids)){
+                $pids[] = $value[$l_arr[1]];
+            }
+            $allId[] = $value[$l_arr[0]];
+        }
+        foreach ($finfos as $value) {
+            if(false != $k = array_search($value[$l_arr[0]],$pids) ) unset($pids[$k]);
+        }
+        $where = $this->where_key_or($pids,$l_arr[0]);
+        $datas = $db->where($where)->select();
+        foreach ($datas as $key=>$value) {
+            if(!in_array($value[$l_arr[0]],$allId)){
+                $allId[] = $value[$l_arr[0]];
+            }else{
+                unset($datas[$key]);
+            }
+        }
+        if(!empty($datas)) $datac = $this->getParentData($datas,$dbc,$l_arr);
+        if(isset($datac) && $datac) $datas = array_merge($datas,$datac);
+        return $datas;
+    }
+    /**
+     * 获取父级数据
+     * @param  array $finfos 所有子集
+     * @param  string $dbc     模型
+     * @param  array $l_arr  0-id  1-fid
+     * @return array 父级数据
+     */
+    public function get_up_data($finfos,$dbc,$l_arr)
     {
         if(empty($finfos)) return false;
 

@@ -55,9 +55,7 @@ class EmployeeController extends CommonController
             $data = $db->where($where)->getField('code',true);
         }
         //如果是警员用户 加上自身的信息
-        if(session('code') && !in_array(session('code'),$data)){
-            $data[] = session('code');
-        }
+        if(session('code') && !in_array(session('code'),$data))  $data[] = session('code');
         //如果有部门ID  进行检索 找出最终能显示的警员信息
         $res = array();
         if($areaid != ''){
@@ -69,9 +67,7 @@ class EmployeeController extends CommonController
             if(!empty($reallyareas)){
                 $where['areaid'] = array('in',$reallyareas);
                 $codes = $db->where($where)->getField('code',true);
-                if(in_array(session('areaid'),$areas) && !in_array(session('code'),$codes)){
-                    $codes[] = session('code');
-                }
+                if(in_array(session('areaid'),$areas) && !in_array(session('code'),$codes))  $codes[] = session('code');
                 //查询区域没有数据直接返回空数组
                 if(empty($codes)){
                     return $res;
@@ -81,16 +77,12 @@ class EmployeeController extends CommonController
                 }
             }else{
                 //若自身所属区域不在查询区域内
-                if(!in_array(session('areaid'),$areas)){
-                    return $res;
-                }
+                if(!in_array(session('areaid'),$areas)) return $res;
             }
         }
         $request['code'] = array('in',$data);
         //最终的警员信息
-        if(!empty($data)){
-            $res = $db->where($request)->getField('code,empid,name');
-        }
+        if(!empty($data))  $res = $db->where($request)->getField('code,empid,name');
         return $res;
     }
     //数据获取
@@ -356,11 +348,11 @@ class EmployeeController extends CommonController
         $nowareaid[] = $empInfo['areaid'];
         $areaDb = D($this->models['area']);
         $request['areaid'] = array('in',$nowareaid);
-        $arearInfo = $areaDb->where($request)->select();
+        $areaInfo = $areaDb->where($request)->select();
         $l_arr = ['areaid','fatherareaid'];
         //选出所有需要展示的部门
-        $areas = $this->getParentData($arearInfo,$this->models['area'],$l_arr);
-        $areas = array_merge((array)$arearInfo,(array)$areas);
+        $areas = $this->getParentData($areaInfo,$this->models['area'],$l_arr);
+        $areas = array_merge((array)$areaInfo,(array)$areas);
         $emps = array();
         //所有需要显示的警员
         if($mangerareas){
@@ -373,6 +365,27 @@ class EmployeeController extends CommonController
         $empAreaTree = $this->emp_tree($areas,$emps);
         S(session('user').'emp_tree',g2us($empAreaTree),5*60);
         $this->ajaxReturn(S(session('user').'emp_tree'));
+    }
+    /**
+     * 根据警员id，自动添加管理区域
+     * @param int $empid  警员ID
+     * @return boolean 成功或失败
+     */
+    public function add_emp_area($empid)
+    {
+        $empdb = D($this->models['employee']);
+        $areadb = D($this->models['area']);
+        $roledb = D($this->models['role']);
+        $empInfo = $empdb->where('empid='.$empid)->find();
+        $roleInfo = $roledb->where('roleid='.$empInfo['roleid'])->find();
+        if($roleInfo['level'] == 4) return true;    //如果是警员的话直接跳过
+        $areaInfo = $areadb->where('areaid='.$empInfo['areaid'])->find();
+        if($areaInfo['type'] == 0){                 //如果是交警部门 直接加上自己
+            $areaAction = A($this->actions['area']);
+            $careas = $areaAction->carea($areaInfo['areaid']);
+            $data = array();
+            $data['userarea'] = explode(',',$careas);
+        }
     }
     /**
      * 调阅的树

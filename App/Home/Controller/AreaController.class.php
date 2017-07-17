@@ -180,7 +180,7 @@ class AreaController extends CommonController
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
             $l_arr = ['areaid','areaname','fatherareaid','areaid'];
             //$L_attributes 额外需要保存的信息
-            $L_attributes = ['arearcode','rperson','rphone'];
+            $L_attributes = ['areacode','rperson','rphone'];
             $icons = ['icon-application_xp_terminal','icon-application'];
             $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
@@ -188,7 +188,6 @@ class AreaController extends CommonController
         }else{
             $data_tree = S(session('user').'area');
         }
-
         return $data_tree;
     }
     //前端请求
@@ -198,28 +197,6 @@ class AreaController extends CommonController
         $data_tree = $this->tree_list($new);
         $this->ajaxReturn(g2us($data_tree));
     }
-    /**
-     * 所有部门加上  自身管理的权限   没有用户表  直接作废！！！
-     * @return
-     */
-    public function tree_list_all()
-    {
-        $userid = I('userid');
-        $action = A($this->actions['user']);
-        $m_userarea = $action->m_userarea($userid);
-        $m_userarea = explode(',', $m_userarea);
-        $db = D($this->models['area']);
-        $area_all = $db->select();
-        $ids = array(0);
-        //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
-        $l_arr = ['areaid','areaname','fatherareaid','areaid'];
-        //$L_attributes 额外需要保存的信息
-        $L_attributes = [];
-        $icons = ['icon-application_xp_terminal','icon-application'];
-        $data_tree = $this->formatTree($ids,$area_all,$l_arr,$L_attributes,$m_userarea,$icons);
-        $this->ajaxReturn(g2us($data_tree));
-    }
-
     /**
      * 获取目标警员的管理区域
      * @param  int $userid 目标用户id

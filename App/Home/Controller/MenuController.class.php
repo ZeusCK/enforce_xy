@@ -18,6 +18,7 @@ class MenuController extends CommonController
         $data = $db->where($where)->order('ordernum desc')->select();
         $l_arr = ['id','pid'];
         $datac = $this->getParentData($data,$this->models['menu'],$l_arr);
+
         $data = array_merge($data,$datac);
         return $data;
     }
