@@ -1,0 +1,96 @@
+<extend name="layouts:master" />
+<block name="link">
+    <style>
+        .d2{
+            display: inline-block;
+            padding: 5px;
+            width:150px;
+            height: 120px;
+             background: url('__PUBLIC__/image/status_bg.png') no-repeat;
+        }
+        .p{
+            margin: 0;
+            line-height: 30px;
+            font-size: 13px;
+            color: #aa5;
+            font-weight: bold;
+        }
+        .d41{
+            box-sizing: border-box;
+            moz-box-sizing: border-box;
+            webkit-box-sizing: border-box;
+            display: inline-block;
+            width: 30%;
+            height: 100%;
+            padding: 5px;
+            vertical-align: top;
+
+        }
+        .d41 img{
+            width: 100%;
+        }
+        .d41 span{
+            display: block;
+            width: 100%;
+            height: 30px;
+            color: #aa5;
+            font-weight: bold;
+
+        }
+        .d42{
+            box-sizing: border-box;
+            moz-box-sizing: border-box;
+            webkit-box-sizing: border-box;
+            display: inline-block;
+            width: 70%;
+            padding-left: 5px;
+            line-height: 25px;
+            color: #aa5;
+        }
+        .no-photo{
+            height: 200px;
+            text-align: center;
+            line-height: 200px;
+            font-size: 30px;
+            color: red;
+        }
+    </style>
+</block>
+<block name="src">
+<script type="text/javascript">
+app.tp.areaname = "{$areaname}";
+app.tp.areaid = "{$areaid}";
+</script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Dev/peShowStatus.js"></script>
+</block>
+<block name="main">
+    <div id="lay" class="easyui-layout" fit="true" style="width: 100%;height: 100%;">
+        <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive'" style="width:20%;">
+            <ul id="tree"></ul>
+        </div>
+        <div id="center" data-options="region:'center'" style="width:80%;">
+            <div id="toolbar">
+                <form id="toolForm">
+                    <label>产品序号：</label>
+                    <input class="easyui-textbox" name="cpxh"/>
+                    <label>警员姓名：</label>
+                    <input class="easyui-textbox" name="jyxm" id="jyxm"/>
+                    <label>设备状态：</label>
+                    <select id="status" class="easyui-combobox" name="status" data-options="editable:false,panelHeight:110,width:60">
+                        <option value="">全部</option>
+                        <option value="0">停用</option>
+                        <option value="1">维修</option>
+                        <option value="2">正常</option>
+                        
+                    </select>
+                    <a id="searching" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
+                </form>
+            </div>
+            <table id="datagrid"></table>
+            <div class="easyui-panel" title="列表区" style="background-color:#eaeaea;" fit="true">
+                <div id="d1" style="padding-bottom: 90px;margin:0 auto;"></div>
+            </div>
+        </div>
+    </div>
+</block>

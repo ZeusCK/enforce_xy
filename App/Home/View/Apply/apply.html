@@ -1,0 +1,96 @@
+<extend name="layouts:master" />
+<block name="link">
+<style type="text/css">
+.emp{
+    margin:2px;
+}
+.request-item{
+    margin-bottom: 10px;
+}
+</style>
+</block>
+<block name="src">
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
+<script type="text/javascript">
+app.tp.code = "{:session('code')}";
+</script>
+<script type="text/javascript" src="__PUBLIC__/js/Apply/apply.js"></script>
+</block>
+<block name="main">
+    <div class="easyui-layout" fit="true">
+        <div data-options="region:'west',title:'申请列表',iconCls:'icon-drive',split:false" style="width:430px;background:#eee;">
+            <table id="datagrid" toolbar="#toolbar"></table>
+        </div>
+       <div data-options="region:'center',border:false" style="width:60%;background:#eee;">
+            <div style="width: 50%;float: left;height: 100%">
+                <div class="easyui-panel" title="申请资源"
+                style="padding:10px;background:#fafafa;width: 100%;min-height: 300px;height: 100%">
+                <ul id="area_emp" style="width: 50%;float: left;"></ul>
+                <div style="width: 49%;float: right;">
+                    <div style="color: red;font-size: 14px;text-align: center;">在左侧树形结构选择警员资源</div>
+                    <div id="request_codes"></div>
+                </div>
+            </div>
+            </div>
+            <div style="width: 50%;float: right;height: 100%">
+            <div id="request_info" class="easyui-panel" title="资源信息"
+                style="padding:10px;background:#fafafa;width: 100%;min-height: 300px;height: 100%">
+                <ul id="area_emp_show" style="width: 50%;float: left;"></ul>
+                <div id="request_info" style="width: 50%;float: right;">
+                    <form id="info">
+                    <div class="request-item">
+                        <label>查看警员：</label>
+                        <input class="easyui-textbox" type="text" id="view_code" 
+                                name="view_code" required="true" data-options="editable:false,prompt:'左侧树形菜单选择警员'"/>
+                    </div>
+                    <div class="request-item">
+                        <label>资源时间：</label>
+                        <input class="easyui-datebox" type="text" id="from_time" name="from_time" 
+                                required="true" data-options="editable:false"/>
+                    </div>   
+                    <div class="request-item">
+                        <label>审核领导：</label>
+                        <input id="parent" name="parent_name" 
+                                required="true" data-options="editable:false"/>
+                    </div>
+                    <div class="request-item">
+                        <span id="ponit_info" style="color: red;text-align: center;font-size: 14px;"></span>
+                    </div>
+                    <div class="request-item">
+                        <label>申请原因：</label>
+                        <input class="easyui-textbox" id="reason" type="text" name="reason"/>
+                    </div>
+                    <div id="allow_info">
+                        <div class="request-item">
+                            <label>审批结果：</label>
+                            <input class="easyui-textbox" id="status_name" type="text" data-options="editable:false,readOnly:true"/>
+                        </div>
+                        <div class="request-item">
+                            <label>审批意见：</label>
+                            <input class="easyui-textbox" id="remark" type="text" data-options="editable:false,readOnly:true"/>
+                        </div>
+                    </div>
+                    <a class="easyui-linkbutton" id="sure" style="padding:5px 10px;" onclick="module.submit()" data-options="iconCls:'icon-ok'">提交</a>        
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+<div id="toolbar">
+    <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
+        审核状态:
+        <select class="easyui-combobox" id="search_status" 
+                data-options="height:22,editable:false,panelHeight:120"
+                name="unusual" style="width:168px">
+            <option value="">全部</option>
+            <option value="0">未审核</option>
+            <option value="1">通过</option>
+            <option value="2">修改</option>
+            <option value="2">拒绝</option>
+        </select>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.init()">新建申请单</a>
+    </form>
+</div>
+</block>

@@ -1,0 +1,150 @@
+<extend name="layouts:master" />
+<block name="link">
+    <style>
+        #keyWord{
+            display: inline-block;
+            line-height: 14px;
+            vertical-align: middle;
+        }
+        #editDialog{
+            padding:8px 15px 8px 5px;
+        }
+        #files{
+            margin-left: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+        #editForm label{
+            display: inline-block;
+            width: 60px;
+            text-align: right;
+        }
+        #editForm div{
+            margin: 5px auto;
+        }
+        #checkedMsg{
+            margin-left: 5px;
+            margin-bottom: 10px;
+            color: #00438a;
+            font-weight: bold;
+        }
+    </style>
+</block>
+<block name="src">
+    <script type="text/javascript">
+        //根部门  用于数据的初始化
+        app.tp.areaid = "{:$areaid}";
+        app.tp.areaname = "{:$areaname}";
+    </script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Apply/apply_video.js"></script>
+</block>
+<block name="main">
+    <div class="easyui-layout" fit="true">
+        <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+            <div style="margin: 5px;min-width: 250px">
+                <select id="treeType" class="easyui-combobox" data-options="height:22,editable:false,panelHeight:46"
+                        name="jybm" style="width:55px">
+                    <option value="2">警员</option>
+                    <option value="1">部门</option>
+                </select>
+                <input id="keyWord" data-options="height:22"  style="width:168px" placeholder="按回车键搜索"/>
+            </div>
+            <div id="checkedMsg"></div>
+            <ul id="area_list"></ul>
+        </div>
+        <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
+            <table id="datagrid" toolbar="#toolbar"></table>
+        </div>
+    </div>
+    <div id="toolbar">
+        <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
+            <div class="search-box search-big">
+                <div class="search-text"><input type="radio" name="search_type" checked="checked" value="1">拍摄时间:</div>
+                <input id="shotS" class="easyui-datetimebox" data-options="height:22,editable:false" name="start_time[btime]" style="width:168px"/>
+                <div class="search-text">至:</div>
+                <input id="shotE" class="easyui-datetimebox" data-options="height:22,editable:false" name="start_time[etime]" style="width:168px"/>
+                <div class="search-text">文件类型: </div>
+                <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:112"
+                        name="wjlx" style="width:181px">
+                    <option value="">全部</option>
+                    <option value="1">视频</option>
+                    <option value="2">音频</option>
+                    <option value="3">图片</option>
+                    <option value="0">未知</option>
+                </select>
+            </div>
+            <div class="search-box search-big">
+                <div class="search-text"><input type="radio" name="search_type" value="2">上传时间:</div>
+                <input id="upS" class="easyui-datetimebox" data-options="height:22,editable:false" name="scsj[btime]" style="width:168px"/>
+                <div class="search-text">至:</div>
+                <input id="upE" class="easyui-datetimebox" data-options="height:22,editable:false" name="scsj[etime]" style="width:168px"/>
+                <div class="search-text">标注类型:</div>
+                <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:46"
+                        name="bzlx" style="width:181px">
+                    <option value="">全部</option>
+                    <option value="1">典型案例</option>
+                </select>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports()">导出</a>
+            </div>
+            <div class="search-box search-big">
+                <div class="search-text">异常数据:</div>
+                <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:68"
+                        name="unusual" style="width:168px">
+                    <option value="3">全部</option>
+                    <option value="2">正常</option>
+                    <option value="1">异常</option>
+                </select>
+                <div class="search-text">文件备注:</div>
+                <input class="easyui-textbox"  data-options="height:22"  style="width:168px" name="mark"/>
+                <div class="search-text">视频类型:</div>
+                <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:134"
+                        name="video_type" style="width:181px">
+                    <option value="">全部</option>
+                    <option value="1">酒驾</option>
+                    <option value="2">事故</option>
+                    <option value="3">毒驾</option>
+                    <option value="4">违法</option>
+                    <option value="9">其他</option>
+                </select>
+                <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true" onclick="module.edit()">编辑</a> -->
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">重置</a>
+            </div>
+        </form>
+    </div>
+    <div id="editDialog" buttons="#editBtns">
+        <div id="files"></div>
+        <form id="editForm">
+            <div>
+                <label>标注类型:</label>
+                <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:46" name="bzlx" style="width:181px">
+                    <option value="">全部</option>
+                    <option value="1">典型案例</option>
+                </select>
+            </div>
+            <div>
+                <label>备注:</label>
+                <input class="easyui-textbox"  data-options="height:22"  style="width:181px" name="mark"/>
+            </div>
+            <div>
+                <label>视频类型:</label>
+                <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:134"
+                        name="video_type" style="width:181px">
+                    <option value="">全部</option>
+                    <option value="1">酒驾</option>
+                    <option value="2">事故</option>
+                    <option value="3">毒驾</option>
+                    <option value="4">违法</option>
+                    <option value="9">其他</option>
+                </select>
+            </div>
+        </form>
+        <div id="editBtns">
+            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.editOk()">确定</a>
+            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
+        </div>
+    </div>
+</block>

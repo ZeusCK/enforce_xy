@@ -1,0 +1,229 @@
+<extend name="layouts:master" />
+<block name="link">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            background: #ececec;
+        }
+        *{
+            box-sizing:border-box;
+            -moz-box-sizing:border-box; /* Firefox */
+            -webkit-box-sizing:border-box; /* Safari */
+        }
+        #logo_video{ 
+            background:#0065b6 url("__PUBLIC__/image/logo_video.jpg") no-repeat 105px 13px;  
+            width: 100%;
+            height: 80px; 
+            text-align: right;
+            color: #F2630A;
+            padding-top: 30px;
+        }
+        .boxtop{
+            /*height: 498px;*/
+            width:auto;
+            background: #383838  url("__PUBLIC__/image/bg_ico.png") repeat;
+        }
+        .boxbottom{
+            height: auto;
+            max-width: 1000px;
+            margin: 0 auto;
+            clear: both;
+        }
+        #videoBox{
+            width: 100%;
+            height: 100%;
+        }
+        form{
+            width: 100%;
+            height: 100%;
+        }
+        form:after{
+            display: block;
+            clear: both;
+            content: '';
+        }
+         .videol h3 span, .videor h3 span{
+            height: 40px;
+            font-size: 16px;
+            margin: 0 5px;
+            line-height: 40px;
+            background: url("__PUBLIC__/image/icon_video.jpg") no-repeat 5px center;
+            color: #333;
+            text-indent: 23px;
+            width:98%;
+            display:block;
+            border-bottom: 1px solid #f2630a;
+
+
+        }
+        .videol h3,.videos h3{
+            position: relative;
+            height: 44px;
+
+            } 
+            .videol h3 em,.videos h3 em{
+                position: absolute;
+                left: 53px;
+                top: 39px;
+                width: 13px;
+                height: 13px;
+                display: block;
+                 background: url("__PUBLIC__/image/icon_h3_03.jpg") no-repeat;
+            }
+        .item{
+            margin: 10px 0 0 10px;
+            clear: both;
+        }
+        .item>select,.item>input,.item>textarea{ width:27%; height: 30px; border-radius: 3px;border:1px solid #ccc; }
+        .item>textarea{width:76%;height: 65px;}
+        .item>label{
+            display: inline-block;
+            text-align: right;
+            color: #666;
+            width: 20%;
+        }
+        .videol,.videor{
+            width: 49.5%;
+            height: 100%;
+            border: 1px solid #d1d1d1;
+            background: #fff;
+        }
+
+        .videol{ float: left;}
+        .videor{ float: right; border: none; background: none; }
+        .videos{
+            border: 1px solid #d1d1d1;
+            background: #fff;
+            padding-bottom: 16px;
+        }
+        #footer{margin-top:10px;background: #0065b6; height: 40px; line-height: 40px;text-align: center; color: #99d2ff;}
+    </style>
+
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
+</block>
+<block name="src">
+<script type="text/javascript">
+app.tp.wjbh = "{$videoInfo['wjbh']}";
+app.tp.wjlx = "{$videoInfo['wjlx']}";
+app.tp.bfwz = "{$videoInfo['bfwz']}";
+app.tp.mark = "{$videoInfo['mark']}";
+</script>
+<script src="__PUBLIC__/plugins/video.js/js/videojs-ie8.min.js"></script>
+<script src="__PUBLIC__/plugins/video.js/js/video.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Media/play_video.js"></script>
+</block>
+<block name="main">
+    <div id="logo_video">
+        <a href="javascript:void(0)" id="download" class="easyui-linkbutton" 
+           iconCls="icon-picture_save">下载</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        视频无法播放？
+        <a href="__ROOT__/about.php" class="easyui-linkbutton" iconCls="icon-drive_web">下载浏览器</a>
+    </div>
+    <div class="boxtop" id="mediaBox" style="text-align: center;min-height: 480px;">
+        <!-- <video id="video" autoplay controls="controls" height="100%"></video> -->
+        <!--<audio src="" autoplay controls="controls"></audio>-->
+        <!--<img src="" alt="" style="height:100%;">-->
+    </div>
+    <div class="boxbottom" style="margin-top: 10px;">
+        <!--视频-->
+        <div id="videoBox" >
+            <form>
+                <div class="videol" style="padding-bottom: 16px;">
+        
+                        <h3><em></em><span>文件信息</span></h3>
+                        <div class="item">
+                            <label for="">文件类型：</label>
+                            <select name="wjlx" id="wjlx" class="easyui-combobox" 
+                                    data-options="editable:false,disabled:true" style="width: 130px">
+                                <foreach name="fileType" item="vo" key="k" >
+                                    <option value="{$k}" 
+                                    <if condition="$videoInfo['wjlx'] == $k ">selected</if>>{$vo}</option>
+                                </foreach>
+                            </select>
+
+                            <label for="">文件编号：</label>
+                            <input type="text" name="wjbh" value="{$videoInfo['wjbh']}" readonly >
+                        </div>
+                        <div class="item">
+                            <!-- <label for="">文件分类：</label> -->
+                            <label for="" style="color: red;">文件分类：</label>
+                            <select name="video_type" id="video_type" class="easyui-combobox" 
+                                    data-options="editable:false" style="width: 130px">
+                             <foreach name="video_type" item="vo" key="k" >
+                                    <option value="{$k}" 
+                                    <if condition="$videoInfo['video_type'] == $k ">selected</if>>{$vo}</option>
+                                </foreach>
+                            </select>
+                            <label for="" style="color: red;">标注类型：</label>
+                            <select name="bzlx" id="bzlx" class="easyui-combobox" 
+                                    data-options="editable:false" style="width: 130px">
+                             <foreach name="bzlx" item="vo" key="k" >
+                                    <option value="{$k}" 
+                                    <if condition="$videoInfo['bzlx'] == $k ">selected</if>>{$vo}</option>
+                            </foreach>
+                            </select>
+                        </div>
+                        <div class="item">
+                            <label for="">拍摄时间：</label>
+                            <input type="text" name="start_time" value="{$videoInfo['start_time']}" readonly >
+                            <label for="">结束时间：</label>
+                            <input type="text" name="end_time" value="{$videoInfo['end_time']}" readonly >
+                        </div>
+                        <div class="item">
+                            <label for="">文件长度：</label>
+                            <input type="text" name="wjcd" value="{$videoInfo['wjcd']}" readonly >
+                            <label for="">上传时间：</label>
+                            <input type="text" name="scsj" value="{$videoInfo['scsj']}" readonly >
+                        </div>
+                        <div class="item">
+                            <label for="" style="color: red;"><i style="margin-right: 32px;font-style: normal;">备</i>注：</label>
+                            <textarea name="mark" id="mark" cols="44" rows="3" style="resize: none; vertical-align: top;">{$videoInfo['mark']}</textarea>
+                        </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="videor" >
+                    <div class="videos" style="">
+                            <h3><em></em><span>单位/警员信息</span></h3>
+                            <div class="item">
+                                <label for="">单位名称：</label>
+                                <input type="text" name="areaname" readonly  value="{$videoInfo['areaname']}">
+                                <label for="">单位编号：</label>
+                                <input type="text" name="areaid" readonly  value="{$videoInfo['areaid']}">
+                            </div>
+                            <div class="item">
+                                <label for="">警员姓名：</label>
+                                <input type="text" name="jyxm" readonly value="{$videoInfo['jyxm']}">
+                                <label for="">警员编号：</label>
+                                <input type="text" name="jybh" readonly  
+                                    value="{$videoInfo['jybh']}">
+                            </div>
+              
+                    </div>
+                    <div class="videos" style="margin-top: 10px;">
+                            <h3><em></em><span>其他信息</span></h3>
+                            <div class="item">
+                                <label for="">产品序号：</label>
+                                <input type="text" name="cpxh" value="{$videoInfo['cpxh']}" readonly >
+                                <label for="">工作站IP：</label>
+                                <input type="text" name="gzz_ip" value="{$videoInfo['gzz_ip']}" readonly >
+                            </div>
+                            <div class="item">
+                                <label for="">播放位置：</label>
+                                <input type="text" name="bfwz" value="{$videoInfo['bfwz']}" readonly >
+                                <label for="">存储位置：</label>
+                                <input type="text" name="ccwz" value="{$videoInfo['ccwz']}" readonly >
+                            </div>
+          
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    <div id="footer" >Copyright © 深圳泰安信义有限公司版权所有</div>
+</block>

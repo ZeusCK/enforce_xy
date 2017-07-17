@@ -1,0 +1,120 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+*{
+    box-sizing:border-box;
+    -moz-box-sizing:border-box; /* Firefox */
+    -webkit-box-sizing:border-box; /* Safari */
+}
+body{
+    overflow: hidden;
+}
+#logo_video{ 
+    background:#0065b6 url("../../Public/image/logo_video.jpg") no-repeat 105px 13px;  
+    width: 100%;
+    height: 80px; 
+    text-align: right;
+    color: #F2630A;
+    padding-top: 30px;
+    float: left;
+}
+#videoBox{
+    width: 100%;
+    height: 100%;
+}
+form{
+    width: 100%;
+    height: 100%;
+}
+form:after{
+    display: block;
+    clear: both;
+    content: '';
+}
+.videol h3 span, .videor h3 span{
+    height: 40px;
+    font-size: 16px;
+    margin: 0 5px;
+    line-height: 40px;
+    color: #333;
+    text-indent: 23px;
+    width:98%;
+    display:block;
+    border-bottom: 1px solid #f2630a;
+
+
+}
+.videol h3,.videos h3{
+    position: relative;
+    height: 44px;
+
+} 
+.videol h3 em,.videos h3 em{
+    position: absolute;
+    left: 53px;
+    top: 39px;
+    width: 13px;
+    height: 13px;
+    display: block;
+     background: url("__PUBLIC__/image/icon_h3_03.jpg") no-repeat;
+}
+.item{
+    margin: 10px 10px 10px 10px;
+    clear: both;
+}
+.item>select,.item>input,.item>textarea{ width:20%; height: 30px; border-radius: 3px;border:1px solid #ccc; }
+.item>label{
+    display: inline-block;
+    text-align: right;
+    color: #666;
+    width: 20%;
+}
+.videol{
+    width: 100%;
+    height: 100%;
+    border: 1px solid #d1d1d1;
+    background: #fff;
+}
+
+.videol{ float: left;}
+.videor{ float: right; border: none; background: none; }
+.videos{
+    border: 1px solid #d1d1d1;
+    background: #fff;
+    padding-bottom: 16px;
+}
+.list_title{
+    padding:20px 0 20px 20px;
+    border-bottom: 1px solid #999; 
+    font-size: 18px;
+    font-weight: 500;
+}
+.list_content p{
+    padding:10px 0 10px 10px; 
+    font-size:14px;
+}
+.list_content p:hover{
+    background-color: #000;
+    color: #fff;
+    cursor: pointer;
+}
+#vedio_list{
+    width:300px;
+    padding:0 10px;
+    background-color: #ececec;
+    float: left;
+    margin-right: 10px;
+}
+#case_info{
+    float: left;
+    background-color: #ececec;
+    margin-bottom: 2px;
+    height: 200px;
+    width: 100%;
+}
+.play_vedio{
+    float: left;
+    background: #383838  url("__PUBLIC__/image/bg_ico.png") repeat;
+    width: 100%;
+}

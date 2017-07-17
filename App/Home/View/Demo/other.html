@@ -1,0 +1,25 @@
+<extend name="layouts:master" />
+<block name="link">
+    <style>
+
+    </style>
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/Case/play_case.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
+</block>
+<block name="src">
+<script type="text/javascript">
+$(function(){
+    $('#webshell').click(function(){
+        try{
+            window.open('Webshell://aa');
+        }catch(e){
+
+        }
+    })
+})
+</script>
+</block>
+<block name="main">
+<a href="#" id="webshell">Wheshell</a>
+<a href="ftp:ofe|u|http://example.com/myTestDocument.docx">Wheshell</a>
+</block>

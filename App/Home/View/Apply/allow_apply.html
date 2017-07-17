@@ -1,0 +1,55 @@
+<extend name="layouts:master" />
+<block name="link">
+<style type="text/css">
+.emp{
+    margin:2px;
+}
+.request-item{
+    margin-bottom: 10px;
+}
+</style>
+</block>
+<block name="src">
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
+<script type="text/javascript">
+app.tp.code = "{:session('code')}";
+</script>
+<script type="text/javascript" src="__PUBLIC__/js/Apply/allow_apply.js"></script>
+</block>
+<block name="main">
+    <div class="easyui-layout" fit="true">
+        <table id="datagrid" toolbar="#toolbar"></table>
+    </div>
+<div id="showInfo" class="easyui-dialog" title="审批意见" buttons="#diaButtons" 
+    data-options="modal:true,closed:true" style="padding: 10px;">
+    <form id="allow_info">
+        <div>申请资源：</div>
+        <div id="request_codes"></div>
+        <div class="request-item" hidden>
+            <label>申请单号：</label>
+            <input type="text" name="apply_id" id="apply_id" class="easyui-textbox">
+        </div>
+        <div class="request-item">
+            <label>审核决定：</label>
+            <select class="easyui-combobox" id="search_status" 
+                    data-options="height:22,editable:false,panelHeight:120"
+                    name="status" style="width:168px">
+                <option value="">请选择</option>
+                <option value="1">审核通过</option>
+                <option value="2">需求修改</option>
+                <option value="3">审核拒绝</option>
+            </select>
+        </div>
+        <div class="request-item">
+            <label>审核意见：</label>
+            <input type="text" name="remark" class="easyui-textbox">
+        </div>
+    </form>
+</div>
+<div id="diaButtons">
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.allow()" style="width:90px">确认</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" 
+        onclick="javascript:$('#showInfo').dialog('close')" style="width:90px">取消</a>
+    </div>
+</block>

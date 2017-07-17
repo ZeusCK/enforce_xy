@@ -1,0 +1,148 @@
+<extend name="layouts:master" />
+<block name="title">
+<title>执法记录仪数据管理平台</title>
+</block>
+<block name="link">
+	<link rel="shortcut icon" href="__PUBLIC__/image/favicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="__PUBLIC__/css/common.css">
+	<style>
+		body{
+			min-width: 1200px;
+		}
+		#tabs>.tabs-panels .panel-body{
+			overflow: hidden;
+		}
+		.myMenu{
+			position: absolute;
+			left: 360px;
+			top: 0;
+			height: 80px;
+		}
+		.myMenu .nav{
+			display: inline-block;
+			height: 76px;
+			position: relative;
+			padding: 0 16px;
+			cursor: pointer;
+		}
+		.myMenu>.nav>.title{
+			width: 100%;
+			height: 80px;
+			line-height: 80px;
+			font-size: 1.2em;
+			color: #FFF;
+		}
+		.myMenu>.nav:hover{
+			border-bottom: 4px solid #00A8E9;
+			background: #aac5e7;
+		}
+		.myMenu>.nav:hover>.title{
+			color: #fafafa;
+		}
+		.myMenu>.nav:hover>.nav_second{
+			display: block;
+		}
+		.myMenu .nav_second{
+			position: absolute;
+			left: 0;
+			background: #0065b6;
+			width: 100%;
+			display: none;
+		}
+		.myMenu .nav_second>.title{
+			white-space: nowrap;
+			color: #FFF;
+			padding: 10px 6px;
+			font-size: 13px;
+			border-left: 2px solid transparent;
+		}
+		.myMenu .nav_second>.title:hover{
+			color: #DDD;
+			border-left: 2px solid lightyellow;
+		}
+		#mb {
+			right: 14px;
+			position: absolute;
+			top: 29px;
+			color: #333;
+			width: 84px;
+			border-radius: 0;
+			background: #f6f6f7;
+		}
+		.m-btn-downarrow, .s-btn-downarrow {
+			background: url(__PUBLIC__/plugins/jquery-easyui/themes/gray/images/menu_arrows.png) no-repeat 0 center;
+		}
+		.menu-line {
+			display: none;
+		}
+		.menu-text {
+			padding-left: 10px;
+			width: 100%;
+		}
+		#mm {
+			width: 80px !important;
+			right:10px;
+		}
+	</style>
+</block>
+<block name="src">
+<script type="text/javascript" src="__PUBLIC__/js/Index/index.js"></script>
+</block>
+<block name="main">
+<div class="easyui-layout" fit="true">
+	<div data-options="region:'north',border:false,split:false" style="height:80px;">
+		<div style="background: url(__PUBLIC__/image/logo.png) no-repeat left; height: 80px; width: 100%">
+            <div id="top_info">
+				<span style="color: #fff;position: absolute;top: 33px;right: 160px;font-size: 15px">{:session('role')}</span>
+				<span style="color: #fff;position: absolute;top: 10px;right: 100px;font-size: 15px"><image style="width:64px;height:64px" src="__PUBLIC__/image/male_user.png"></image></span>
+				<a href="javascript:void(0)" id="mb" class="easyui-menubutton"
+					data-options="menu:'#mm'">{:session('user')}</a>
+				<div id="mm">
+					<div id="changePassword">修改密码</div>
+					<div><a style="color:#333; text-decoration:none;display: inline-block;width: 100%;" href="{:U('Index/loginout')}">退出</a></div>
+					<div><a style="color:#333; text-decoration:none;display: inline-block;width: 100%;" href="__ROOT__/about.php" target="_blank">关于</a></div>
+				</div>
+		</div>
+		</div>
+    </div>
+    <div data-options="region:'center',border:false" style="background:#eee;">
+        <div id="tabs" class="easyui-tabs" fit="true"></div>
+    </div>
+    <div data-options="region:'south',border:false,split:false" style="background: #e0ecff; height: 24px; text-align: center;">
+        <div class="footer" id="footer">Copyright © 深圳泰安信义有限公司版权所有</div>
+    </div>
+</div>
+
+<!-- 菜单S -->
+<div class="myMenu">
+	<foreach name="menus" item="menu">
+		<div class="nav">
+			<div class="title">{$menu.text}</div>
+			<if condition="$menu['children']">
+				<div class="nav_second">
+					<foreach name="menu.children" item="chmenu">
+						<div class="title" data-url="{$chmenu.attributes.url}" iconCls="{$chmenu.iconCls}" onclick=menuHandler(this)>{$chmenu.text}</div>
+					</foreach>
+				</div>
+			</if>
+		</div>
+	</foreach>
+</div>
+<!-- 菜单E -->
+<!--修改密码-->
+<div id="dialog" class="easyui-dialog" title="修改密码" style="width:300px;" buttons="#buttons"
+    data-options="iconCls:'icon-pencil',modal:true,closed:true">
+    <form id="loginBox" method="post">
+        <div style="margin:10px">
+            新密码: <input class="easyui-validatebox easyui-textbox" type="password" id="newpassword" autofocus="autofocus" style="width:100%;height:40px;padding:12px;" data-options="iconCls:'icon-lock',iconWidth:38,required:true" name="">
+        </div>
+        <div style="margin:10px">
+            确认密码：<input class="easyui-validatebox easyui-textbox" type="password" id="surepassword" style="width:100%;height:40px;padding:12px;" data-options="iconCls:'icon-lock',iconWidth:38,required:true" name="userpassword">
+        </div>
+    </form>
+</div>
+<div id="buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="change_password()" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+    $('#dialog').dialog('close')" style="width:90px">取消</a>
+</block>

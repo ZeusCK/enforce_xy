@@ -1,0 +1,78 @@
+<extend name="layouts:master" />
+<block name="link">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        div{
+            box-sizing:border-box;
+            -moz-box-sizing:border-box; /* Firefox */
+            -webkit-box-sizing:border-box; /* Safari */
+        }
+        .topBox{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 150px;
+        }
+        .centerBox{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 150px;
+            height: 150px;
+        }
+        .bottomBox{
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            top: 300px;
+        }
+        .box{
+            width: 50%;
+            height: 100%;
+            float: left;
+            padding: 4px;
+        }
+        .pie{
+            width: 100%;
+            height: 100%;
+            background: #4ad2ff;
+        }
+    </style>
+</block>
+<block name="src">
+    <script src="__PUBLIC__/plugins/charts/echarts.common.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Index/home.js"></script>
+</block>
+<block name="main">
+    <div class="topBox">
+        <div id="myDatagrid"></div>
+    </div>
+    <div class="centerBox">
+        <div class="box">
+            <div id="myChart3" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="box">
+            <div id="myChart4" style="width: 100%; height: 100%;"></div>
+        </div>
+    </div>
+
+    <div class="bottomBox">
+        <div class="box">
+            <div id="myChart" style="width: 100%; height: 100%;"></div>
+        </div>
+        <div class="box">
+            <div id="myChart2" style="width: 100%; height: 100%;"></div>
+        </div>
+    </div>
+</block>
