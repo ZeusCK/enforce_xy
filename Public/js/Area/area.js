@@ -171,8 +171,6 @@ $(function(){
             }
         }
     });
-
-    tree.init();
     tree.loadData();
     $(tree.dom).tree({
         checkbox:true,

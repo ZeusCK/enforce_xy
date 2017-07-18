@@ -125,7 +125,6 @@ function unusal_sat(){
                     data: udata
                 }]
             };
-            console.log(ndata,udata);
             myChart.setOption(option2);
         }
     });

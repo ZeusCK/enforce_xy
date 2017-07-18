@@ -95,7 +95,6 @@ $(function() {
     $('#etime').datetimebox({ value: new Time(time, 0).init() });
     $('#btime').datetimebox({ value: new Time(time, 7).init() });
     //树的初始化
-    tree.init();
     tree.loadData();
     //树的额外参数
     $(tree.dom).tree({

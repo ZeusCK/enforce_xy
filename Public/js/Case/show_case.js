@@ -104,7 +104,6 @@ function searchTree(event) {
 }
 $(function() {
     //树的初始化
-    tree.init();
     tree.load_emp_tree();
     //树的额外参数
     $(document).keydown(function(event) { searchTree(event) });

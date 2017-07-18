@@ -3,6 +3,7 @@ var Tree = function(dom){
     this.data = null;
 }
 Tree.prototype.loadData = function (noS){
+    this.init();
     var self = this;
     var dom = this.dom;
     var load = noS ? noS : false;
@@ -19,6 +20,7 @@ Tree.prototype.loadData = function (noS){
     });
 }
 Tree.prototype.loadUserArea = function (userid){
+    this.init();
     var dom = this.dom;
     var self = this;
     $.ajax({
@@ -35,6 +37,7 @@ Tree.prototype.loadUserArea = function (userid){
     });
 }
 Tree.prototype.load_dev_area = function(){
+    this.init();
     var dom = this.dom;
     var self = this;
     $.ajax({
@@ -48,6 +51,7 @@ Tree.prototype.load_dev_area = function(){
     });
 }
 Tree.prototype.load_emp_tree = function(){
+    this.init();
     var dom = this.dom;
     var self = this;
     $.ajax({
@@ -61,6 +65,7 @@ Tree.prototype.load_emp_tree = function(){
     });
 }
 Tree.prototype.show_emp_manger_area = function(empid){
+    this.init();
     var dom = this.dom;
     var self = this;
     $.ajax({
@@ -77,6 +82,7 @@ Tree.prototype.show_emp_manger_area = function(empid){
     });
 }
 Tree.prototype.show_apply_tree = function(){
+    this.init();
     var dom = this.dom;
     var self = this;
     $.ajax({

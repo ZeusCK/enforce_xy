@@ -123,10 +123,8 @@ module.init = function(){
 }
 $(function(){
     //初始化选择请求警员显示
-    area_emp_tree.init();
     area_emp_tree.show_apply_tree();
     //初始化选择查看警员显示
-    area_emp_show.init();
     area_emp_show.load_emp_tree();
     //左侧菜单
     $(area_emp_tree.dom).tree({

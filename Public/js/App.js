@@ -211,16 +211,18 @@ App.prototype.removeArrayItem = function(value,arr){
     return arr;
 }
 /**
- * 导出excel
+ * 导出excel  需要后端支持
  * @param  object  params 查询参数
  * @param  string  datagrid datagridId  没有该属性 url fields page rows 都要自己准备
  * @param  object  fields fields属性
  * @param  array   delField 需要删除的fields
+ * @param  function callback回调函数
  * @return viod
  */
-App.prototype.exportExcel = function(exportInfo){
+App.prototype.exportExcel = function(exportInfo,callback){
     if(typeof exportInfo.params == 'undefined'){
         $.messager.alert('操作提示','无导出参数,请核验！','info');
+        callback();
         return false;
     }
     var fields = {};
@@ -256,10 +258,12 @@ App.prototype.exportExcel = function(exportInfo){
     exportInfo.params.fields = fields;
     if(url == ''){
         $.messager.alert('操作提示','无导出URL,请核验！','info');
+        callback();
         return false;
     }
     if(typeof exportInfo.params.rows == 'undefined'){
         $.messager.alert('操作提示','无导出条数,请核验！','info');
+        callback();
         return false;
     }
     $.messager.show({
@@ -281,6 +285,71 @@ App.prototype.exportExcel = function(exportInfo){
         },
         error:function(r){
             $.messager.alert('操作提示','网络发生错误！','info');
+        },
+        complete:function(){
+            callback();
         }
     })
+}
+App.prototype.ohter = function(options){
+    var other = {};
+    other.default = {
+        success:function(){},
+        error:function(){}
+    };
+    other.default.call(options,'success');
+    other.default.call(options,'other');
+}
+//增加修改
+App.prototype.add_edit = function(params){
+    var url = params.url || '';
+    if(url == ''){
+        $.messager.alert('操作提示','url地址不能为空','info');
+        return false;
+    }
+    var form = params.form || '';
+    if(form != '') var data = this.serializeJson(form);
+    if(params.data) var data = params.data;
+    if(!data){
+        $.messager.alert('操作提示','发送参数不能为空','info');
+        return false;
+    }
+    if(params.submitdata){      //处理参数
+        data = params.submitdata(data);
+    }
+
+}
+App.prototype.remove = function(params){
+    var url = params.url || '';             //url地址
+    var idFiled = params.idFiled || 'id';   //标识ID
+    var datagrid = params.datagrid || '#datagrid';   //datagrid
+    if(url == ''){
+        $.messager.alert('操作提示','url地址不能为空','info');
+    }
+    var infos = $(datagrid).datagrid('getSelections');
+    if(infos.length == 0) return false;
+    var ids = [];
+    $.each(infos,function(n,m){
+        var id= m[idFiled];
+        ids.push(id);
+    });
+    ids = ids.join(',');
+    var data = {};
+    data[idFiled] = ids;
+    $.ajax({
+        url:url,
+        type:'post',
+        data:data,
+        success:function(data){
+            $.messager.alert('结果提示',data.message,'info');
+            $('#datagrid').datagrid('reload',{
+                areaid:module.areaid,
+                rand:Math.random()
+            });
+        },
+        error:function(data){
+            $('#dialog').dialog('close');
+            $.messager.alert('操作提示','网络故障','info');
+        }
+    });
 }

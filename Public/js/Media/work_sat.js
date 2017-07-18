@@ -1,6 +1,5 @@
 //树的实例化
 var tree = new Tree('#area_list');
-var managerTree = new Tree('#areaList');
 // 创建时间对象
 var judgeTime = new Time(new Date(), 0);
 var module = {};
@@ -44,7 +43,6 @@ $(function() {
     $('#etime').datetimebox({ value: new Time(time, 0).init() });
     $('#btime').datetimebox({ value: new Time(time, 7).init() });
     //树的初始化
-    tree.init();
     tree.loadData();
     //树的额外参数
     $(tree.dom).tree({

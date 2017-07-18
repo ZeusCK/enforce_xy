@@ -189,7 +189,6 @@ module.allowOther = function(){
 }
 $(function(){
     //树的初始化
-    tree.init();
     tree.loadData();
     //树的额外参数
     $(tree.dom).tree({
@@ -210,8 +209,7 @@ $(function(){
                 $('#manInfo').hide();
                 var rowData = $(this).datagrid('getData').rows[r];
                 var empid = rowData.empid;
-                managerTree.init();
-                managerTree.show_emp_manger_area(empid);
+                managerTree.loadData();
                 $(managerTree.dom).tree({
                     checkbox:true
                 });

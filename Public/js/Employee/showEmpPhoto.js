@@ -73,7 +73,6 @@ module.ajaxSerach = function(params){
 }
 $(function(){
     //树的初始化
-    tree.init();
     tree.loadData();
     //树的额外参数
     $(tree.dom).tree({

@@ -4,9 +4,7 @@ var areaname = app.tp.areaname;
 var tree=new Tree('#tree');
 $(function(){
     //左侧tree的加载
-    tree.init();
     tree.load_emp_tree();
-
     $('#pos').html(areaname);
     //右侧datagrid的加载
     $('#datagrid').datagrid({

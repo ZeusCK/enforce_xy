@@ -106,7 +106,7 @@ class CommonController extends Controller {
 
         $db = D($dbc);
         $datas = array();
-        if(empty($allId)) static $allId = array();
+        if(!isset($allId)) static $allId = array();
         //需要查询的上级集合
         $pids = array();
         foreach ($finfos as $value) {

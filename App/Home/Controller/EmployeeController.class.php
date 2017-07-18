@@ -147,6 +147,7 @@ class EmployeeController extends CommonController
         $c_area = explode(',', session('userarea'));
         if(in_array($request['areaid'],$c_area)){
             $result = $db->getTableAdd(u2gs($request));
+            if(array_key_exists('add_id',$result))  $this->add_emp_area($result['add_id']);
         }else{
             $result['message'] = '对不起，你无法向该部门添加警员！因为该部门不在你的管辖范围，或者不全在管辖范围';
         }
@@ -194,7 +195,9 @@ class EmployeeController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $result = $db->getTableEdit($where,$request);
-        //if($info)  $result['message'] .= $info;
+        $roleid = $db->where('empid = '.$request['empid'])->getField('roleid');
+        if($roleid != $request['roleid'])       //如果角色ID改变那么重新计算
+            $this->add_emp_area($request['empid']);
         exit(json_encode($result));
     }
     //准备前端页面数据
@@ -366,6 +369,20 @@ class EmployeeController extends CommonController
         S(session('user').'emp_tree',g2us($empAreaTree),5*60);
         $this->ajaxReturn(S(session('user').'emp_tree'));
     }
+    //更新警员的部门
+    public function update_emp_area()
+    {
+        $empid = I('empid');
+        $result = array();
+        if($this->add_emp_area($empid)){
+            $result['status'] = true;
+            $result['message'] = '更新成功';
+        }else{
+            $result['status'] = false;
+            $result['message'] = '更新失败,可能原因管理部门并未发生变化';
+        }
+        $this->ajaxReturn($result);
+    }
     /**
      * 根据警员id，自动添加管理区域
      * @param int $empid  警员ID
@@ -378,14 +395,31 @@ class EmployeeController extends CommonController
         $roledb = D($this->models['role']);
         $empInfo = $empdb->where('empid='.$empid)->find();
         $roleInfo = $roledb->where('roleid='.$empInfo['roleid'])->find();
-        if($roleInfo['level'] == 4) return true;    //如果是警员的话直接跳过
+        $data = array('userarea'=>'');
+        if($roleInfo['level'] == 4)
+            return $empdb->where('empid='.$empid)->save($data) ? true : false;
+
         $areaInfo = $areadb->where('areaid='.$empInfo['areaid'])->find();
-        if($areaInfo['type'] == 0){                 //如果是交警部门 直接加上自己
-            $areaAction = A($this->actions['area']);
-            $careas = $areaAction->carea($areaInfo['areaid']);
-            $data = array();
-            $data['userarea'] = explode(',',$careas);
+        //自身加上子集
+        $areaAction = A($this->actions['area']);
+        $careas = $areaAction->carea($areaInfo['areaid']);
+        if($areaInfo['type'] != 0){            //如果不是交警部门
+            if($roleInfo['level'] == 0 || $roleInfo['level'] == 1){      //系统管理员,市局管理员,拥有全部
+                $careas = array();
+                $careas = $areadb->getField('areaid',true);             //拥有全部权限
+            }else{
+                if($areaInfo['code'] != ''){        //如果该部门拥有标识代码
+                    $areawhere = array('code'=>$areaInfo['code'],'type'=>0);
+                    $extraAreaInfo = $areadb->where($areawhere)->find();
+                    if($extraAreaInfo){
+                        $cpeareas = $areaAction->carea($extraAreaInfo['areaid']);     //交警部门的子集
+                        $careas = array_unique(array_merge($careas,$cpeareas));
+                    }
+                }
+            }
         }
+        $data['userarea'] = implode(',',$careas);
+        return $empdb->where('empid='.$empid)->save($data) ? true : false;
     }
     /**
      * 调阅的树

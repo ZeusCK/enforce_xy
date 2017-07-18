@@ -50,7 +50,7 @@ class BaseModel extends Model
            $return['status']  = true;
            $return['add_id'] = $result;
        }
-       return($return);
+       return $return;
     }
 
     //编辑并返回结果
@@ -65,7 +65,7 @@ class BaseModel extends Model
             $return['message'] = '更新成功!';
             $return['status']  = true;
        }
-       return($return);
+       return $return;
     }
 
     //删除并返回结果
@@ -83,21 +83,12 @@ class BaseModel extends Model
             $return['message'] = '删除成功!';
             $return['status']  = true;
         }
-       return($return);
+       return $return;
     }
 
     // 判断数据库中是否已经存在
     public function checkExistence($content)
     {
-        $result = $this->where($content)->find();
-        if($result)
-        {
-            return Ture;     //存在
-        }
-        else
-        {
-            return False;   //不存在
-        }
+        return $this->where($content)->find();
     }
-
 }

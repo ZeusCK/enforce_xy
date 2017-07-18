@@ -17,7 +17,8 @@ module.show = function() {
         });
     }
 //搜索事件 ----
-module.search = function() {
+module.search = function(emmet) {
+    $(emmet).linkbutton('disable');
     var data = app.serializeJson('#searchForm');
     if(data.search_type == 1){
         if(!judgeTime.judge(data['start_time[btime]'], data['start_time[etime]'])){
@@ -56,9 +57,11 @@ module.search = function() {
         $('.datagrid-view>.datagrid-view2').show();
         $('#myP').remove(); 
         $('#datagrid').datagrid('load', data);
+        $(emmet).linkbutton('enable');
     }else{
         $('.datagrid-view').css('textAlign','center');
         module.ajaxSerach(data);
+        $(emmet).linkbutton('enable');
     }
     
 };
@@ -172,12 +175,15 @@ module.editCancel = function() {
     $('#editDialog').dialog('close');
 };
 //导出
-module.exports = function() {
+module.exports = function(emmet) {
+    $(emmet).linkbutton('disable');
     var exportInfo = {};
     exportInfo.datagrid = '#datagrid';
     exportInfo.params = module.params;
     exportInfo.delFields = ['id', 'detail'];
-    app.exportExcel(exportInfo);
+    app.exportExcel(exportInfo,function(){
+        $(emmet).linkbutton('enable');
+    });
 };
 //查看详情
 module.detail = function(wjbh) {
@@ -263,7 +269,6 @@ module.case_close = function() {
 };
 $(function() {
     //树的初始化
-    tree.init();
     tree.load_emp_tree();
     //树的额外参数
     $(document).keydown(function(event) { searchTree(event) });
