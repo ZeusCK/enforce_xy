@@ -100,4 +100,22 @@ class DemoController extends CommonController
             echo 'failed';
         }
     }
+    public function t()
+    {
+        $co = range(1,1000000);
+        $test1 = [];
+        $test2 = [];
+        G('begin');
+        foreach ($co as $value) {
+            $test1[$value] = '1';
+        }
+        G('end');
+        echo G('begin','end',8).'s'."<br>";
+        G('begin');
+        array_walk($co,function($v,$k){
+            $test2[$v] = '1';
+        });
+        G('end');
+        echo G('begin','end',8).'s'."<br>";
+    }
 }

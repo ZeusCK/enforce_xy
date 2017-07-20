@@ -54,6 +54,9 @@ class AreaController extends CommonController
             $areas = $db->getField('areaid,areaname');
             foreach ($data['rows'] as &$value) {
                 $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
+                $value['areatype'] = $value['type'];
+                $value['typename'] = $value['type'] == '' ? '无' : $value['type'] == 0 ? '交警' : '其他';
+                $value['typename'] = u2g($value['typename']);
             }
         }
         $this->saveExcel($data); //监测是否为导出
@@ -63,6 +66,8 @@ class AreaController extends CommonController
     public function dataAdd()
     {
         $request = I();
+        $request['type'] = $request['areatype'];
+        unset($request['areatype']);
         $db = D($this->models['area']);
         $result = $db->getTableAdd(u2gs($request));
         $add_area = $result['add_id'];
@@ -180,7 +185,7 @@ class AreaController extends CommonController
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
             $l_arr = ['areaid','areaname','fatherareaid','areaid'];
             //$L_attributes 额外需要保存的信息
-            $L_attributes = ['areacode','rperson','rphone'];
+            $L_attributes = ['areacode','rperson','rphone','type','code'];
             $icons = ['icon-application_xp_terminal','icon-application'];
             $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);

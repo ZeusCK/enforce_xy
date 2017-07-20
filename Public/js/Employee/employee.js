@@ -75,6 +75,9 @@ module.changeinfo = function(){
     $('#form').form('submit',{
         url:requestUrl,
         onSubmit:function(param){
+            if(!$('#form').form('validate')){
+                return false;
+            }
             if(module.actionType == 1) delete(param.empid);
             //console.log(param.photo);
             var photo = $("#form input[name='photo']").val();

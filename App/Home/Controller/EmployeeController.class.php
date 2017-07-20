@@ -403,6 +403,7 @@ class EmployeeController extends CommonController
         //自身加上子集
         $areaAction = A($this->actions['area']);
         $careas = $areaAction->carea($areaInfo['areaid']);
+        //$this->ajaxReturn(g2us($empInfo));
         if($areaInfo['type'] != 0){            //如果不是交警部门
             if($roleInfo['level'] == 0 || $roleInfo['level'] == 1){      //系统管理员,市局管理员,拥有全部
                 $careas = array();

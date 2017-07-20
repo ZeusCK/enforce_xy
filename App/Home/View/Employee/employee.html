@@ -40,11 +40,11 @@ app.tp.code = "{:session('code')}";
         <p style="color: #0E2D5F;margin-left: 20px;font-size: 14px;"><span id="infoAreaname"></span></p>
         <form id="form" method="post" enctype="multipart/form-data">
             <div class="form_m" style="display: none"><div for="empid" class="form_label" >ID : </div>
-                <input class=" form_in easyui-textbox" type="text" name="empid" required="true" /></div>
+                <input class=" form_in easyui-textbox" type="text" name="empid"/></div>
             <div class="form_m"><div for="code" class="form_label" >警号 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="code" required="true" /></div>
+                <input class=" form_in easyui-textbox" type="text" name="code" data-options="required:true" /></div>
             <div class="form_m"><div for="name" class="form_label">姓名 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="name" required="true"/></div>
+                <input class=" form_in easyui-textbox" type="text" name="name" data-options="required:true"/></div>
             <div class="form_m"><div for="sex" class="form_label">性别 : </div>
                 <select class=" easyui-combobox form_in" name="sex" style="width: 181px;"
                     data-options="editable:false">
@@ -109,18 +109,18 @@ app.tp.code = "{:session('code')}";
                 <input class=" form_in easyui-textbox" type="text" name="clientip" id="clientip"/>
             </div>
         </form>
-        
+
         <div style="padding-top: : 10px;padding-left: 50px;">
             <p style="color: #0E2D5F">额外管理部门，只能为自身所属部门下的部门</p>
             <p style="color: #0E2D5F">后端会自动排除多余的部门</p>
             <div id="manInfo">
                 <a href="javascript:void(0)" onclick="module.link()" id="link" class="easyui-linkbutton"
                    iconCls="icon icon-link" style="background-color: #00A8E9;">部门联级</a>
-                <a href="javascript:void(0)" onclick="module.unlink()" id="unlink" class="easyui-linkbutton" 
+                <a href="javascript:void(0)" onclick="module.unlink()" id="unlink" class="easyui-linkbutton"
                    iconCls="icon icon-link_break" style="background-color: #00A8E9;">部门精确</a>
                 <div id="pointInfo" style="color: #00A8E9;margin: 5px 0;font-size: 20px;">部门精确，精准分配部门</div>
             </div>
-            
+
             <ul id="areaList"></ul>
         </div>
     </div>

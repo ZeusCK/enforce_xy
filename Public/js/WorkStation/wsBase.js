@@ -33,7 +33,6 @@ things.editBar = function(){
 }
 things.change_info = function(form,url,dialog){
     var params = app.serializeJson(form);
-    //$(form).form('validate');
     if(!$(form).form('validate')){
         //$.messager.alert('操作提示','有未满足条件的选项，无法提交','info');
         return false;

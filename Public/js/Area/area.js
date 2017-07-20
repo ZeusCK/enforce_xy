@@ -27,7 +27,13 @@ module.callback = function(data){
 //打开增加dialog
 module.addBar = function(){
     $('#addForm').form('reset');
-    $('#addForm').form('load',{fatherareaid:module.areaid});
+    var node = $(tree.dom).tree('find',module.areaid);
+    if(node.type != ''){
+        $('#add_areatype').combobox({readonly:true});
+    }else{
+        $('#add_areatype').combobox({readonly:false});
+    }
+    $('#addForm').form('load',{fatherareaid:module.areaid,areatype:node.type});
     $('#infoAreaname').html('*'+module.areaname+'*添加新的子级部门');
     $('#addDialog').dialog('open');
 }
@@ -43,54 +49,52 @@ module.editBar = function(){
         $('#editDialog').dialog('open');
     }
 }
-module.change_info = function(form,url,dialog,type){
-    var params = app.serializeJson(form);
-    if(!$(form).form('validate')){
-        $.messager.alert('操作提示','有未满足条件的选项，无法提交','info');
-        return false;
-    }
-    $.ajax({
-        url:url,
-        type:'post',
-        dataType:'json',
-        data:params,
-        success:function(data){
-            $(dialog).dialog('close');
-            module.callback(data);
-            //新增部门
-            if(data.add_id){
-                var node = $(tree.dom).tree('find',module.areaid);
-                $(tree.dom).tree('append',{
-                    parent: node.target,
-                    data:[{id:data.add_id,text:params.areaname}]
-                });
-            }else{
-            //修改部门
-                var node = $(tree.dom).tree('find',params.areaid);
-                if (node){
-                    $(tree.dom).tree('update', {
-                        target: node.target,
-                        text: params.areaname
-                    });
-                }
-            }
-            //tree.loadData(true);    //不使用缓存加载树
+module.add = function(target){
+    var params = {};
+    app.extra('add_edit',{
+        form:'#addForm',
+        dialog:'#addDialog',
+        url:module.addUrl,
+        linkbutton:target,
+        parsedata:function(data){
+            params = data;
         },
-        error:function(data){
-            $(dialog).dialog('close');
-            $.messager.alert('操作提示','网络故障','info');
-
+        success:function(data){
+            //新增部门
+            $('#datagrid').datagrid('load',{areaid:module.areaid});
+            var node = $(tree.dom).tree('find',module.areaid);
+            $(tree.dom).tree('append',{
+                parent: node.target,
+                data:[{id:data.add_id,text:params.areaname,type:params.areatype}]
+            });
         }
     });
 }
-module.add = function(){
-    module.change_info('#addForm',module.addUrl,'#addDialog',1);
-}
-module.edit = function(){
-    module.change_info('#editForm',module.editUrl,'#editDialog',2);
+module.edit = function(target){
+    var params = {};
+    app.extra('add_edit',{
+        form:'#editForm',
+        dialog:'#editDialog',
+        url:module.editUrl,
+        linkbutton:target,
+        parsedata:function(data){
+            params = data;
+        },
+        success:function(data){
+            //修改部门
+            $('#datagrid').datagrid('load',{areaid:module.areaid});
+            var node = $(tree.dom).tree('find',params.areaid);
+            if (node){
+                $(tree.dom).tree('update', {
+                    target: node.target,
+                    text: params.areaname
+                });
+            }
+        }
+    });
 }
 //删除事件
-module.remove = function(){
+module.remove = function(target){
     var nodes = $('#area_list').tree('getChecked');
     var ids = [];
     if(nodes.length == 0)
@@ -102,14 +106,15 @@ module.remove = function(){
                 ids.push(id);
             });
             ids = ids.join(',');
-            $.ajax({
+            app.extra('remove',{
                 url:module.removeUrl,
-                type:'post',
-                data:{
-                    areaid:ids
+                datagrid:false,
+                linkbutton:target,
+                parsedata:function(data){
+                    data.areaid = ids;
                 },
                 success:function(data){
-                    module.callback(data);
+                    $('#datagrid').datagrid('load',{areaid:module.areaid});
                     tree.loadData(true);
                 }
             });
@@ -128,47 +133,34 @@ module.unlink = function(){
 }
 //搜索事件 ----！  需要额外写
 module.search = function(){
-    var areaname = $('#areaname').val();
-    areaname = $.trim(areaname);
-    $('#datagrid').datagrid('load',{
-        areaid:module.areaid,
-        areaname:areaname
+    app.extra('search',{
+        form:'#searchForm',
+        datagrid:'#datagrid',
+        parsedata:function(data){
+            data.areaid = module.areaid;
+        }
     });
 }
 //初始化表格
 $(function(){
     $('#mu_area').html(module.areaname);
-    $('#datagrid').datagrid({
+    app.datagrid('#datagrid',{
+        singleSelect:true,
         url:module.datagridUrl,
-        method:'get',
         title:'部门列表',
-        queryParams:{
-            areaid:module.areaid,
-            rand:Math.random()
-        },
-        fitColumns:true,
-        rownumbers:true,
-        fit:true,
-        pageSize:15,
-        pageNumber:1,
-        pageList:[10,15,20,30,50],
         columns:[[
         {field:'areaid',title:'部门id',hidden:true},
         {field:'areaname',title:'部门名称',width:200,align:'center'},
         {field:'areacode',title:'部门编号',width:200,align:'center'},
         {field:'pareaname',title:'父部门',width:200,align:'center'},
+        {field:'typename',title:'部门类型',width:200,align:'center'},
+        {field:'code',title:'部门标识',width:200,align:'center'},
         {field:'rperson',title:'联系人',width:200,align:'center'},
         {field:'rphone',title:'联系方式',width:200,align:'center'}
         ]],
-        pagination:true,
-        onLoadSuccess:function(r){
-            if(r.total==0){
-                $('div.datagrid-view').find('div.datagrid-view1').hide();
-                $('div.datagrid-view2').css('left','0');
-                $('div.datagrid-view2').find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({'color':'#F00','text-align':'center','font-size':'16px'});
-            }else if(r.error){
-                $.messager.alert('操作提示', r.error,'info');
-            }
+        queryParams:{
+            areaid:module.areaid,
+            rand:Math.random()
         }
     });
     tree.loadData();

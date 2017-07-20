@@ -210,60 +210,83 @@ App.prototype.removeArrayItem = function(value,arr){
     }
     return arr;
 }
+//easyui 按钮控制
+App.prototype.linkbutton = function(target,method){
+    if(target) $(target).linkbutton(method);
+}
+//应用
+App.prototype.extra = function(method,param){
+    this.extra.methods[method](param);
+}
+App.prototype.extra.methods = {
+    remove:function(param){
+        return App.prototype.remove(param);
+    },
+    export:function(param){
+        return App.prototype.exportExcel(param);
+    },
+    add_edit:function(param){
+        return App.prototype.add_edit(param);
+    },
+    search:function(param){
+        return App.prototype.search(param);
+    }
+};
 /**
  * 导出excel  需要后端支持
- * @param  object  params 查询参数
- * @param  string  datagrid datagridId  没有该属性 url fields page rows 都要自己准备
- * @param  object  fields fields属性
- * @param  array   delField 需要删除的fields
- * @param  function callback回调函数
+ * @param  object  exportInfo
  * @return viod
  */
-App.prototype.exportExcel = function(exportInfo,callback){
-    if(typeof exportInfo.params == 'undefined'){
+App.prototype.exportExcel = function(exportInfo){
+    var self = this;
+    var options = $.extend(this.exportExcel.defaults,exportInfo);
+    this.linkbutton(options.linkbutton,'disable');
+    if(options.params === false){
         $.messager.alert('操作提示','无导出参数,请核验！','info');
-        callback();
+        this.linkbutton(options.linkbutton,'enable');
         return false;
     }
     var fields = {};
     var url = '';
     //如果拥有datagrid属性
-    if(exportInfo.datagrid){
-        var options = $(exportInfo.datagrid).datagrid('options');
+    if(options.datagrid){
+        var option = $(options.datagrid).datagrid('options');
     }
-    if(exportInfo.treegrid){
-        var options = $(exportInfo.treegrid).treegrid('options');
+    if(options.treegrid){
+        var option = $(options.treegrid).treegrid('options');
     }
-    if(options){
-        exportInfo.params.page = options.pageNumber;
-        exportInfo.params.rows = options.pageSize;
-        url = typeof options.url != 'undefined' ? options.url : '';
-        for (var i = 0; i < options.columns[0].length; i++) {
+    if(option){
+        options.params.page = option.pageNumber;
+        options.params.rows = option.pageSize;
+        url = option.url != null ? option.url : '';
+        for (var i = 0; i < option.columns[0].length; i++) {
             //无需添加的数据
-            if(typeof exportInfo.delFields != 'undefined'){
-                if(this.inArray(options.columns[0][i].field,exportInfo.delFields)){
-                    continue;
-                }
+            if(options.delFields != false){
+                if(this.inArray(option.columns[0][i].field,options.delFields)) continue;
             }
-            fields[options.columns[0][i].field] = options.columns[0][i].title;
+            fields[option.columns[0][i].field] = option.columns[0][i].title;
         }
     }
     //如果拥有fields重置fields属性
-    if(exportInfo.fields)  fields = exportInfo.fields;
+    if(options.fields)  fields = options.fields;
     //如果有url属性重置url
-    if(exportInfo.url)  url = exportInfo.url;
+    if(options.url)  url = options.url;
+
+    if(options.page) options.params.page = options.page;
+    if(options.rows) options.params.rows = options.rows;
     //设置导出
-    exportInfo.params['export'] = true;
+    options.params['export'] = true;
     //设置文本
-    exportInfo.params.fields = fields;
+    options.params.fields = fields;
+    options.parseFileds(options.params.fields);
     if(url == ''){
         $.messager.alert('操作提示','无导出URL,请核验！','info');
-        callback();
+        this.linkbutton(options.linkbutton,'enable');
         return false;
     }
-    if(typeof exportInfo.params.rows == 'undefined'){
+    if(options.params.rows == false){
         $.messager.alert('操作提示','无导出条数,请核验！','info');
-        callback();
+        this.linkbutton(options.linkbutton,'enable');
         return false;
     }
     $.messager.show({
@@ -272,10 +295,12 @@ App.prototype.exportExcel = function(exportInfo,callback){
         timeout:2000,
         showType:'slide'
     });
+    this.exportExcel.options = options;
     $.ajax({
         url:url,
         type:'POST',
-        data:exportInfo.params,
+        dataType:'json',
+        data:options.params,
         success:function(r){
             if(r.status==true){
                 window.location.href = r.fileUrl;
@@ -286,70 +311,216 @@ App.prototype.exportExcel = function(exportInfo,callback){
         error:function(r){
             $.messager.alert('操作提示','网络发生错误！','info');
         },
-        complete:function(){
-            callback();
+        complete:function(r,s){
+            self.linkbutton(options.linkbutton,'enable');
         }
     })
 }
-App.prototype.ohter = function(options){
-    var other = {};
-    other.default = {
-        success:function(){},
-        error:function(){}
-    };
-    other.default.call(options,'success');
-    other.default.call(options,'other');
-}
+//导出函数参数初始化
+App.prototype.exportExcel.defaults = {
+    datagrid:false,                //表格
+    treegrid:false,                //树表格
+    url:false,                     //重写url地址
+    delFields:false,               //删除字段
+    fields:false,                  //重写字段属性
+    linkbutton:false,              //关联按钮
+    params:false,                  //查询参数
+    page:false,                    //重写查询页数
+    rows:false,                    //重写查询条数
+    parseFileds:function(fields){} //解析参数
+};
 //增加修改
 App.prototype.add_edit = function(params){
-    var url = params.url || '';
-    if(url == ''){
+    var self = this;
+    var options = $.extend(App.prototype.add_edit.defaults,params);
+    this.linkbutton(options.linkbutton,'disable');
+    if(options.url == false){
         $.messager.alert('操作提示','url地址不能为空','info');
+        this.linkbutton(options.linkbutton,'enable');
         return false;
     }
-    var form = params.form || '';
-    if(form != '') var data = this.serializeJson(form);
-    if(params.data) var data = params.data;
-    if(!data){
-        $.messager.alert('操作提示','发送参数不能为空','info');
-        return false;
+    var request = {};
+    if(options.form != false){
+        request = this.serializeJson(options.form);
+        if(!$(options.form).form('validate')){
+            this.linkbutton(options.linkbutton,'enable');
+            return false;
+        }
     }
-    if(params.submitdata){      //处理参数
-        data = params.submitdata(data);
-    }
-
-}
-App.prototype.remove = function(params){
-    var url = params.url || '';             //url地址
-    var idFiled = params.idFiled || 'id';   //标识ID
-    var datagrid = params.datagrid || '#datagrid';   //datagrid
-    if(url == ''){
-        $.messager.alert('操作提示','url地址不能为空','info');
-    }
-    var infos = $(datagrid).datagrid('getSelections');
-    if(infos.length == 0) return false;
-    var ids = [];
-    $.each(infos,function(n,m){
-        var id= m[idFiled];
-        ids.push(id);
-    });
-    ids = ids.join(',');
-    var data = {};
-    data[idFiled] = ids;
+    options.parsedata(request);
+    this.add_edit.options = options;
     $.ajax({
-        url:url,
+        url:options.url,
         type:'post',
-        data:data,
+        dataType:'json',
+        data:request,
         success:function(data){
-            $.messager.alert('结果提示',data.message,'info');
-            $('#datagrid').datagrid('reload',{
-                areaid:module.areaid,
-                rand:Math.random()
-            });
+            options.success(data);
         },
         error:function(data){
-            $('#dialog').dialog('close');
+            options.error(data);
             $.messager.alert('操作提示','网络故障','info');
+        },
+        complete:function(r,s){
+            if(options.dialog) $(options.dialog).dialog('close');
+            App.prototype.linkbutton(options.linkbutton,'enable');
         }
     });
 }
+//增加修改函数参数初始化
+App.prototype.add_edit.defaults = {
+    form:false,             //相关表单
+    dialog:'#dialog',       //相关dialog
+    url:false,              //发送地址
+    linkbutton:false,       //相关按钮
+    parsedata:function(data){}, //数据分析
+    success:function(data){},   //成功后
+    error:function(data){}      //发送失败后
+
+};
+//删除
+App.prototype.remove = function(params){
+    var options = $.extend(App.prototype.remove.defaults,params);
+    this.linkbutton(options.linkbutton,'disable');
+    if(options.url == ''){
+        $.messager.alert('操作提示','url地址不能为空','info');
+        this.linkbutton(options.linkbutton,'enable');
+        return false;
+    }
+    var data = {};
+    if(options.datagrid){               //如果有datagrid
+        var infos = $(options.datagrid).datagrid('getSelections');
+        if(infos.length == 0) return false;
+        var ids = [];
+        $.each(infos,function(n,m){
+            ids.push(m[options.idFiled]);
+        });
+        ids = ids.join(',');
+        data[options.idFiled] = ids;
+    }
+    options.parsedata(data);
+    $.ajax({
+        url:options.url,
+        type:'post',
+        data:data,
+        dataType:'json',
+        success:function(data){
+            options.success(data);
+            if(data.message) $.messager.alert('结果提示',data.message,'info');
+        },
+        error:function(data){
+            options.error(data);
+            $.messager.alert('操作提示','网络故障','info');
+        },
+        complete:function(r,s){
+            App.prototype.linkbutton(options.linkbutton,'enable');
+        }
+    });
+}
+//删除方法默认值
+App.prototype.remove.defaults = {
+    url:'',         //url地址
+    idFiled:'id',     //标识主键
+    datagrid:'#datagrid',    //datagrid表格
+    linkbutton:false,  //相关按钮
+    dialog:false,      //dialog
+    parsedata:function(data){}, //分析数据
+    error:function(data){},     //错误方法
+    success:function(data){}   //成功方法
+};
+//搜索
+App.prototype.search = function(param){
+    var options = $.extend(App.prototype.search.defaults,param);
+    this.linkbutton(options.linkbutton,'disable');
+    var data = {};
+    if(options.form)  data = this.serializeJson(options.form);
+    options.parsedata(data);
+    this.search.options = options;
+    if(options.ajax){
+        $.ajax({
+            url:options.url,
+            type:'post',
+            dataType:'json',
+            data:data,
+            success:function(result){
+                options.success(result);
+                if(data.message) $.messager.alert('结果提示',data.message,'info');
+            },
+            error:function(info){
+                options.error(info);
+                $.messager.alert('提示','网络发生错误！','info');
+            },
+            complete:function(r,s){
+                App.prototype.linkbutton(options.linkbutton,'enable');
+            }
+        })
+    }else{
+        var option = $(options.datagrid).datagrid('options');
+        option.showDatagrid = options.showDatagrid;
+        option.otherView = options.otherView;
+        $(options.datagrid).datagrid('load',data);
+        App.prototype.linkbutton(options.linkbutton,'enable');
+    }
+}
+App.prototype.search.defaults = {
+    ajax:false,         //是否为ajax搜索
+    url:null,           //当ajax为true时生效
+    datagrid:null,
+    treegrid:null,
+    showDatagrid:true,  //是否显示datagrid
+    form:null,          //查询表单
+    linkbutton:null,    //相关按钮
+    parsedata:function(data){}, //解析参数
+    otherView:function(data){}, //显示的信息 当showDatagrid 为false时生效,
+    success:function(data){},   //为ajax时生效
+    error:function(data){}      //为ajax时生效
+};
+//表格
+App.prototype.datagrid = function(target,params){
+    var options = $.extend(App.prototype.datagrid.defaults,params);
+    $(target).datagrid(options);
+}
+//设置表格默认属性
+App.prototype.datagrid.defaults = {
+    fitColumns: true,
+    rownumbers: true,
+    fit: true,
+    pageSize:'20',
+    pagination: true,
+    showDatagrid:true,  //是否显示datagrid表格 自定义属性
+    otherView:function(data){}, //自定义属性,显示的信息 当showDatagrid 为false时生效
+    loadFilter:function(data){
+        var options = $(this).datagrid('options');
+        if(!options.showDatagrid){
+            var string = options.otherView(data);
+            $(this).parent('.datagrid-view').children('.datagrid-view1').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').find('.datagrid-header').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('.datagrid-body').html(string);
+        }
+        if(options.showDatagrid && data.total > 0){
+            $(this).parent('.datagrid-view').children('.datagrid-view1').show();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left','').find('.datagrid-header').show();
+        }
+        if(data.error){
+            var info = {};
+            info.total = 0;
+            info.rows = [];
+            info.error = data.error;
+            return info;
+        }
+        return data;
+    },
+    onLoadSuccess: function(data) {
+        if(data.total == 0 && !$(this).datagrid('options').showDatagrid){
+            $(this).parent('.datagrid-view').find('div.datagrid-view1').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2');
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({'color':'#F00','text-align':'center','font-size':'20px'});
+        }
+        if(data.error){
+            $.messager.alert('操作提示', data.error, 'info');
+        }
+    },
+    onLoadError:function(){
+        $.messager.alert('提示','网络发生错误！','info');
+    }
+};

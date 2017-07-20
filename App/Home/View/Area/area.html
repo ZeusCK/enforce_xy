@@ -11,7 +11,7 @@ app.tp.areaname = "{:$areaname}";
 <block name="main">
     <div class="easyui-layout" fit="true">
         <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
-            <a href="javascript:void(0)" onclick="module.remove()" class="easyui-linkbutton" iconCls="icon icon-delete"
+            <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" iconCls="icon icon-delete"
                 style="background-color: #00A8E9;">部门删除</a>
             <a href="javascript:void(0)" onclick="module.link()" class="easyui-linkbutton" iconCls="icon icon-link"
                 style="background-color: #00A8E9;">部门联级</a>
@@ -27,7 +27,7 @@ app.tp.areaname = "{:$areaname}";
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
-                部门名称: <input id="areaname"  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
+                部门名称: <input id="areaname" name="areaname" class="easyui-textbox" data-options="height:22"  style="width:168px"/>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
         </form>
         <a href="javascript:void(0)" class="easyui-linkbutton"
@@ -35,8 +35,6 @@ app.tp.areaname = "{:$areaname}";
         当前部门：<span id="mu_area">无</span></a>
         <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <!-- <a href="javascript:void(0)" onclick="module.remove()" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
-        删除</a> -->
     </div>
 <!-- 增加 -->
     <div id="addDialog" class="easyui-dialog" title="添加部门" buttons="#addButtons"
@@ -46,18 +44,33 @@ app.tp.areaname = "{:$areaname}";
             <div class="form_m"><div for="areaname" class="form_label">部门名称 : </div>
                 <input class="form_in easyui-textbox" type="text" name="areaname" required="true"/></div>
             <div class="form_m"><div for="areacode" class="form_label">部门编号 : </div>
-                <input class="form_in easyui-textbox" type="text" name="areacode" required="true"/></div>
+                <input class="form_in easyui-textbox" type="text" name="areacode"/></div>
             <div class="form_m"><div for="rperson" class="form_label">联系人 : </div>
                 <input class="form_in easyui-textbox" type="text" name="rperson"/></div>
             <div class="form_m"><div for="rphone" class="form_label">联系方式 : </div>
                 <input class="form_in easyui-textbox" type="text" name="rphone"/></div>
+            <div class="form_m" style="text-align: center;">
+                <div><span style="color: red;">接下来的选项很重要用于权限自动分配</span></div>
+                <div><span style="color: red;">一旦添加将无法修改！</span></div>
+            </div>
+            <div class="form_m">
+                <div for="rphone" class="form_label">部门类型 : </div>
+                <select class="easyui-combobox form_in" id="add_areatype" data-options="height:22,editable:false,panelHeight:68"
+                    name="areatype" style="width: 180px;">
+                    <option value="">无</option>
+                    <option value="0">交警</option>
+                    <option value="1">其他</option>
+                </select>
+            </div>
+            <div class="form_m"><div for="code" class="form_label">标识 : </div>
+                <input class="form_in easyui-textbox" type="text" name="code" data-options="prompt:'用于公安与交警进行关联'"></div>
             <div class="form_m" style="display: none"><div for="fatherareaid" class="form_label">上级部门 : </div>
                 <input class="form_in easyui-textbox" type="text" name="fatherareaid">
             </div>
     	</form>
     </div>
     <div id="addButtons">
-    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.add()" style="width:90px">确认</a>
+    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
             $('#addDialog').dialog('close')" style="width:90px">取消</a>
     </div>
@@ -70,18 +83,29 @@ app.tp.areaname = "{:$areaname}";
             <div class="form_m"><div for="areaname" class="form_label">部门名称 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="areaname" required="true"/></div>
             <div class="form_m"><div for="areacode" class="form_label">部门编号 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="areacode" required="true"/></div>
+                <input class=" form_in easyui-textbox" type="text" name="areacode"/></div>
             <div class="form_m"><div for="rperson" class="form_label">联系人 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="rperson"/></div>
             <div class="form_m"><div for="rphone" class="form_label">联系方式 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="rphone"/></div>
+            <!-- <div class="form_m">
+                <div for="type" class="form_label">部门类型 : </div>
+                <select class="easyui-combobox form_in" data-options="height:22,editable:false,panelHeight:68,readonly:true"
+                    name="areatype" style="width: 180px;">
+                    <option value="">无</option>
+                    <option value="0">交警</option>
+                    <option value="1">其他</option>
+                </select>
+            </div>
+            <div class="form_m"><div for="code" class="form_label">标识 : </div>
+                <input class="form_in easyui-textbox" type="text" name="code" data-options="prompt:'用于公安与交警进行关联',readonly:true"></div> -->
             <div class="form_m" style="display: none"><div for="fatherareaid" class="form_label">上级部门 : </div>
                 <input class="form_in easyui-textbox" type="text" name="fatherareaid">
             </div>
         </form>
     </div>
     <div id="editButtons">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit()" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">确认</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
                     $('#editDialog').dialog('close')" style="width:90px">取消</a>
     </div>

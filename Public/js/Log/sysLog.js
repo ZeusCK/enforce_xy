@@ -3,12 +3,13 @@ var judgeTime = new Time(new Date(), 0);
 var module = {};
 module.params = {};
 //导出
-module.exports = function() {
+module.exports = function(target) {
     var exportInfo = {};
     exportInfo.datagrid = '#datagrid';
     exportInfo.params = module.params;
     exportInfo.delFields = ['id'];
-    app.exportExcel(exportInfo);
+    exportInfo.linkbutton = target;
+    app.extra('export',exportInfo);
 };
 $(function() {
     var time = new Date();
