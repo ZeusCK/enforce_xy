@@ -145,7 +145,7 @@ class ApplyController extends CommonController
         if($status == 1){
             $row = $db->where($where)->find();
             $codes = explode(',',$row['codes']);
-            $appWhere = $this->where_key_or($codes,'jybh');
+            $appWhere[] = $this->where_key_or($codes,'jybh');
             $time = explode(' ',$row['from_time']);
             $btime = $time[0].' 00:00:00';
             $etime = $time[0].' 23:59:59';

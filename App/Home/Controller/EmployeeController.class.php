@@ -406,21 +406,44 @@ class EmployeeController extends CommonController
         //$this->ajaxReturn(g2us($empInfo));
         if($areaInfo['type'] != 0){            //如果不是交警部门
             if($roleInfo['level'] == 0 || $roleInfo['level'] == 1){      //系统管理员,市局管理员,拥有全部
-                $careas = array();
                 $careas = $areadb->getField('areaid',true);             //拥有全部权限
             }else{
-                if($areaInfo['code'] != ''){        //如果该部门拥有标识代码
+                $other = $this->get_link_area($careas);
+                $careas = array_merge($careas,$other);
+                /*if($areaInfo['code'] != ''){        //如果该部门拥有标识代码
                     $areawhere = array('code'=>$areaInfo['code'],'type'=>0);
                     $extraAreaInfo = $areadb->where($areawhere)->find();
                     if($extraAreaInfo){
                         $cpeareas = $areaAction->carea($extraAreaInfo['areaid']);     //交警部门的子集
                         $careas = array_unique(array_merge($careas,$cpeareas));
                     }
-                }
+                }*/
             }
         }
         $data['userarea'] = implode(',',$careas);
         return $empdb->where('empid='.$empid)->save($data) ? true : false;
+    }
+    /**
+     * 得到所有相关联的部门
+     * @param  array $areas 需要进行关联的部门
+     * @return array        关联的部门
+     */
+    public function get_link_area($areas)
+    {
+        if($areas == '' || empty($areas)) return array();
+        $areadb = D($this->models['area']);
+        $query[] = $this->where_key_or($areas,'areaid');
+        $query['code'] = array('<>','');
+        $codes = $areas->where($query)->getField('code',true);      //获取不为空的所有codes
+        $tp_query[] = $this->where_key_or($codes,'code');
+        $tp_query['type'] = 0;                                      //获取相关交警
+        $tp_area = $areadb->where($tp_query)->getField('areaid',true);
+        $allAreas = array();
+        $areaAction = A($this->actions['area']);
+        foreach ($tp_area as $value) {
+            $allAreas = array_merge((array)$areaAction->carea($value),$allAreas);
+        }
+        return array_unique($allAreas);
     }
     /**
      * 调阅的树
@@ -445,7 +468,7 @@ class EmployeeController extends CommonController
         }else{
             $areas = explode(',', session('userarea'));
         }
-        $areawhere = $this->where_key_or($areas,'areaid');
+        $areawhere[] = $this->where_key_or($areas,'areaid');
         $allareas = $areaDb->where($areawhere)->select();
 
         $allowareas = array();
@@ -462,7 +485,7 @@ class EmployeeController extends CommonController
 
         //查询需要显示的警员
         $empDb = D($this->models['employee']);
-        $where = $this->where_key_or($allowareas,'areaid');
+        $where[] = $this->where_key_or($allowareas,'areaid');
         $emps = $empDb->where($where)->select();
         $empAreaTree = $this->emp_tree($allareas,$emps);
         S(session('user').'apply_tree',g2us($empAreaTree),5*60);

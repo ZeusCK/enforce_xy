@@ -71,6 +71,7 @@
   //pending=false;
 
   file=document.getElementsByName('mof')[0].files[0];
+  console.log(file);
   //filename = file.name;
   if(!file){
    alert('请选择文件');
@@ -124,6 +125,7 @@
 　　　　　　　
 　　　　　　　//分割文件核心部分slice
    blob=file.slice(start,end);
+   console.log(blob);
    fd=new FormData();
    fd.append('mof',blob);
    fd.append('test',file.name);

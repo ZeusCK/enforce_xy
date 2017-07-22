@@ -30,7 +30,7 @@ class FourGenController extends CommonController
             $this->ajaxReturn($emp_gps_info);
         }
         $gpsdb = D($this->models['gpsinfo']);
-        $where = $this->where_key_or($emps['allowCodes'],'g.jybh');
+        $where[] = $this->where_key_or($emps['allowCodes'],'g.jybh');
         $where['gps_time'] = array('GT',date('Y-m-d').' 00:00:00');
         $temtable = $gpsdb->table('enforce.gps_info as g')->field('jybh,max(gps_time) as update_time')->where($where)->group('jybh')->select(false);
         $where[] = 'gps_time = update_time';

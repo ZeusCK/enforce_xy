@@ -106,7 +106,7 @@ class MediaController extends CommonController
         $db = D($this->models['pe_video_list']);
         //检索文件是不要用in  没有索引是全文检索  速度会很慢
         if(!empty($where)){
-            $where = array_merge($where,$this->where_key_or($allowCodes,'jybh'));
+            $where = array_merge($where,(array)$this->where_key_or($allowCodes,'jybh'));
         }
         if($field != '')  $db = $db->field($field);
         $data = $db->where($where)->group($group)->order($order)->select();
@@ -166,9 +166,9 @@ class MediaController extends CommonController
             $db = D($this->models['pe_video_list']);
         }
         if(!empty($where)){
-            $where = array_merge($where,$this->where_key_or($allowCodes,'jybh'));
+            $where = array_merge($where,(array)$this->where_key_or($allowCodes,'jybh'));
         }else{
-            $where = $this->where_key_or($allowCodes,'jybh');
+            $where[] = $this->where_key_or($allowCodes,'jybh');
         }
         $data = $db->where($where)->order($order)->page($page,$rows)->select();
         $count = $db->where($where)->count('jybh');
@@ -181,7 +181,7 @@ class MediaController extends CommonController
     {
         $db = D($this->models['pe_video_list']);
         if($field != '')  $db = $db->field($field);
-        $where = array_merge($where,$this->where_key_or($jybhs,'jybh'));
+        $where = array_merge($where,(array)$this->where_key_or($jybhs,'jybh'));
         //删除无意义的where语句
         foreach ($where as $key => &$value) {
             if($value == '' || empty($value)){
@@ -205,7 +205,7 @@ class MediaController extends CommonController
     {
         $db = D($this->models['pe_video_list']);
         if($field != '')  $db = $db->field($field);
-        $keyWhere = $this->where_key_or($areaids,'areaid');
+        $keyWhere[] = $this->where_key_or($areaids,'areaid');
         if($iscode) $keyWhere[0] .= ' OR jybh="'.session('code').'"';
         $where = array_merge($where,$keyWhere);
         //删除无意义的where语句
@@ -371,7 +371,7 @@ class MediaController extends CommonController
             $userAreas = array_intersect($show,$userAreas);
         }
         //准备初始化的显示数据
-        $showWhere = $this->where_key_or($userAreas,'areaid');
+        $showWhere[] = $this->where_key_or($userAreas,'areaid');
         //判断查询区域是否在自己的所属区域
         $initInfos = $areadb->field('areaid,areaname,fatherareaid as _parentId')->where($showWhere)->select();
         $satInfo = array();
@@ -476,7 +476,7 @@ class MediaController extends CommonController
         /*if(empty($showAreas)){
             $showAreas[] = $showpareaid;
         }*/
-        $showWhere = $this->where_key_or($showAreas,'areaid');
+        $showWhere[] = $this->where_key_or($showAreas,'areaid');
         //准备初始化的显示数据
         $initAreas = $areadb->where($showWhere)->getField('areaid,areaname');
         $initData = array();
@@ -485,7 +485,7 @@ class MediaController extends CommonController
             $initData[$areaid]['areaname'] = $areaname;         //x轴
         }
         $iscode =  in_array(session('areaid'), $showAreas) ? true : false;
-        $empWhere = $this->where_key_or($areaids,'areaid');
+        $empWhere[] = $this->where_key_or($areaids,'areaid');
         $empnum = $empdb->where($empWhere)->count('empid');
         if(!in_array(session('areaid'),$areaids) && in_array(session('areaid'),$showAreas)){
             $empnum = $empnum + 1;
@@ -626,7 +626,7 @@ class MediaController extends CommonController
         $wjbhs = explode(',',$request['wjbh']);
         $this->write_log('更新文件'.$request['wjbh']);
         unset($request['wjbh']);
-        $where = $this->where_key_or($wjbhs,'wjbh');
+        $where[] = $this->where_key_or($wjbhs,'wjbh');
         $db = D($this->models['pe_video_list']);
         $result = $db->getTableEdit($where,u2gs($request));
         $this->ajaxReturn($result);
@@ -636,7 +636,7 @@ class MediaController extends CommonController
     {
         $request = I();
         $wjbhs = explode(',',$request['wjbh']);
-        $where = $this->where_key_or($wjbhs,'wjbh');
+        $where[] = $this->where_key_or($wjbhs,'wjbh');
         $db = D($this->models['pe_video_list']);
         $result = $db->getTableDel($request);
         $this->write_log('删除文件'.$request['wjbh']);

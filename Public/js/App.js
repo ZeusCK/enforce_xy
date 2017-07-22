@@ -219,16 +219,16 @@ App.prototype.extra = function(method,param){
     this.extra.methods[method](param);
 }
 App.prototype.extra.methods = {
-    remove:function(param){
-        return App.prototype.remove(param);
-    },
-    export:function(param){
+    'export':function(param){
         return App.prototype.exportExcel(param);
     },
-    add_edit:function(param){
+    'add_edit':function(param){
         return App.prototype.add_edit(param);
     },
-    search:function(param){
+    'remove':function(param){
+        return App.prototype.remove(param);
+    },
+    'search':function(param){
         return App.prototype.search(param);
     }
 };
@@ -356,6 +356,8 @@ App.prototype.add_edit = function(params){
         data:request,
         success:function(data){
             options.success(data);
+            if(data.message) $.messager.alert('结果提示',data.message,'info');
+            if(options.datagrid) $(options.datagrid).datagrid('reload',options.queryParam);
         },
         error:function(data){
             options.error(data);
@@ -369,8 +371,10 @@ App.prototype.add_edit = function(params){
 }
 //增加修改函数参数初始化
 App.prototype.add_edit.defaults = {
+    queryParam:{},          //更新datagrid的参数
+    datagrid:null,          //成功后更新datagrid
     form:false,             //相关表单
-    dialog:'#dialog',       //相关dialog
+    dialog:null,       //相关dialog
     url:false,              //发送地址
     linkbutton:false,       //相关按钮
     parsedata:function(data){}, //数据分析
@@ -393,10 +397,10 @@ App.prototype.remove = function(params){
         if(infos.length == 0) return false;
         var ids = [];
         $.each(infos,function(n,m){
-            ids.push(m[options.idFiled]);
+            ids.push(m[options.idField]);
         });
         ids = ids.join(',');
-        data[options.idFiled] = ids;
+        data[options.idField] = ids;
     }
     options.parsedata(data);
     $.ajax({
@@ -407,6 +411,7 @@ App.prototype.remove = function(params){
         success:function(data){
             options.success(data);
             if(data.message) $.messager.alert('结果提示',data.message,'info');
+            if(options.datagrid) $(options.datagrid).datagrid('reload',options.queryParam);
         },
         error:function(data){
             options.error(data);
@@ -420,8 +425,9 @@ App.prototype.remove = function(params){
 //删除方法默认值
 App.prototype.remove.defaults = {
     url:'',         //url地址
-    idFiled:'id',     //标识主键
-    datagrid:'#datagrid',    //datagrid表格
+    idField:'id',     //标识主键
+    datagrid:null,    //datagrid表格
+    queryParam:{},          //更新datagrid时额外参数
     linkbutton:false,  //相关按钮
     dialog:false,      //dialog
     parsedata:function(data){}, //分析数据
@@ -511,13 +517,13 @@ App.prototype.datagrid.defaults = {
         return data;
     },
     onLoadSuccess: function(data) {
-        if(data.total == 0 && !$(this).datagrid('options').showDatagrid){
+        if(data.total == 0 && $(this).datagrid('options').showDatagrid){
             $(this).parent('.datagrid-view').find('div.datagrid-view1').hide();
             $(this).parent('.datagrid-view').children('.datagrid-view2');
             $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({'color':'#F00','text-align':'center','font-size':'20px'});
         }
         if(data.error){
-            $.messager.alert('操作提示', data.error, 'info');
+            $.messager.alert('操作提示',data.error,'info');
         }
     },
     onLoadError:function(){

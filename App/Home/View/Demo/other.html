@@ -5,21 +5,106 @@
     </style>
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/Case/play_case.css">
 <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css">
 </block>
 <block name="src">
+<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.min.js"></script>
 <script type="text/javascript">
 $(function(){
+
     $('#webshell').click(function(){
         try{
             window.open('Webshell://aa');
         }catch(e){
 
         }
-    })
+    });
+    $('#test').click(function(){
+        var files = $('#uploader')[0].files[0];
+        var post_lenght = 2*1024*1000,
+            file_slice,
+            start;
+        var file_name = files.name; //文件名
+        file_slice = files.slice(0,post_lenght);
+        var postData = {};
+        postData.name = file_name;
+        postData.file_slice = file_slice;
+        /*$('#testf').form('submit',{
+            type:'post',
+            url:'/enforce/upload.php',
+            onSubmit:function(param){
+                param = $.extend(param,{'file_slice':file_slice});
+                console.log(param);
+                //param.append = ('file_slice',file_slice);
+            },
+            success:function(data){
+                console.log(data);
+            }
+        });*/
+        var formData = new FormData();
+        formData.append('file_slice',file_slice);
+        console.log(formData);
+        $.ajax({
+            type: 'post',
+            url: '/enforce/upload.php',
+            data: formData,
+            dataType:'json',
+            contentType: false,// 当有文件要上传时，此项是必须的，否则后台无法识别文件流的起始位置(详见：#1)
+            processData: false,// 是否序列化data属性，默认true(注意：false时type必须是post，详见：#2)
+            success: function(data) {
+                console.log(data);
+            }
+        })
+
+        console.log(postData);
+        console.log(file_slice);
+    });
+   /* $('#testf').form('submit',{
+        onSubmit:function(param){
+            param.file_slice:file_slice
+        },
+        success:function(data){
+            console.log(data);
+        }
+    });*/
+    var uploader = WebUploader.create({
+
+    // swf文件路径
+    swf: '__PUBLIC__/plugins/webuploader/Uploader.swf',
+
+    // 文件接收服务端。
+    server: '/enforce/upload.php',
+    // 开起分片上传。
+    chunked: true,
+    // 选择文件的按钮。可选。
+    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+    pick: '#picker',
+    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+    resize: false
+});
+$('#ctlBtn').click(function(){
+    uploader.upload();
+})
 })
 </script>
 </block>
 <block name="main">
+<div id="uploader" class="wu-example">
+    <!--用来存放文件信息-->
+    <div id="thelist" class="uploader-list"></div>
+    <div class="btns">
+        <div id="picker">选择文件</div>
+        <button id="ctlBtn" class="btn btn-default">开始上传</button>
+    </div>
+</div>
+
+<form enctype="multipart/form-data" id="ss" method="post">
+    <input type="file" name="uploader" id="uploader">
+</form>
+<form enctype="multipart/form-data" id="testf" method="post">
+    <input type="text" name="test">
+</form>
+<button id="test">test</button>
 <a href="#" id="webshell">Wheshell</a>
 <a href="ftp:ofe|u|http://example.com/myTestDocument.docx">Wheshell</a>
 </block>

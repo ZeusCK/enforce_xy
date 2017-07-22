@@ -70,7 +70,7 @@ class CaseController extends CommonController
         $request['create_time'] = date('Y-m-d H:i:s');  //创建时间
         //更新媒体表
         $pevideodb = D($this->models['pe_video_list']);
-        $where = $this->where_key_or(explode(',', I('wjbh')),'wjbh');
+        $where[] = $this->where_key_or(explode(',', I('wjbh')),'wjbh');
         $data['mark'] = I('pe_name').' '.I('mark');
         $pevideodb->getTableEdit($where,u2gs($data));
         //新增数据
@@ -95,7 +95,7 @@ class CaseController extends CommonController
         $request['uniqid'] = I('uniqid');
         $casedb = D($this->models['case']);
         $mediadb = D($this->models['pe_video_list']);
-        $caseWhere = $this->where_key_or(explode(',',$request),'uniqid');
+        $caseWhere[] = $this->where_key_or(explode(',',$request),'uniqid');
         $wjbh = $casedb->where($caseWhere)->getField('wjbh',true);
         $wjbh = implode(',', $wjbh);
         $mediaWhere = $this->where_key_or(explode(',',$wjbh),'wjbh');
@@ -116,7 +116,7 @@ class CaseController extends CommonController
         $searchAreas = $areas['areaids'];   //搜索数据
         $showAreas = $areas['userAreas'];   //显示数据
         //准备初始化的显示数据
-        $showWhere = $this->where_key_or($showAreas,'areaid');
+        $showWhere[] = $this->where_key_or($showAreas,'areaid');
         $areadb = D($this->models['area']);
         //判断查询区域是否在自己的所属区域
         $initInfos = $areadb->field('areaid,areaname,fatherareaid as _parentId')->where($showWhere)->select();
@@ -134,7 +134,7 @@ class CaseController extends CommonController
                           'empnum'=>0,'workemp'=>0,'administration'=>0,'criminal'=>0);
         $empdb = D($this->models['employee']);
         $casedb = D($this->models['case']);
-        $where = $this->where_key_or($searchAreas,'areaid');
+        $where[] = $this->where_key_or($searchAreas,'areaid');
         if(!in_array($initInfo['areaid'],$searchAreas) && in_array(session('areaid'),$showAreas)){
             $where = ' OR code="'.session('code').'"';
         }
@@ -192,7 +192,7 @@ class CaseController extends CommonController
             $res['error'] = '没有警员可查看！';
             $this->ajaxReturn($res);
         }
-        $where = $this->where_key_or($allowCodes,'jybh');
+        $where[] = $this->where_key_or($allowCodes,'jybh');
         if($request['case_code']) $where['case_code'] = array('like','%'.$request['case_code'].'%');    //案件编号
         if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
         if($request['pe_code']) $where['pe_code'] = array('like','%'.$request['pe_code'].'%');    //警情编号
@@ -221,7 +221,7 @@ class CaseController extends CommonController
         $caseWhere['uniqid'] = $request['uniqid'];
         $caseInfo = $casedb->where($caseWhere)->find();
         $wjbh = $caseInfo['wjbh'];
-        $mediaWhere = $this->where_key_or(explode(',',$wjbh),'wjbh');
+        $mediaWhere[] = $this->where_key_or(explode(',',$wjbh),'wjbh');
         $data = $mediadb->where($mediaWhere)->select();
         $res = array();
         $res['total'] = count($data);

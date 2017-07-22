@@ -118,7 +118,7 @@ class CommonController extends Controller {
         foreach ($finfos as $value) {
             if(false != $k = array_search($value[$l_arr[0]],$pids) ) unset($pids[$k]);
         }
-        $where = $this->where_key_or($pids,$l_arr[0]);
+        $where[] = $this->where_key_or($pids,$l_arr[0]);
         $datas = $db->where($where)->select();
         foreach ($datas as $key=>$value) {
             if(!in_array($value[$l_arr[0]],$allId)){
@@ -278,21 +278,17 @@ class CommonController extends Controller {
      */
     public function where_key_or($data,$field)
     {
-        $where = array();
         $count = count($data);
         if($count == 0){
-            $where[] = $field.'='.'""';
-            return $where;
+            return $field.'='.'""';
         }
         if($count == 1){
-            $where[] = $field.'='."'".$data[0]."'";
-            return $where;
+            return $field.'='."'".$data[0]."'";
         }
         foreach ($data as &$value) {
             $value = $field.'='."'".$value."'";
         }
-        $where[] = implode(' OR ',$data);
-        return $where;
+        return implode(' OR ',$data);
     }
     /**
      * 根据数据生成excel保存到服务器 返回保存地址

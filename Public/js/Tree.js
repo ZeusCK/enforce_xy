@@ -1,4 +1,4 @@
-var Tree = function(dom){
+function Tree(dom){
     this.dom = dom;
     this.data = null;
 }

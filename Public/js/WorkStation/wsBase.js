@@ -1,18 +1,14 @@
 var things = {};
+things.areaid = app.tp.areaid;
+things.areaname = app.tp.areaname;
 things.datagridUrl = app.url('WorkStation/ws_base_list');
 things.addUrl = app.url('WorkStation/ws_base_add');
 things.editUrl = app.url('WorkStation/ws_base_edit');
 things.removeUrl = app.url('WorkStation/ws_base_remove');
-things.statusUrl = app.url('WorkStation/ws_status_statistics');
+var tree = new Tree('#area_list');
 things.show = function(){
     $('#searchForm').form('reset');
     $('#datagrid').datagrid('load',{
-        rand:Math.random()
-    });
-}
-things.callback = function(data){
-    $.messager.alert('操作提示',data.message,'info');
-    $('#datagrid').datagrid('reload',{
         rand:Math.random()
     });
 }
@@ -31,89 +27,89 @@ things.editBar = function(){
         $('#editDialog').dialog('open');
     }
 }
-things.change_info = function(form,url,dialog){
-    var params = app.serializeJson(form);
-    if(!$(form).form('validate')){
-        //$.messager.alert('操作提示','有未满足条件的选项，无法提交','info');
-        return false;
-    }
-    $.ajax({
-        url:url,
-        type:'post',
-        dataType:'json',
-        data:params,
-        success:function(data){
-            $(dialog).dialog('close');
-            things.callback(data);
-        },
-        error:function(data){
-            $(dialog).dialog('close');
-            $.messager.alert('操作提示','网络故障','info');
-        }
+things.add = function(target){
+    app.extra('add_edit',{
+        url:things.addUrl,
+        form:'#addForm',
+        dialog:'#addDialog',
+        datagrid:'#datagrid',
+        linkbutton:target
     });
 }
-things.add = function(){
-    things.change_info('#addForm',things.addUrl,'#addDialog');
-}
-things.edit = function(){
-    things.change_info('#editForm',things.editUrl,'#editDialog');
-}
-things.remove = function(){
-    var infos = $('#datagrid').datagrid('getSelections');
-    var ids = [];
-    if(infos.length == 0)
-        return false;
-
-    $.each(infos,function(n,m){
-        var id= m.id;
-        ids.push(id);
+things.edit = function(target){
+    app.extra('add_edit',{
+        url:things.editUrl,
+        form:'#editForm',
+        dialog:'#editDialog',
+        datagrid:'#datagrid',
+        linkbutton:target
     });
-    ids = ids.join(',');
-
-    $.ajax({
+}
+things.remove = function(target){
+    app.extra('remove',{
+        idField:'gzz_ip',
         url:things.removeUrl,
-        type:'post',
-        data:{
-            id:ids
-        },
-        success:function(data){
-            things.callback(data);
-        }
+        datagrid:'#datagrid',
+        linkbutton:target
     });
 }
 things.search = function(){
-  var data = app.serializeJson("#searchForm");
-  $('#datagrid').datagrid('load',data);
+    app.extra('search',{
+        form:'#searchForm',
+        datagrid:'#datagrid'
+    });
 }
-$(function(){
-    $('#datagrid').datagrid({
-        url:things.datagridUrl,
-        title:'工作站',
-        fitColumns:true,
-        rownumbers:true,
-        fit:true,
-        pageSize:15,
-        pageNumber:1,
-        pageList:[2,5,10,15,20,25,30,40,50],
-        columns:[[
-          { field: 'id', title: 'id', checkbox: true },
-          {field:'gzz_ip',title:'工作站IP',align:'center'},
-          {field:'dz',title:'地址', width: 200, align:'center'},
-          {field: 'hzr', title: '负责人', width: 200, align: 'center' },
-          {field: 'dh', title: '负责人电话', width: 200, align: 'center' },
-          {field:'zxztname',title:'在线状态',width:200,align:'center'},
-          {field: 'ztsj', title: '最后在线时间', width: 200, align: 'center' },
-          {field: 'qyztname', title: '启用状态', width: 200, align: 'center' }
-        ]],
-        pagination:true,
-        onLoadSuccess:function(r){
-            if(r.total==0){
-                $('div.datagrid-view').find('div.datagrid-view1').hide();
-                $('div.datagrid-view2').css('left','0');
-                $('div.datagrid-view2').find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({'color':'#F00','text-align':'center','font-size':'16px'});
-            }else if(r.error){
-                $.messager.alert('操作提示', r.error,'info');
-            }
+things.clickTree = function(node){
+    things.areaid = node.id;
+    things.areaname = node.text;
+    $('#tip_area').text(node.text);
+    $('#mu_ser').text(things.areaname);
+    app.extra('search',{
+        datagrid:'#datagrid',
+        parsedata:function(data){
+            data.areaid = things.areaid;
+        }
+    })
+}
+things.bind = function(id,choose){
+    var dz = choose ? things.areaname : '';
+    var areaid = choose ? things.areaid : 0;
+    app.extra('add_edit',{
+        datagrid:'#datagrid',
+        url:things.editUrl,
+        parsedata:function(data){
+            data.id = id;
+            data.dz = dz;
+            data.areaid = areaid;
         }
     });
+}
+$(function(){
+    app.datagrid('#datagrid',{
+        url:things.datagridUrl,
+        title:'工作站',
+        columns:[[
+          {field:'id', title: 'id', checkbox: true },
+          {field:'gzz_ip',title:'工作站IP',align:'center'},
+          {field:'dz',title:'地址', width: 200, align:'center'},
+          {field:'ztsj', title: '最后在线时间', width: 200, align: 'center' },
+          {field:'hzr', title: '负责人', width: 200, align: 'center' },
+          {field:'dh', title: '负责人电话', width: 200, align: 'center' },
+          {field:'qyztname', title: '启用状态', width: 200, align: 'center' },
+          {field:'zxztname',title:'在线状态',width:200,align:'center'},
+          {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
+                if(d.areaid == 0){
+                    return '<span style="color:#0E2D5F;cursor:pointer;" onClick="things.bind('+d.id+',true)">绑定部门</span>';
+                }else{
+                    return '<span style="color:#0E2D5F;cursor:pointer;" onClick="things.bind('+d.id+',false)">解除部门绑定</span>';
+                }
+          }}
+        ]]
+    });
+    tree.loadData();
+    $(tree.dom).tree({
+        onClick:things.clickTree
+    });
+    $('#mu_ser').text(things.areaname);
+    $('#tip_area').text(things.areaname);
 });
