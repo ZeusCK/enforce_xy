@@ -142,7 +142,7 @@ $(function(){
             //判断数组中是否拥有选中值
             if(module.allowCodes[node.code]){
                 delete(module.allowCodes[node.code]);
-                module.allowCodes.length = module.allowCodes.length - 1; 
+                module.allowCodes.length = module.allowCodes.length - 1;
                 $('#'+node.code).remove();
             }else{
                 var button = '<a id="'+node.code+'" class="emp" href="#">'+node.name+'('+node.code+')'+'</a>';

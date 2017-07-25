@@ -79,9 +79,15 @@ class CommonController extends Controller {
     {
     	if(empty($finfos)) return false;
 
+        //if(!S('chcache')) S('chcache',array());
+
         $db = D($dbc);
     	$infos = array();
     	foreach ($finfos as $key => $finfo) {
+            if(($return = S('chcache.'.$dbc.'.'.$finfo[$l_arr[0]])) && !S('update'.$dbc)){
+                //error_log('读取缓存'.'chcache.'.$dbc.'.'.$finfo[$l_arr[0]]."\r\n",3,'cache.log');
+                return $return;
+            }
     		$id = $finfo[$l_arr[0]];
     		$where[$l_arr[1]] = $id;
     		$infoc = $db->where($where)->select();
@@ -89,8 +95,12 @@ class CommonController extends Controller {
     		if(!empty($infoc)){
     			$info = $this->getChData($infoc,$dbc,$l_arr);
     		}
+            //error_log('写入缓存'.'chcache.'.$dbc.'.'.$finfo[$l_arr[0]]."\r\n",3,'cache.log');
             $infos = array_merge($info,$infos,$infoc);
+            S('chcache.'.$dbc.'.'.$finfo[$l_arr[0]],$infos);
     	}
+        $cache = array();
+
     	return $infos;
     }
     /**
@@ -110,7 +120,7 @@ class CommonController extends Controller {
         //需要查询的上级集合
         $pids = array();
         foreach ($finfos as $value) {
-            if(!in_array($value[$l_arr[1]],$pids)){
+            if(!in_array($value[$l_arr[1]],$pids) && $value[$l_arr[1]] != 0){
                 $pids[] = $value[$l_arr[1]];
             }
             $allId[] = $value[$l_arr[0]];

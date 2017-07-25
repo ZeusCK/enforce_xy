@@ -28,7 +28,11 @@ module.callback = function(data){
 module.addBar = function(){
     $('#addForm').form('reset');
     var node = $(tree.dom).tree('find',module.areaid);
-    if(node.type != ''){
+    if(node == null){
+        node = {};
+        node.type = 0;
+    }
+    if(node.type != 0){
         $('#add_areatype').combobox({readonly:true});
     }else{
         $('#add_areatype').combobox({readonly:false});
@@ -163,7 +167,7 @@ $(function(){
             rand:Math.random()
         }
     });
-    tree.loadData();
+    tree.loadData();        //管理部门的树
     $(tree.dom).tree({
         checkbox:true,
         onClick:function(node){

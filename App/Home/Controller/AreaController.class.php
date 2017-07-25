@@ -43,8 +43,10 @@ class AreaController extends CommonController
         $areaid = $request['areaid'];
         //初始数据展示限制只显示自身和下级角色
         $all_list = $this->carea($areaid);
+
         //将不属于自身部门的数据排除
         $all_list = array_intersect($all_list, $userarea);
+
         $check['areaid'] = array('in',$all_list);
         $data['total'] = 0;
         $data['rows'] = array();
@@ -59,6 +61,7 @@ class AreaController extends CommonController
                 $value['typename'] = u2g($value['typename']);
             }
         }
+        S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
@@ -90,6 +93,7 @@ class AreaController extends CommonController
             }
         }
         $this->write_log('添加'.$request['areaname']);
+        S('update'.$this->models['area'],true);     //设置部门缓存更新
         $this->ajaxReturn($result);
     }
 
@@ -134,6 +138,7 @@ class AreaController extends CommonController
             $result['message'] = '对不起,你没有权限删除这些部门';
         }
         $this->write_log('删除部门');
+        S('update'.$this->models['area'],true);     //设置部门缓存更新
         $this->ajaxReturn($result);
     }
 
@@ -144,10 +149,11 @@ class AreaController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $result = $db->getTableEdit($where,u2gs($request));
+        S('update'.$this->models['area'],true);     //设置部门缓存更新
         $this->ajaxReturn($result);
     }
     //获取自身展示部门
-    public function all_user_area()
+    public function all_user_area($type)
     {
         $db = D($this->models['area']);
         $userarea = $this->m_userarea(session('empid'));
@@ -158,6 +164,10 @@ class AreaController extends CommonController
         $data_s = array();
         if(!empty($userarea)){
             $where['areaid'] = array('in',$userarea);
+            if(isset($type)){
+                $where['type'] = $type;
+                $where['code'] = '';
+            }
             $data_f = $db->where($where)->select();
         }
         if(!empty($data_f)){
@@ -170,6 +180,24 @@ class AreaController extends CommonController
             $data = $data_f;
         }
         return $data;
+    }
+    //显示未绑定的交警部门的树
+    public function show_tp_tree()
+    {
+        $type = 1;
+        $data = $this->all_user_area($type);
+        if(!empty($data)){
+            $ids = array(0);
+            //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
+            $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+            //$L_attributes 额外需要保存的信息
+            $L_attributes = ['areacode','rperson','rphone','type','code'];
+            $icons = ['icon-application_xp_terminal','icon-application'];
+            $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
+        }else{
+            $data_tree = array();
+        }
+        $this->ajaxReturn(g2us($data_tree));
     }
     /**
      * 获取当前用户管理部门

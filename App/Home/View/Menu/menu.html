@@ -1,0 +1,67 @@
+<extend name="layouts:master" />
+<block name="link"></block>
+<block name="src">
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Menu/menu.js"></script>
+</block>
+<block name="main">
+        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" iconCls="icon icon-delete"
+            style="background-color: #00A8E9;">菜单删除</a>
+        <a href="javascript:void(0)" onclick="module.link()" class="easyui-linkbutton" iconCls="icon icon-link"
+            style="background-color: #00A8E9;">菜单联级</a>
+        <a href="javascript:void(0)" onclick="module.unlink()" class="easyui-linkbutton" iconCls="icon icon-link_break"
+            style="background-color: #00A8E9;">菜单精确</a>
+        <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" iconCls="icon icon-add"
+            style="background-color: #00A8E9;">菜单添加</a>
+        <a href="javascript:void(0)" onclick="module.addmBar()" class="easyui-linkbutton" iconCls="icon icon-add"
+            style="background-color: #00A8E9;">添加根菜单</a>
+        <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" iconCls="icon icon-edit"
+            style="background-color: #00A8E9;">菜单修改</a>
+        <div id="pointInfo" style="color: #00A8E9;margin: 5px 0;">菜单精确，精准删除整体菜单</div>
+        <ul id="menu_list"></ul>
+<!-- 增加 -->
+    <div id="addDialog" class="easyui-dialog" title="添加菜单" buttons="#addButtons"
+    data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+        <p style="color: #0E2D5F;text-align:center;font-size: 20px;"><sapn id="infomenuname"></span></p>
+        <form id="addForm" method="post">
+            <div class="form_m"><div for="menuname" class="form_label">菜单名称 : </div>
+                <input class="form_in easyui-textbox" type="text" name="name" required="true"/></div>
+            <div class="form_m"><div for="rperson" class="form_label">url : </div>
+                <input class="form_in easyui-textbox" type="text" name="url"/></div>
+            <div class="form_m"><div for="rphone" class="form_label">排序 : </div>
+                <input class="form_in easyui-textbox" type="text" name="ordernum"/></div>
+            <div class="form_m"><div for="menucode" class="form_label">菜单图标 : </div>
+                <input class="form_in easyui-textbox" type="text" name="iconcls"/></div>
+            <div class="form_m" style="display: none"><div for="pid" class="form_label">上级菜单 : </div>
+                <input class="form_in easyui-textbox" type="text" name="pid">
+            </div>
+        </form>
+    </div>
+    <div id="addButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+            $('#addDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+<!-- 修改 -->
+    <div id="editDialog" class="easyui-dialog" title="修改菜单" buttons="#editButtons"
+            data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+        <form id="editForm" method="post">
+            <div class="form_m" style="display: none"><div for="menuid" class="form_label">菜单id : </div>
+                <input class=" form_in easyui-textbox" type="text" name="id"/></div>
+            <div class="form_m"><div for="menuname" class="form_label">菜单名称 : </div>
+                <input class="form_in easyui-textbox" type="text" name="name" required="true"/></div>
+            <div class="form_m"><div for="rperson" class="form_label">url : </div>
+                <input class="form_in easyui-textbox" type="text" name="url"/></div>
+            <div class="form_m"><div for="rphone" class="form_label">排序 : </div>
+                <input class="form_in easyui-textbox" type="text" name="ordernum"/></div>
+            <div class="form_m"><div for="menucode" class="form_label">菜单图标 : </div>
+                <input class="form_in easyui-textbox" type="text" name="iconcls"/></div>
+            </div>
+        </form>
+    </div>
+    <div id="editButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+                    $('#editDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+</block>

@@ -404,7 +404,7 @@ class EmployeeController extends CommonController
         $areaAction = A($this->actions['area']);
         $careas = $areaAction->carea($areaInfo['areaid']);
         //$this->ajaxReturn(g2us($empInfo));
-        if($areaInfo['type'] != 0){            //如果不是交警部门
+        if($areaInfo['type'] != 1){            //如果不是交警部门
             if($roleInfo['level'] == 0 || $roleInfo['level'] == 1){      //系统管理员,市局管理员,拥有全部
                 $careas = $areadb->getField('areaid',true);             //拥有全部权限
             }else{

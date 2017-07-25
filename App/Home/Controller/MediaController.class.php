@@ -429,6 +429,7 @@ class MediaController extends CommonController
     //数据比对
     public function  data_comparison()
     {
+        //G('begin');
         $satType = I('satType',0);    //比对类型  0按周1按月
         $mooDarea = I('areaid','');
         $areadb = D($this->models['area']);
@@ -535,7 +536,7 @@ class MediaController extends CommonController
         $empInitData = array();
         $showEmps  = $empdb->where('areaid='.$showpareaid)->getField('code,name');     //属于本部门的警员
 
-        foreach ($showEmps as $code=>$name) {
+        foreach ((array)$showEmps as $code=>$name) {
             $empInitData[g2u($name).'('.$code.')'] = 0;
         }
         $field = 'sum(wjcd) as num,jybh,jyxm';
@@ -547,6 +548,8 @@ class MediaController extends CommonController
         //$this->ajaxReturn($empInitData);
         $res = array_merge($res,(array)$empInitData);
         arsort($res);
+        //G('end');
+        //error_log(G('begin','end',6).'s'."\r\n",3,'cache.log');
         $this->ajaxReturn($res);
     }
     /**
@@ -657,7 +660,9 @@ class MediaController extends CommonController
             $checkArr[$value[$pidFiled]][] = $key;
         }
         foreach ($data as $key => $value) {
-            if($data[$key]['_parentId'] == $root)  unset($data[$key]['_parentId']);
+            if(isset($root)){
+                if($data[$key]['_parentId'] == $root)  unset($data[$key]['_parentId']);
+            }
             if(empty($checkArr[$key])) continue;
             foreach ($checkArr[$key] as $val) {
                 foreach ($fields as $field) {

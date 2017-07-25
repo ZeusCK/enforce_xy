@@ -124,7 +124,7 @@ class WorkStationController extends CommonController
     public function ws_sat()
     {
         $db =  D($this->models['wsbase']);
-        $query['areaid'] = $this->where_key_or(explode(',',session('userarea'),'areaid')).'OR areaid=0';
+        $query[] = $this->where_key_or(explode(',',session('userarea')),'areaid').'OR areaid = 0';
         $result = $db->where($query)->field('count(id) as value,zxzt as name')->group('zxzt')->select();
         $initData = array(1=>array('value'=>0,'name'=>'在线'),0=>array('value'=>0,'name'=>'离线'));
         foreach ($result as $value) {

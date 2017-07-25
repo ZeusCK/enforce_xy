@@ -102,10 +102,8 @@
                     <option value="3">图片</option>
                     <option value="0">未知</option>
                 </select>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-calendar_view_day" plain="true" onclick="module.case_edit()" id="caseEdit">案件编辑</a>
             </div>
             <div class="search-box search-big">
-                
                 <div class="search-text"><input type="radio" name="radio" value="">上传时间:</div>
                 <input id="upS" class="easyui-datetimebox" data-options="height:22,editable:false" name="scsj[btime]" style="width:168px"/>
                 <div class="search-text">至:</div>
@@ -115,11 +113,9 @@
                         name="bzlx" style="width:181px" id="label_type">
                     <option value="">全部</option>
                     <option value="1">典型案例</option>
-                    <option value="2">涉案视图</option>
-                    <option value="3">物证视图</option>
                 </select>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports()">导出</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search(this)">搜索</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出</a>
             </div>
             <div class="search-box search-big">
                 <div class="search-text">异常数据:</div>
@@ -177,105 +173,5 @@
             <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.editOk()">确定</a>
             <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
         </div>
-    </div>
-    <div id="caseDialog" class="easyui-dialog" title="案件编辑" data-options="modal:true,closed:true" style="width: 90%;">
-        <form id="caseForm">
-            <div class="easyui-panel" data-options="title:'接处警信息'" style="padding-left: 4%;">
-                <div class="one-row">
-                    <label class="fitem">案事件名称<span class="mark">*</span></label>：<input class="easyui-textbox" style="width: 40%" name="pe_name" id="pe_name"  />
-                    <label class="fitem">警情编号<span class="mark">*</span></label>：<input class="easyui-textbox" style="width: 40%" name="pe_code" id="pe_code" />
-                </div>
-                <div class="one-row">
-                    <label class="fitem">出警单位</label>：<input class="easyui-textbox" style="width: 17%" name="areaid" />
-                    <label class="fitem">警情类型<span class="mark">*</span></label>：<select class="easyui-combobox" style="width: 16%" editable=false name="pe_type" id="pe_type"> 
-                        <option value="">全部</option>
-                        <option value="1">一般警情(6个月)</option>
-                        <option value="2">重大警情(永久)</option>
-                        <option value="3">阻碍民警执法妨碍公务(永久)</option>
-                        <option value="4">行政强制执行(永久)</option>
-                        <option value="5">当场盘问检查(6个月)</option>
-                        <option value="6">无效数据(7天)</option>
-                        <option value="7">其他(6个月)</option>
-                    </select>
-                    <label class="fitem">出警地址</label>：<input class="easyui-textbox" style="width: 40%" name="pe_address" />
-                </div>
-                <div class="one-row">
-                    <label class="fitem">警号</label>：<input class="easyui-textbox" style="width: 17%" name="jybh" />
-                    <label class="fitem">出警人</label>：<input class="easyui-textbox" style="width: 16%" name="jyxm" />
-                    <label class="fitem">设备号</label>：<input class="easyui-textbox" style="width: 17%" name="cpbh" />
-                </div>
-                <div class="one-row">
-                    <label class="fitem">出警开始时间</label>：<input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="pe_btime"/>
-                    <label class="fitem" style="margin-left:23%;">警情结束时间</label>：<input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="pe_etime" />
-                </div>
-            </div>
-            <div class="easyui-panel" data-options="title:'案件信息'" style="padding-left: 4%;">
-                <div class="one-row">
-                    <label class="fitem">案件名称</label>：<input class="easyui-textbox" style="width: 40%" name="case_name" />
-                    <label class="fitem">案件编号</label>：<input class="easyui-textbox" style="width: 40%" name="case_code" />
-                </div>
-                <div class="one-row">
-                    <label class="fitem">案件类型</label>：<select class="easyui-combobox" style="width: 17%" editable=false name="case_type">
-                        <option value="">全部</option>
-                        <option value="1">行政案件</option>
-                        <option value="2">刑侦案件</option>
-                    </select>
-                    <label class="fitem" >办案单位</label>：<input class="easyui-textbox" style="width: 16%"  />
-                    <label class="fitem">办案人</label>：<input class="easyui-textbox" style="width: 17%" name="jyxm" />
-                </div>
-
-            </div>
-            <div class="easyui-panel" data-options="title:'视频信息'" style="padding-left: 4%;">
-                <div class="one-row">
-                    <label class="fitem">视频标题</label>：<input class="easyui-textbox" style="width: 40%" name="video_title" />
-                </div>
-                <div class="one-row">
-                    <label class="fitem">采集日期</label>：<input class="easyui-datebox" data-options="height:22,editable:false"  style="width: 17%" name="cjsj" />
-                    <label class="fitem" >上传日期</label>：<input class="easyui-datebox" data-options="height:22,editable:false" style="width: 16%" name="scsj" />
-                    <label class="fitem">编辑人</label>：<input class="easyui-textbox" style="width: 17%" name="edit_code" />
-                </div>
-                <div class="one-row">
-                    <input  name="wjbh" type="hidden">
-                    <label class="fitem">备注</label>：<textarea style="width:63%;height:60px;" name="mark"></textarea>
-                </div>
-            </div>
-        </form>
-        
-        <div style="padding:10px 0 10px 45%;">
-            <a class="easyui-linkbutton" onclick="module.case_add()">保存</a>
-            <a class="easyui-linkbutton" id="upload_vedio">追加案件视频</a>
-            <a class="easyui-linkbutton" onclick="module.case_close()">关闭</a>
-        </div>
-    </div>
-    <div id="uploadDialog" class="easyui-dialog" title="视频上传" data-options="modal:true,closed:true" style="width: 40%;">
-        <form id="upload_form" name="upload_form" action="javascript:init();" method="post" enctype="multipart/form-data">
-            <div><label for="file">Please select file</label></div>
-            <div><input type="file" id="file" name="file" onchange="fileReady()"><div>
-            <input type="submit" id="submit" name="submit" value="上传">
-            <button id="clear" onclick="clearUploadFile()">清除</button>
-            <div class="upload_message_show">
-                <!--进度条-->
-                <div class="upload_bar_box">
-                    <div class="upload_bar"></div>
-                    <span class="upload_percent"></span>
-                </div>
-                <!--上传剩余时间和上传速度-->
-                <div class="upload_count">
-                    <div class="left_time">剩余时间 | 00:00:00</div>
-                    <div class="speed">100k/s</div>
-                </div>
-                <!--文件信息-->
-                <div class="upload_file_message">
-                    <div class="message_box">
-                        <div class="upload_file_name"></div>
-                        <div class="upload_file_size"></div>
-                        <div class="upload_file_type"></div>
-                        <div class="upload_file_error"></div>
-                        <div class="isCompleted"></div>
-                    </div>
-                    <div class="upload_file_preview"></div>
-                </div>
-            </div>
-        </form>
     </div>
 </block>

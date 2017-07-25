@@ -2,6 +2,7 @@ function Tree(dom){
     this.dom = dom;
     this.data = null;
 }
+//加载管理的部门 noS使用缓存  true不使用 false使用
 Tree.prototype.loadData = function (noS){
     this.init();
     var self = this;
@@ -19,37 +20,7 @@ Tree.prototype.loadData = function (noS){
         }
     });
 }
-Tree.prototype.loadUserArea = function (userid){
-    this.init();
-    var dom = this.dom;
-    var self = this;
-    $.ajax({
-        url:app.url('Area/tree_list_all')+'?&rand='+Math.random(),
-        type:'get',
-        dataType:'json',
-        data:{
-            userid:userid
-        },
-        success:function(data){
-            self.data = data;
-            $(dom).tree('loadData',data);
-        }
-    });
-}
-Tree.prototype.load_dev_area = function(){
-    this.init();
-    var dom = this.dom;
-    var self = this;
-    $.ajax({
-        url:app.url('Dev/show_dev')+'?&rand='+Math.random(),
-        type:'get',
-        dataType:'json',
-        success:function(data){
-            self.data = data;
-            $(dom).tree('loadData',data);
-        }
-    });
-}
+//加载带有警员的树
 Tree.prototype.load_emp_tree = function(){
     this.init();
     var dom = this.dom;
@@ -64,6 +35,7 @@ Tree.prototype.load_emp_tree = function(){
         }
     });
 }
+//加载目标警员能管理的树 empid  目标警员
 Tree.prototype.show_emp_manger_area = function(empid){
     this.init();
     var dom = this.dom;
@@ -81,12 +53,28 @@ Tree.prototype.show_emp_manger_area = function(empid){
         }
     });
 }
+//加载调阅管理显示的树
 Tree.prototype.show_apply_tree = function(){
     this.init();
     var dom = this.dom;
     var self = this;
     $.ajax({
         url:app.url('Employee/show_apply_tree')+'?&rand='+Math.random(),
+        type:'get',
+        dataType:'json',
+        success:function(data){
+            self.data = data;
+            $(dom).tree('loadData',data);
+        }
+    });
+}
+//加载能管理的交警部门树
+Tree.prototype.show_tp_tree = function(){
+    this.init();
+    var dom = this.dom;
+    var self = this;
+    $.ajax({
+        url:app.url('Area/show_tp_tree')+'?&rand='+Math.random(),
         type:'get',
         dataType:'json',
         success:function(data){

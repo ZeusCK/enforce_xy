@@ -1,0 +1,67 @@
+<extend name="layouts:master" />
+<block name="link"></block>
+<block name="src">
+    <script type="text/javascript" src="__PUBLIC__/js/Dictionary/dictionary.js"></script>
+</block>
+<block name="main">
+    <div class="easyui-layout" fit="true">
+        <div data-options="region:'west',title:'字典类型',iconCls:'icon-drive',split:false" style="width:40%;background:#eee;">
+            <table id="typeDatagrid" toolbar="#treeTool"></table>
+        </div>
+        <div data-options="region:'center',title:'字典明细',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
+            <table id="dataDatagrid" toolbar="#dataTool"></table>
+        </div>
+    </div>
+    <div id="treeTool">
+        <a href="javascript:void(0)" onclick="module.addBar('#typeDialog')" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
+        <a href="javascript:void(0)" onclick="module.editBar('#typeDialog')" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
+        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+    删除</a>
+    </div>
+    <div id="dataTool">
+        <a href="javascript:void(0)" onclick="module.addBar('#dataDialog')" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
+        <a href="javascript:void(0)" onclick="module.editBar('#dataDialog')" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
+        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+    删除</a>
+    </div>
+    <!-- 增加 -->
+    <div id="typeDialog" class="easyui-dialog" title="添加" buttons="#addButtons" data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+        <form id="typeForm" method="post">
+            <div id="tip_area" style="text-align: center;color:#0E2D5F;font-size: 20px;"></div>
+            <div class="form_m">
+                <div for="name" class="form_label">字典名称:</div>
+                <input class="form_in easyui-textbox" type="text" name="gzz_ip" data-options="required:true" />
+            </div>
+            <div class="form_m">
+                <div for="name" class="form_label">字典类型:</div>
+                <input class="easyui-validatebox form_in easyui-textbox" type="text" name="dz" data-options="required:true"/>
+            </div>
+        </form>
+    </div>
+    <div id="addButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#typeDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <!-- 修改 -->
+    <div id="dataDialog" class="easyui-dialog" title="修改" buttons="#editButtons" data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+        <form id="dataForm" method="post">
+            <input type="hidden" name="id" />
+            <div class="form_m">
+                <div for="name" class="form_label">字典名目:</div>
+                <input class="easyui-validatebox form_in easyui-textbox" type="text" name="gzz_ip" data-options="required:true" />
+            </div>
+            <div class="form_m">
+                <div for="name" class="form_label">字典值:</div>
+                <input class="easyui-validatebox form_in easyui-textbox" type="text" name="dz" />
+            </div>
+            <div class="form_m">
+                <div for="name" class="form_label">排序:</div>
+                <input class="easyui-validatebox form_in easyui-textbox" type="text" name="hzr" />
+            </div>
+        </form>
+    </div>
+    <div id="editButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dataDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+</block>
