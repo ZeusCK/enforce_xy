@@ -127,9 +127,8 @@ $(function() {
     });
     //初始化搜索表单
     module.init_search_form();
-    $('#datagrid').datagrid({
-        url: app.url('Case/case_list'),
-        method: 'get',
+    app.datagrid('#datagrid',{
+        url: 'Case/case_list',
         title: '数据编辑',
         onClickCell: function(r, f, v) {
             if (f == 'detail') {
@@ -137,12 +136,6 @@ $(function() {
                 module.detail(rowData.wjbh);
             }
         },
-        fitColumns: true,
-        rownumbers: true,
-        fit: true,
-        pageSize: 15,
-        pageNumber: 1,
-        pageList: [15, 20, 25, 30],
         columns: [
             [
                 { field: 'id', checkbox: true },
@@ -162,39 +155,7 @@ $(function() {
                     return '<a href="javascript:void(0)" onclick="module.play_info($(this))" name="play" tiggle="'+row.uniqid+'"></a><a href="javascript:void(0)" onclick="module.edit($(this))" name="edit" tiggle="'+row.uniqid+'"></a><a href="javascript:void(0)" onclick="" name="delete" tiggle="'+row.uniqid+'"></a>';
                 }},
             ]
-        ],
-        pagination: true,
-        loadFilter: function(data) {
-            if (data.error) {
-                $('div.datagrid-view').find('div.datagrid-view1').hide();
-                $('div.datagrid-view2').css('left', '0');
-                $('div.datagrid-view2').find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({ 'color': '#F00', 'text-align': 'center', 'font-size': '16px' });
-                var info = {};
-                info.total = 0;
-                info.rows = [];
-                return info;
-            } else {
-                return data;
-            }
-
-        },
-        onLoadSuccess: function(r) {
-            $('a[name="play"]').linkbutton({plain:true,iconCls:'icon icon-search'});
-            $('a[name="edit"]').linkbutton({plain:true,iconCls:'icon icon-edit'});
-            $('a[name="delete"]').linkbutton({plain:true,iconCls:'icon icon-delete'});
-            var a = $('.datagrid-cell-rownumber');
-            $.each(a,function(i,m){
-                m.style.width='21px';
-                m.style.padding='4px';
-            })
-            if (r.total == 0) {
-                $('div.datagrid-view').find('div.datagrid-view1').hide();
-                $('div.datagrid-view2').css('left', '0');
-                $('div.datagrid-view2').find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({ 'color': '#F00', 'text-align': 'center', 'font-size': '16px' });
-            } else if (r.error) {
-                $.messager.alert('操作提示', r.error, 'info');
-            }
-        }
+        ]
     });
 
 });

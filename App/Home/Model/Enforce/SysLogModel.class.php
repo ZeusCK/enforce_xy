@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class SysLogModel extends CommonModel{
-    protected $tablename = 'sys_log';
+    protected $tableName = 'sys_log';
 }

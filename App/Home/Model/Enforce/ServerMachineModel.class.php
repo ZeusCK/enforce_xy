@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class ServerMachineModel extends CommonModel{
-    protected $tablename = 'server_machine';
+    protected $tableName = 'server_machine';
 }

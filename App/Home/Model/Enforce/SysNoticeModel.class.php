@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class SysNoticeModel extends CommonModel{
-    protected $tablename = 'sys_notice';
+    protected $tableName = 'sys_notice';
 }

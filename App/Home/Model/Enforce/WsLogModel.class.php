@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class WsLogModel extends CommonModel{
-    protected $tablename = 'ws_log';
+    protected $tableName = 'ws_log';
 }

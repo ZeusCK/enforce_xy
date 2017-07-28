@@ -32,7 +32,7 @@ class ServerController extends CommonController
         //server_ip 服务器ip
         //areaid 部门ID
         $action =   A($this->actions['employee']);
-        $areaSql = $action->get_manger_sql($request['areaid'],0,false);
+        $areaSql = $action->get_manger_sql($request['areaid'],'areaid',false);
         $where[] = $areaSql;
         if($request['status'] != '') $where['status'] = $request['status'];
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');
@@ -70,7 +70,7 @@ class ServerController extends CommonController
         return $result;
     }
     //服务器
-    public function ws_base_edit($request)
+    public function server_edit($request)
     {
         //server_ip  服务器ip  不可更改
         //server_port 服务器端口
@@ -89,7 +89,7 @@ class ServerController extends CommonController
         return $result;
     }
     //服务器
-    public function ws_base_remove($request)
+    public function server_remove($request)
     {
         $server_ip = $request['server_ip'];
         $where['server_ip'] = array('in',u2g($server_ip));
@@ -99,7 +99,7 @@ class ServerController extends CommonController
         return $result;
     }
     //服务器在线，离线统计
-    public function ws_sat()
+    public function server_sat()
     {
         $db =  D($this->models['server']);
         $query[] = $this->where_key_or(explode(',',session('userarea')),'areaid').'OR areaid = 0';

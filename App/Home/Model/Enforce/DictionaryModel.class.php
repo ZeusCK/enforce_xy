@@ -5,7 +5,7 @@
 namespace Home\Model\Enforce;
 
 class DictionaryModel extends CommonModel{
-    protected $tablename = 'dictionary';
+    protected $tableName = 'dictionary';
     public function get_val_item($type = '')
     {
         if($type == '') return array();

@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class CaseModel extends CommonModel{
-    protected $tablename = 'pe_video';
+    protected $tableName = 'pe_video';
 }

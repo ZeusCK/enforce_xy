@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class WsBaseModel extends CommonModel{
-    protected $tablename = 'ws_base';
+    protected $tableName = 'ws_base';
 }

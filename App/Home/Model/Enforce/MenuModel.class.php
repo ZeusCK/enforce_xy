@@ -5,5 +5,5 @@
 namespace Home\Model\Enforce;
 
 class MenuModel extends CommonModel{
-    protected $tablename = 'menu';
+    protected $tableName = 'menu';
 }

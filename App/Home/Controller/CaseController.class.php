@@ -10,6 +10,7 @@ class CaseController extends CommonController
                          'employee'=>'Enforce\Employee',
                          'dictionary'=>'Enforce\dictionary'];
     protected $actions = ['media'=>'Media',
+                          'employee'=>'Employee',
                           'area'=>'Area'];
     protected $pe_type = ['未知','一般警情(6个月)','重大警情(永久)','阻碍民警执法妨碍公务(永久)',
                           '行政强制执行(永久)','当场盘问检查(6个月)','无效数据(7天)','其他(6个月)'];

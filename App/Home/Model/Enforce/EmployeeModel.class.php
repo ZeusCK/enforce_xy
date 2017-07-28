@@ -5,7 +5,7 @@
 namespace Home\Model\Enforce;
 
 class EmployeeModel extends CommonModel{
-    protected $tablename = 'employee';
+    protected $tableName = 'employee';
     public function get_val_item()
     {
         return $this->getField('code,name');
