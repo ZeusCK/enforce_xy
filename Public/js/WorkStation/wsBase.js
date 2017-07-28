@@ -76,14 +76,14 @@ things.clickTree = function(node){
     })
 }
 things.bind = function(id,choose){
-    var dz = choose ? things.areaname : '';
+    var areaname = choose ? things.areaname : '';
     var areaid = choose ? things.areaid : 0;
     app.extra('add_edit',{
         datagrid:'#datagrid',
         url:things.editUrl,
         parsedata:function(data){
             data.id = id;
-            data.dz = dz;
+            data.areaname = areaname;
             data.areaid = areaid;
         }
     });
