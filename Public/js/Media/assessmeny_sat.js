@@ -51,9 +51,10 @@ $(function() {
     $('#infoAreaname').html('*' + module.areaname + '*添加/修改添加警员！');
     $('#mu_ser').html(module.areaname);
     $('#treegrid').treegrid({
-        url: app.url('Media/area_sat'),
+        url: app.url('Ajax/index'),
         method: 'get',
         queryParams: {
+            tpUrl:'Media/area_sat',
             areaid: module.areaid,
             rand: Math.random()
         },

@@ -7,14 +7,15 @@ class CaseController extends CommonController
     protected $models = ['case'=>'Enforce\Case',
                          'pe_video_list'=>'Enforce\PeVideoList',
                          'area'=>'Enforce\AreaDep',
-                         'employee'=>'Enforce\Employee'];
+                         'employee'=>'Enforce\Employee',
+                         'dictionary'=>'Enforce\dictionary'];
     protected $actions = ['media'=>'Media',
                           'area'=>'Area'];
     protected $pe_type = ['未知','一般警情(6个月)','重大警情(永久)','阻碍民警执法妨碍公务(永久)',
                           '行政强制执行(永久)','当场盘问检查(6个月)','无效数据(7天)','其他(6个月)'];
     protected $case_type = ['未知','行政案件','刑侦案件'];
     //日志模块
-    protected $logContent = '案件管理/数据管理';
+    protected $logContent = '案件管理';
     //播放页面
     public function play_case()
     {
@@ -32,6 +33,24 @@ class CaseController extends CommonController
         $this->assignInfo();
         $this->display();
     }
+    //申请列表
+    public function show_apply_case()
+    {
+        $this->assignInfo();
+        $this->display('apply_case');
+    }
+    //移交视频
+    public function show_applyed()
+    {
+        $this->assignInfo();
+        $this->display('applyed');
+    }
+    //申请审核
+    public function allow_case()
+    {
+        $this->assignInfo();
+        $this->display('allow_case');
+    }
     public function assignInfo()
     {
         $action = A($this->actions['area']);
@@ -42,191 +61,152 @@ class CaseController extends CommonController
         $this->assign('areaid',$rootId);
         $this->assign('areaname',$rootName);
     }
-    //添加案件
-    public function add_case()
-    {
-        $request = array();
-        $request['pe_name'] = I('pe_name');         //案事件名称
-        $request['pe_code'] = I('pe_code');         //警情编号
-        $request['areaid'] = I('areaid');           //出警部门ID
-        $request['pe_type'] = I('pe_type');         //警情类型      1一般警情-6 2重大警情-f 3阻碍民警执法妨碍公务-f
-                                                    //              4行政强制执行-f 5当场盘问检查-6 6无效数据-7d 7其他-6
-        $request['pe_address'] = I('pe_address');   //出警地址
-        $request['pe_btime'] = I('pe_btime');       //出警开始时间
-        $request['pe_etime'] = I('pe_etime');       //出警结束时间
-        $request['jybh'] = I('jybh');               //警员编号          用于统计案件
-        $request['jyxm'] = I('jyxm');               //警员姓名
-        $request['cpbh'] = I('cpbh');               //设备编号
-        $request['case_name'] = I('case_name');     //案件名称
-        $request['case_code'] = I('case_code');     //案件编号
-        $request['case_type'] = I('case_type');     //案件类型      1行政案件 2刑侦案件
-        $request['video_title'] = I('video_title'); //视频标题
-        $request['scsj'] = I('scsj');               //上传时间
-        $request['cjsj'] = I('cjsj');               //采集时间
-        $request['wjbh'] = I('wjbh');               //文件编号
-        $request['mark'] = I('mark');               //备注
-        $request['uniqid'] = uniqid();              //唯一ID
-        $request['edit_code'] = session('code');    //编辑人           一般与出警人编号一样
-        $request['create_time'] = date('Y-m-d H:i:s');  //创建时间
-        //更新媒体表
-        $pevideodb = D($this->models['pe_video_list']);
-        $where[] = $this->where_key_or(explode(',', I('wjbh')),'wjbh');
-        $data['mark'] = I('pe_name').' '.I('mark');
-        $pevideodb->getTableEdit($where,u2gs($data));
-        //新增数据
-        $db = D($this->models['case']);
-        $result = $db->getTableAdd(u2gs($request));
-        $this->write_log('添加案件:'.$request['video_title']);
-        $this->ajaxReturn($result);
-    }
-    //修改案件
-    public function edit_case()
-    {
-        $request = I();
-        $where['uniqid'] = I('uniqid');
-        unset($request['uniqid']);
-        $result = $db->getTableEdit($where,u2gs($request));
-        $this->write_log('修改案件'.I('video_title'));
-        $this->ajaxReturn($result);
-    }
-    //删除案件，删除后相关媒体变为未编辑状态
-    public function remove_case()
-    {
-        $request['uniqid'] = I('uniqid');
-        $casedb = D($this->models['case']);
-        $mediadb = D($this->models['pe_video_list']);
-        $caseWhere[] = $this->where_key_or(explode(',',$request),'uniqid');
-        $wjbh = $casedb->where($caseWhere)->getField('wjbh',true);
-        $wjbh = implode(',', $wjbh);
-        $mediaWhere = $this->where_key_or(explode(',',$wjbh),'wjbh');
-        $data['mark'] = '';
-        $mediadb->where($mediaWhere)->save($data);
-        $res = $casedb->getTableDel($caseWhere);
-        $this->write_log('删除案件'.I('uniqid'));
-        $this->ajaxReturn(g2us($res));
-    }
-    //统计案件
-    public function case_sat()
-    {
-        $satType = I('satType',1);  //1为按周 2为按月
-        $moodarea = I('areaid','');
-        //需要查询的部门
-        $areaAc = A($this->actions['area']);
-        $areas = $areaAc->show_sat_area($moodarea);
-        $searchAreas = $areas['areaids'];   //搜索数据
-        $showAreas = $areas['userAreas'];   //显示数据
-        //准备初始化的显示数据
-        $showWhere[] = $this->where_key_or($showAreas,'areaid');
-        $areadb = D($this->models['area']);
-        //判断查询区域是否在自己的所属区域
-        $initInfos = $areadb->field('areaid,areaname,fatherareaid as _parentId')->where($showWhere)->select();
-        //按周统计
-        if($satType == 0){
-            $btime = date('Y-m-d H:i:s',time()-7*24*60*60);
-        }else{
-            $btime = date('Y-m-d H:i:s',time()-30*24*60*60);
-        }
-        $searchWhere['pe_btime'] = array('EGT',$btime);
-        $satInfo = array();
-        //总数 一般 重大 妨碍 强制 现场 作废 无用 其他 警员总数 工作警员 百分比 行政 刑事
-        $initShow = array('num'=>0,'common'=>0,'major'=>0,'impede'=>0,
-                          'force'=>0,'spot'=>0,'disuse'=>0,'other'=>0,
-                          'empnum'=>0,'workemp'=>0,'administration'=>0,'criminal'=>0);
-        $empdb = D($this->models['employee']);
-        $casedb = D($this->models['case']);
-        $where[] = $this->where_key_or($searchAreas,'areaid');
-        if(!in_array($initInfo['areaid'],$searchAreas) && in_array(session('areaid'),$showAreas)){
-            $where = ' OR code="'.session('code').'"';
-        }
-        $searchWhere[] = $where;
-        $empsInfo = $empdb->field('count(empid) as num,areaid')->where($where)->group('areaid')->select(array('index'=>'areaid'));
-        $casesInfo = $casedb->field('count(uniqid) as num,areaid')->where($where)->group('areaid')->select(array('index'=>'areaid'));
-        foreach ($initInfos as $initInfo) {
-            $initInfo = array_merge($initInfo,$initShow);
-            $satInfo[$initInfo['areaid']] = $initInfo;
-            $satInfo[$initInfo['areaid']]['empnum'] = $empsInfo[$initInfo['areaid']]['num'] ? $empsInfo[$initInfo['areaid']]['num'] : 0;
-            $satInfo[$initInfo['areaid']]['workemp'] = $casesInfo[$initInfo['areaid']]['num'] ? $casesInfo[$initInfo['areaid']]['num'] : 0;
-        }
-        $res = $casedb->field('count(uniqid) as num,areaid,pe_type,case_type')->where($where)->group('areaid,pe_type,case_type')->select();
-        $action = A($this->actions['media']);
-        $fields = array('num'=>'num');
-        $markField = 'areaid';
-        $paresFields = array('pe_type'=>array('field'=>'num',
-                                           'info'=>array('common'=>0,'major'=>1,'impede'=>2,'force'=>3,'spot'=>4,'disuse'=>5,'other'=>6)),
-                             'case_type'=>array('field'=>'num',
-                                                'info'=>array('administration'=>0,'criminal'=>1))
-                        );
-        $satInfo = $action->pares_data($satInfo,$res,$fields,$markField,$paresFields);
-        $parent = array(0);             //父级部门ID
-        if($moodarea != ''){
-            $parent = (array)$areadb->where('areaid='.$moodarea)->getField('fatherareaid');
-        }
-        //倒叙排序 确保上级菜单 在最后执行
-        $satInfo = $action->ksort_sat_data($satInfo,'_parentId',array_keys($initShow),$parent[0]);
-        foreach ($satInfo as &$value) {
-            $value['percent'] = $value['empnum'] == 0 ? 0 : round($value['workemp']/$value['empnum'],2);
-        }
-        $result['total'] = count($showAreas);
-        $result['rows'] = array_values($satInfo);
-        $this->saveExcel($result); //监测是否为导出
-        $this->ajaxReturn(g2us($result));
-    }
     //案件查询
-    public function case_list()
+    public function case_list($request)
     {
-        $request = I();
-        $page = I('page');
-        $rows = I('rows');
-        $areaid = $request['areaid'];                      //查询部门
-        $casedb = D($this->models['case']);
-        $action = A($this->actions['media']);
-        $jybh = $request['jybh'];           //出警人
-        $emps = $action->emps_s_info($areaid);
-        $allowCodes = $emps['allowCodes'];
-        if($jybh != ''){
-            $jybh = explode(',', $jybh);
-            $allowCodes = array_intersect($jybh,$allowCodes);
-        }
-        if(empty($allowCodes)){
-            $res = array();
-            $res['error'] = '没有警员可查看！';
-            $this->ajaxReturn($res);
-        }
-        $where[] = $this->where_key_or($allowCodes,'jybh');
-        if($request['case_code']) $where['case_code'] = array('like','%'.$request['case_code'].'%');    //案件编号
+        //case_no  案件编号
+        //case_name 案件名称
+        //case_type 案件类型
+        //alarm_no 警情编号
+        //alarm_name 警情名称
+        //alarm_type 警情类型
+        //jybh 警员编号
+        //start_time.btime 开始时间
+        //start_time.etime 结束时间
+        //type 显示类型 0 正常产看  1 申请查看
+        $type = $request['type'] ? $request['type'] : 0;
+        $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
+        $idField = $type == 0 ? 'areaid' : 'apply_areaid';
+        $page = $request['page'];
+        $rows = $request['rows'];
+        $areaid = $request['areaid'];       //查询部门
+        $action = A($this->actions['employee']);
+        $manger_sql = $action->get_manger_sql($areaid,$idField);
+        $where[] = $manger_sql;
+        if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
         if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
-        if($request['pe_code']) $where['pe_code'] = array('like','%'.$request['pe_code'].'%');    //警情编号
-        if($request['pe_name']) $where['pe_name'] = array('like','%'.$request['pe_name'].'%');    //警情名称
         if($request['case_type']) $where['case_type'] = $request['case_type'];      //案件类型
-        if($request['pe_type']) $where['pe_type'] = $request['pe_type'];            //警情类型
-        $where['cjsj'][] = array('EGT',$request['cjsj']['btime'] ? $request['cjsj']['btime'] : date('Y-m-d H:i:s',time()-7*24*60*60));
-        $where['cjsj'][] = array('ELT',$request['cjsj']['etime'] ? $request['cjsj']['etime'] : date('Y-m-d H:i:s'));
-        $res = $casedb->getTableList($where,$page,$rows,'create_time desc');
-        $areadb = D($this->models['area']);
-        $areas = $areadb->getField('areaid,areaname');
+        if($request['alarm_no']) $where['alarm_no'] = array('like','%'.$request['alarm_no'].'%');    //警情编号
+        if($request['alarm_name']) $where['alarm_name'] = array('like','%'.$request['alarm_name'].'%');    //警情名称
+        if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
+        if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
+        $where['start_time'][] = array('EGT',$request['start_time']['btime'] ? $request['start_time']['btime'].' 00:00:00' : date('Y-m-d',time()-7*24*60*60).' 00:00:00');      //开始时间
+        $where['start_time'][] = array('ELT',$request['start_time']['etime'] ? $request['start_time']['etime'].' 00:00:00' : date('Y-m-d').' 00:00:00');                    //结束时间
+        $casedb = D($this->models['case']);
+        $res = $casedb->getTableList($where,$page,$rows,'title desc');
+        $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
+        $case_type = $this->get_val_item('dictionary', 'case_type');
         foreach ($res['rows'] as &$row) {
-            $row['areaname'] = array_key_exists($row['areaid'],$areas) ? $areas[$row['areaid']] : u2g('未知');
-            $row['pe_type_name'] = u2g($this->pe_type[$row['pe_type']]);
-            $row['case_type_name'] = u2g($this->case_type[$row['case_type']]);
+            $row['alarm_type_name'] = $alarm_type[$row['alarm_type']];
+            $row['case_type_name'] = $case_type[$row['case_type']];
         }
         $this->saveExcel($res); //监测是否为导出
-        $this->ajaxReturn(g2us($res));
+        return g2us($res);
     }
-    //播放信息
-    public function play_case_info()
+    //修改案件
+    public function edit_case($request)
     {
-        $request['uniqid'] = I('uniqid');
+        $where['video_id'] = $request['video_id'];
+        unset($request['video_id']);
+        $result = $db->getTableEdit($where,u2gs($request));
+        $this->write_log('修改案件'.I('video_title'));
+        return $result;
+    }
+    //查看可以申请的数据
+    public function show_apply_list($request)
+    {
+        //areaid  查看部门
+        //page 页数
+        //rows 条数
+        $areas = explode(',',session('userarea'));
+        foreach ($areas as &$area) {
+            $area = 'areaid !="'.$area.'"';
+        }
+        $areasql = implode(' AND ');
+        if(!in_array(session('areaid'),$areas)){
+            $areasql .= ' AND jybh!="'.session('code').'"';
+        }
+        $where[] = $areasql;    //禁止查看的数据
+        $action = A($this->actions['area']);
+        $careas = $action->carea($request['areaid']);
+        $where[] = $this->where_key_or($careas,'areaid');      //需要查看的数据
+        $where['alarm_no'] = array('NEQ','');           //没有编辑过的不允许移交
+        $db = D($this->models['case']);
+        $data = $db->getTableList($where,$request['page'],$request['rows'],'title desc');
+        $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
+        $case_type = $this->get_val_item('dictionary', 'case_type');
+        foreach ($data['rows'] as &$row) {
+            $row['alarm_type_name'] = $alarm_type[$row['alarm_type']];
+            $row['case_type_name'] = $case_type[$row['case_type']];
+        }
+        return g2us($data);
+    }
+    //申请移交
+    public function apply_case($request)
+    {
+        //video_id  案件ID 申请案件
+        $data['apply_jybh'] = session('code');
+        $data['apply_jyxm'] = u2g(session('user'));
+        $data['apply_areaid'] = session('areaid');
+        $data['apply_areaname'] = u2g(session('areaname'));
+        $data['update_time'] = date('Y-m-d H:i:s');
+        $data['hand_status'] = 1;   //待审核状态
+        $db = D($this->models['case']);
+        $result = $db->getTableEdit($request,$data);
+        if($result['status']){
+            $result['message'] = '提交申请成功';
+        }else{
+            $result['message'] = '提交申请失败';
+        }
+        $info = $db->where($request)->find();
+        $this->write_log(g2u($info['video_title']).$result['message']);
+        return $result;
+    }
+    public function allow_apply($request)
+    {
+        //video_id 案件ID
+        $data['hand_status'] = 2;   //初始状态
+        $result = $db->getTableEdit($request,$data);
+        $result['message'] = $result['status'] ? '审核通过' : '审核通过失败,可能原因该案件已被其他管理员审核通过';
+        return  $result;
+    }
+    //撤销，拒绝申请
+    public function init_apply($request)
+    {
+        //video_id 案件ID
+        //action  0 撤销 1 拒绝
+        $data['hand_status'] = 0;   //初始状态
+        $result = $db->getTableEdit($request,$data);
+        if($result['status']){
+            if($request['action'] == 0) $result['message'] = '撤销成功';
+            if($request['action'] == 1) $result['message'] = '申请已拒绝';
+        }else{
+            if($request['action'] == 0) $result['message'] = '撤销失败';
+            if($request['action'] == 1) $result['message'] = '申请拒绝失败';
+        }
+        $this->write_log(g2u($info['video_title']).$result['message']);
+        return $result;
+    }
+    //播放,编辑信息
+    public function play_case_info($request)
+    {
+        //video_id  案件ID
         $casedb = D($this->models['case']);
         $mediadb = D($this->models['pe_video_list']);
-        $caseWhere['uniqid'] = $request['uniqid'];
+        $caseWhere['video_id'] = $request['video_id'];
         $caseInfo = $casedb->where($caseWhere)->find();
-        $wjbh = $caseInfo['wjbh'];
-        $mediaWhere[] = $this->where_key_or(explode(',',$wjbh),'wjbh');
-        $data = $mediadb->where($mediaWhere)->select();
+        $data = $mediadb->where($caseWhere)->select();
+        $fileType = $this->get_val_item('dictionary','filetype');
+        $video_source = $this->get_val_item('dictionary','video_source');
+        foreach ($data as &$value) {
+            $value['file_type_name'] = $fileType[$value['file_type']];
+            $value['source_name'] = $video_source[$value['source']];
+        }
         $res = array();
         $res['total'] = count($data);
         $res['rows'] = $data;
         $res['info'] = $caseInfo;
-        $this->ajaxReturn(g2us($res));
+        $this->write_log(g2u($info['video_title']).'播放,编辑信息');
+        return g2us($res);
     }
 }

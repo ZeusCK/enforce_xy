@@ -85,6 +85,33 @@ class EmployeeController extends CommonController
         if(!empty($data))  $res = $db->where($request)->getField('code,empid,name');
         return $res;
     }
+    /**
+     * 根据部门ID,警员编号获取查询条件
+     * @param  int $areaid 部门ID
+     * @param  string $idField 有关部门字段
+     * @param  string/false $jybhField 有关警员字段 或者不进行关联
+     * @return string         筛选之后的sql语句
+     */
+    public function get_manger_sql($areaid = '',$idField = 'areaid',$jybhField = 'jybh')
+    {
+        $areaAction = A($this->actions['area']);
+        //如果部门ID为空视为查看自身管理区域
+        if($areaid != ''){
+            $careas = $areaAction->carea($areaid);
+            $areas = array_intersect(explode(',',session('userarea')),$careas);
+            $areasql = $this->where_key_or($areas,$idField);
+            if($jybhField){
+                if(in_array(session('areaid'),$careas)) $areasql .= ' OR '.$jybhField.'="'.session('code').'"';
+            }
+        }else{
+            $areas = explode(',',session('userarea'));
+            $areasql = $this->where_key_or($areas,$idField);
+            if($jybhField){
+                if(!in_array(session('areaid'),$areas)) $areasql .= ' OR '.$jybhField.'="'.session('code').'"';
+            }
+        }
+        return $areasql;
+    }
     //数据获取
     public function dataList()
     {
@@ -102,15 +129,10 @@ class EmployeeController extends CommonController
         $dbc = D($this->models['area']);
         $areas = $dbc->getField('areaid,areaname');
         $db = D($this->models['employee']);
-        $emps = $this->get_manger_emp(I('areaid'));
+        $emps = $this->get_manger_sql(I('areaid'));
+        $check[] = $emps;
         $roledb = D($this->models['role']);
         $roles = $roledb->getField('roleid,rolename');
-        $allowCodes = array_keys($emps);
-        if(!empty($allowCodes)){
-            $check['code'] = array('in',$allowCodes);
-        }else{
-            $check['code'] = '';
-        }
         $order = 'areaid asc,level asc';
         $fields = 'e.*';
         $check[] = 'e.roleid = r.roleid';
@@ -203,10 +225,10 @@ class EmployeeController extends CommonController
     //准备前端页面数据
     public function assignInfo()
     {
-        $db = D($this->models['area']);
+        /*$db = D($this->models['area']);
         $info['areareg'] = $db->select();
         $info['areareg'] = g2us($info['areareg']);
-        $info['arearegJson'] = json_encode(g2us($info['areareg']));
+        $info['arearegJson'] = json_encode(g2us($info['areareg']));*/
         $action = A($this->actions['role']);
         //警员记录
         $info['role'] = $action->get_role_info()['rows'];
@@ -321,7 +343,7 @@ class EmployeeController extends CommonController
         //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
         $l_arr = ['areaid','areaname','fatherareaid','areaid'];
         //$L_attributes 额外需要保存的信息
-        $L_attributes = ['arearcode','rperson','rphone'];
+        $L_attributes = ['areacode','rperson','rphone'];
         $icons = ['icon-application_xp_terminal','icon-application'];
         $data_tree = $this->formatTree($ids,$areas,$l_arr,$L_attributes,'',$icons);
         $checkeds = ['areaid','empid','name'];

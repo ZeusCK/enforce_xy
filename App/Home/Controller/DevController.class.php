@@ -22,7 +22,7 @@ class DevController extends CommonController
         $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
         $this->assign('areaid',$rootId);
         $this->assign('areaname',$rootName);
-        $this->assignInfo();
+        //$this->assignInfo();
         $this->display('peBase');
     }
     //执法仪状态
@@ -34,7 +34,7 @@ class DevController extends CommonController
         $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
         $this->assign('areaid',$rootId);
         $this->assign('areaname',$rootName);
-        $this->assignInfo();
+        //$this->assignInfo();
         $this->display('peShowStatus');
     }
     //执法记录仪
@@ -51,7 +51,7 @@ class DevController extends CommonController
         $db =  D($this->models['pebase']);
         //获取能显示的执法仪信息
         $action = A($this->actions['employee']);
-        $emps = $action->get_manger_emp($request['areaid']);
+        /*$emps = $action->get_manger_emp($request['areaid']);
         $allowCodes = array_keys($emps);
         if(!empty($allowCodes)){
             $where['jybh'] = array('in',$allowCodes);
@@ -59,7 +59,10 @@ class DevController extends CommonController
             $result['total'] = 0;
             $result['rows'] = array();
             $this->ajaxReturn($result);
-        }
+        }*/
+        $sql = $action->get_manger_sql($request['areaid']);
+        $where[] = $sql;
+        if(I('jybh')) $where['jybh'] = I('jybh');           //警员编号
         //支持模糊搜索
         foreach ($request as $key => $value) {
             if($value != '' && $key != 'status' && $key != 'areaid'){
@@ -150,12 +153,12 @@ class DevController extends CommonController
         $this->ajaxReturn($result);
     }
     //传值  添加执法仪时能够选择的警员
-    public function assignInfo()
+    /*public function assignInfo()
     {
         $action = A($this->actions['employee']);
         $emps = $action->get_manger_emp();
         $this->assign('emps',g2us($emps));
-    }
+    }*/
     /**
      * 获取执法记录仪使用状态  七天内统计
      * @param  array $cpxhs 执法记录仪序号

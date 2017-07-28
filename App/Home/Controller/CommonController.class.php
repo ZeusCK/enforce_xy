@@ -100,7 +100,6 @@ class CommonController extends Controller {
             S('chcache.'.$dbc.'.'.$finfo[$l_arr[0]],$infos);
     	}
         $cache = array();
-
     	return $infos;
     }
     /**
@@ -436,5 +435,16 @@ class CommonController extends Controller {
     public function get_local_ip()
     {
         return DIRECTORY_SEPARATOR === '/' ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
+    }
+    /**
+     * 获取基础信息
+     * @param  string $module 模型
+     * @param  string $type   需要的类型
+     * @return array         value=>item
+     */
+    public function get_val_item($module,$type = '')
+    {
+        $mo = D(C('Model.'.$module));
+        return $mo->get_val_item($type);
     }
 }

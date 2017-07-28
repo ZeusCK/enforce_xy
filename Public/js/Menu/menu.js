@@ -1,9 +1,9 @@
 var tree = new Tree('#menu_list');
 var module = {};
 //操作所需的url
-module.addUrl = app.url('menu/dataAdd');
-module.editUrl = app.url('menu/dataEdit');
-module.removeUrl = app.url('menu/dataRemove');
+module.addUrl = 'menu/dataAdd';
+module.editUrl = 'menu/dataEdit';
+module.removeUrl = 'menu/dataRemove';
 module.menuid = 0;
 module.menuname = '根菜单';
 //接收数据之后的操作
@@ -19,6 +19,7 @@ module.addBar = function(){
 }
 module.addmBar = function(){
     $('#addForm').form('reset');
+    module.menuid = 0;
     $('#addForm').form('load',{pid:0});
     $('#infomenuname').html('*根菜单*添加新的子级菜单');
     $('#addDialog').dialog('open');

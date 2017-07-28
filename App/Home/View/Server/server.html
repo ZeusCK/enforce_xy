@@ -7,7 +7,7 @@ app.tp.areaid = "{:$areaid}";
 app.tp.areaname = "{:$areaname}";
 </script>
 <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
-<script type="text/javascript" src="__PUBLIC__/js/WorkStation/wsBase.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Server/server.js"></script>
 </block>
 <block name="main">
 <div class="easyui-layout" fit="true">
@@ -21,6 +21,7 @@ app.tp.areaname = "{:$areaname}";
 <div id="toolbar">
     <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
          <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
+        地址: <input class="easyui-textbox" data-options="height:22" name="dz" style="width:168px"/>
         负责人: <input class="easyui-textbox" data-options="height:22" name="hzr" style="width:168px"/>
         在线状态:
         <select class="easyui-combobox form_in" name="zxzt" style="width: 181px;" data-options="editable:false">

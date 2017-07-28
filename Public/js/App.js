@@ -32,6 +32,7 @@ function App(rootPath){
     this.public = this.root+'Public/';
     this.registerLoadedJs();
     this.registerLoadedCss();
+    this.tp.ajax = this.url('Ajax/index');
 }
 //首字母大写
 App.prototype.upString = function(string){
@@ -216,21 +217,13 @@ App.prototype.linkbutton = function(target,method){
 }
 //应用
 App.prototype.extra = function(method,param){
-    this.extra.methods[method](param);
+    this[this.extra.methods[method]](param);
 }
 App.prototype.extra.methods = {
-    'export':function(param){
-        return App.prototype.exportExcel(param);
-    },
-    'add_edit':function(param){
-        return App.prototype.add_edit(param);
-    },
-    'remove':function(param){
-        return App.prototype.remove(param);
-    },
-    'search':function(param){
-        return App.prototype.search(param);
-    }
+    'export':'exportExcel',
+    'add_edit':'add_edit',
+    'remove':'remove',
+    'search':'search'
 };
 /**
  * 导出excel  需要后端支持
@@ -239,7 +232,7 @@ App.prototype.extra.methods = {
  */
 App.prototype.exportExcel = function(exportInfo){
     var self = this;
-    var options = $.extend(this.exportExcel.defaults,exportInfo);
+    var options = $.extend({},App.prototype.exportExcel.defaults,exportInfo);
     this.linkbutton(options.linkbutton,'disable');
     if(options.params === false){
         $.messager.alert('操作提示','无导出参数,请核验！','info');
@@ -296,6 +289,7 @@ App.prototype.exportExcel = function(exportInfo){
         showType:'slide'
     });
     this.exportExcel.options = options;
+    url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
         url:url,
         type:'POST',
@@ -332,7 +326,7 @@ App.prototype.exportExcel.defaults = {
 //增加修改
 App.prototype.add_edit = function(params){
     var self = this;
-    var options = $.extend(App.prototype.add_edit.defaults,params);
+    var options = $.extend({},App.prototype.add_edit.defaults,params);
     this.linkbutton(options.linkbutton,'disable');
     if(options.url == false){
         $.messager.alert('操作提示','url地址不能为空','info');
@@ -349,6 +343,7 @@ App.prototype.add_edit = function(params){
     }
     options.parsedata(request);
     this.add_edit.options = options;
+    options.url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
         url:options.url,
         type:'post',
@@ -357,7 +352,13 @@ App.prototype.add_edit = function(params){
         success:function(data){
             options.success(data);
             if(data.message) $.messager.alert('结果提示',data.message,'info');
-            if(options.datagrid) $(options.datagrid).datagrid('reload',options.queryParam);
+            if(options.datagrid) {
+                if(options.queryParam){
+                    $(options.datagrid).datagrid('reload',options.queryParam);
+                }else{
+                    $(options.datagrid).datagrid('reload');
+                }
+            }
         },
         error:function(data){
             options.error(data);
@@ -371,7 +372,7 @@ App.prototype.add_edit = function(params){
 }
 //增加修改函数参数初始化
 App.prototype.add_edit.defaults = {
-    queryParam:{},          //更新datagrid的参数
+    queryParam:false,          //更新datagrid的参数
     datagrid:null,          //成功后更新datagrid
     form:false,             //相关表单
     dialog:null,       //相关dialog
@@ -380,11 +381,10 @@ App.prototype.add_edit.defaults = {
     parsedata:function(data){}, //数据分析
     success:function(data){},   //成功后
     error:function(data){}      //发送失败后
-
 };
 //删除
 App.prototype.remove = function(params){
-    var options = $.extend(App.prototype.remove.defaults,params);
+    var options = $.extend({},App.prototype.remove.defaults,params);
     this.linkbutton(options.linkbutton,'disable');
     if(options.url == ''){
         $.messager.alert('操作提示','url地址不能为空','info');
@@ -403,6 +403,7 @@ App.prototype.remove = function(params){
         data[options.idField] = ids;
     }
     options.parsedata(data);
+    options.url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
         url:options.url,
         type:'post',
@@ -411,7 +412,13 @@ App.prototype.remove = function(params){
         success:function(data){
             options.success(data);
             if(data.message) $.messager.alert('结果提示',data.message,'info');
-            if(options.datagrid) $(options.datagrid).datagrid('reload',options.queryParam);
+            if(options.datagrid) {
+                if(options.queryParam){
+                    $(options.datagrid).datagrid('reload',options.queryParam);
+                }else{
+                    $(options.datagrid).datagrid('reload');
+                }
+            }
         },
         error:function(data){
             options.error(data);
@@ -427,7 +434,7 @@ App.prototype.remove.defaults = {
     url:'',         //url地址
     idField:'id',     //标识主键
     datagrid:null,    //datagrid表格
-    queryParam:{},          //更新datagrid时额外参数
+    queryParam:false,          //更新datagrid时额外参数
     linkbutton:false,  //相关按钮
     dialog:false,      //dialog
     parsedata:function(data){}, //分析数据
@@ -436,11 +443,12 @@ App.prototype.remove.defaults = {
 };
 //搜索
 App.prototype.search = function(param){
-    var options = $.extend(App.prototype.search.defaults,param);
+    var options = $.extend({},App.prototype.search.defaults,param);
     this.linkbutton(options.linkbutton,'disable');
     var data = {};
     if(options.form)  data = this.serializeJson(options.form);
     options.parsedata(data);
+    options.url = this.tp.ajax+'?tpUrl='+options.url;
     this.search.options = options;
     if(options.ajax){
         $.ajax({
@@ -483,16 +491,22 @@ App.prototype.search.defaults = {
 };
 //表格
 App.prototype.datagrid = function(target,params){
-    var options = $.extend(App.prototype.datagrid.defaults,params);
+    var options = $.extend({},App.prototype.datagrid.defaults,params);
+    console.log(App.prototype.datagrid.defaults);
+    if(options.url != null){
+        options.url = this.tp.ajax+'?tpUrl='+options.url;
+    }
     $(target).datagrid(options);
 }
 //设置表格默认属性
 App.prototype.datagrid.defaults = {
+    url:null,
     fitColumns: true,
     rownumbers: true,
     fit: true,
     pageSize:'20',
     pagination: true,
+    queryParams:{},
     showDatagrid:true,  //是否显示datagrid表格 自定义属性
     otherView:function(data){}, //自定义属性,显示的信息 当showDatagrid 为false时生效
     loadFilter:function(data){

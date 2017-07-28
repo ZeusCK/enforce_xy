@@ -7,7 +7,7 @@ namespace Home\Controller;
 class WorkStationController extends CommonController
 {
     //表的表名-自增主键
-    protected $models = ['wsbase'=>'Enforce\WsBase'];           //执法仪
+    protected $models = ['wsbase'=>'Enforce\WsBase'];           //工作站
     protected $actions = ['employee'=>'Employee','area'=>'Area'];
     protected $views = ['ws_base'=>'wsBase'];
     protected $logContent = '设备管理/工作站管理';
@@ -29,7 +29,6 @@ class WorkStationController extends CommonController
     //工作站
     public function ws_base_list()
     {
-        $request['dz'] = I('dz');           //地址
         $request['hzr'] = I('hzr');        //负责人
         $request['zxzt'] = I('zxzt');        //在线状态,0:不在线，1：在线
         $request['qyzt'] = I('qyzt');
@@ -73,11 +72,10 @@ class WorkStationController extends CommonController
     //工作站
     public function ws_base_add()
     {
-        //dh->负责人电话
-        //hzr->负责人
-        //dz->地址
+        //dh  负责人电话
+        //hzr 负责人
         //gzz_ip 工作站IP  必填
-        //qyzt->启用状态 0:未启用，1：启用
+        //qyzt 启用状态 0:未启用，1：启用
         $request = I();
         $db =  D($this->models['wsbase']);
         if($db->where(array('gzz_ip'=>$request['gzz_ip']))->find()){
@@ -90,11 +88,11 @@ class WorkStationController extends CommonController
     //工作站
     public function ws_base_edit()
     {
-        //dh->负责人电话
-        //hzr->负责人
-        //dz->地址
+        //dh 负责人电话
+        //hzr 负责人
+        //dz 地址
         //gzz_ip 工作站IP  必填
-        //qyzt->启用状态 0:未启用，1：启用
+        //qyzt 启用状态 0:未启用，1：启用
         $request = I();
         $db =  D($this->models['wsbase']);
         $where['id'] = $request['id'];

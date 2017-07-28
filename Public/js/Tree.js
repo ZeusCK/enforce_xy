@@ -9,8 +9,9 @@ Tree.prototype.loadData = function (noS){
     var dom = this.dom;
     var load = noS ? noS : false;
     var params = {'new':load};
+    params.tpUrl = 'Area/data_tree_list';
     $.ajax({
-        url:app.url('Area/data_tree_list')+'?&rand='+Math.random(),
+        url:app.tp.ajax,
         type:'post',
         dataType:'json',
         data:params,
@@ -26,7 +27,7 @@ Tree.prototype.load_emp_tree = function(){
     var dom = this.dom;
     var self = this;
     $.ajax({
-        url:app.url('Employee/show_employee')+'?&rand='+Math.random(),
+        url:app.tp.ajax+'?rand='+Math.random()+'&tpUrl=Employee/show_employee',
         type:'get',
         dataType:'json',
         success:function(data){
@@ -41,7 +42,7 @@ Tree.prototype.show_emp_manger_area = function(empid){
     var dom = this.dom;
     var self = this;
     $.ajax({
-        url:app.url('Employee/show_emp_manger_area')+'?&rand='+Math.random(),
+        url:app.tp.ajax+'?rand='+Math.random()+'&tpUrl=Employee/show_emp_manger_area',
         type:'get',
         dataType:'json',
         data:{
@@ -59,7 +60,7 @@ Tree.prototype.show_apply_tree = function(){
     var dom = this.dom;
     var self = this;
     $.ajax({
-        url:app.url('Employee/show_apply_tree')+'?&rand='+Math.random(),
+        url:app.tp.ajax+'?rand='+Math.random()+'&tpUrl=Employee/show_apply_tree',
         type:'get',
         dataType:'json',
         success:function(data){
@@ -74,7 +75,7 @@ Tree.prototype.show_tp_tree = function(){
     var dom = this.dom;
     var self = this;
     $.ajax({
-        url:app.url('Area/show_tp_tree')+'?&rand='+Math.random(),
+        url:app.tp.ajax+'?rand='+Math.random()+'&tpUrl=Employee/show_tp_tree',
         type:'get',
         dataType:'json',
         success:function(data){

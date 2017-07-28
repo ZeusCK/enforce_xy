@@ -17,4 +17,5 @@ return array(
     //地图相关 南京 118.78 32.04
     'MAP_LNG'   => '32.04',  //地图经度
     'MAP_LAT'   => '118.78',  //地图维度
+    'LOAD_EXT_CONFIG' => 'model',      //模型配置
 );

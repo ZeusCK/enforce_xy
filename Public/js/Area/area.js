@@ -1,24 +1,15 @@
 var tree = new Tree('#area_list');
 var module = {};
 //操作所需的url
-module.datagridUrl = app.url('Area/dataList');
-module.addUrl = app.url('Area/dataAdd');
-module.editUrl = app.url('Area/dataEdit');
-module.removeUrl = app.url('Area/dataRemove');
+module.datagridUrl = 'Area/dataList';
+module.addUrl = 'Area/dataAdd';
+module.editUrl = 'Area/dataEdit';
+module.removeUrl = 'Area/dataRemove';
 module.areaid = app.tp.areaid;
 module.areaname = app.tp.areaname;
 //基本的搜索
 module.show = function(){
     $('#searchForm').form('reset');
-    $('#datagrid').datagrid('load',{
-        areaid:module.areaid,
-        rand:Math.random()
-    });
-}
-//接收数据之后的操作
-module.callback = function(data){
-   // data = eval('('+data+')');
-    $.messager.alert('操作提示',data.message,'info');
     $('#datagrid').datagrid('load',{
         areaid:module.areaid,
         rand:Math.random()

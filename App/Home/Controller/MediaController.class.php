@@ -15,6 +15,50 @@ class MediaController extends CommonController
                           'employee'=>'Employee'];
     protected $views = ['play_video'=>'playVideo'];
     protected $logContent = '数据管理/媒体数据';
+    //拆包
+    public function pack_pop($request)
+    {
+        //wjbh  拆包的文件编号 多文件,隔开
+        $data['video_id'] = '';
+        $where[] = $this->where_key_or(explode(',',$request['wjbh']),'wjbh');
+        return D($this->models['pe_video_list'])->getTableEdit($where,$data);
+    }
+    //合包
+    public function pack_merage($request)
+    {
+        //wjbh 合包文件 多文件,隔开
+        //video_id 合包案件
+        $where[] = $this->where_key_or(explode(',',$request['wjbh']),'wjbh');
+        return D(C('MODEL.pe_video_list'))->getTableEdit($where,$request);
+    }
+    //显示可以合包文件
+    public function show_unpack($request)
+    {
+        //areaid  部门ID
+        //page   页数
+        //rows   条数
+        $action = A($this->actions['employee']);
+        $where[] = $action->get_manger_sql($request['areaid']);
+        $where['video_id'] = '';
+        return D($this->models['pe_video_list'])->getTableList($where,$request['page'],$request['rows'],'start_time desc');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //单文件播放页面
     public function play_video()
     {

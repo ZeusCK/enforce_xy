@@ -65,15 +65,14 @@ class IndexController extends CommonController {
             }else{
                 $result['message'] = '用户名，密码错误';
             }
-            session_write_close();
-            $this->write_log('登录','平台系统');
+            $this->write_log('登录');
             $this->ajaxReturn($result);
         }
     }
     //登出
     public function loginOut()
     {
-        $this->write_log('登出','平台系统');
+        $this->write_log('登出');
         session(null);
         $this->redirect('Index/login');
     }

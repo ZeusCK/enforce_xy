@@ -1,10 +1,10 @@
 var things = {};
 things.areaid = app.tp.areaid;
 things.areaname = app.tp.areaname;
-things.datagridUrl = app.url('WorkStation/ws_base_list');
-things.addUrl = app.url('WorkStation/ws_base_add');
-things.editUrl = app.url('WorkStation/ws_base_edit');
-things.removeUrl = app.url('WorkStation/ws_base_remove');
+things.datagridUrl = 'WorkStation/ws_base_list';
+things.addUrl = 'WorkStation/ws_base_add';
+things.editUrl = 'WorkStation/ws_base_edit';
+things.removeUrl = 'WorkStation/ws_base_remove';
 var tree = new Tree('#area_list');
 things.show = function(){
     $('#searchForm').form('reset');
@@ -33,7 +33,11 @@ things.add = function(target){
         form:'#addForm',
         dialog:'#addDialog',
         datagrid:'#datagrid',
-        linkbutton:target
+        linkbutton:target,
+        parsedata:function(data){
+            data.areaid = things.areaid;
+            data.areaname = things.areaname;
+        }
     });
 }
 things.edit = function(target){
@@ -91,7 +95,7 @@ $(function(){
         columns:[[
           {field:'id', title: 'id', checkbox: true },
           {field:'gzz_ip',title:'工作站IP',align:'center'},
-          {field:'dz',title:'地址', width: 200, align:'center'},
+          {field:'areaname',title:'地址', width: 200, align:'center'},
           {field:'ztsj', title: '最后在线时间', width: 200, align: 'center' },
           {field:'hzr', title: '负责人', width: 200, align: 'center' },
           {field:'dh', title: '负责人电话', width: 200, align: 'center' },

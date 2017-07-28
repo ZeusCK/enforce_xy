@@ -34,57 +34,6 @@ class FunctionController extends CommonController {
             exit('没有图片下载，或者服务器获取图片失败！');
         }
     }
-        /**
-     * 导出excel
-     * @return
-     */
-    public function exportExcel()
-    {
-        $listUrl = I('listUrl');            //请求数据的url地址
-        $total = I('total');                 //下载数量
-        $query = I('query');                //请求数据
-        $fields = I('fields');               //field name
-
-        $listUrl = '/enforce/index.php/Home/Media/work_emp_sat';
-        $fields = ['num'=>'总数','video'=>'视频','picture'=>'图片','vioce'=>'音频'];
-        $total = 20;
-
-        //$query['rows'] = (int)$total;
-        //向链接请求数据
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, 'http://localhost'.$listUrl);
-        //echo 'http://localhsot'.$listUrl;
-        //print_r($query);
-        //curl_setopt($ch, CURLOPT_POSTFIELDS, $query);             //post发送数据
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $res = curl_exec($ch);
-        $data = json_decode($res,true);
-        $this->ajaxReturn($data);
-        if($data['total'] && $data['total'] > 0){
-            //表格查询处理
-            if(array_key_exists('rows', $data)){
-                $rows = $data['rows'];
-            }
-            $res = $this->saveExcel($rows,$fields);
-            if($res){
-                $result['status'] = true;
-                $result['message'] = '成功。';
-                $result['fileUrl'] = $res;
-                $this->ajaxReturn($result);
-            }else{
-                $result['status'] = false;
-                $result['message'] = '可能原因：服务器权限不足。';
-                $result['fileUrl'] = $res;
-                $this->ajaxReturn($result);
-            }
-        }else{
-            $result['status'] = false;
-            $result['message'] = '获取数据失败，或者没有数据。';
-            $result['fileUrl'] = '';
-            $this->ajaxReturn($result);
-        }
-    }
     //下载大文件专用   以时间换空间
     public function downfile()
     {
@@ -139,5 +88,10 @@ class FunctionController extends CommonController {
                 closedir($dh);
             }
         }
+    }
+
+    public function dic_val_item($request)
+    {
+        return $this->get_val_item('dictionary',$request['type']);
     }
 }
