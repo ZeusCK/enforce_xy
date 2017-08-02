@@ -270,13 +270,21 @@ class EmployeeController extends CommonController
         $empid  = I('empid');
         $action = A($this->actions['area']);
         $empdb = D($this->models['employee']);
-        $areaid = $empdb->where('empid='.$empid)->getField('areaid');
+        /*$areaid = $empdb->where('empid='.$empid)->getField('areaid');
         $careas = $action->carea($areaid);
         $pareas = $action->parea($areaid,true);
-        $areas = array_merge($careas,$pareas);
+        $areas = array_merge($careas,$pareas);*/
+
+
+        $userarea = explode(',', session('userarea'));
+        if(!empty($userareas)){
+            $areas = array();
+        }else{
+            $areas = $action->all_user_area();
+        }
         $db = D($this->models['area']);
-        $where['areaid'] = array('in',$areas);
-        $areas = $db->where($where)->select();
+        //$where['areaid'] = array('in',$areas);
+        //$areas = $db->where($where)->select();
         $ids = array(0);
         //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
         $l_arr = ['areaid','areaname','fatherareaid','areaid'];
@@ -455,7 +463,7 @@ class EmployeeController extends CommonController
         if($areas == '' || empty($areas)) return array();
         $areadb = D($this->models['area']);
         $query[] = $this->where_key_or($areas,'areaid');
-        $query['code'] = array('<>','');
+        $query['code'] = array('NEQ','');
         $codes = $areas->where($query)->getField('code',true);      //获取不为空的所有codes
         $tp_query[] = $this->where_key_or($codes,'code');
         $tp_query['type'] = 0;                                      //获取相关交警

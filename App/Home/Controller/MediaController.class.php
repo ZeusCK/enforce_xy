@@ -750,7 +750,7 @@ class MediaController extends CommonController
     public function unusual_sat()
     {
         session_write_close();
-        $btime = date('Y-m-d H:i:s',time()-7*24*60*60);
+        $btime = date('Y-m-d H:i:s',time()-6*24*60*60);
         $etime = date('Y-m-d H:i:s');
         $where['start_time'][] = array('EGT',$btime);
         $where['start_time'][] = array('ELT',$etime);

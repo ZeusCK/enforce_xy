@@ -42,25 +42,11 @@ class WorkStationController extends CommonController
                 $where[$key] = array('like','%'.$value.'%');
             }
         }
-        if($request['zxzt'] != ''){
-            $where['zxzt'] = I('zxzt');
-        }
-        if($request['qyzt'] != ''){
-            $where['qyzt'] = I('qyzt');
-        }
-        $sarea = array();
-        if($request['areaid']){
-            $action = A($this->actions['area']);
-            $sarea = $action->carea($request['areaid']);
-            $sarea = array_intersect(explode(',', session('userarea')),$sarea);
-        }else{
-            $sarea = explode(',', session('userarea'));
-        }
-        if(!empty($sarea)){
-            $where[] = $this->where_key_or($sarea,'areaid').' OR areaid=0';
-        }else{
-            $where[] = 'areaid=0';
-        }
+        if($request['zxzt'] != '') $where['zxzt'] = I('zxzt');
+        if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
+
+        $action = A($this->actions['employee']);
+        $where[] = $action->get_manger_sql($request['areaid'],'areaid',false). ' OR areaid=0';
         $data = $db->getTableList(u2gs($where),$page,$rows,'areaid asc');
         foreach ($data['rows'] as &$value) {
             $value['zxztname'] = $value['zxzt'] == 0 ? u2g('离线') : u2g('在线');

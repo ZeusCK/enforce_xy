@@ -21,12 +21,10 @@ app.tp.areaname = "{:$areaname}";
 </div>
 <div id="toolbar">
     <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-        统计类型:
-        <select class="easyui-combobox" data-options="height:22,editable:false,panelHeight:68"
-                name="satType" style="width:168px">
-            <option value="0">按周统计</option>
-            <option value="1">按月统计</option>
-        </select>
+        开始日期:
+        <input class="easyui-datebox" type="text" name="start_time[btime]" data-options="editable:false">
+        结束日期:
+        <input class="easyui-datebox" type="text" name="start_time[etime]" data-options="editable:false">
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports()">导出</a>
         <a href="javascript:void(0)" class="easyui-linkbutton"

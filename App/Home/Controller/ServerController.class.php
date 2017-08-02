@@ -32,7 +32,7 @@ class ServerController extends CommonController
         //server_ip 服务器ip
         //areaid 部门ID
         $action =   A($this->actions['employee']);
-        $areaSql = $action->get_manger_sql($request['areaid'],'areaid',false);
+        $areaSql = $action->get_manger_sql($request['areaid'],'areaid',false).' OR areaid=0';
         $where[] = $areaSql;
         if($request['status'] != '') $where['status'] = $request['status'];
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');

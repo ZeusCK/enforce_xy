@@ -288,12 +288,8 @@ class CommonController extends Controller {
     public function where_key_or($data,$field)
     {
         $count = count($data);
-        if($count == 0){
-            return $field.'='.'""';
-        }
-        if($count == 1){
-            return $field.'='."'".$data[0]."'";
-        }
+        if($count == 0)  return $field.'='.'""';
+        if($count == 1)  return $field.'='."'".array_pop($data)."'";        //修复bug之前用的是$data[0] 防止索引 非0出现
         foreach ($data as &$value) {
             $value = $field.'='."'".$value."'";
         }

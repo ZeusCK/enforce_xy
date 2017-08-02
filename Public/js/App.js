@@ -271,7 +271,7 @@ App.prototype.exportExcel = function(exportInfo){
     options.params['export'] = true;
     //设置文本
     options.params.fields = fields;
-    options.parseFileds(options.params.fields);
+    if(options.parseFileds(options.params.fields) === false) return false;
     if(url == ''){
         $.messager.alert('操作提示','无导出URL,请核验！','info');
         this.linkbutton(options.linkbutton,'enable');
@@ -341,7 +341,7 @@ App.prototype.add_edit = function(params){
             return false;
         }
     }
-    options.parsedata(request);
+    if(options.parsedata(request) === false) return false;
     this.add_edit.options = options;
     options.url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
@@ -402,7 +402,7 @@ App.prototype.remove = function(params){
         ids = ids.join(',');
         data[options.idField] = ids;
     }
-    options.parsedata(data);
+    if(options.parsedata(data) === false) return false;
     options.url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
         url:options.url,
@@ -447,7 +447,7 @@ App.prototype.search = function(param){
     this.linkbutton(options.linkbutton,'disable');
     var data = {};
     if(options.form)  data = this.serializeJson(options.form);
-    options.parsedata(data);
+    if(options.parsedata(data) === false) return false;
     options.url = this.tp.ajax+'?tpUrl='+options.url;
     this.search.options = options;
     if(options.ajax){
@@ -467,12 +467,20 @@ App.prototype.search = function(param){
             complete:function(r,s){
                 App.prototype.linkbutton(options.linkbutton,'enable');
             }
-        })
+        });
     }else{
-        var option = $(options.datagrid).datagrid('options');
-        option.showDatagrid = options.showDatagrid;
-        option.otherView = options.otherView;
-        $(options.datagrid).datagrid('load',data);
+        if(options.datagrid){
+            var option = $(options.datagrid).datagrid('options');
+            option.showDatagrid = options.showDatagrid;
+            option.otherView = options.otherView;
+            $(options.datagrid).datagrid('load',data);
+        }
+        if(options.treegrid){
+            var option = $(options.treegrid).treegrid('options');
+            option.showDatagrid = options.showDatagrid;
+            option.otherView = options.otherView;
+            $(options.treegrid).treegrid('load',data);
+        }
         App.prototype.linkbutton(options.linkbutton,'enable');
     }
 }
@@ -492,11 +500,18 @@ App.prototype.search.defaults = {
 //表格
 App.prototype.datagrid = function(target,params){
     var options = $.extend({},App.prototype.datagrid.defaults,params);
-    console.log(App.prototype.datagrid.defaults);
     if(options.url != null){
         options.url = this.tp.ajax+'?tpUrl='+options.url;
     }
     $(target).datagrid(options);
+}
+//树表格
+App.prototype.treegrid = function(target,params){
+    var options = $.extend({},App.prototype.datagrid.defaults,params);
+    if(options.url != null){
+        options.url = this.tp.ajax+'?tpUrl='+options.url;
+    }
+    $(target).treegrid(options);
 }
 //设置表格默认属性
 App.prototype.datagrid.defaults = {
@@ -544,3 +559,4 @@ App.prototype.datagrid.defaults = {
         $.messager.alert('提示','网络发生错误！','info');
     }
 };
+

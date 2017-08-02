@@ -60,7 +60,10 @@ things.remove = function(target){
 things.search = function(){
     app.extra('search',{
         form:'#searchForm',
-        datagrid:'#datagrid'
+        datagrid:'#datagrid',
+        parsedata:function(data){
+            data.areaid = things.areaid
+        }
     });
 }
 things.clickTree = function(node){

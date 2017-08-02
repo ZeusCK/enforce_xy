@@ -41,34 +41,41 @@ $(function() {
         onClick: module.clickTree
     });
     $('#mu_ser').html(module.areaname);
-    $('#treegrid').treegrid({
-        url: app.url('Case/case_sat'),
-        method: 'get',
+    app.treegrid('#treegrid',{
+        url: 'Case/case_sat',
         queryParams: {
             areaid: module.areaid,
             rand: Math.random()
         },
         idField: 'areaid',
         treeField: 'areaname',
-        fit: true,
         title: '统计信息',
-        fitColumns: true,
-        rownumbers: true,
         columns: [
             [
-                { field: 'areaname', title: '所属部门' },
-                { field: 'empnum', title: '警员总数', width: 200, align: 'center' },
-                { field: 'workemp', title: '上传警员数', width: 200, align: 'center' },
-                { field: 'percent', title: '警员上传率', width: 200, align: 'center' },
-                { field: 'num', title: '案件总数', width: 200, align: 'center' },
-                { field: 'common', title: '一般警情', width: 200, align: 'center' },
-                { field: 'major', title: '重大警情', width: 200, align: 'center' },
+                { field: 'areaname', title: '所属部门', rowspan: 2, width: 80, align: 'center' },
+                { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
+                { field: 'workemp', title: '上传警员数', rowspan: 2, width: 80, align: 'center' },
+                { field: 'percent', title: '警员上传率', rowspan: 2, width: 80, align: 'center' },
+                { title: '警情', colspan: 9 },
+                { title: '案件', colspan: 3 },
+                { title: '工作站', colspan: 3 }
+            ],
+            [
+                { field: 'common', title: '一般警情', width: 80, align: 'center' },
+                { field: 'major', title: '重大警情', width: 80, align: 'center' },
+                { field: 'major', title: '重大警情', width: 80, align: 'center' },
                 { field: 'impede', title: '阻碍民警执法妨碍公务', align: 'center' },
-                { field: 'force', title: '行政强制执行', width: 200, align: 'center' },
-                { field: 'spot', title: '当场盘问检查', width: 200, align: 'center' },
-                { field: 'disuse', title: '无效数据', width: 200, align: 'center' },
-                { field: 'criminal', title: '刑侦案件', width: 200, align: 'center' },
-                { field: 'administration', title: '行政案件', width: 200, align: 'center' }
+                { field: 'force', title: '行政强制执行', width: 80, align: 'center' },
+                { field: 'spot', title: '当场盘问检查', align: 'center' },
+                { field: 'disuse', title: '无效数据', align: 'center' },
+                { field: 'unmark', title: '未编辑', align: 'center' },
+                { field: 'num', title: '合计', align: 'center' },
+                { field: 'criminal', title: '刑侦案件', align: 'center' },
+                { field: 'administration', title: '行政案件', align: 'center' },
+                { field: 'case_num', title: '合计', width: 80, align: 'center' },
+                { field: 'wsbase_num', title: '总数', width: 80, align: 'center' },
+                { field: 'wsbase_online', title: '在线数', width: 80, align: 'center' },
+                { field: 'case_num', title: '在线率', width: 80, align: 'center' },
             ]
         ]
     });

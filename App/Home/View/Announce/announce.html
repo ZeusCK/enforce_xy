@@ -1,0 +1,97 @@
+<extend name="layouts:master" />
+<block name="link">
+
+    <style>
+        #searchForm {
+            padding-left: 8px;
+        }
+        
+        #searchForm label {
+            line-height: 24px;
+        }
+        
+        .marginL {
+            margin-left: 20px;
+        }
+        
+        #form {
+            width: 350px;
+            padding: 10px 20px 10px 10px;
+        }
+        
+        .form_m {
+            width: 100%;
+        }
+        
+        .form_m>textarea {
+            width: 246px;
+            height: 80px;
+            resize: none;
+        }
+        
+        .textareaLabel {
+            position: relative;
+            top: -70px;
+        }
+    </style>
+</block>
+<block name="src">
+    <script type="text/javascript">
+        //根部门  用于数据的初始化
+        app.tp.areaid = "{:$areaid}";
+        app.tp.areaname = "{:$areaname}";
+    </script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Announce/announce.js"></script>
+</block>
+<block name="main">
+    <div class="easyui-layout" fit="true">
+        <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+            <ul id="area_list"></ul>
+        </div>
+        <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
+            <table id="datagrid" toolbar="#toolbar"></table>
+        </div>
+    </div>
+    <div id="toolbar">
+        <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
+            <label>发布日期：</label>
+            <input class="easyui-datebox" id="bTime" name="create_time[btime]" editable="false"> -
+            <input class="easyui-datebox" id="eTime" name="create_time[etime]" editable="false">
+            <label class="marginL">标题：</label>
+            <input name="title" id="title" class="easyui-textbox">
+            <a class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="module.search()">搜索</a>
+        </form>
+        <a onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
+        <a onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
+        <a onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+    删除</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
+        当前部门：<span id="mu_ser">无</span></a>
+    </div>
+    <!-- 增加 修改窗口-->
+    <div id="dialog" class="easyui-dialog" data-options="buttons:'#buttons',resizable:true,modal:true,closed:true">
+        <form id="form">
+            <div id="tip_area" style="text-align: center;color:#0E2D5F;font-size: 20px;"></div>
+            <div class="form_m">
+                <div class="form_label">公告标题:</div>
+                <input class="form_in easyui-textbox" name="title" data-options="required:true,width:252" />
+            </div>
+            <div class="form_m">
+                <div class="form_label">有效日期:</div>
+                <input id="start_time" class="form_in easyui-datebox" name="start_time" data-options="required:true,width:120" editable="false" /> -
+                <input id="end_time" class="form_in easyui-datebox" name="end_time" data-options="required:true,width:120" editable="false" />
+            </div>
+            <div class="form_m">
+                <div class="form_label textareaLabel">公告内容:</div>
+                <textarea name="content"></textarea>
+            </div>
+        </form>
+    </div>
+    <div id="buttons">
+        <a class="easyui-linkbutton" id="ok" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
+        <a class="easyui-linkbutton" id="update" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">更新</a>
+        <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+</block>

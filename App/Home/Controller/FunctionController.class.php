@@ -92,6 +92,13 @@ class FunctionController extends CommonController {
 
     public function dic_val_item($request)
     {
-        return $this->get_val_item('dictionary',$request['type']);
+        $data = $this->get_val_item('dictionary',$request['type']);
+        $res = array();
+        foreach ($data as $key => $value) {
+            $re['value'] = $key;
+            $re['item'] = $value;
+            $res[] =$re;
+        }
+        return g2us($res);
     }
 }

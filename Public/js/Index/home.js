@@ -10,7 +10,7 @@ $(function() {
             [
                 { field: 'id', title: 'id', checkbox: true },
                 { field: 'gzz_ip', title: '工作站IP', align: 'center' },
-                { field: 'dz', title: '地址', width: 200, align: 'center' },
+                { field: 'areaname', title: '地址', width: 200, align: 'center' },
                 { field: 'zxztname', title: '在线状态', width: 200, align: 'center' },
                 { field: 'ztsj', title: '最后在线时间', width: 200, align: 'center' },
                 { field: 'qyztname', title: '启用状态', width: 200, align: 'center' }

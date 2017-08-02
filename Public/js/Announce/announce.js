@@ -1,10 +1,10 @@
 var module = {};
 module.areaid = app.tp.areaid;
 module.areaname = app.tp.areaname;
-module.datagridUrl = 'Server/server_list';
-module.addUrl = 'Server/server_add';
-module.editUrl = 'Server/server_edit';
-module.removeUrl = 'Server/server_remove';
+module.datagridUrl = 'Announce/announce_list';
+module.addUrl = 'Announce/announce_add';
+module.editUrl = 'Announce/announce_edit';
+module.removeUrl = 'Announce/announce_remove';
 var tree = new Tree('#area_list');
 module.show = function() {
     $('#searchForm').form('reset');
@@ -23,6 +23,9 @@ module.addBar = function() {
         }
     }).dialog('open');
     $('#form').form('reset');
+    var t = new Date();
+    $('#start_time').datebox('setValue', new Time(t, 7).init());
+    $('#end_time').datebox('setValue', new Time(t, 0).init());
 }
 module.editBar = function() {
     var infos = $('#datagrid').datagrid('getSelections');
@@ -54,8 +57,13 @@ module.add = function(target) {
         datagrid: '#datagrid',
         linkbutton: target,
         parsedata: function(data) {
-            data.areaid = module.areaid;
-            data.areaname = module.areaname;
+            var begin = new Date(data.start_time).getTime();
+            var end = new Date(data.end_time).getTime();
+            if (end - begin < 0) {
+                $.messager.alert('操作提示', '开始时间不能大于结束时间', 'info');
+                return false;
+            }
+            return true;
         }
     });
 }
@@ -68,12 +76,20 @@ module.edit = function(target) {
         linkbutton: target,
         parsedata: function(data) {
             data.id = module.id;
+            var begin = new Date(data.start_time).getTime();
+            var end = new Date(data.end_time).getTime();
+            if (end - begin < 0) {
+                $.messager.alert('操作提示', '开始时间不能大于结束时间', 'info');
+                return false;
+            }
+            return true;
         }
     });
 }
 module.remove = function(target) {
+    var infos = $('#datagrid').datagrid('getSelections');
     app.extra('remove', {
-        idField: 'server_ip',
+        idField: 'id',
         url: module.removeUrl,
         datagrid: '#datagrid',
         linkbutton: target
@@ -83,6 +99,15 @@ module.search = function() {
     app.extra('search', {
         form: '#searchForm',
         datagrid: '#datagrid',
+        parsedata: function(data) {
+            var begin = new Date(data['create_time[btime]']).getTime();
+            var end = new Date(data['create_time[etime]']).getTime();
+            if (end - begin < 0) {
+                $.messager.alert('操作提示', '开始时间不能大于结束时间', 'info');
+                return false;
+            }
+            return true;
+        }
     });
 }
 module.clickTree = function(node) {
@@ -110,48 +135,22 @@ module.bind = function(id, choose) {
         }
     });
 }
+
 $(function() {
+    var t = new Date();
+    $('#bTime').datebox('setValue', new Time(t, 7).init());
+    $('#eTime').datebox('setValue', new Time(t, 0).init());
     app.datagrid('#datagrid', {
         url: module.datagridUrl,
-        title: '服务器',
+        title: '公告',
         columns: [
             [
-                { field: 'id', title: 'id', checkbox: true },
-                { field: 'server_ip', title: '服务器IP', align: 'center' },
-                { field: 'areaname', title: '所属部门', align: 'center' },
-                { field: 'server_port', title: '端口号', align: 'center' },
-                { field: 'trademark', title: '品牌', width: 200, align: 'center' },
-                { field: 'config', title: '配置', width: 200, align: 'center' },
-                { field: 'account', title: '帐号', width: 200, align: 'center' },
-                { field: 'password', title: '密码', width: 200, align: 'center' },
-                { field: 'db_user', title: '数据库账号', width: 200, align: 'center' },
-                { field: 'db_pwd', title: '数据库密码', width: 200, align: 'center' },
-                { field: 'phone', title: '联系电话', width: 200, align: 'center' },
-                {
-                    field: 'status_name',
-                    title: '状态',
-                    width: 200,
-                    align: 'center',
-                    formatter: function(v, d, i) {
-                        if (v == '离线') {
-                            return '<span style="color:#a00">离线</span>';
-                        } else {
-                            return '<span style="color:#0a0">在线</span>';
-                        }
-                    }
-                },
-                {
-                    field: 'handle',
-                    title: '操作',
-                    align: 'center',
-                    formatter: function(v, d, i) {
-                        if (d.areaid == 0) {
-                            return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind(' + d.id + ',true)">绑定部门</span>';
-                        } else {
-                            return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind(' + d.id + ',false)">解除部门绑定</span>';
-                        }
-                    }
-                }
+                { field: 'id', title: 'id', width: 200, checkbox: true },
+                { field: 'title', title: '公告标题', width: 200, align: 'center' },
+                { field: 'content', title: '公告内容', width: 400, align: 'center' },
+                { field: 'dept_name', title: '单位', width: 200, align: 'center' },
+                { field: 'start_time', title: '开始日期', width: 200, align: 'center' },
+                { field: 'end_time', title: '结束日期', width: 200, align: 'center' }
             ]
         ]
     });

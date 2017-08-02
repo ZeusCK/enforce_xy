@@ -15,16 +15,28 @@ class AnnounceController extends CommonController
     {
         $this->display('announce');
     }
+    public function assignInfo()
+    {
+        $action = A($this->actions['area']);
+         //如果没有
+        $areaTree = $action->tree_list();
+        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : '';
+        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
+        $this->assign('areaid',$rootId);
+        $this->assign('areaname',$rootName);
+    }
     //显示
     public function announce_list($request)
     {
-        $action = D($this->actions['employee']);
-        $where[] = $action->get_manger_sql($request['areaid'],'dep_code',false);
+        //title 标题
+        //create_time 创建时间
+        $action = A($this->actions['employee']);
+        $where[] = $action->get_manger_sql($request['areaid'],'dept_code',false);
         if($request['title']) $where['title'] = array('like','%'.$request['title'].'%');
         $where['create_time'][] = array('EGT',$request['create_time']['btime'] ? $request['create_time']['btime'].' 00:00:00' : date('Y-m-d',time()-7*24*60*60).' 00:00:00');      //开始时间
-        $where['create_time'][] = array('ELT',$request['create_time']['etime'] ? $request['create_time']['etime'].' 00:00:00' : date('Y-m-d').' 00:00:00');
+        $where['create_time'][] = array('ELT',$request['create_time']['etime'] ? $request['create_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59');
         $db = D($this->models['sys_notice']);
-        $data = $this->getTableList($where,$request['page'],$request['rows'],'create_time desc');
+        $data = $db->getTableList($where,$request['page'],$request['rows'],'create_time desc');
         $this->saveExcel($data);
         return g2us($data);
     }
@@ -36,9 +48,17 @@ class AnnounceController extends CommonController
         //start_time 开始日期   不能为空
         //end_time  结束日期  默认一周 不能为空
         $request['start_time'] = $request['start_time'].' 00:00:00';
-        $request['end_time'] = $request['end_time'].' 00:00:00';
-        $request['dep_code'] = session('areaid'); //创建单位
-        $request['dep_name'] = session('areaname');
+        $request['end_time'] = $request['end_time'].' 23:59:59';
+        if(session('areaid') == 0){
+            $action = A($this->actions['area']);
+         //如果没有
+            $areaTree = $action->tree_list();
+            $request['dept_code'] = !empty($areaTree) ? $areaTree[0]['id'] : ''; //创建单位
+            $request['dept_name'] = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
+        }else{
+            $request['dept_code'] = session('areaid'); //创建单位
+            $request['dept_name'] = session('areaname');
+        }
         $request['create_time'] = date('Y-m-d H:i:s');  //创建时间
         $request['creater_name'] = session('user');
         $request['creater_id'] = session('code');
@@ -67,12 +87,12 @@ class AnnounceController extends CommonController
     public function announce_broadcast($request)
     {
         $db = D($this->models['sys_notice']);
-        $action = D($this->actions['area']);
+        $action = A($this->actions['area']);
         $where['start_time'] = array('ELT',date('Y-m-d H:i:s'));    //开始时间小于当前时间
         $where['end_time'] = array('EGT',date('Y-m-d H:i:s'));      //结束时间大于当前时间
         $data = $db->where($where)->order('create_time desc')->select();
         foreach ($data as $key => $value) {
-            if(!in_array(session('areaid'),$action->carea($value['dep_code']))) unset($data[$key]);
+            if(!in_array(session('areaid'),$action->carea($value['dept_code']))) unset($data[$key]);
         }
         $data = array_values($data);
         $total = count($data);

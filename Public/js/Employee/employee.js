@@ -149,7 +149,6 @@ module.allowAreaBar = function(){
         return false;
     }
     var empid = rowData.empid;
-    managerTree.init();
     managerTree.show_emp_manger_area(empid);
     $(managerTree.dom).tree({
         checkbox:true
@@ -212,7 +211,7 @@ $(function(){
                 $('#manInfo').hide();
                 var rowData = $(this).datagrid('getData').rows[r];
                 var empid = rowData.empid;
-                managerTree.loadData();
+                managerTree.show_emp_manger_area(empid);
                 $(managerTree.dom).tree({
                     checkbox:true
                 });
