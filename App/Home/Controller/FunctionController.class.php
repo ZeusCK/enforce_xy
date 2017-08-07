@@ -89,7 +89,8 @@ class FunctionController extends CommonController {
             }
         }
     }
-
+    //前端获取字典数据
+    //type  字典类型
     public function dic_val_item($request)
     {
         $data = $this->get_val_item('dictionary',$request['type']);
@@ -100,5 +101,70 @@ class FunctionController extends CommonController {
             $res[] =$re;
         }
         return g2us($res);
+    }
+    /**
+     * 将excel数据读入数组中
+     * @param  string $filepath excel文件路径
+     * @return array           数组
+     */
+    public function read_excel($filepath)
+    {
+        if(!$filepath) return array();
+        //导入Excel表格
+        Vendor('PHPExcel.PHPExcel');
+        $objreader = \PHPExcel_IOFactory::createReaderForFile($filepath);
+        //载入阅读器 ******类变更为PHPExcel
+        $phpexcel = $objreader->load($filepath);
+        //获取表名
+        $content = $phpexcel->getSheetNames();
+        //获取目前表  ******类变更为Worksheet
+        $objWorksheet = $phpexcel->getActiveSheet();
+        //获取最高列
+        $hcolumn = $objWorksheet->getHighestColumn();
+        //获取最高行
+        $hrow = $objWorksheet->getHighestRow();
+        $allData = array();
+        for ($j = 1; $j <= $hrow; $j++) {
+            $oneRowData = array();
+            for ($k = 'A'; $k <= $hcolumn; $k++) {
+                $cell = $objWorksheet->getCell($k.$j)->getValue();
+                if ($cell instanceof \PHPExcel_RichText) //富文本转换字符串
+                {
+                    $cell = $cell->__toString();
+                }
+                $oneRowData[] = $cell;
+            }
+            $allData[] = $oneRowData;
+        }
+        return $allData;
+    }
+    /**
+     * 保存上传文件
+     * @param  array  $file     文件数组 $_FILE
+     * @param  string $filePath 文件保存目录
+     * @param  array  $exts     文件保存类型
+     * @param  boolean $is_remove_overtime_file 是否删除超时文件
+     * @return string/boolean           文件保存位置/false
+     */
+    public function save_upload($file,$filePath,$exts,$is_remove_overtime_file=true)
+    {
+        //2w张分目录
+        $upload = new \Think\Upload(); //实例化上传类
+        $upload->maxSize = 3145728; //设置附件上传大小
+        $upload->exts = $exts; //设置附件上传类型
+        $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0].'upload/';
+        $upload->autoSub = false;
+        $upload->subName = $filePath.'/'.date('Ymd'); //设置上传子目录
+        $upload->replace = true; //设置是否覆盖上传文件
+        //$upload->saveName = $imagename; //设置上传文件名
+        $upload->rootPath = $rootPath; //设置上传文件位置
+        //$upload->savePath = $filePath; // 设置附件上传目录
+        if($is_remove_overtime_file)  $this->del_dir($rootPath.$filePath);    //删除上传超时文件
+        // 上传文件
+        if(!is_dir($rootPath)) mkdir($rootPath);
+        if(!is_dir($rootPath.$filePath)) mkdir($rootPath.$filePath);
+        if(!is_dir($rootPath.$filePath.'/'.date('Ymd'))) mkdir($rootPath.$filePath.'/'.date('Ymd'));
+        $result = $upload->uploadOne($file);
+        return $result ? '/upload/'.$result['savepath'].$result['savename'] : false;  //$upload->getError();
     }
 }

@@ -73,27 +73,30 @@ class AreaController extends CommonController
         unset($request['areatype']);
         $db = D($this->models['area']);
         $result = $db->getTableAdd(u2gs($request));
-        $add_area = $result['add_id'];
-        //增加时将所有自身,父用户添加相关部门
-        $empWhere = array();
-        $empWhere['userarea'][] = array('NEQ','');
-        $empWhere['userarea'][] = array('exp','is not null');
-        $empWhere['userarea'][] = 'AND';
-        //更新警员表
-        $empdb = D($this->models['employee']);
-        //找出拥有管理权限的用户
-        $empMans = $empdb->where($empWhere)->getField('empid,userarea');
-        foreach ($empMans as $k => $v) {
-            $manAreas = explode(',',$v);
-            if(in_array($request['fatherareaid'],$manAreas)){
-                $manAreas[] = $add_area;
-                $data['userarea'] = implode(',', $manAreas);
-                $updateWhere['empid'] = $k;
-                $empdb->getTableEdit($updateWhere,$data);
+        if(!$result['status']) $result['message'] = '请确保部门代码的唯一性';
+        if($result['status']){
+            $add_area = $result['add_id'];
+            //增加时将所有自身,父用户添加相关部门
+            $empWhere = array();
+            $empWhere['userarea'][] = array('NEQ','');
+            $empWhere['userarea'][] = array('exp','is not null');
+            $empWhere['userarea'][] = 'AND';
+            //更新警员表
+            $empdb = D($this->models['employee']);
+            //找出拥有管理权限的用户
+            $empMans = $empdb->where($empWhere)->getField('empid,userarea');
+            foreach ($empMans as $k => $v) {
+                $manAreas = explode(',',$v);
+                if(in_array($request['fatherareaid'],$manAreas)){
+                    $manAreas[] = $add_area;
+                    $data['userarea'] = implode(',', $manAreas);
+                    $updateWhere['empid'] = $k;
+                    $empdb->getTableEdit($updateWhere,$data);
+                }
             }
+            $this->write_log('添加'.$request['areaname'].':'.$request['areacode']);
+            S('update'.$this->models['area'],true);     //设置部门缓存更新
         }
-        $this->write_log('添加'.$request['areaname']);
-        S('update'.$this->models['area'],true);     //设置部门缓存更新
         $this->ajaxReturn($result);
     }
 
@@ -322,5 +325,21 @@ class AreaController extends CommonController
         $areas['areaids'] = $areaids;
         $areas['userAreas'] = $userAreas;
         return $areas;
+    }
+    //获取能添加的部门代码
+    public function get_add_code($request)
+    {
+        //areaid  上级ID
+        $db = D($this->models['area']);
+        $where['fatherareaid'] = $request['areaid'];
+        $current = $db->where($request)->getField('areacode');
+        $areacodes = $db->where($where)->getField('areacode',true);
+        $allCodes = range(0,99);
+        foreach ($areacodes as &$areacode) {
+            (int)str_replace($current, '', $areacode);
+        }
+        $useCodes = array_diff($allCodes,$areacodes);
+        sort($useCodes);
+        return array('areacode'=>sprintf('%02d',reset($useCodes)));
     }
 }

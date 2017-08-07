@@ -40,24 +40,35 @@
    <div id="upimg">
     <div id="load"></div>
    </div>
-   <input type="file" name="mof" multiple="multiple"/>
+   <div id="picker">选择文件</div>
+   <input type="file" name="mof" id="mof" multiple="multiple"/>
    <input type="button" value="uploadfile" onclick="upfile();" />
    <input type="submit" value="submit" />
   </form>
   <div id="test">
    测试是否DIV消失
   </div>
+<script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.min.js"></script>
 <script type="text/javascript">
- var dom=document.getElementsByTagName('form')[0];
+var uploader = WebUploader.Uploader({
+  swf:'__PUBLIC__/plugins/webuploader/Uploader.swf',
+  server: 'http://2betop.net/fileupload.php',
+  pick:'#picker',
+  chunked:true          //切片上传
+});
+uploader.upload('#mof');
+</script>
+<script type="text/javascript">
+/* var dom = document.getElementsByTagName('form')[0];
  dom.onsubmit=function(){
   //return false;
- }
+ }*/
  var xhr=new XMLHttpRequest();
  var fd;
  var des=document.getElementById('load');
  var num=document.getElementById('upimg');
  var file;
- const LENGTH=10*1024*1024;
+ var LENGTH=10*1024*1024;
  var start;
  var end;
  var blob;

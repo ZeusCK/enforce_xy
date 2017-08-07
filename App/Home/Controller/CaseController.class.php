@@ -22,7 +22,7 @@ class CaseController extends CommonController
     //播放页面
     public function play_case()
     {
-        $request['video_id'] = I('video_id');
+        $request = I('');
         $data = $this->play_case_info($request);
         $this->assign('data',$data);
         $this->display();
@@ -84,8 +84,8 @@ class CaseController extends CommonController
         $type = $request['type'] ? $request['type'] : 0;
         $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
         $idField = $type == 0 ? 'areaid' : 'apply_areaid';
-        $page = $request['page'];
-        $rows = $request['rows'];
+        $page = $request['page'] ? $request['page'] : 1;
+        $rows = $request['rows'] ? $request['rows'] : 20;
         $areaid = $request['areaid'];       //查询部门
         $action = A($this->actions['employee']);
         $manger_sql = $action->get_manger_sql($areaid,$idField);
@@ -98,10 +98,26 @@ class CaseController extends CommonController
         if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
         if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
         if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
-        $where['start_time'][] = array('EGT',$request['start_time']['btime'] ? $request['start_time']['btime'].' 00:00:00' : date('Y-m-d',time()-6*24*60*60).' 00:00:00');      //开始时间
-        $where['start_time'][] = array('ELT',$request['start_time']['etime'] ? $request['start_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59');                    //结束时间
+        $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
+        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'] : date('Y-m-d H:i:s');
+        $where['start_time'][] = array('EGT',$btime);      //开始时间
+        $where['start_time'][] = array('ELT',$etime); //结束时间
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $total = array();
         $casedb = D($this->models['case']);
-        $res = $casedb->getTableList($where,$page,$rows,'title desc');
+        $tables = $this->get_dbTables();
+        foreach ($months as $month) {
+            if(!in_array('case_'.$month,$tables)) continue;
+            $total[$month] = $casedb->table('case_'.$month)->where($where)->count();
+        }
+        $tables = $this->get_query_table($total,$page,$rows);
+        $res = array();
+        $res['total'] = array_sum($total);
+        $res['rows'] = array();
+        foreach ($tables as $table => $start_limit) {
+            $data = $casedb->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            $res['rows'] = array_merge($res['rows'],(array),$data);
+        }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
         $case_type = $this->get_val_item('dictionary', 'case_type');
 
@@ -116,9 +132,11 @@ class CaseController extends CommonController
     public function edit_case($request)
     {
         $where['video_id'] = $request['video_id'];
+        $start_time = $request['start_time'];
+        $table = date('Ym',strtotime($start_time));
         unset($request['video_id']);
         $db = D($this->models['case']);
-        $result = $db->getTableEdit($where,u2gs($request));
+        $result = $db->table('case_'.$table)->getTableEdit($where,u2gs($request));
         $this->write_log('修改案件'.I('video_title'));
         return $result;
     }
@@ -183,6 +201,7 @@ class CaseController extends CommonController
         $this->write_log(g2u($info['video_title']).$result['message']);
         return $result;
     }
+    //审批通过
     public function allow_apply($request)
     {
         //video_id 案件ID
@@ -192,6 +211,41 @@ class CaseController extends CommonController
         $result['message'] = $result['status'] ? '审核通过' : '审核通过失败,可能原因该案件已被其他管理员审核通过';
         return  $result;
     }
+    //初始化案件
+    public function init_case($request)
+    {
+        $keys = array('alarm_no','alarm_name','alarm_addr','case_name','case_no','remark','case_qualify','case_empl','case_dept');
+        $initData = array_fill_keys($keys,'');
+        $initData['alarm_type'] = 0;
+        $initData['case_type'] = 0;
+        $db = D($this->models['case']);
+        $result = $db->getTableEdit($request,$initData);
+        $result['message'] = $result['status'] ? '初始化案件成功' : '初始化案件失败';
+        return $result;
+    }
+    //案件合并
+    public function case_merage($request)
+    {
+        $casesId = explode(',',$request['video_id']);
+        sort($casesId);
+        $db = D($this->models['case']);
+        $endCase = $db->where('video_id='.end($casesId))->find();
+        //将第一个案件的结束时间调整至最后一个案件的结束时间
+        $data['end_time'] = $endCase['end_time'];
+        $where['video_id'] = reset($casesId);
+        $result = $db->getTableEdit($request,$data);
+        //将相关视频合并
+        $mediadb = D($this->models['pe_video_list']);
+        $caseData['video_id'] = array_shift($casesId);
+        $caseWhere[] = $this->where_key_or($casesId, 'video_id');
+        $result = $mediadb->getTableEdit($caseWhere,$caseData);
+        return $result;
+    }
+    //案件拆包
+    public function case_slice($request)
+    {
+        $wjbhs = explode(',', $request['wjbh']);
+    }
     //撤销，拒绝申请
     public function init_apply($request)
     {
@@ -199,7 +253,9 @@ class CaseController extends CommonController
         //action  0 撤销 1 拒绝
         $data['hand_status'] = 0;   //初始状态
         $db = D($this->models['case']);
-        $result = $db->getTableEdit($request,$data);
+        $start_time = $request['start_time'];
+        $table = date('Ym',strtotime($start_time));
+        $result = $db->table('case_'.$table)->getTableEdit($request,$data);
         if($result['status']){
             if($request['action'] == 0) $result['message'] = '撤销成功';
             if($request['action'] == 1) $result['message'] = '申请已拒绝';
@@ -217,8 +273,10 @@ class CaseController extends CommonController
         $casedb = D($this->models['case']);
         $mediadb = D($this->models['pe_video_list']);
         $caseWhere['video_id'] = $request['video_id'];
-        $caseInfo = $casedb->where($caseWhere)->find();
-        $data = $mediadb->where($caseWhere)->select();
+        $start_time = $request['start_time'];
+        $table = date('Ym',strtotime($start_time));
+        $caseInfo = $casedb->table('case_'.$table)->where($caseWhere)->find();
+        $data = $mediadb->table('case_video_'.$table)->where($caseWhere)->select();
         $fileType = $this->get_val_item('dictionary','filetype');
         $video_source = $this->get_val_item('dictionary','video_source');
         foreach ($data as &$value) {
@@ -265,9 +323,6 @@ class CaseController extends CommonController
         $keys = array('areaname','empnum','workemp','percent','common','major','major','impede',
                       'force','spot','disuse','unmark','num','criminal','administration','case_num',
                       'wsbase_num','wsbase_online','case_num');
-
-
-
         $this->ajaxReturn(g2us($allEmp));
     }
     /**

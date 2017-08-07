@@ -118,4 +118,19 @@ class DemoController extends CommonController
         G('end');
         echo G('begin','end',8).'s'."<br>";
     }
+    public function test_get_query_table()
+    {
+        dump($this->get_dbTables());
+        $time = range(201701,201709);
+        foreach ($time as $value) {
+            $totalArr[$value] = rand(0,200);
+        }
+        $page=2;
+        $rows=100;
+        dump($totalArr);
+        dump($page);
+        dump($rows);
+        $res = $this->get_query_table($totalArr,$page,$rows);
+        dump($res);
+    }
 }

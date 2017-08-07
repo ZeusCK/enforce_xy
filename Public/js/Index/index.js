@@ -1,7 +1,9 @@
-function createFrame(url) {
-    return '<div style="width:100%;height:100%;overflow:hidden;"><iframe src="' + url + '" width="100%" height="100%" frameborder="0" scrolling="yes"></iframe></div>';
-    // return '<iframe scrolling="auto" frameborder="0"  style="width:100%;height:100%;" src="' + url + '" ></iframe>';
-
+function createFrame(url, dialog) {
+    if (dialog) {
+        return '<div style="width:100%;height:100%;overflow:hidden;"><iframe src="' + url + '" width="100%" height="100%" frameborder="0" scrolling="yes"></iframe></div>';
+    } else {
+        return '<iframe scrolling="auto" frameborder="0"  style="width:100%;height:100%;" src="' + url + '" ></iframe>';
+    }
 }
 
 function showTab(url, title, icon) {
@@ -116,16 +118,7 @@ function showMsgDialog() {
         height: '100%',
         border: false
     });
-    $('#msgTabs').tabs('add', {
-        title: '公告',
-        content: createFrame(app.url('Announce/showAnnounce'))
-    }).tabs('add', {
-        title: '服务器'
-    }).tabs('add', {
-        title: '工作站'
-    }).tabs('add', {
-        title: '未编辑'
-    });
+
 }
 $(function() {
     showMsgDialog();
@@ -188,12 +181,22 @@ $(function() {
         '工作站': app.url('WorkStation/showWork'),
         '未编辑': app.url('Announce/showAnnounce')
     }
+    $('#msgTabs').tabs('add', {
+        title: '公告',
+        content: createFrame(app.url('Announce/showAnnounce'), 'dialog')
+    }).tabs('add', {
+        title: '服务器'
+    }).tabs('add', {
+        title: '工作站'
+    }).tabs('add', {
+        title: '未编辑'
+    });
     $('#msgTabs').tabs({
         onSelect: function(title, index) {
             $(this).tabs('update', {
                 tab: $('#msgTabs').tabs('getSelected'),
                 options: {
-                    content: createFrame(tabs[title])
+                    content: createFrame(tabs[title], 'dialog')
                 }
             });
         }

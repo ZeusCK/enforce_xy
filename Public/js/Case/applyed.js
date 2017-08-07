@@ -57,8 +57,19 @@ things.clickTree = function(node){
         }
     })
 }
-things.play = function(data){
+things.play = function(data,time){
     var url='play_case.html'+'?video_id='+data;
+    var params = {video_id:data,start_time:time};
+    params.tpUrl = 'Case/play_case_info';
+    $.ajax({
+        url:app.tp.ajax,
+        type:'post',
+        dataType:'json',
+        data:params,
+        success:function(data){
+            
+        }
+    });
     window.open(url);
 }
 $(function(){
@@ -90,7 +101,7 @@ $(function(){
             }
           }},
           {field:'aa',title:'操作',align:'center',width:100,formatter:function(value,row,index){
-                return '<a href="javascript:void(0)" onclick="things.editBar($(this))" name="edit" tiggle="'+row.vedio_id+'"></a><a href="javascript:void(0)" onclick="things.play('+row.video_id+')" name="play" ></a>';
+                return '<a href="javascript:void(0)" onclick="things.editBar($(this))" name="edit" tiggle="'+row.vedio_id+'"></a><a href="javascript:void(0)" onclick="things.play('+row.video_id+','+row.start_time+')" name="play" ></a>';
           }}
         ]],
         onLoadSuccess:function(data){

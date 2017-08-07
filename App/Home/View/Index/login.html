@@ -1,56 +1,171 @@
 <extend name="layouts:master" />
-<block name="title"><title>执法记录仪数据管理平台登录</title></block>
+<block name="title">
+    <title>执法记录仪数据管理平台登录</title>
+</block>
 <block name='link'>
     <style type="text/css">
-        body{
-            background:url('__PUBLIC__/image/bg_log11.jpg') no-repeat center 0 #f4f4f4;
+        html {
+            position: relative;
+            width: 100%;
+            height: 100%;
         }
-        #logBg{
+        
+        #bodyBg {
             position: absolute;
-            width: 480px;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .lpImg {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 125px;
+            height: 142px;
+            /* background: url('__PUBLIC__/image/logo-xyga.png') no-repeat center center; */
+        }
+        /* #logBg {
+            position: absolute;
+            width: 761px;
             height: 380px;
             top: 50%;
             left: 50%;
-            margin-left: -260px;
-            margin-top: -190px;
-            background:url('__PUBLIC__/image/bg_log22.png') no-repeat center 0;
+            margin-left: -380px;
+            margin-top: -88px;
         }
-        #loginBox{
-            width: 268px;
-            height: 200px;
+         */
+        
+        #log_title {
+            /* width: 100%; */
             position: absolute;
-            top:130px;
-            left: 100px;
+            width: 761px;
+            height: 96px;
+            top: 50%;
+            left: 50%;
+            margin-left: -380px;
+            margin-top: -50px;
         }
-        /* #info{
+        
+        #loginBox {
+            width: 320px;
+            height: 160px;
             position: absolute;
-            top: 450px;
-            left: 42%;
+            top: 58%;
+            left: 50%;
+            margin-left: -160px;
+            /* margin-top: 0; */
+            background-color: #7576f4;
+            background: url('__PUBLIC__/image/login_form.png') no-repeat 0 0;
+        }
+        
+        .log_li {
+            margin-top: 20px;
+            margin-left: 30px;
+            width: 100%;
+            height: 30px;
+        }
+        
+        .log_label {
+            display: inline-block;
+            width: 60px;
+            line-height: 30px;
+            height: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #7576f4;
+        }
+        
+        .log_li>input {
+            display: inline-block;
+            width: 170px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            border: none;
+            background-color: #e2efff;
+        }
+        
+        #loginButton,
+        #resetButton {
+            display: inline-block;
+            padding-left: 5px;
+            width: 130px;
+            height: 32px;
+            line-height: 32px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            text-align: center;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        #loginButton {
+            background: url('__PUBLIC__/image/denglu.png') no-repeat 0 0;
+        }
+        
+        #loginButton:hover {
+            background: url('__PUBLIC__/image/denglu2.png') no-repeat 0 0;
+        }
+        
+        #resetButton {
+            background: url('__PUBLIC__/image/chongzhi.png') no-repeat 0 0;
+        }
+        
+        #resetButton:hover {
+            background: url('__PUBLIC__/image/chongzhi2.png') no-repeat 0 0;
+        }
+        
+        #info {
+            margin-top: 25px;
+            margin-left: 120px;
+            height: 30px;
             color: red;
-        } */
+        }
+        
+        .vesion_info {
+            margin-top: 40px;
+            margin-left: 10px;
+            color: #fff;
+        }
     </style>
 </block>
 <block name='src'>
-<script type="text/javascript" src="__PUBLIC__/js/Index/login.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Index/login.js"></script>
 </block>
 <block name="main">
     <!-- 登陆框 -->
-    <div id="logBg">
-        <form id="loginBox" method="post">
-            <div style="margin-bottom:10px">
-                <input class="easyui-textbox" id="username"  style="width:100%;height:40px;padding:12px;" 
-                data-options="prompt:'用户名',iconCls:'icon-man',iconWidth:38,autofocus:'autofocus'" name="username">
-            </div>
-            <div style="margin-bottom:30px">
-                <input class="easyui-textbox" type="password" id="password" style="width:100%;height:40px;padding:12px;" data-options="prompt:'密码',iconCls:'icon-lock',iconWidth:38" name="password">
-            </div>
-            <a href="javascript:void(0)" class="easyui-linkbutton" style="width:30%;margin-left:40px;padding:5px;" id="loginButton">登录</a>
-            <a href="javascript:void(0)" class="easyui-linkbutton" style="width:30%;margin-left:30px;padding:5px;" id="resetButton">重置</a>
-            <div id="download" style="width: 100%;color: red;margin-top:20px;text-align: center;">
+    <img id="bodyBg" src="__PUBLIC__/image/background.jpg">
+    <img class="lpImg" src="__PUBLIC__/image/logo-xyga.png"></img>
+    <!-- <div id="logBg"> -->
+    <img src="__PUBLIC__/image/logo-font-zfysp.png" id="log_title">
+    <form id="loginBox" method="post">
+        <div class="log_li">
+            <label class="log_label">警号：</label>
+            <input id="username" name="username">
+        </div>
+        <div class="log_li">
+            <label class="log_label">密码：</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <div class="log_li">
+            <a id="loginButton">登录</a>
+            <a id="resetButton">重置</a>
+        </div>
+        <div id="info"></div>
+
+        <div class="vesion_info">
+            版权所有：南京盾华交通科技有限公司
+        </div>
+        <!-- <div id="download" style="width: 100%;color: red;margin-top:20px;text-align: center;">
                 <span style="color: red;">推荐使用浏览器 </span><a href="__ROOT__/about.php" class="easyui-linkbutton" iconCls="icon-drive_web">火狐浏览器</a>
-            </div>
-            <div id="info" style="width: 100%;color: red;text-align: center;"></div>
-        </form>
-    </div>
+            </div> -->
+    </form>
+    <!-- </div> -->
 
 </block>

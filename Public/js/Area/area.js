@@ -6,6 +6,7 @@ module.addUrl = 'Area/dataAdd';
 module.editUrl = 'Area/dataEdit';
 module.removeUrl = 'Area/dataRemove';
 module.areaid = app.tp.areaid;
+module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 //基本的搜索
 module.show = function(){
@@ -17,6 +18,18 @@ module.show = function(){
 }
 //打开增加dialog
 module.addBar = function(){
+    var params = {areaid:module.areaid};
+    params.tpUrl = 'Area/get_add_code';
+    $.ajax({
+        url:app.tp.ajax,
+        type:'post',
+        dataType:'json',
+        data:params,
+        success:function(data){
+            $('#codetext').html(module.areacode);
+            $('#areacodeAdd').textbox('setValue',data.areacode);
+        }
+    });
     $('#addForm').form('reset');
     var node = $(tree.dom).tree('find',module.areaid);
     if(node == null){
@@ -40,6 +53,8 @@ module.editBar = function(){
         return false;
     }
     if(infos.length == 1){
+        $('#codetext_1').html(module.areacode);
+        infos[0].areacode=infos[0].areacode.replace(module.areacode,'');
         $('#editForm').form('load',infos[0]);
         $('#editDialog').dialog('open');
     }
@@ -52,6 +67,7 @@ module.add = function(target){
         url:module.addUrl,
         linkbutton:target,
         parsedata:function(data){
+            data.areacode=$('#codetext').html()+data.areacode;
             params = data;
         },
         success:function(data){
@@ -73,6 +89,7 @@ module.edit = function(target){
         url:module.editUrl,
         linkbutton:target,
         parsedata:function(data){
+            data.areacode=$('#codetext_1').html()+data.areacode;
             params = data;
         },
         success:function(data){
@@ -139,6 +156,8 @@ module.search = function(){
 //初始化表格
 $(function(){
     $('#mu_area').html(module.areaname);
+    $("#areacodeAdd").next('span').find('input.textbox-text').before('<span style="display: inline-block;padding-top:4px;font-family:Arial;padding-left: 5px;" id="codetext"></span>');
+    $("#areacodeEdit").next('span').find('input.textbox-text').before('<span style="display: inline-block;padding-top:4px;font-family:Arial;padding-left: 5px;" id="codetext_1"></span>');
     app.datagrid('#datagrid',{
         singleSelect:true,
         url:module.datagridUrl,
@@ -164,6 +183,7 @@ $(function(){
         onClick:function(node){
             module.areaid = node.id;
             module.areaname = node.text;
+            module.areacode = node.areacode;
             $('#mu_area').html(node.text);
             module.show();
         }

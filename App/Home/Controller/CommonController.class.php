@@ -182,9 +182,14 @@ class CommonController extends Controller {
      */
     public function get_dbTables($config)
     {
+
         $tables = array();
-        try {
+        if(empty($config)){
+            $initdb = M();
+        }else{
             $initdb = M('','',$config);
+        }
+        try {
             $tablesArr = $initdb->query('show tables');
             $tables = array();
             foreach ($tablesArr as  $table) {
@@ -194,24 +199,6 @@ class CommonController extends Controller {
         } catch (Exception $e) {
             return $tables;
         }
-    }
-    /**
-     * 获取两个日期之间的所有日期 包含自身
-     * @param  Date $smallDate 较小的日期
-     * @param  Date $bigDate   较大的日期
-     * @param  string $format  生成日期的格式
-     * @return array
-     */
-    public function get_twoMonthsDates($smallDate,$bigDate,$format)
-    {
-        $time1 = strtotime($smallDate); // 自动为00:00:00 时分秒 两个时间之间的年和月份
-        $time2 = strtotime($bigDate);
-        $datearr = array();
-        $datearr[] = date($format,$time1);
-        while( ($time1 = strtotime('+1 day', $time1)) <= $time2){
-              $datearr[] = date($format,$time1); // 取得递增月;
-        }
-        return $datearr;
     }
     /**
      * 添加其他信息到树
@@ -442,5 +429,48 @@ class CommonController extends Controller {
     {
         $mo = D(C('Model.'.$module));
         return $mo->get_val_item($type);
+    }
+    /**
+     * 获取两个日期之间的所有月份 包含自身
+     * @param  Date $smallDate 较小的日期
+     * @param  Date $bigDate   较大的日期
+     * @param  string $format  生成日期的格式
+     * @param  string $interval 间隔
+     * @return array
+     */
+    public function get_twoDates($smallDate,$bigDate,$format,$interval)
+    {
+        $time1 = strtotime($smallDate); // 自动为00:00:00 时分秒 两个时间之间的年和月份
+        $time2 = strtotime($bigDate);
+        $datearr = array();
+        $datearr[] = date($format,$time1);
+        while( ($time1 = strtotime($interval, $time1)) <= $time2){
+              $datearr[] = date($format,$time1); // 取得递增月;
+        }
+        return $datearr;
+    }
+    /**
+     * 获取需要查询的数据表
+     * @param  array   $totalArr 所有符合条件的记录 每张表的记录
+     * @param  integer $page     第几页
+     * @param  integer $rows     记录数
+     * @return array            查询的记录表及记录条数
+     */
+    public function get_query_table($totalArr=array(),$page=1,$rows=20)
+    {
+        $needTotal = $page*$rows;  //需要的记录数
+        $queryArray = array();
+        $total = 0;
+        foreach ($totalArr as $key => $value) {
+            $lastTotal = $total;
+            $total = $total + $value;
+            if($value == 0 || $total <= ($needTotal-$rows)) continue;       //如果该表没有满足条件的记录 或者 <= 上一页条目数 直接跳过
+            $start = ($needTotal-$rows) - $lastTotal;
+            $start = $start < 0 ? 0 : $start;           //开始统计
+            $rows = ($needTotal - $lastTotal) > $rows ? $rows : $needTotal - $lastTotal;            //需要统计的数量
+            $queryArray[$key] = array($start,$rows);
+            if($total >= $needTotal) break;     //如果目前统计的总数 >= 需要的总数，直接结束循环
+        }
+        return $queryArray;
     }
 }
