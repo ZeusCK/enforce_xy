@@ -32,7 +32,7 @@ class WorkStationController extends CommonController
         $request['hzr'] = I('hzr');        //负责人
         $request['zxzt'] = I('zxzt');        //在线状态,0:不在线，1：在线
         $request['qyzt'] = I('qyzt');
-        $request['areaid'] = I('areaid');
+        $request['areacode'] = I('areacode');
         $page = I('page');
         $rows = I('rows');
         $db =  D($this->models['wsbase']);
@@ -45,8 +45,7 @@ class WorkStationController extends CommonController
         if($request['zxzt'] != '') $where['zxzt'] = I('zxzt');
         if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
 
-        $action = A($this->actions['employee']);
-        $where[] = $action->get_manger_sql($request['areaid'],'areaid',false). ' OR areaid=0';
+        $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
         $data = $db->getTableList(u2gs($where),$page,$rows,'areaid asc');
         foreach ($data['rows'] as &$value) {
             $value['zxztname'] = $value['zxzt'] == 0 ? u2g('离线') : u2g('在线');
@@ -75,7 +74,7 @@ class WorkStationController extends CommonController
     public function ws_base_edit()
     {
         //dh 负责人电话
-        //hzr 负责人
+        //fzr 负责人
         //dz 地址
         //gzz_ip 工作站IP  必填
         //qyzt 启用状态 0:未启用，1：启用
@@ -100,7 +99,7 @@ class WorkStationController extends CommonController
     public function ws_status_statistics()
     {
         $db =  D($this->models['wsbase']);
-        $query['areaid'] = $this->where_key_or(explode(',',session('userarea'),'areaid')).'OR areaid=0';
+        $query[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
         $data = $db->where($query)->field('count(id) as num,zxzt')->group('zxzt');
         $this->ajaxReturn($data);
     }

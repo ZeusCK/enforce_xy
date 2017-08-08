@@ -87,14 +87,25 @@ class AreaController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $areaInfo = $db->where($where)->find();
-
-        foreach ($this->link_tabs as $tab) {
-            if($tab == 'enforce.employee'){
-                M()->query('UPDATE '.$tab.' SET `userarea`=REPLACE(`userarea`,"'.$areaInfo['areacode'].'","'.$request['areacode'].'")');
+        $result = $db->getTableEdit($where,u2gs($request));     //更新记录
+        if($areaInfo['areacode'] != $request['areacode']){      //更新关联表及下级部门
+            $linkTabs = $this->link_tabs;
+            $linkTabs[] = 'enforce.area_dep';   //部门区域
+            foreach ($linkTabs as $tab) {
+                $strLen = strLen($request['areacode']);
+                //更新所有符合条件的部门代码
+                $sql = 'UPDATE '.$tab.' SET 
+                       `areacode`=CONTACT("'.$request['areacode'].'",
+                       RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.')) 
+                       WHERE `areacode` like "'.$areaInfo['areacode'].'%"';
+                if($tab == 'enforce.employee'){
+                    M()->query('UPDATE '.$tab.' SET 
+                       `userarea`=CONTACT("'.$request['areacode'].'",
+                       RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.')) 
+                       WHERE `userarea` like "'.$areaInfo['areacode'].'%"');
+                }
             }
-            M()->query('UPDATE '.$tab.' SET `areacode`=REPLACE(`areacode`,"'.$areaInfo['areacode'].'","'.$request['areacode'].'")');
         }
-        $result = $db->getTableEdit($where,u2gs($request));
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
     }

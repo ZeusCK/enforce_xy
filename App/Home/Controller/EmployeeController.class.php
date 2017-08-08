@@ -92,6 +92,7 @@ class EmployeeController extends CommonController
      * @param  string/false $jybhField 有关警员字段 或者不进行关联
      * @return string         筛选之后的sql语句
      */
+    /*
     public function get_manger_sql($areacode = '',$codeField = 'areacode',$jybhField = 'jybh')
     {
         $areaAction = A($this->actions['area']);
@@ -111,7 +112,7 @@ class EmployeeController extends CommonController
             }
         }
         return $areasql;
-    }
+    }*/
     //数据获取
     public function dataList()
     {
@@ -121,7 +122,7 @@ class EmployeeController extends CommonController
         unset($request['page'],$request['rows'],$request['rand']);
         if(!empty($request)){
             foreach($request as $key=>$value){
-                if($key != 'areaid'){
+                if($key != 'areaid' || $key != 'areacode'){
                     $check[$key] = array('like','%'.u2g($value).'%');
                 }
             }
@@ -129,7 +130,7 @@ class EmployeeController extends CommonController
         $dbc = D($this->models['area']);
         $areas = $dbc->getField('areaid,areaname');
         $db = D($this->models['employee']);
-        $emps = $this->get_manger_sql(I('areaid'));
+        $emps = $this->get_manger_sql(I('areacode'));
         $check[] = $emps;
         $roledb = D($this->models['role']);
         $roles = $roledb->getField('roleid,rolename');

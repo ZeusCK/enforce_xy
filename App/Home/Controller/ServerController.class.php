@@ -30,9 +30,8 @@ class ServerController extends CommonController
     {
         //status 在线状态
         //server_ip 服务器ip
-        //areaid 部门ID
-        $action =   A($this->actions['employee']);
-        $areaSql = $action->get_manger_sql($request['areaid'],'areaid',false).' OR areaid=0';
+        //areacode 部门编号
+        $areaSql = $this->get_manger_sql($request['areacode'],'areacode',false).' OR areacode=""';
         $where[] = $areaSql;
         if($request['status'] != '') $where['status'] = $request['status'];
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');
