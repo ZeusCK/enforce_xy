@@ -473,4 +473,84 @@ class CommonController extends Controller {
         }
         return $queryArray;
     }
+    /**
+     * 根据部门编号,警员编号获取查询条件
+     * @param  int $areacode 部门编号
+     * @param  string $idField 有关部门字段
+     * @param  string/false $jybhField 有关警员字段 或者不进行关联
+     * @return string         筛选之后的sql语句
+     */
+    public function get_manger_sql($areacode='',$codeField='areacode',$jybhField='jybh')
+    {
+        //如果实际管理的部门是 all 基础sql不做限制  否则开始限制
+        $baseSql = '';
+        $mangerArea = session('mangerArea');
+        if(is_array($mangerArea)){
+            if(!empty($mangerArea)){
+                foreach ($mangerArea as &$value) {
+                    $value = $codeField.' like "'.$value.'%"';
+                }
+                $baseSql .= implode(' OR ',$mangerArea);
+            }else{
+                $baseSql .= $codeField. '= ""';
+            }
+        }
+        if($jybhField){
+            $jybhSql = $jybhField.' = '.session('code');
+            $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR '.$jybhSql;
+        }
+        if($areacode != ''){
+            $areacodeSql = $codeField.' like "'.$areacode.'%"';
+            $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
+        }
+        if($baseSql == '') $baseSql = '1';
+        error_log($baseSql."\r\n",3,'./error.log');
+        return $baseSql;
+
+    }
+    /**
+     * 根据部门编号,部门类型确定实际管理的部门
+     * @param  string $areacode 部门编号
+     * @param  string $areatype 部门类型
+     * @return array           实际管理的部门
+     */
+    public function real_manger_area($areacode = '',$areatype = '')
+    {
+        if($areatype == 2)  return 'all';                //法制部门
+        if($areacode == '') return array();
+        if($areatype == 0) return array($areacode);     //交警部门直接返回交警部门的部门代码
+        $areadb = D('Enforce\AreaDep');
+        $where['code'] = array('NEQ','');       //有标识字段
+        $where['type'] = 1;                     //非交警部门
+        $where['areacode'] = array('like',$areacode.'%');   //自身所管辖的部门
+        $codes = $areadb->where($where)->getField('code',true); //获取关联
+        if(empty($codes)) return array($areacode);
+        $codeWhere['code'] = array('IN',$codes);
+        $codeWhere['type'] = 0;     //交警部门
+        $areacodes = $areadb->where($where)->getField('areacode',true);
+        //排除自己已经监管的部门
+        foreach ($areacodes as $key => $value) {
+            if(strpos($value, $areacode) === 0) unset($areacodes[$key]);
+        }
+        if(empty($areacodes)) return array($areacode);
+
+        $searchArr = array();
+        foreach ($areacodes as $key => $value) {
+            if(isset($minLength)){
+                if($minLength < strlen($value)) continue;
+                if($minLength > strlen($value)) $searchArr = array();
+                if($minLength == strlen($value)) $searchArr[] = $value;
+            }else{
+                $minLength = strlen($value);
+                $searchArr[] = $value;
+            }
+        }
+        $checkAreacode = array_diff($areacodes,$searchArr);
+        foreach ($checkAreacode as $key => $value) {
+            foreach ($searchArr as $val) {
+                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
+            }
+        }
+        return array_merge($checkAreacode,$searchArr);
+    }
 }

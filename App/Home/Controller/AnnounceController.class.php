@@ -30,8 +30,7 @@ class AnnounceController extends CommonController
     {
         //title 标题
         //create_time 创建时间
-        $action = A($this->actions['employee']);
-        $where[] = $action->get_manger_sql($request['areaid'],'dept_code',false);
+        $where[] = $this->get_manger_sql($request['areacode'],'dept_code',false);
         if($request['title']) $where['title'] = array('like','%'.$request['title'].'%');
         $where['create_time'][] = array('EGT',$request['create_time']['btime'] ? $request['create_time']['btime'].' 00:00:00' : date('Y-m-d',time()-7*24*60*60).' 00:00:00');      //开始时间
         $where['create_time'][] = array('ELT',$request['create_time']['etime'] ? $request['create_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59');

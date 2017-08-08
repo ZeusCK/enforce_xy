@@ -87,8 +87,7 @@ class CaseController extends CommonController
         $page = $request['page'] ? $request['page'] : 1;
         $rows = $request['rows'] ? $request['rows'] : 20;
         $areaid = $request['areaid'];       //查询部门
-        $action = A($this->actions['employee']);
-        $manger_sql = $action->get_manger_sql($areaid,$idField);
+        $manger_sql = $this->get_manger_sql($areaid,$idField);
         $where[] = $manger_sql;
         if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
         if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
@@ -116,7 +115,7 @@ class CaseController extends CommonController
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
             $data = $casedb->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
-            $res['rows'] = array_merge($res['rows'],(array),$data);
+            $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
         $case_type = $this->get_val_item('dictionary', 'case_type');

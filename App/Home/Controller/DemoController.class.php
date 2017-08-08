@@ -133,4 +133,29 @@ class DemoController extends CommonController
         $res = $this->get_query_table($totalArr,$page,$rows);
         dump($res);
     }
+    public function ala()
+    {
+        $areacodes = ['36023656','3602365636','36023678','3602367837'];
+        $searchArr = array();
+        foreach ($areacodes as $key => $value) {
+            if(isset($minLength)){
+                if($minLength < strlen($value)) continue;
+                if($minLength > strlen($value)) $searchArr = array();
+                if($minLength == strlen($value)) $searchArr[] = $value;
+            }else{
+                $minLength = strlen($value);
+                $searchArr[] = $value;
+            }
+        }
+        dump($searchArr);
+        $checkAreacode = array_diff($areacodes,$searchArr);
+        dump($checkAreacode);
+        foreach ($checkAreacode as $key => $value) {
+            foreach ($searchArr as $val) {
+                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
+            }
+        }
+        dump($checkAreacode);
+        dump(array_merge($checkAreacode,$searchArr));
+    }
 }

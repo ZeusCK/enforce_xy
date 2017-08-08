@@ -9,10 +9,13 @@ class AreaController extends CommonController
                          'user'=>'Enforce\User',
                          'areapro'=>'Enforce\AreaPro',
                          'employee'=>'Enforce\Employee'];
-    protected $remove_link_tabs = ['employee'=>'Enforce\Employee'];    //删除部门时需要删除的警员
+    protected $link_tabs = ['enforce.ws_base', //工作站
+                            'enforce.pe_base', //执法记录仪
+                            'enforce.server_machine',  //服务器
+                            'enforce.sys.notice',    //公告
+                            'enforce.employee'];    //警员
     //控制器
     protected $actions = ['user'=>'User'];
-    protected $views = ['index'=>'area'];
     protected $logContent = '系统管理/部门管理';
     public function index()
     {
@@ -21,139 +24,79 @@ class AreaController extends CommonController
         $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
         $this->assign('areaid',$rootId);
         $this->assign('areaname',$rootName);
-        $this->display($this->views['index']);
+        $this->display('area');
     }
 
-    public function dataList()
+    public function dataList($request)
     {
-        $request = I();
         $request = u2gs($request);
-        $page = I('page');
-        $rows = I('rows');
+        $page = $request['page'];
+        $rows = $request['rows'];
         unset($request['page'],$request['rows'],$request['rand']);
         if(!empty($request)){
             foreach($request as $key=>$value){
-                if($key!='areaid')
+                if($key!='areaid' || $key != 'areacode')
                     $check[$key] = array('like','%'.$value.'%');
             }
         }
         $db = D($this->models['area']);
-        //有关于部门管理不要直接取session
-        $userarea = $this->m_userarea(session('empid'));
-        $areaid = $request['areaid'];
-        //初始数据展示限制只显示自身和下级角色
-        $all_list = $this->carea($areaid);
-
-        //将不属于自身部门的数据排除
-        $all_list = array_intersect($all_list, $userarea);
-
-        $check['areaid'] = array('in',$all_list);
+        $check[] = $this->get_manger_sql($request['areacode'],'areacode',false);
         $data['total'] = 0;
         $data['rows'] = array();
-        if(!empty($all_list)){
-            $order = 'fatherareaid asc';
-            $data = $db->getTableList($check,$page,$rows,$order);
-            $areas = $db->getField('areaid,areaname');
-            foreach ($data['rows'] as &$value) {
-                $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
-                $value['areatype'] = $value['type'];
-                $value['typename'] = $value['type'] == '' ? '无' : $value['type'] == 0 ? '交警' : '其他';
-                $value['typename'] = u2g($value['typename']);
-            }
+        $order = 'fatherareaid asc';
+        $data = $db->getTableList($check,$page,$rows,$order);
+        $areas = $db->getField('areaid,areaname');
+        foreach ($data['rows'] as &$value) {
+            $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
+            $value['areatype'] = $value['type'];
+            $value['typename'] = $value['type'] == '' ? '无' : $value['type'] == 0 ? '交警' : '其他';
+            $value['typename'] = u2g($value['typename']);
         }
         S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
 
-    public function dataAdd()
+    public function dataAdd($request)
     {
-        $request = I();
         $request['type'] = $request['areatype'];
         unset($request['areatype']);
         $db = D($this->models['area']);
         $result = $db->getTableAdd(u2gs($request));
         if(!$result['status']) $result['message'] = '请确保部门代码的唯一性';
-        if($result['status']){
-            $add_area = $result['add_id'];
-            //增加时将所有自身,父用户添加相关部门
-            $empWhere = array();
-            $empWhere['userarea'][] = array('NEQ','');
-            $empWhere['userarea'][] = array('exp','is not null');
-            $empWhere['userarea'][] = 'AND';
-            //更新警员表
-            $empdb = D($this->models['employee']);
-            //找出拥有管理权限的用户
-            $empMans = $empdb->where($empWhere)->getField('empid,userarea');
-            foreach ($empMans as $k => $v) {
-                $manAreas = explode(',',$v);
-                if(in_array($request['fatherareaid'],$manAreas)){
-                    $manAreas[] = $add_area;
-                    $data['userarea'] = implode(',', $manAreas);
-                    $updateWhere['empid'] = $k;
-                    $empdb->getTableEdit($updateWhere,$data);
-                }
-            }
-            $this->write_log('添加'.$request['areaname'].':'.$request['areacode']);
-            S('update'.$this->models['area'],true);     //设置部门缓存更新
-        }
-        $this->ajaxReturn($result);
+        return $result;
     }
 
-    public function dataRemove()
+    public function dataRemove($request)
     {
-        $request = I();
+        $where[] = $this->where_key_or(explode(',',$request['code']), 'areacode');
         $db = D($this->models['area']);
-        $empdb = D($this->models['employee']);
-        //有关于部门管理不要直接取session('userarea')
-        $userarea = $this->m_userarea(session('empid'));
-        $removearea = explode(',', $request[$this->tab_id]);
-        //算出用户管理的部门与要删除的部门的交集 得到真正能删除的部门
-        $intersect = array_intersect($removearea,$userarea);
-        if(!empty($intersect)){
-            $where[$this->tab_id] = array('in',$intersect);
-            $result = $db->getTableDel($where);
-            //删除与部门相关表的数据
-            foreach ($this->remove_link_tabs as $tab) {
-                $db_rm = D($tab);
-                $db_rm->getTableDel($where);
-            }
-            //更新警员表
-            $empWhere = array();
-            $empWhere['userarea'][] = array('NEQ','');
-            $empWhere['userarea'][] = array('exp','is not null');
-            $empWhere['userarea'][] = 'AND';
-            $empdb = D($this->models['employee']);
-            //找出拥有管理权限的用户
-            $empMans = $empdb->where($empWhere)->getField('empid,userarea');
-            foreach ($empMans as $k => $v) {
-                $manAreas = explode(',',$v);
-                $holdArae = array_diff($manAreas, $intersect);
-                $updateArae = implode(',', $holdArae);
-                //如果更新之后的与之前的数据有所不同，那么更新警员信息表
-                if($updateArae != $v){
-                    $data['userarea'] = $updateArae;
-                    $updateWhere['empid'] = $k;
-                    $empdb->getTableEdit($updateWhere,$data);
-                }
-            }
-        }else{
-            $result['message'] = '对不起,你没有权限删除这些部门';
+        $where[] = $this->get_manger_sql($request['areacode'],'areacode',false);
+        foreach ($this->link_tabs as $tab) {
+            $db_rm = D()->table($tab);
+            $db_rm->getTableDel($where);
         }
-        $this->write_log('删除部门');
+        $this->write_log('删除部门,部门代码：'.$request['areacode']);
         S('update'.$this->models['area'],true);     //设置部门缓存更新
-        $this->ajaxReturn($result);
+        return $result;
     }
 
-    public function dataEdit()
+    public function dataEdit($request)
     {
-        $request = I();
         $db = D($this->models['area']);
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
+        $areaInfo = $db->where($where)->find();
+
+        foreach ($this->link_tabs as $tab) {
+            if($tab == 'enforce.employee'){
+                M()->query('UPDATE '.$tab.' SET `userarea`=REPLACE(`userarea`,"'.$areaInfo['areacode'].'","'.$request['areacode'].'")');
+            }
+            M()->query('UPDATE '.$tab.' SET `areacode`=REPLACE(`areacode`,"'.$areaInfo['areacode'].'","'.$request['areacode'].'")');
+        }
         $result = $db->getTableEdit($where,u2gs($request));
         S('update'.$this->models['area'],true);     //设置部门缓存更新
-        $this->ajaxReturn($result);
+        return $result;
     }
     //获取自身展示部门
     public function all_user_area($type)
@@ -334,10 +277,10 @@ class AreaController extends CommonController
         $where['fatherareaid'] = $request['areaid'];
         $current = $db->where($request)->getField('areacode');
         $areacodes = $db->where($where)->getField('areacode',true);
-        $allCodes = range(0,99);
         foreach ($areacodes as &$areacode) {
-            (int)str_replace($current, '', $areacode);
+            $areacode = (int)str_replace($current, '', $areacode);
         }
+        $allCodes = range(1,99);
         $useCodes = array_diff($allCodes,$areacodes);
         sort($useCodes);
         return array('areacode'=>sprintf('%02d',reset($useCodes)));

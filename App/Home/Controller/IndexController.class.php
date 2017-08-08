@@ -41,6 +41,7 @@ class IndexController extends CommonController {
             $where['password'] = I('password');
             $empDb = D($this->models['employee']);
             $roleDb = D($this->models['role']);
+            $roleDb = D($this->models['role']);
             $res = $empDb->where($where)->find();
             if($res){
                 if($res['bindingip'] == 1){
@@ -51,6 +52,9 @@ class IndexController extends CommonController {
                 }
                 $roleData = $roleDb->where('roleid = '.$res['roleid'])->field('rolename,functionlist,level')->find();
                 $roleData = g2us($roleData);
+                $mangerArea = $this->real_manger_area($areacode, $areatype);
+                if($roleData['level'] == 0) $mangerArea = 'all';    //如果是系统管理员直接监管所有的部门
+                session('mangerArea',$mangerArea);
                 session('areaid',$res['areaid']);
                 session('role',$roleData['rolename']);
                 session('menu',$roleData['functionlist']);

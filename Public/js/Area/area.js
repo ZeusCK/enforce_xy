@@ -12,7 +12,7 @@ module.areaname = app.tp.areaname;
 module.show = function(){
     $('#searchForm').form('reset');
     $('#datagrid').datagrid('load',{
-        areaid:module.areaid,
+        areacode:module.areacode,
         rand:Math.random()
     });
 }
@@ -53,8 +53,8 @@ module.editBar = function(){
         return false;
     }
     if(infos.length == 1){
-        $('#codetext_1').html(module.areacode);
-        infos[0].areacode=infos[0].areacode.replace(module.areacode,'');
+        $('#codetext_1').html(infos[0].areacode.substring(0,infos[0].areacode.length-2));
+        infos[0].areacode=infos[0].areacode.substring(infos[0].areacode.length-2,infos[0].areacode.length);
         $('#editForm').form('load',infos[0]);
         $('#editDialog').dialog('open');
     }
@@ -149,7 +149,7 @@ module.search = function(){
         form:'#searchForm',
         datagrid:'#datagrid',
         parsedata:function(data){
-            data.areaid = module.areaid;
+            data.areacode = module.areacode;
         }
     });
 }

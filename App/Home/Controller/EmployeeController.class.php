@@ -92,7 +92,7 @@ class EmployeeController extends CommonController
      * @param  string/false $jybhField 有关警员字段 或者不进行关联
      * @return string         筛选之后的sql语句
      */
-    public function get_manger_sql($areaid = '',$idField = 'areaid',$jybhField = 'jybh')
+    public function get_manger_sql($areacode = '',$codeField = 'areacode',$jybhField = 'jybh')
     {
         $areaAction = A($this->actions['area']);
         //如果部门ID为空视为查看自身管理区域
@@ -115,7 +115,7 @@ class EmployeeController extends CommonController
     //数据获取
     public function dataList()
     {
-        $request = I();
+        $request = I('');
         $page = I('page');
         $rows = I('rows');
         unset($request['page'],$request['rows'],$request['rand']);
