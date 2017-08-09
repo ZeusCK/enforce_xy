@@ -4,12 +4,15 @@ var managerTree = new Tree('#areaList');
 var module = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
+module.area_is_read = app.tp.area_is_read;
 module.code = app.tp.code;
 module.actionType = 1;
 module.clickTree = function(node){
     module.areacode = node.areacode;
     module.areaname = node.text;
-    $('#mu_ser').html(module.areaname);
+    module.area_is_read = node.is_read;
+    var is_read_info = module.area_is_read == 0 ? '(只读)':'';
+    $('#mu_ser').html(module.areaname+is_read_info);
     $('#infoAreaname').html('*<span style="color:red;">'+module.areaname+'</span>*添加/修改警员！');
     module.search();
 }
@@ -48,6 +51,10 @@ module.infoBar = function(type){
     }
     //添加
     if(type == 1){
+        if(module.area_is_read == 0){
+            $.messager.alert('操作提示','你无法向'+module.areaname+'(只读)添加警员','info');
+            return false;
+        }
         var info = {areacode:module.areacode,name:'',code:'',phone:'',remark:'',email:'',empid:''};
         //$('#form').form('clear');
         $('#form').form('load',info);
@@ -197,7 +204,8 @@ $(function(){
         onClick:module.clickTree
     });
     $('#infoAreaname').html('*<span style="color:red;">'+module.areaname+'</span>*添加/修改警员！');
-    $('#mu_ser').html(module.areaname);
+    var is_read_info = module.area_is_read == 0 ? '(只读)':'';
+    $('#mu_ser').html(module.areaname+is_read_info);
     $('#datagrid').datagrid({
         url:app.url('Employee/dataList'),
         method:'get',

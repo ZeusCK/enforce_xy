@@ -1,9 +1,9 @@
 <?php
 /**********************
- *案件同步表
+ *视频同步表
  **********************/
 namespace Home\Model\Enforce;
 
-class SyncCaseVideoModel extends CommonModel{
+class SyncCaseVideoModel extends SyncModel{
     protected $tableName = 'sync_case_video';
 }

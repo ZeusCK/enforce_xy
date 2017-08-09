@@ -4,6 +4,6 @@
  **********************/
 namespace Home\Model\Enforce;
 
-class SyncCaseModel extends CommonModel{
+class SyncCaseModel extends SyncModel{
     protected $tableName = 'sync_case';
 }
