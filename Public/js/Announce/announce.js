@@ -1,5 +1,5 @@
 var module = {};
-module.areaid = app.tp.areaid;
+module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.datagridUrl = 'Announce/announce_list';
 module.addUrl = 'Announce/announce_add';
@@ -111,31 +111,17 @@ module.search = function() {
     });
 }
 module.clickTree = function(node) {
-    module.areaid = node.id;
+    module.areacode = node.areacode;
     module.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(module.areaname);
     app.extra('search', {
         datagrid: '#datagrid',
         parsedata: function(data) {
-            data.areaid = module.areaid;
+            data.areacode = module.areacode;
         }
     })
 }
-module.bind = function(id, choose) {
-    var dz = choose ? module.areaname : '';
-    var areaid = choose ? module.areaid : 0;
-    app.extra('add_edit', {
-        datagrid: '#datagrid',
-        url: module.editUrl,
-        parsedata: function(data) {
-            data.id = id;
-            data.dz = dz;
-            data.areaid = areaid;
-        }
-    });
-}
-
 $(function() {
     var t = new Date();
     $('#bTime').datebox('setValue', new Time(t, 7).init());
@@ -148,7 +134,7 @@ $(function() {
                 { field: 'id', title: 'id', width: 200, checkbox: true },
                 { field: 'title', title: '公告标题', width: 200, align: 'center' },
                 { field: 'content', title: '公告内容', width: 400, align: 'center' },
-                { field: 'dept_name', title: '单位', width: 200, align: 'center' },
+                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'start_time', title: '开始日期', width: 200, align: 'center' },
                 { field: 'end_time', title: '结束日期', width: 200, align: 'center' }
             ]

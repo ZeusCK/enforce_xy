@@ -83,12 +83,13 @@ class CaseController extends CommonController
         //type 显示类型 0 正常产看  1 申请查看
         $type = $request['type'] ? $request['type'] : 0;
         $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
-        $idField = $type == 0 ? 'areaid' : 'apply_areaid';
+        $idField = $type == 0 ? 'areacode' : 'apply_areacode';
         $page = $request['page'] ? $request['page'] : 1;
         $rows = $request['rows'] ? $request['rows'] : 20;
-        $areaid = $request['areaid'];       //查询部门
-        $manger_sql = $this->get_manger_sql($areaid,$idField);
+        $areacode = $request['areacode'];       //查询部门
+        $manger_sql = $this->get_manger_sql($areacode,$idField);
         $where[] = $manger_sql;
+
         if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
         if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
         if($request['case_type']) $where['case_type'] = $request['case_type'];      //案件类型
@@ -103,18 +104,18 @@ class CaseController extends CommonController
         $where['start_time'][] = array('ELT',$etime); //结束时间
         $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
         $total = array();
-        $casedb = D($this->models['case']);
         $tables = $this->get_dbTables();
         foreach ($months as $month) {
             if(!in_array('case_'.$month,$tables)) continue;
-            $total[$month] = $casedb->table('case_'.$month)->where($where)->count();
+            $total[$month] = M()->table('case_'.$month)->where($where)->count();
         }
         $tables = $this->get_query_table($total,$page,$rows);
         $res = array();
         $res['total'] = array_sum($total);
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
-            $data = $casedb->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
@@ -130,10 +131,10 @@ class CaseController extends CommonController
     //修改案件
     public function edit_case($request)
     {
-        $where['video_id'] = $request['video_id'];
+        $where['case_key'] = $request['case_key'];
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
-        unset($request['video_id']);
+        unset($request['case_key']);
         $db = D($this->models['case']);
         $result = $db->table('case_'.$table)->getTableEdit($where,u2gs($request));
         $this->write_log('修改案件'.I('video_title'));
@@ -142,47 +143,68 @@ class CaseController extends CommonController
     //查看可以申请的数据
     public function show_apply_list($request)
     {
-        //areaid  查看部门
-        //page 页数
-        //rows 条数
         //case_no  案件编号
         //case_name 案件名称
+        //case_type 案件类型
         //alarm_no 警情编号
         //alarm_name 警情名称
-        $areas = explode(',',session('userarea'));
-        foreach ($areas as &$area) {
-            $area = 'areaid !="'.$area.'"';
-        }
-        $areasql = implode(' AND ',$areas);
-        if(!in_array(session('areaid'),$areas)){
-            $areasql .= ' AND jybh !="'.session('code').'"';
-        }
-        $where[] = $areasql;    //禁止查看的数据
-        $action = A($this->actions['area']);
-        if($request['areaid'] != ''){
-            $careas = $action->carea($request['areaid']);
-            $where[] = $this->where_key_or($careas,'areaid');      //需要查看的数据
-        }
-        $where['alarm_no'] = array('NEQ','');           //没有编辑过的不允许移交
-        $where[] = "hand_status = '0' OR (hand_status = '1' AND apply_jybh = '".session('code')."')";
+        //alarm_type 警情类型
+        //jybh 警员编号
+        //start_time.btime 开始时间
+        //start_time.etime 结束时间
+        //hand_status 案件移交状态
+        //type 显示类型 0 正常产看  1 申请查看
+        //areacode 部门代码
+        $type = $request['type'] ? $request['type'] : 0;
+        $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
+        $idField = $type == 0 ? 'areacode' : 'apply_areacode';
+        $page = $request['page'] ? $request['page'] : 1;
+        $rows = $request['rows'] ? $request['rows'] : 20;
+        $areacode = $request['areacode'];
+        $manger_sql = $this->get_manger_sql($areacode,$idField);
+        $where[] = str_replace('OR','AND',str_replace('LIKE', 'NO LIKE', $manger_sql));
         if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
         if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
+        if($request['case_type']) $where['case_type'] = $request['case_type'];      //案件类型
         if($request['alarm_no']) $where['alarm_no'] = array('like','%'.$request['alarm_no'].'%');    //警情编号
-        if($request['alarm_name']) $where['alarm_name'] = array('like','%'.$request['alarm_name'].'%');    //警情名称/
-        $db = D($this->models['case']);
-        $data = $db->getTableList($where,$request['page'],$request['rows'],'title desc');
+        if($request['alarm_name']) $where['alarm_name'] = array('like','%'.$request['alarm_name'].'%');    //警情名称
+        if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
+        if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
+        if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
+        $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
+        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'] : date('Y-m-d H:i:s');
+        $where['start_time'][] = array('EGT',$btime);      //开始时间
+        $where['start_time'][] = array('ELT',$etime); //结束时间
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $total = array();
+        $tables = $this->get_dbTables();
+        foreach ($months as $month) {
+            if(!in_array('case_'.$month,$tables)) continue;
+            $total[$month] = M()->table('case_'.$month)->where($where)->count();
+        }
+        $tables = $this->get_query_table($total,$page,$rows);
+        $res = array();
+        $res['total'] = array_sum($total);
+        $res['rows'] = array();
+        foreach ($tables as $table => $start_limit) {
+            error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            $res['rows'] = array_merge($res['rows'],(array)$data);
+        }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
         $case_type = $this->get_val_item('dictionary', 'case_type');
-        foreach ($data['rows'] as &$row) {
+
+        foreach ($res['rows'] as &$row) {
             $row['alarm_type_name'] = $alarm_type[$row['alarm_type']];
             $row['case_type_name'] = $case_type[$row['case_type']];
         }
-        return g2us($data);
+        $this->saveExcel($res); //监测是否为导出
+        return g2us($res);
     }
     //申请移交
     public function apply_case($request)
     {
-        //video_id  案件ID 申请案件
+        //case_key  案件关键字 申请案件
         $data['apply_jybh'] = session('code');
         $data['apply_jyxm'] = u2g(session('user'));
         $data['apply_areaid'] = session('areaid');
@@ -203,7 +225,7 @@ class CaseController extends CommonController
     //审批通过
     public function allow_apply($request)
     {
-        //video_id 案件ID
+        //case_key 案件关键字
         $data['hand_status'] = 2;   //初始状态
         $db = D($this->models['case']);
         $result = $db->getTableEdit($request,$data);
@@ -225,18 +247,18 @@ class CaseController extends CommonController
     //案件合并
     public function case_merage($request)
     {
-        $casesId = explode(',',$request['video_id']);
+        $casesId = explode(',',$request['case_key']);
         sort($casesId);
         $db = D($this->models['case']);
-        $endCase = $db->where('video_id='.end($casesId))->find();
+        $endCase = $db->where('case_key='.end($casesId))->find();
         //将第一个案件的结束时间调整至最后一个案件的结束时间
         $data['end_time'] = $endCase['end_time'];
-        $where['video_id'] = reset($casesId);
+        $where['case_key'] = reset($casesId);
         $result = $db->getTableEdit($request,$data);
         //将相关视频合并
         $mediadb = D($this->models['pe_video_list']);
-        $caseData['video_id'] = array_shift($casesId);
-        $caseWhere[] = $this->where_key_or($casesId, 'video_id');
+        $caseData['case_key'] = array_shift($casesId);
+        $caseWhere[] = $this->where_key_or($casesId, 'case_key');
         $result = $mediadb->getTableEdit($caseWhere,$caseData);
         return $result;
     }
@@ -248,7 +270,7 @@ class CaseController extends CommonController
     //撤销，拒绝申请
     public function init_apply($request)
     {
-        //video_id 案件ID
+        //case_key 案件关键字
         //action  0 撤销 1 拒绝
         $data['hand_status'] = 0;   //初始状态
         $db = D($this->models['case']);
@@ -268,10 +290,10 @@ class CaseController extends CommonController
     //播放,编辑信息
     public function play_case_info($request)
     {
-        //video_id  案件ID
+        //case_key  案件关键字
         $casedb = D($this->models['case']);
         $mediadb = D($this->models['pe_video_list']);
-        $caseWhere['video_id'] = $request['video_id'];
+        $caseWhere['case_key'] = $request['case_key'];
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
         $caseInfo = $casedb->table('case_'.$table)->where($caseWhere)->find();
@@ -289,36 +311,93 @@ class CaseController extends CommonController
         $this->write_log(g2u($info['video_title']).'播放,编辑信息');
         return g2us($res);
     }
+/*    var column = [
+    [
+        { field: 'areaname', title: '所属部门', rowspan: 2, width: 80, align: 'center' },
+        { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
+        { field: 'workemp', title: '执法民警数', rowspan: 2, width: 80, align: 'center' },
+        { field: 'recorder', title: '执法记录仪数', rowspan: 2, width: 80, align: 'center' },
+        //{ field: 'upload', title: '民警上传情况', colspan: 3, align: 'center' },
+        //{ field: 'warning', title: '警情数', colspan: 9, align: 'center' },
+        //{ field: 'case', title: '案件数', colspan: 3, align: 'center' },
+        //{ field: 'collect', title: '采集站情况', colspan: 3, align: 'center' }
+    ],
+    [
+        //{ field: 'uploadnum', title: '上传警员数', width: 80, align: 'center' },
+        //{ field: 'unuploadnum', title: '未上传民警数', width: 80, align: 'center' },
+        //{ field: 'uploadper', title: '警员上传率', width: 80, align: 'center' },
+
+        { field: 'common', title: '一般警情', width: 80, align: 'center' },
+        { field: 'major', title: '重大警情', width: 80, align: 'center' },
+        { field: 'spot', title: '当场盘问检查', align: 'center' },
+        { field: 'force', title: '行政强制执行', width: 80, align: 'center' },
+        { field: 'impede', title: '阻碍民警执法妨碍公务', align: 'center' },
+        { field: 'otherdata', title: '其他数据', align: 'center' },
+        { field: 'unmark', title: '未编辑数据', align: 'center' },
+        { field: 'disuse', title: '无效数据', align: 'center' },
+        { field: 'num', title: '合计', align: 'center' },
+
+        { field: 'administration', title: '行政案件', align: 'center' },
+        { field: 'criminal', title: '刑侦案件', align: 'center' },
+        { field: 'case_num', title: '合计', width: 80, align: 'center' },
+
+        { field: 'wsbase_num', title: '采集站数', width: 80, align: 'center' },
+        { field: 'wsbase_online', title: '连接数', width: 80, align: 'center' },
+        { field: 'wsbase_per', title: '连接率', width: 80, align: 'center' }
+    ]
+];*/
     //案件统计
     public function case_sat($request)
     {
-        //---------------------
-        //查询阶段
-        //---------------------
-        $where['start_time'][] = array('EGT',$request['start_time']['btime'] ? $request['start_time']['btime'].' 00:00:00' : date('Y-m-d',time()-6*24*60*60).' 00:00:00');      //开始时间
-        $where['start_time'][] = array('ELT',$request['start_time']['etime'] ? $request['start_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59');                    //结束时间
-        $areaid = $request['areaid'];
-        $action = A($this->actions['employee']);
-        $manger_sql = $action->get_manger_sql($areaid);
+        //----------------
+        //基础where条件
+        //----------------
+        $areacode = $request['areacode'];
+        $manger_sql = $this->get_manger_sql($areacode);
         $where[] = $manger_sql;
+        $emWhere = $wsWhere = $serWhere = $caseWhere = $peWhere = $where;
+        //---------------------
+        //查询时间
+        //---------------------
+        $btime = $request['start_time']['btime'] ? $request['start_time']['btime'].' 00:00:00' : date('Y-m-d',time()-6*24*60*60).' 00:00:00'; //开始时间
+        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59'); //结束时间
+        $where['start_time'][] = array('EGT',$btime);      //开始时间
+        $where['start_time'][] = array('ELT',$etime); //结束时间
+        //警员统计
+        $employeedb = D($this->models['employee']);
+        $allEmp = $employeedb->field('areacode,count(1) as empnum')->where($wsWhere)->group('areacode')->select();
+
+
+
+
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $total = array();
+        $tables = $this->get_dbTables();
+        foreach ($months as $month) {
+            if(!in_array('case_'.$month,$tables)) continue;
+            $total[$month] = M()->table('case_'.$month)->where($where)->count();
+        }
+
+
+
         $db = D($this->models['case']);
         $caseWhere = $empWhere = $alarmWhere = $where;
         //案件统计 和 警情统计
-        $caseData = $db->field('areaid,areaname,count(1) as num')->where($where)->group('areaid,alarm_type,case_type')->select();
+        $caseData = $db->field('areacode,areaname,count(1) as num')->where($where)->group('areacode,alarm_type,case_type')->select();
         $sql = $action->get_manger_sql($areaid,'areaid',fasle);
         $wsWhere[]= $sql;
         //民警执勤统计
         $empData = $db->field('areaid,areaname,count(distinct(jybh)) as workemp')->where($where)->group('areaid')->select();
-        $allEmp = D($this->models['employee'])->field('areaid,count(1) as empnum')->where($wsWhere)->group('areaid')->select();
+        $allEmp = D($this->models['employee'])->field('areacode,count(1) as empnum')->where($wsWhere)->group('areacode')->select();
         $wsDb = D($this->models['wsbase']);
         //工作站统计
-        $wsData = $wsDb->field('areaid,areaname,count(1) as wsnum')->where($wsWhere)->group('areaid,zxzt')->select();
+        $wsData = $wsDb->field('areacode,areaname,count(1) as wsnum')->where($wsWhere)->group('areacode,zxzt')->select();
         //------------------
         //数据初始化阶段
         //------------------
         $areaAction = A($this->actions['area']);
         $areadb = D($this->models['area']);
-        $initInfos = $areadb->field('areaid,areaname,fatherareaid as _parentId')->where($showWhere)->select();
+        $initInfos = $areadb->field('areacode,areaname,fatherareaid as _parentId')->where($showWhere)->select();
         $keys = array('areaname','empnum','workemp','percent','common','major','major','impede',
                       'force','spot','disuse','unmark','num','criminal','administration','case_num',
                       'wsbase_num','wsbase_online','case_num');

@@ -271,7 +271,10 @@ App.prototype.exportExcel = function(exportInfo){
     options.params['export'] = true;
     //设置文本
     options.params.fields = fields;
-    if(options.parseFileds(options.params.fields) === false) return false;
+    if(options.parseFileds(options.params.fields) === false){
+        this.linkbutton(options.linkbutton,'enable');
+        return false;
+    }
     if(url == ''){
         $.messager.alert('操作提示','无导出URL,请核验！','info');
         this.linkbutton(options.linkbutton,'enable');
@@ -341,7 +344,10 @@ App.prototype.add_edit = function(params){
             return false;
         }
     }
-    if(options.parsedata(request) === false) return false;
+    if(options.parsedata(request) === false){
+        this.linkbutton(options.linkbutton,'enable');
+        return false;
+    }
     this.add_edit.options = options;
     options.url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
@@ -402,7 +408,10 @@ App.prototype.remove = function(params){
         ids = ids.join(',');
         data[options.idField] = ids;
     }
-    if(options.parsedata(data) === false) return false;
+    if(options.parsedata(data) === false){
+        this.linkbutton(options.linkbutton,'enable');
+        return false;
+    }
     options.url = this.tp.ajax+'?tpUrl='+options.url;
     $.ajax({
         url:options.url,
@@ -447,7 +456,10 @@ App.prototype.search = function(param){
     this.linkbutton(options.linkbutton,'disable');
     var data = {};
     if(options.form)  data = this.serializeJson(options.form);
-    if(options.parsedata(data) === false) return false;
+    if(options.parsedata(data) === false){
+        this.linkbutton(options.linkbutton,'enable');
+        return false;
+    }
     options.url = this.tp.ajax+'?tpUrl='+options.url;
     this.search.options = options;
     if(options.ajax){

@@ -3,8 +3,9 @@
 <block name="src">
 <script type="text/javascript">
 //根部门  用于数据的初始化
-app.tp.areaid = "{:$areaid}";
-app.tp.areaname = "{:$areaname}";
+app.tp.areaid = "{:session('areaid')}";
+app.tp.areacode = "{:session('areacode')}";
+app.tp.areaname = "{:session('areaname')}";
 </script>
 <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
 <script type="text/javascript" src="__PUBLIC__/js/WorkStation/wsBase.js"></script>

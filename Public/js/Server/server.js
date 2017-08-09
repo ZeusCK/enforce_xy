@@ -1,5 +1,5 @@
 var module = {};
-module.areaid = app.tp.areaid;
+module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.datagridUrl = 'Server/server_list';
 module.addUrl = 'Server/server_add';
@@ -54,7 +54,7 @@ module.add = function(target) {
         datagrid: '#datagrid',
         linkbutton: target,
         parsedata: function(data) {
-            data.areaid = module.areaid;
+            data.areacode = module.areacode;
             data.areaname = module.areaname;
         }
     });
@@ -86,27 +86,27 @@ module.search = function() {
     });
 }
 module.clickTree = function(node) {
-    module.areaid = node.id;
+    module.areacode = node.areacode;
     module.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(module.areaname);
     app.extra('search', {
         datagrid: '#datagrid',
         parsedata: function(data) {
-            data.areaid = module.areaid;
+            data.areacode = module.areacode;
         }
     })
 }
 module.bind = function(id, choose) {
     var dz = choose ? module.areaname : '';
-    var areaid = choose ? module.areaid : 0;
+    var areacode = choose ? module.areacode : '';
     app.extra('add_edit', {
         datagrid: '#datagrid',
         url: module.editUrl,
         parsedata: function(data) {
             data.id = id;
-            data.dz = dz;
-            data.areaid = areaid;
+            data.areaname = dz;
+            data.areacode = areacode;
         }
     });
 }
@@ -145,7 +145,7 @@ $(function() {
                     title: '操作',
                     align: 'center',
                     formatter: function(v, d, i) {
-                        if (d.areaid == 0) {
+                        if (d.areacode == '') {
                             return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind(' + d.id + ',true)">绑定部门</span>';
                         } else {
                             return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind(' + d.id + ',false)">解除部门绑定</span>';

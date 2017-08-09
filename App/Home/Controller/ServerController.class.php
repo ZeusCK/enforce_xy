@@ -12,19 +12,9 @@ class ServerController extends CommonController
     protected $logContent = '设备管理/服务器管理';
     public function server_show()
     {
-        $this->assignInfo();
         $this->display('server');
     }
-    public function assignInfo()
-    {
-        $action = A($this->actions['area']);
-         //如果没有
-        $areaTree = $action->tree_list();
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : '';
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
-    }
+
     //服务器
     public function server_list($request)
     {
@@ -37,7 +27,7 @@ class ServerController extends CommonController
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');
 
         $db =  D($this->models['server']);
-        $data = $db->getTableList($where,$page,$rows,'areaid asc');
+        $data = $db->getTableList($where,$page,$rows,'areacode asc');
         $statusType = $this->get_val_item('dictionary', 'status');
         foreach ($data['rows'] as &$value) {
             $value['status_name'] = $statusType[$value['status']];

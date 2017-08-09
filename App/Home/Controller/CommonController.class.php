@@ -206,16 +206,17 @@ class CommonController extends Controller {
      * @param array $otherData  其他的数据信息
      * @param array $checkFiled  需要验证添加的字段  0-checkid  1-id 2-name
      * @param  array $attributes 额外需要保存的信息 ['iconcls']//直接处理  ['iconCls'=>'iconcls']//根据键名处理
+     * @param string $idField  验证的字段
      * @param string $icon       加载的图标
      */
-    public function add_other_info($easyuiTree,$otherData,$checkFiled,$icon,$attributes)
+    public function add_other_info($easyuiTree,$otherData,$checkFiled,$icon,$attributes,$idField = 'id')
     {
         foreach ($easyuiTree as &$node) {
             $children = array();
             foreach ($otherData as $key=>$info) {
                 //如果符合验证
                 $data = array();
-                if($node['id'] == $info[$checkFiled[0]]){
+                if($node[$idField] == $info[$checkFiled[0]]){
                     $data['id'] = $info[$checkFiled[1]];   //id
                     $data['text'] = $info[$checkFiled[2]]; //内容
                     $data['iconCls'] = $icon;                   //图标
@@ -234,7 +235,7 @@ class CommonController extends Controller {
             }
             if($node['children']){      //如果有子节点
                 //递归调用
-                $childrens = $this->add_other_info($node['children'],$otherData,$checkFiled,$icon,$attributes);
+                $childrens = $this->add_other_info($node['children'],$otherData,$checkFiled,$icon,$attributes,$idField);
                 //合并数据
                 if(!empty($children)){
                     $node['children'] = array_merge($children,$childrens);
@@ -495,18 +496,17 @@ class CommonController extends Controller {
                 $baseSql .= $codeField. '= ""';
             }
         }
-        if($jybhField){
-            $jybhSql = $jybhField.' = '.session('code');
-            $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR '.$jybhSql;
-        }
         if($areacode != ''){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
         }
         if($baseSql == '') $baseSql = '1';
-        error_log($baseSql."\r\n",3,'./error.log');
+        if($jybhField){
+            $jybhSql = $jybhField.' = "'.session('code').'"';
+            $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR '.$jybhSql;
+        }
+        // error_log($baseSql."\r\n",3,'./error.log');
         return $baseSql;
-
     }
     /**
      * 根据部门编号,部门类型确定实际管理的部门

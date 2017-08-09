@@ -3,9 +3,8 @@
 <block name="src">
 <script type="text/javascript">
 //根部门  用于数据的初始化
-app.tp.areaid = "{$areaid}";
-app.tp.areaname = "{$areaname}";
-app.tp.code = "{:session('code')}";
+app.tp.areacode = "{:session('areacode')}";
+app.tp.areaname = "{:session('areaname')}";
 </script>
 <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
 <script type="text/javascript" src="__PUBLIC__/js/Employee/employee.js"></script>
@@ -59,7 +58,7 @@ app.tp.code = "{:session('code')}";
             <div class="form_m"><div for="remark" class="form_label">备注 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="remark"/></div>
             <div class="form_m" style="display: none"><div for="remark" class="form_label">部门 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="areaid"/></div>
+                <input class=" form_in easyui-textbox" type="text" name="areacode"/></div>
             <div class="form_m"><div for="photo" class="form_label">照片 : </div>
                 <input class="easyui-filebox form_in"  name="photo"
                     data-options="prompt:'警员照片',buttonText:'选择照片'"></div>

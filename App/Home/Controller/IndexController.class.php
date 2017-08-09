@@ -2,7 +2,7 @@
 namespace Home\Controller;
 
 class IndexController extends CommonController {
-    protected $models = ['area'=>'Enforce\Area',
+    protected $models = ['area'=>'Enforce\AreaDep',
                          'role'=>'Enforce\Role',
                          'user'=>'Enforce\User',
                          'employee'=>'Enforce\Employee',
@@ -41,7 +41,7 @@ class IndexController extends CommonController {
             $where['password'] = I('password');
             $empDb = D($this->models['employee']);
             $roleDb = D($this->models['role']);
-            $roleDb = D($this->models['role']);
+            $areaDb = D($this->models['area']);
             $res = $empDb->where($where)->find();
             if($res){
                 if($res['bindingip'] == 1){
@@ -52,18 +52,23 @@ class IndexController extends CommonController {
                 }
                 $roleData = $roleDb->where('roleid = '.$res['roleid'])->field('rolename,functionlist,level')->find();
                 $roleData = g2us($roleData);
-                $mangerArea = $this->real_manger_area($areacode, $areatype);
+                $areaData = $areaDb->where('areacode="'.$res['areacode'].'"')->find();
+                $mangerArea = $this->real_manger_area($res['userarea'], $areaData['type']);
                 if($roleData['level'] == 0) $mangerArea = 'all';    //如果是系统管理员直接监管所有的部门
-                session('mangerArea',$mangerArea);
-                session('areaid',$res['areaid']);
-                session('role',$roleData['rolename']);
-                session('menu',$roleData['functionlist']);
-                session('user',g2u($res['name']));
-                session('roleid',$res['roleid']);
-                session('rolelevel',$roleData['level']);
-                session('code',I('username'));
-                session('empid',$res['empid']);
-                session('userarea',$res['userarea']);
+                session('mangerArea',$mangerArea);          //实际管理部门
+                session('areaid',$areaData['areaid']);           //部门ID
+                session('area_is_read',$areaData['is_read']);   //部门属性
+                session('area_type',$areaData['type']);   //部门类型
+                session('role',$roleData['rolename']);      //角色姓名
+                session('menu',$roleData['functionlist']);  //菜单
+                session('user',g2u($res['name']));          //警员姓名
+                session('areacode',$res['areacode']);       //部门代码
+                session('areaname',g2u($areaData['areaname']));  //部门名称
+                session('roleid',$res['roleid']);           //角色ID
+                session('rolelevel',$roleData['level']);    //角色级别
+                session('code',I('username'));          //警员编号
+                session('empid',$res['empid']);         //警员ID
+                session('userarea',$res['userarea']);   //管理部门
                 $result['status'] = true;
                 $result['message'] = '验证成功';
             }else{

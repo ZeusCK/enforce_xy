@@ -85,34 +85,6 @@ class EmployeeController extends CommonController
         if(!empty($data))  $res = $db->where($request)->getField('code,empid,name');
         return $res;
     }
-    /**
-     * 根据部门ID,警员编号获取查询条件
-     * @param  int $areaid 部门ID
-     * @param  string $idField 有关部门字段
-     * @param  string/false $jybhField 有关警员字段 或者不进行关联
-     * @return string         筛选之后的sql语句
-     */
-    /*
-    public function get_manger_sql($areacode = '',$codeField = 'areacode',$jybhField = 'jybh')
-    {
-        $areaAction = A($this->actions['area']);
-        //如果部门ID为空视为查看自身管理区域
-        if($areaid != ''){
-            $careas = $areaAction->carea($areaid);
-            $areas = array_intersect(explode(',',session('userarea')),$careas);
-            $areasql = $this->where_key_or($areas,$idField);
-            if($jybhField){
-                if(in_array(session('areaid'),$careas)) $areasql .= ' OR '.$jybhField.'="'.session('code').'"';
-            }
-        }else{
-            $areas = explode(',',session('userarea'));
-            $areasql = $this->where_key_or($areas,$idField);
-            if($jybhField){
-                if(!in_array(session('areaid'),$areas)) $areasql .= ' OR '.$jybhField.'="'.session('code').'"';
-            }
-        }
-        return $areasql;
-    }*/
     //数据获取
     public function dataList()
     {
@@ -122,19 +94,18 @@ class EmployeeController extends CommonController
         unset($request['page'],$request['rows'],$request['rand']);
         if(!empty($request)){
             foreach($request as $key=>$value){
-                if($key != 'areaid' || $key != 'areacode'){
+                if($key != 'areaid' && $key != 'areacode'){
                     $check[$key] = array('like','%'.u2g($value).'%');
                 }
             }
         }
         $dbc = D($this->models['area']);
-        $areas = $dbc->getField('areaid,areaname');
+        $areas = $dbc->getField('areacode,areaname');
         $db = D($this->models['employee']);
-        $emps = $this->get_manger_sql(I('areacode'));
-        $check[] = $emps;
+        $check[] = $this->get_manger_sql(I('areacode'),'areacode','code');
         $roledb = D($this->models['role']);
         $roles = $roledb->getField('roleid,rolename');
-        $order = 'areaid asc,level asc';
+        $order = 'areacode asc,level asc';
         $fields = 'e.*';
         $check[] = 'e.roleid = r.roleid';
         $rows = $db->table('employee as e,role as r')->field($fields)->where($check)->page($page,$rows)->order($order)->select();
@@ -142,7 +113,7 @@ class EmployeeController extends CommonController
         $res['total'] =  $total;
         $res['rows'] =  $rows ? $rows : [];
         foreach ($res['rows'] as &$value){
-            $value['areaname'] = array_key_exists($value['areaid'],$areas) ? $areas[$value['areaid']]  : u2g('系统根部门');
+            $value['areaname'] = array_key_exists($value['areacode'],$areas) ? $areas[$value['areacode']]  : u2g('系统根部门');
             $value['rolename'] = $roles[$value['roleid']];
         }
         $this->saveExcel($res); //监测是否为导出
@@ -152,6 +123,12 @@ class EmployeeController extends CommonController
     public function dataAdd()
     {
         $request = I();
+        $check[] = $this->get_manger_sql($request['areacode'],'areacode',false);
+        $mangerCount = D($this->models['area'])->where($check)->count();
+        if($mangerCount <= 0){
+            $result['message'] = '对不起，你无法向该部门添加警员！因为该部门不在你的管辖范围，或者不全在管辖范围';
+            exit(json_encode($result));
+        }
         unset($request['empid']);
         if($_FILES['photo']['name']){
             $res = $this->save_image($_FILES['photo']);
@@ -167,15 +144,10 @@ class EmployeeController extends CommonController
             $result['message'] = '该警员已经录入！';
             exit(json_encode($result));
         }
-        $c_area = explode(',', session('userarea'));
-        if(in_array($request['areaid'],$c_area)){
-            $result = $db->getTableAdd(u2gs($request));
-            if(array_key_exists('add_id',$result))  $this->add_emp_area($result['add_id']);
-        }else{
-            $result['message'] = '对不起，你无法向该部门添加警员！因为该部门不在你的管辖范围，或者不全在管辖范围';
-        }
+        $result = $db->getTableAdd(u2gs($request));
+        if($result['status']) $this->add_emp_area($result['add_id']);
         if($info)  $result['message'] .= $info;
-        $this->write_log('添加'.$request['name']);
+        $this->write_log('添加'.$request['name'].'('.$request['code'].')');
         exit(json_encode($result));
     }
     //删除事件
@@ -216,20 +188,16 @@ class EmployeeController extends CommonController
         }
         $request = u2gs($request);
         $where[$this->tab_id] = $request[$this->tab_id];
-        unset($request[$this->tab_id]);
-        $result = $db->getTableEdit($where,$request);
         $roleid = $db->where('empid = '.$request['empid'])->getField('roleid');
-        if($roleid != $request['roleid'])       //如果角色ID改变那么重新计算
-            $this->add_emp_area($request['empid']);
+        error_log($roleid.'-'.$request['roleid'],3,'error.log');
+        $result = $db->getTableEdit($where,$request);
+        if($roleid != $request['roleid']) $this->add_emp_area($request['empid']); //如果角色ID改变那么重新计算
+
         exit(json_encode($result));
     }
     //准备前端页面数据
     public function assignInfo()
     {
-        /*$db = D($this->models['area']);
-        $info['areareg'] = $db->select();
-        $info['areareg'] = g2us($info['areareg']);
-        $info['arearegJson'] = json_encode(g2us($info['areareg']));*/
         $action = A($this->actions['role']);
         //警员记录
         $info['role'] = $action->get_role_info()['rows'];
@@ -271,12 +239,6 @@ class EmployeeController extends CommonController
         $empid  = I('empid');
         $action = A($this->actions['area']);
         $empdb = D($this->models['employee']);
-        /*$areaid = $empdb->where('empid='.$empid)->getField('areaid');
-        $careas = $action->carea($areaid);
-        $pareas = $action->parea($areaid,true);
-        $areas = array_merge($careas,$pareas);*/
-
-
         $userarea = explode(',', session('userarea'));
         if(!empty($userareas)){
             $areas = array();
@@ -355,10 +317,11 @@ class EmployeeController extends CommonController
         $L_attributes = ['areacode','rperson','rphone'];
         $icons = ['icon-application_xp_terminal','icon-application'];
         $data_tree = $this->formatTree($ids,$areas,$l_arr,$L_attributes,'',$icons);
-        $checkeds = ['areaid','empid','name'];
+        $checkeds = ['areacode','empid','name'];
         $attributes = ['code','name'];
         $icon = 'icon-user';
-        $empAreaTree = $this->add_other_info($data_tree,$emps,$checkeds,$icon,$attributes);
+        $idField = 'areacode';
+        $empAreaTree = $this->add_other_info($data_tree,$emps,$checkeds,$icon,$attributes,$idField);
         return $empAreaTree;
     }
     /**
@@ -367,35 +330,15 @@ class EmployeeController extends CommonController
      */
     public function show_employee()
     {
-        session_write_close();
         if(S(session('user').'emp_tree')){
             $this->ajaxReturn(S(session('user').'emp_tree'));
         }
         $empDb = D($this->models['employee']);
-        $where['code'] = session('code');
-        $empInfo = $empDb->where($where)->find();
-        //判断该警员是否拥有管理部门的权限
-        if($empInfo['userarea'] != ''){
-            $mangerareas = explode(',',$empInfo['userarea']);
-        }
-        $nowareaid = $mangerareas ? $mangerareas : array();
-        $nowareaid[] = $empInfo['areaid'];
-        $areaDb = D($this->models['area']);
-        $request['areaid'] = array('in',$nowareaid);
-        $areaInfo = $areaDb->where($request)->select();
-        $l_arr = ['areaid','fatherareaid'];
-        //选出所有需要展示的部门
-        $areas = $this->getParentData($areaInfo,$this->models['area'],$l_arr);
-        $areas = array_merge((array)$areaInfo,(array)$areas);
+        $action = A($this->actions['area']);
+        $areas = $action->all_user_area();
         $emps = array();
-        //所有需要显示的警员
-        if($mangerareas){
-            $areawhere['areaid'] = array('in',$mangerareas);
-            $emps = $empDb->where($areawhere)->select();
-        }
-        if(!in_array(session('areaid'),$mangerareas) && session('areaid') != 0){
-            $emps[] = $empInfo;
-        }
+        $where[] = $this->get_manger_sql();
+        $emps = $empDb->where($areawhere)->select();
         $empAreaTree = $this->emp_tree($areas,$emps);
         S(session('user').'emp_tree',g2us($empAreaTree),5*60);
         $this->ajaxReturn(S(session('user').'emp_tree'));
@@ -422,36 +365,14 @@ class EmployeeController extends CommonController
     public function add_emp_area($empid)
     {
         $empdb = D($this->models['employee']);
-        $areadb = D($this->models['area']);
         $roledb = D($this->models['role']);
         $empInfo = $empdb->where('empid='.$empid)->find();
         $roleInfo = $roledb->where('roleid='.$empInfo['roleid'])->find();
-        $data = array('userarea'=>'');
-        if($roleInfo['level'] == 4)
-            return $empdb->where('empid='.$empid)->save($data) ? true : false;
-
-        $areaInfo = $areadb->where('areaid='.$empInfo['areaid'])->find();
-        //自身加上子集
-        $areaAction = A($this->actions['area']);
-        $careas = $areaAction->carea($areaInfo['areaid']);
-        //$this->ajaxReturn(g2us($empInfo));
-        if($areaInfo['type'] != 1){            //如果不是交警部门
-            if($roleInfo['level'] == 0 || $roleInfo['level'] == 1){      //系统管理员,市局管理员,拥有全部
-                $careas = $areadb->getField('areaid',true);             //拥有全部权限
-            }else{
-                $other = $this->get_link_area($careas);
-                $careas = array_merge($careas,$other);
-                /*if($areaInfo['code'] != ''){        //如果该部门拥有标识代码
-                    $areawhere = array('code'=>$areaInfo['code'],'type'=>0);
-                    $extraAreaInfo = $areadb->where($areawhere)->find();
-                    if($extraAreaInfo){
-                        $cpeareas = $areaAction->carea($extraAreaInfo['areaid']);     //交警部门的子集
-                        $careas = array_unique(array_merge($careas,$cpeareas));
-                    }
-                }*/
-            }
+        if($roleInfo['level'] == 4){     //警员
+            $data = array('userarea'=>'');
+        }else{          //其他
+            $data = array('userarea'=>$empInfo['areacode']);
         }
-        $data['userarea'] = implode(',',$careas);
         return $empdb->where('empid='.$empid)->save($data) ? true : false;
     }
     /**

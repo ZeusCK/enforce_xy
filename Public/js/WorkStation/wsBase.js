@@ -1,5 +1,5 @@
 var things = {};
-things.areaid = app.tp.areaid;
+things.areacode = app.tp.areacode;
 things.areaname = app.tp.areaname;
 things.datagridUrl = 'WorkStation/ws_base_list';
 things.addUrl = 'WorkStation/ws_base_add';
@@ -35,7 +35,7 @@ things.add = function(target){
         datagrid:'#datagrid',
         linkbutton:target,
         parsedata:function(data){
-            data.areaid = things.areaid;
+            data.areacode = things.areacode;
             data.areaname = things.areaname;
         }
     });
@@ -62,32 +62,32 @@ things.search = function(){
         form:'#searchForm',
         datagrid:'#datagrid',
         parsedata:function(data){
-            data.areaid = things.areaid
+            data.areacode = things.areacode
         }
     });
 }
 things.clickTree = function(node){
-    things.areaid = node.id;
+    things.areacode = node.areacode;
     things.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(things.areaname);
     app.extra('search',{
         datagrid:'#datagrid',
         parsedata:function(data){
-            data.areaid = things.areaid;
+            data.areacode = things.areacode;
         }
     })
 }
 things.bind = function(id,choose){
     var areaname = choose ? things.areaname : '';
-    var areaid = choose ? things.areaid : 0;
+    var areacode = choose ? things.areacode : '';
     app.extra('add_edit',{
         datagrid:'#datagrid',
         url:things.editUrl,
         parsedata:function(data){
             data.id = id;
             data.areaname = areaname;
-            data.areaid = areaid;
+            data.areacode = areacode;
         }
     });
 }
@@ -105,7 +105,7 @@ $(function(){
           {field:'qyztname', title: '启用状态', width: 200, align: 'center' },
           {field:'zxztname',title:'在线状态',width:200,align:'center'},
           {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
-                if(d.areaid == 0){
+                if(d.areacode == ''){
                     return '<span style="color:#0E2D5F;cursor:pointer;" onClick="things.bind('+d.id+',true)">绑定部门</span>';
                 }else{
                     return '<span style="color:#0E2D5F;cursor:pointer;" onClick="things.bind('+d.id+',false)">解除部门绑定</span>';

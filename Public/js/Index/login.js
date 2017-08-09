@@ -40,7 +40,7 @@ $(function() {
         $('#loginBox').form('clear');
         $('#info').html('');
     });
-
+    $('#username').focus();
     $('#info').html(info);
     $(document).keydown(function(event) { keyDownSearch(event) });
     $('#username').next('span').find('input').focus();

@@ -158,4 +158,12 @@ class DemoController extends CommonController
         dump($checkAreacode);
         dump(array_merge($checkAreacode,$searchArr));
     }
+    public function ooo()
+    {
+        G('begin');
+        $a = array_fill(0, 100000, 'jybhkem');
+        G('end');
+        echo G('begin','end',6).'s'."\r\n";
+        echo G('begin','end','m').'kb';
+    }
 }

@@ -1,11 +1,12 @@
 var info={};
-var areaid = app.tp.areaid;
-var areaname = app.tp.areaname;
+var module = {};
+module.areacode = app.tp.areacode;
+module.areaname = app.tp.areaname;
 var tree=new Tree('#tree');
 $(function(){
     //左侧tree的加载
     tree.load_emp_tree();
-    $('#pos').html(areaname);
+    $('#pos').html(module.areaname);
     //右侧datagrid的加载
     $('#datagrid').datagrid({
         url:app.url('Dev/pe_base_list'),
@@ -22,6 +23,7 @@ $(function(){
         toolbar:'#toolbar',
         columns:[[
             {field:'id',title:'',checkbox:true},
+            {field:'areaname',title:'所属部门'},
             {field:'cpxh',title:'产品序号',width:100,align:'center'},
             {field:'jyxm',title:'警员姓名',width:100,align:'center'},
             {field:'jybh',title:'警员编号',width:100,align:'center'},
@@ -49,7 +51,7 @@ $(function(){
                 $('#datagrid').datagrid('load',info);
                 $('#jyxm').textbox('setValue',node.text);
             }else{
-                info.areaid=node.id;
+                info.areacode=node.areacode;
                 $('#datagrid').datagrid('load',info);
             }
         }

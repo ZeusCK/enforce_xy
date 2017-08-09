@@ -8,6 +8,8 @@ module.removeUrl = 'Area/dataRemove';
 module.areaid = app.tp.areaid;
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
+module.area_is_read = app.tp.area_is_read;
+module.area_type = app.tp.area_type;
 //基本的搜索
 module.show = function(){
     $('#searchForm').form('reset');
@@ -31,17 +33,13 @@ module.addBar = function(){
         }
     });
     $('#addForm').form('reset');
-    var node = $(tree.dom).tree('find',module.areaid);
-    if(node == null){
-        node = {};
-        node.type = 0;
-    }
-    if(node.type != 0){
-        $('#add_areatype').combobox({readonly:true});
+
+    $('#addForm').form('load',{fatherareaid:module.areaid,areatype:module.area_type,is_read:module.area_is_read});
+    if(module.area_is_read == 0){
+        $('#add_area_is_read').combobox('readonly',true);
     }else{
-        $('#add_areatype').combobox({readonly:false});
+        $('#add_area_is_read').combobox('readonly',false);
     }
-    $('#addForm').form('load',{fatherareaid:module.areaid,areatype:node.type});
     $('#infoAreaname').html('*'+module.areaname+'*添加新的子级部门');
     $('#addDialog').dialog('open');
 }
@@ -55,6 +53,11 @@ module.editBar = function(){
     if(infos.length == 1){
         $('#codetext_1').html(infos[0].areacode.substring(0,infos[0].areacode.length-2));
         infos[0].areacode=infos[0].areacode.substring(infos[0].areacode.length-2,infos[0].areacode.length);
+        if(infos[0].is_read == 0){
+            $('#edit_area_is_read').combobox('readonly',true);
+        }else{
+            $('#edit_area_is_read').combobox('readonly',false);
+        }
         $('#editForm').form('load',infos[0]);
         $('#editDialog').dialog('open');
     }
@@ -76,7 +79,7 @@ module.add = function(target){
             var node = $(tree.dom).tree('find',module.areaid);
             $(tree.dom).tree('append',{
                 parent: node.target,
-                data:[{id:data.add_id,text:params.areaname,type:params.areatype}]
+                data:[{id:data.add_id,text:params.areaname,type:params.areatype,areacode:params.areacode}]
             });
         }
     });
@@ -99,7 +102,8 @@ module.edit = function(target){
             if (node){
                 $(tree.dom).tree('update', {
                     target: node.target,
-                    text: params.areaname
+                    text: params.areaname,
+                    areacode:params.areacode
                 });
             }
         }
@@ -111,11 +115,11 @@ module.remove = function(target){
     var ids = [];
     if(nodes.length == 0)
         return false;
-    $.messager.confirm('重要提醒','删除前请确定位于该部门下人员不在职！',function(r){
+    $.messager.confirm('重要提醒','删除会将请确定位于该部门下的 警员/执法记录仪/工作站/服务器/公告 一起删除！',function(r){
         if(r){
             $.each(nodes,function(n,m){
-                var id= m.id;
-                ids.push(id);
+                var areacode= m.areacode;
+                ids.push(areacode);
             });
             ids = ids.join(',');
             app.extra('remove',{
@@ -123,7 +127,7 @@ module.remove = function(target){
                 datagrid:false,
                 linkbutton:target,
                 parsedata:function(data){
-                    data.areaid = ids;
+                    data.areacode = ids;
                 },
                 success:function(data){
                     $('#datagrid').datagrid('load',{areaid:module.areaid});
@@ -168,6 +172,7 @@ $(function(){
         {field:'areacode',title:'部门编号',width:200,align:'center'},
         {field:'pareaname',title:'父部门',width:200,align:'center'},
         {field:'typename',title:'部门类型',width:200,align:'center'},
+        {field:'is_read_name',title:'部门属性',width:200,align:'center'},
         {field:'code',title:'部门标识',width:200,align:'center'},
         {field:'rperson',title:'联系人',width:200,align:'center'},
         {field:'rphone',title:'联系方式',width:200,align:'center'}
@@ -184,6 +189,8 @@ $(function(){
             module.areaid = node.id;
             module.areaname = node.text;
             module.areacode = node.areacode;
+            module.area_is_read = node.is_read;
+            module.area_type = node.type;
             $('#mu_area').html(node.text);
             module.show();
         }

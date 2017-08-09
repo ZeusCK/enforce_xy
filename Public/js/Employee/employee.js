@@ -2,12 +2,12 @@
 var tree = new Tree('#area_list');
 var managerTree = new Tree('#areaList');
 var module = {};
-module.areaid = app.tp.areaid;
+module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.code = app.tp.code;
 module.actionType = 1;
 module.clickTree = function(node){
-    module.areaid = node.id;
+    module.areacode = node.areacode;
     module.areaname = node.text;
     $('#mu_ser').html(module.areaname);
     $('#infoAreaname').html('*<span style="color:red;">'+module.areaname+'</span>*添加/修改警员！');
@@ -17,7 +17,7 @@ module.clickTree = function(node){
 module.show = function(){
     $('#searchForm').form('reset');
     $('#datagrid').datagrid('load',{
-        areaid:module.areaid,
+        areacode:module.areacode,
         rand:Math.random()
     });
 }
@@ -26,7 +26,7 @@ module.search = function(){
     var name = $('#name').val();
     name = $.trim(name);
     $('#datagrid').datagrid('load',{
-        areaid:module.areaid,
+        areacode:module.areacode,
         name:name
     });
 }
@@ -42,13 +42,13 @@ module.unlink = function(){
 }
 module.infoBar = function(type){
     module.actionType = type;
-    if (module.areaid == 0) {
+    if (module.areacode == '') {
         $.messager.alert('操作提示','你无法向系统根部门添加/修改警员,请先创建部门，重新登录后添加警员！','info');
         return false;
     }
     //添加
     if(type == 1){
-        var info = {areaid:module.areaid,name:'',code:'',phone:'',remark:'',email:'',empid:''};
+        var info = {areacode:module.areacode,name:'',code:'',phone:'',remark:'',email:'',empid:''};
         //$('#form').form('clear');
         $('#form').form('load',info);
         $('#dialog').dialog({title:'添加'});
@@ -95,7 +95,7 @@ module.changeinfo = function(){
             $.messager.alert('结果提示',data.message,'info');
             $('#dialog').dialog('close');
             $('#datagrid').datagrid('reload',{
-                areaid:module.areaid,
+                areacode:module.areacode,
                 rand:Math.random()
             });
         },
@@ -127,7 +127,7 @@ module.remove = function(){
         success:function(data){
             $.messager.alert('结果提示',data.message,'info');
             $('#datagrid').datagrid('reload',{
-                areaid:module.areaid,
+                areacode:module.areacode,
                 rand:Math.random()
             });
         },
@@ -183,7 +183,7 @@ module.allowOther = function(){
                 $.messager.alert('操作提示',result.message,'info');
                 $('#otherdialog').dialog('close');
                 $('#datagrid').datagrid('reload',{
-                    areaid:module.areaid,
+                    areacode:module.areacode,
                     rand:Math.random()
                 });
             }
@@ -202,7 +202,7 @@ $(function(){
         url:app.url('Employee/dataList'),
         method:'get',
         queryParams:{
-            areaid:module.areaid,
+            areacode:module.areacode,
             rand:Math.random()
         },
         onClickCell:function(r,f,v){

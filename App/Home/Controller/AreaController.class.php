@@ -9,11 +9,11 @@ class AreaController extends CommonController
                          'user'=>'Enforce\User',
                          'areapro'=>'Enforce\AreaPro',
                          'employee'=>'Enforce\Employee'];
-    protected $link_tabs = ['enforce.ws_base', //工作站
-                            'enforce.pe_base', //执法记录仪
-                            'enforce.server_machine',  //服务器
-                            'enforce.sys.notice',    //公告
-                            'enforce.employee'];    //警员
+    protected $link_tabs = ['ws_base', //工作站
+                            'pe_base', //执法记录仪
+                            'server_machine',  //服务器
+                            'sys_notice',    //公告
+                            'employee'];    //警员
     //控制器
     protected $actions = ['user'=>'User'];
     protected $logContent = '系统管理/部门管理';
@@ -35,7 +35,7 @@ class AreaController extends CommonController
         unset($request['page'],$request['rows'],$request['rand']);
         if(!empty($request)){
             foreach($request as $key=>$value){
-                if($key!='areaid' || $key != 'areacode')
+                if($key != 'areaid' && $key != 'areacode')
                     $check[$key] = array('like','%'.$value.'%');
             }
         }
@@ -43,14 +43,17 @@ class AreaController extends CommonController
         $check[] = $this->get_manger_sql($request['areacode'],'areacode',false);
         $data['total'] = 0;
         $data['rows'] = array();
-        $order = 'fatherareaid asc';
+        $order = 'areacode asc';
         $data = $db->getTableList($check,$page,$rows,$order);
         $areas = $db->getField('areaid,areaname');
+        $areaType = array('交警','其他','法制');
+        $read_type = array('只读','读写');
         foreach ($data['rows'] as &$value) {
             $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
             $value['areatype'] = $value['type'];
-            $value['typename'] = $value['type'] == '' ? '无' : $value['type'] == 0 ? '交警' : '其他';
+            $value['typename'] = $areaType[$value['type']];
             $value['typename'] = u2g($value['typename']);
+            $value['is_read_name'] = u2g($read_type[$value['is_read']]);
         }
         S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
         $this->saveExcel($data); //监测是否为导出
@@ -60,8 +63,15 @@ class AreaController extends CommonController
     public function dataAdd($request)
     {
         $request['type'] = $request['areatype'];
-        unset($request['areatype']);
         $db = D($this->models['area']);
+        $areacode = $db->where('areaid='.$request['fatherareaid'])->getField('areacode');
+        $check[] = $this->get_manger_sql($areacode,'areacode',false);
+        $mangerCount = $db->where($check)->count();
+        if($mangerCount <= 0){
+            $result['message'] = '对不起，你无法向该部门添加部门！因为该部门不在你的管辖范围。';
+            return $result;
+        }
+        unset($request['areatype']);
         $result = $db->getTableAdd(u2gs($request));
         if(!$result['status']) $result['message'] = '请确保部门代码的唯一性';
         return $result;
@@ -69,14 +79,17 @@ class AreaController extends CommonController
 
     public function dataRemove($request)
     {
-        $where[] = $this->where_key_or(explode(',',$request['code']), 'areacode');
+        $where[] = $this->where_key_or(explode(',',$request['areacode']), 'areacode');
         $db = D($this->models['area']);
         $where[] = $this->get_manger_sql($request['areacode'],'areacode',false);
-        foreach ($this->link_tabs as $tab) {
-            $db_rm = D()->table($tab);
-            $db_rm->getTableDel($where);
+        $result = $db->getTableDel($where);
+        if($result['status']){
+            foreach ($this->link_tabs as $tab) {
+                $db_rm = D()->table($tab);
+                $db_rm->where($where)->delete();
+            }
+            $this->write_log('删除部门,部门代码：'.$request['areacode']);
         }
-        $this->write_log('删除部门,部门代码：'.$request['areacode']);
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
     }
@@ -88,20 +101,21 @@ class AreaController extends CommonController
         unset($request[$this->tab_id]);
         $areaInfo = $db->where($where)->find();
         $result = $db->getTableEdit($where,u2gs($request));     //更新记录
+
         if($areaInfo['areacode'] != $request['areacode']){      //更新关联表及下级部门
             $linkTabs = $this->link_tabs;
-            $linkTabs[] = 'enforce.area_dep';   //部门区域
+            $linkTabs[] = 'area_dep';   //部门区域
             foreach ($linkTabs as $tab) {
-                $strLen = strLen($request['areacode']);
+                $strLen = strlen($request['areacode']);
                 //更新所有符合条件的部门代码
-                $sql = 'UPDATE '.$tab.' SET 
-                       `areacode`=CONTACT("'.$request['areacode'].'",
-                       RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.')) 
+                $sql = 'UPDATE '.$tab.' SET
+                       `areacode`=CONCAT("'.$request['areacode'].'",
+                       RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.'))
                        WHERE `areacode` like "'.$areaInfo['areacode'].'%"';
                 if($tab == 'enforce.employee'){
-                    M()->query('UPDATE '.$tab.' SET 
-                       `userarea`=CONTACT("'.$request['areacode'].'",
-                       RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.')) 
+                    M()->query('UPDATE '.$tab.' SET
+                       `userarea`=CONCAT("'.$request['areacode'].'",
+                       RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.'))
                        WHERE `userarea` like "'.$areaInfo['areacode'].'%"');
                 }
             }
@@ -113,20 +127,8 @@ class AreaController extends CommonController
     public function all_user_area($type)
     {
         $db = D($this->models['area']);
-        $userarea = $this->m_userarea(session('empid'));
-        if(!in_array(session('areaid'), $userarea)){
-            $userarea[] = session('areaid');
-        }
-        $data_f = array();
-        $data_s = array();
-        if(!empty($userarea)){
-            $where['areaid'] = array('in',$userarea);
-            if(isset($type)){
-                $where['type'] = $type;
-                $where['code'] = '';
-            }
-            $data_f = $db->where($where)->select();
-        }
+        $where = $this->get_manger_sql(session('areacode'),'areacode',false). 'OR areacode="'.session('areacode').'"';
+        $data_f = $db->where($where)->select();
         if(!empty($data_f)){
             $lc=['areaid','fatherareaid'];
             $data_s = $this->getParentData($data_f,$this->models['area'],$lc);
@@ -148,7 +150,7 @@ class AreaController extends CommonController
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
             $l_arr = ['areaid','areaname','fatherareaid','areaid'];
             //$L_attributes 额外需要保存的信息
-            $L_attributes = ['areacode','rperson','rphone','type','code'];
+            $L_attributes = ['areacode','rperson','rphone','type','code','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
         }else{
@@ -170,7 +172,7 @@ class AreaController extends CommonController
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
             $l_arr = ['areaid','areaname','fatherareaid','areaid'];
             //$L_attributes 额外需要保存的信息
-            $L_attributes = ['areacode','rperson','rphone','type','code'];
+            $L_attributes = ['areacode','rperson','rphone','type','code','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
             $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);

@@ -3,8 +3,11 @@
 <block name="src">
 <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
 <script type="text/javascript">
-app.tp.areaid = "{:$areaid}";
-app.tp.areaname = "{:$areaname}";
+app.tp.areaid = "{:session('areaid')}";
+app.tp.areacode = "{:session('areacode')}";
+app.tp.areaname = "{:session('areaname')}";
+app.tp.area_is_read = "{:session('area_is_read')}";
+app.tp.area_type = "{:session('area_type')}";
 </script>
 <script type="text/javascript" src="__PUBLIC__/js/Area/area.js"></script>
 </block>
@@ -44,7 +47,7 @@ app.tp.areaname = "{:$areaname}";
             <div class="form_m"><div for="areaname" class="form_label">部门名称 : </div>
                 <input class="form_in easyui-textbox" type="text" name="areaname" required="true"/></div>
             <div class="form_m" style="position: relative;"><div for="areacode" class="form_label">部门编号 : </div>
-                <div class="easyui-tooltip" title='请输入00-99的两位字符' position="bottom" style="width:179px;display:inline-block;">
+                <div class="easyui-tooltip" title='请输入01-99的两位字符' position="bottom" style="width:179px;display:inline-block;">
                    <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeAdd" style="width:179px"/>
                 </div>
                 </div>
@@ -54,19 +57,28 @@ app.tp.areaname = "{:$areaname}";
                 <input class="form_in easyui-textbox" type="text" name="rphone"/></div>
             <div class="form_m" style="text-align: center;">
                 <div><span style="color: red;">接下来的选项很重要用于权限自动分配</span></div>
-                <div><span style="color: red;">一旦添加将无法修改！</span></div>
             </div>
             <div class="form_m">
                 <div for="rphone" class="form_label">部门类型 : </div>
                 <select class="easyui-combobox form_in" id="add_areatype" data-options="height:22,editable:false,panelHeight:68"
                     name="areatype" style="width: 180px;">
-                    <option value="0">无</option>
-                    <option value="1">交警</option>
-                    <option value="2">其他</option>
+                    <option value="1">其他</option>
+                    <option value="0">交警</option>
+                    <option value="3">法制</option>
+                </select>
+            </div>
+            <div class="form_m">
+                <div for="rphone" class="form_label">部门属性 : </div>
+                <select class="easyui-combobox form_in" id="add_area_is_read" data-options="height:22,editable:false,panelHeight:68"
+                    name="is_read" style="width: 180px;">
+                    <option value="1">读写</option>
+                    <option value="0">只读</option>
                 </select>
             </div>
             <div class="form_m"><div for="code" class="form_label">标识 : </div>
-                <input class="form_in easyui-textbox" type="text" name="code" data-options="prompt:'用于公安与交警进行关联'"></div>
+                <div class="easyui-tooltip" title='用于公安与交警进行关联' position="bottom" style="width:179px;display:inline-block;">
+                    <input class="form_in easyui-textbox" type="text" name="code" data-options="prompt:'用于公安与交警进行关联'"></div>
+                </div>
             <div class="form_m" style="display: none"><div for="fatherareaid" class="form_label">上级部门 : </div>
                 <input class="form_in easyui-textbox" type="text" name="fatherareaid">
             </div>
@@ -91,17 +103,27 @@ app.tp.areaname = "{:$areaname}";
                 <input class=" form_in easyui-textbox" type="text" name="rperson"/></div>
             <div class="form_m"><div for="rphone" class="form_label">联系方式 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="rphone"/></div>
-            <!-- <div class="form_m">
+            <div class="form_m">
                 <div for="type" class="form_label">部门类型 : </div>
                 <select class="easyui-combobox form_in" data-options="height:22,editable:false,panelHeight:68,readonly:true"
                     name="areatype" style="width: 180px;">
-                    <option value="">无</option>
-                    <option value="0">交警</option>
                     <option value="1">其他</option>
+                    <option value="0">交警</option>
+                    <option value="3">法制</option>
+                </select>
+            </div>
+            <div class="form_m">
+                <div for="rphone" class="form_label">部门属性 : </div>
+                <select class="easyui-combobox form_in" id="edit_area_is_read" data-options="height:22,editable:false,panelHeight:68"
+                    name="is_read" style="width: 180px;">
+                    <option value="1">读写</option>
+                    <option value="0">只读</option>
                 </select>
             </div>
             <div class="form_m"><div for="code" class="form_label">标识 : </div>
-                <input class="form_in easyui-textbox" type="text" name="code" data-options="prompt:'用于公安与交警进行关联',readonly:true"></div> -->
+                <div class="easyui-tooltip" title='用于公安与交警进行关联' position="bottom" style="width:179px;display:inline-block;">
+                    <input class="form_in easyui-textbox" type="text" name="code" data-options="prompt:'用于公安与交警进行关联'"></div>
+                </div>
             <div class="form_m" style="display: none"><div for="fatherareaid" class="form_label">上级部门 : </div>
                 <input class="form_in easyui-textbox" type="text" name="fatherareaid">
             </div>

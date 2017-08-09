@@ -49,16 +49,8 @@ class AnnounceController extends CommonController
         //end_time  结束日期  默认一周 不能为空
         $request['start_time'] = $request['start_time'].' 00:00:00';
         $request['end_time'] = $request['end_time'].' 23:59:59';
-        if(session('areaid') == 0){
-            $action = A($this->actions['area']);
-         //如果没有
-            $areaTree = $action->tree_list();
-            $request['dept_code'] = !empty($areaTree) ? $areaTree[0]['id'] : ''; //创建单位
-            $request['dept_name'] = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        }else{
-            $request['dept_code'] = session('areaid'); //创建单位
-            $request['dept_name'] = session('areaname');
-        }
+        $request['areacode'] = session('areacode'); //创建单位
+        $request['areaname'] = session('areaname');
         $request['create_time'] = date('Y-m-d H:i:s');  //创建时间
         $request['creater_name'] = session('user');
         $request['creater_id'] = session('code');

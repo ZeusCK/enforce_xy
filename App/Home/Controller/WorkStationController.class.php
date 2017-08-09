@@ -38,7 +38,7 @@ class WorkStationController extends CommonController
         $db =  D($this->models['wsbase']);
         //支持模糊搜索
         foreach ($request as $key => $value) {
-            if($value != '' && $key!='zxzt' && $key!='qyzt' && $key != 'areaid'){
+            if($value != '' && $key!='zxzt' && $key!='qyzt' && $key != 'areaid' && $key != 'areacode'){
                 $where[$key] = array('like','%'.$value.'%');
             }
         }
@@ -46,7 +46,7 @@ class WorkStationController extends CommonController
         if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
 
         $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
-        $data = $db->getTableList(u2gs($where),$page,$rows,'areaid asc');
+        $data = $db->getTableList(u2gs($where),$page,$rows,'areacode asc');
         foreach ($data['rows'] as &$value) {
             $value['zxztname'] = $value['zxzt'] == 0 ? u2g('离线') : u2g('在线');
             $value['qyztname'] = $value['qyzt'] == 0 ? u2g('停用') : u2g('启用');
@@ -107,7 +107,7 @@ class WorkStationController extends CommonController
     public function ws_sat()
     {
         $db =  D($this->models['wsbase']);
-        $query[] = $this->where_key_or(explode(',',session('userarea')),'areaid').'OR areaid = 0';
+        $query[] = $this->where_key_or(explode(',',session('userarea')),'areacode').'OR areacode = ""';
         $result = $db->where($query)->field('count(id) as value,zxzt as name')->group('zxzt')->select();
         $initData = array(1=>array('value'=>0,'name'=>'在线'),0=>array('value'=>0,'name'=>'离线'));
         foreach ($result as $value) {
