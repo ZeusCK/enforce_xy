@@ -160,10 +160,9 @@ class DemoController extends CommonController
     }
     public function ooo()
     {
-        G('begin');
-        $a = array_fill(0, 100000, 'jybhkem');
-        G('end');
-        echo G('begin','end',6).'s'."\r\n";
-        echo G('begin','end','m').'kb';
+        list($msec, $sec) = explode(' ', microtime());
+        return (int)$sec.str_pad((int)($msec*1000),3,"0",STR_PAD_LEFT);
+
+
     }
 }

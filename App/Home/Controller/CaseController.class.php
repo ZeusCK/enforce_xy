@@ -9,7 +9,8 @@ class CaseController extends CommonController
                          'area'=>'Enforce\AreaDep',
                          'employee'=>'Enforce\Employee',
                          'dictionary'=>'Enforce\dictionary',
-                         'wsbase'=>'Enforce\WsBase'];
+                         'wsbase'=>'Enforce\WsBase',
+                         'pebase'=>'Enforce\peBase'];
     protected $actions = ['media'=>'Media',
                           'employee'=>'Employee',
                           'area'=>'Area',
@@ -136,8 +137,15 @@ class CaseController extends CommonController
         $table = date('Ym',strtotime($start_time));
         unset($request['case_key']);
         $db = D($this->models['case']);
-        $result = $db->table('case_'.$table)->getTableEdit($where,u2gs($request));
-        $this->write_log('修改案件'.I('video_title'));
+        $result = M()->table('case_'.$table)->where($where)->save(u2gs($request));
+        if($result){
+            $res['status'] = true;
+            $res['message'] = '修改案件成功';
+        }else{
+            $res['status'] = false;
+            $res['message'] = '修改案件失败';
+        }
+        $this->write_log('修改案件'.$request['case_key']);
         return $result;
     }
     //查看可以申请的数据
@@ -187,7 +195,7 @@ class CaseController extends CommonController
         $res['total'] = array_sum($total);
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
-            error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
+            // error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
             $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
@@ -235,6 +243,8 @@ class CaseController extends CommonController
     //初始化案件
     public function init_case($request)
     {
+        //case_key  案件关键字
+        //start_time  案件开始时间
         $keys = array('alarm_no','alarm_name','alarm_addr','case_name','case_no','remark','case_qualify','case_empl','case_dept');
         $initData = array_fill_keys($keys,'');
         $initData['alarm_type'] = 0;
@@ -247,25 +257,69 @@ class CaseController extends CommonController
     //案件合并
     public function case_merage($request)
     {
-        $casesId = explode(',',$request['case_key']);
-        sort($casesId);
-        $db = D($this->models['case']);
-        $endCase = $db->where('case_key='.end($casesId))->find();
+        $caseInfo = $request['caseInfo'];
+        foreach ($caseInfo as $case_key => $start_time) {
+            $case_time[$case_key] = $start_time;
+            $time_table[$start_time] = 'case_'.date('Ym',strtotime($start_time));
+        }
+        sort($case_time);
+        $endCase = M()->table($time_table[end($case_time)])->where('case_key="'.key($case_time).'"')->find();
         //将第一个案件的结束时间调整至最后一个案件的结束时间
         $data['end_time'] = $endCase['end_time'];
-        $where['case_key'] = reset($casesId);
-        $result = $db->getTableEdit($request,$data);
+        $where['case_key'] = key(reset($case_time));
+        $result = M()->table($time_table[current($case_time)])->where($where)->save($data);
+
+        $video_data['case_key'] = $where['case_key'];
+        foreach ($caseInfo as $case_key => $start_time) {
+            if($case_key == $where['case_key']) continue;
+            $video_where['case_key'] = $case_key;
+            $result = M()->table('case_video_'.date('Ym',strtotime($start_time)))->where($video_where)->save($video_data);
+        }
         //将相关视频合并
-        $mediadb = D($this->models['pe_video_list']);
-        $caseData['case_key'] = array_shift($casesId);
-        $caseWhere[] = $this->where_key_or($casesId, 'case_key');
-        $result = $mediadb->getTableEdit($caseWhere,$caseData);
-        return $result;
+        if($result){
+            $res['status'] = true;
+            $res['message'] = '合并案件成功';
+        }else{
+            $res['status'] = false;
+            $res['message'] = '合并案件失败';
+        }
+        return $res;
     }
     //案件拆包
     public function case_slice($request)
     {
-        $wjbhs = explode(',', $request['wjbh']);
+        $wjbhInfo = $request['wjbhInfo'];
+        foreach ($wjbhInfo as $wjbh => $start_time) {
+            $video_time[$wjbh] = $start_time;
+            $time_table[$start_time] = 'case_video_'.date('Ym',strtotime($start_time));
+        }
+        sort($video_time);
+        $firstTime = reset($video_time);
+        $wjInfo = M()->table($time_table[$firstTime])->where('wjbh="'.key($video_time).'"')->find();
+        $wjeInfo = M()->table($time_table[end($video_time)])->where('wjbh="'.key($video_time).'"')->find();
+        $data['case_key'] = date('YmdHis',strtotime($firstTime)).'_'.$wjInfo['cpxh'].'_'.$wjInfo['areacode'];
+        $data['title'] = date('YmdHis',strtotime($firstTime)).'_'.$wjInfo['jyxm'];
+        $data['start_time'] = $firstTime;
+        $data['end_time'] = $wjeInfo['end_time'];
+        $data['scsj'] = date('Y-m-d H:i:s');
+        $data['jybh']= $wjInfo['jybh'];
+        $data['areacode'] = $wjInfo['areacode'];
+        $data['jyxm'] = $wjInfo['jyxm'];
+        $data['areaname'] = $wjInfo['areaname'];
+        $result = M()->table('case_'.date('Ym',strtotime($firstTime)))->add($data);
+        $video_data['case_key'] = $data['case_key'];
+        foreach ($wjbhInfo as $wjbh => $start_time) {
+            $video_where['wjbh'] = $wjbh;
+            M()->table('case_video_'.date('Ym',strtotime($start_time)))->where($video_where)->save($video_data);
+        }
+        if($result){
+            $res['status'] = true;
+            $res['message'] = '拆分案件成功';
+        }else{
+            $res['status'] = false;
+            $res['message'] = '拆分案件失败';
+        }
+        return $res;
     }
     //撤销，拒绝申请
     public function init_apply($request)
@@ -291,13 +345,11 @@ class CaseController extends CommonController
     public function play_case_info($request)
     {
         //case_key  案件关键字
-        $casedb = D($this->models['case']);
-        $mediadb = D($this->models['pe_video_list']);
         $caseWhere['case_key'] = $request['case_key'];
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
-        $caseInfo = $casedb->table('case_'.$table)->where($caseWhere)->find();
-        $data = $mediadb->table('case_video_'.$table)->where($caseWhere)->select();
+        $caseInfo = M()->table('case_'.$table)->where($caseWhere)->find();
+        $data = M()->table('case_video_'.$table)->where($caseWhere)->select();
         $fileType = $this->get_val_item('dictionary','filetype');
         $video_source = $this->get_val_item('dictionary','video_source');
         foreach ($data as &$value) {
@@ -311,97 +363,176 @@ class CaseController extends CommonController
         $this->write_log(g2u($info['video_title']).'播放,编辑信息');
         return g2us($res);
     }
-/*    var column = [
-    [
-        { field: 'areaname', title: '所属部门', rowspan: 2, width: 80, align: 'center' },
-        { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
-        { field: 'workemp', title: '执法民警数', rowspan: 2, width: 80, align: 'center' },
-        { field: 'recorder', title: '执法记录仪数', rowspan: 2, width: 80, align: 'center' },
-        //{ field: 'upload', title: '民警上传情况', colspan: 3, align: 'center' },
-        //{ field: 'warning', title: '警情数', colspan: 9, align: 'center' },
-        //{ field: 'case', title: '案件数', colspan: 3, align: 'center' },
-        //{ field: 'collect', title: '采集站情况', colspan: 3, align: 'center' }
-    ],
-    [
-        //{ field: 'uploadnum', title: '上传警员数', width: 80, align: 'center' },
-        //{ field: 'unuploadnum', title: '未上传民警数', width: 80, align: 'center' },
-        //{ field: 'uploadper', title: '警员上传率', width: 80, align: 'center' },
-
-        { field: 'common', title: '一般警情', width: 80, align: 'center' },
-        { field: 'major', title: '重大警情', width: 80, align: 'center' },
-        { field: 'spot', title: '当场盘问检查', align: 'center' },
-        { field: 'force', title: '行政强制执行', width: 80, align: 'center' },
-        { field: 'impede', title: '阻碍民警执法妨碍公务', align: 'center' },
-        { field: 'otherdata', title: '其他数据', align: 'center' },
-        { field: 'unmark', title: '未编辑数据', align: 'center' },
-        { field: 'disuse', title: '无效数据', align: 'center' },
-        { field: 'num', title: '合计', align: 'center' },
-
-        { field: 'administration', title: '行政案件', align: 'center' },
-        { field: 'criminal', title: '刑侦案件', align: 'center' },
-        { field: 'case_num', title: '合计', width: 80, align: 'center' },
-
-        { field: 'wsbase_num', title: '采集站数', width: 80, align: 'center' },
-        { field: 'wsbase_online', title: '连接数', width: 80, align: 'center' },
-        { field: 'wsbase_per', title: '连接率', width: 80, align: 'center' }
-    ]
-];*/
     //案件统计
     public function case_sat($request)
     {
         //----------------
         //基础where条件
         //----------------
-        $areacode = $request['areacode'];
+        $areacode = $request['areacode'] ? $request['areacode'] : session('areacode');
         $manger_sql = $this->get_manger_sql($areacode);
         $where[] = $manger_sql;
-        $emWhere = $wsWhere = $serWhere = $caseWhere = $peWhere = $where;
+        $emWhere[] = $this->get_manger_sql($areacode,'areacode','code');
+        $peWhere = $wsWhere[] = $this->get_manger_sql($areacode,'areacode',false);
         //---------------------
         //查询时间
         //---------------------
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'].' 00:00:00' : date('Y-m-d',time()-6*24*60*60).' 00:00:00'; //开始时间
-        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59'); //结束时间
-        $where['start_time'][] = array('EGT',$btime);      //开始时间
-        $where['start_time'][] = array('ELT',$etime); //结束时间
-        //警员统计
-        $employeedb = D($this->models['employee']);
-        $allEmp = $employeedb->field('areacode,count(1) as empnum')->where($wsWhere)->group('areacode')->select();
-
-
-
-
+        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59'; //结束时间
         $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
         $total = array();
         $tables = $this->get_dbTables();
+        //---------------
+        //准备部门
+        //---------------
+        $area_code_id = D($this->models['area'])->getField('areacode,areaid');
+        //统计时间段
+        $where['start_time'][] = array('EGT',$btime);      //开始时间
+        $where['start_time'][] = array('ELT',$etime); //结束时间
+        //各部门警员总数统计   完成
+        $employeedb = D($this->models['employee']);
+        $allEmp = $employeedb->field('areacode,count(1) as empnum')->where($emWhere)->group('areacode')->select();
+        //各部门上传警员统计
+        $emWhere['start_time'][] = array('EGT',$btime);      //开始时间
+        $emWhere['start_time'][] = array('ELT',$etime); //结束时间
+        $uploadEmps = array();
         foreach ($months as $month) {
             if(!in_array('case_'.$month,$tables)) continue;
-            $total[$month] = M()->table('case_'.$month)->where($where)->count();
+            $upload = M()->table('case_'.$month)->field('distinct(jybh) as jybh,areacode')->where($where)->group('jybh')->select();
+            $uploadEmps = array_merge((array)$upload,$uploadEmps);
         }
-
-
-
-        $db = D($this->models['case']);
-        $caseWhere = $empWhere = $alarmWhere = $where;
-        //案件统计 和 警情统计
-        $caseData = $db->field('areacode,areaname,count(1) as num')->where($where)->group('areacode,alarm_type,case_type')->select();
-        $sql = $action->get_manger_sql($areaid,'areaid',fasle);
-        $wsWhere[]= $sql;
-        //民警执勤统计
-        $empData = $db->field('areaid,areaname,count(distinct(jybh)) as workemp')->where($where)->group('areaid')->select();
-        $allEmp = D($this->models['employee'])->field('areacode,count(1) as empnum')->where($wsWhere)->group('areacode')->select();
+        $uploadEmpArr = array();
+        foreach ($uploadEmps as $value) {
+            $uploadEmpArr[$value['areacode']][] = $value['jybh'];
+        }
+        $uploadNum = array();
+        foreach ($uploadEmpArr as $key => $value) {
+            $arr = array('areacode'=>$key,'uploadNum'=>count(array_unique($value)));
+            $uploadNum[] = $arr;
+        }
+        //-----------------
+        //统计案件数和警情数
+        //------------------
+        $caseNUm = array();
+        foreach ($months as $month) {
+            if(!in_array('case_'.$month,$tables)) continue;
+            $case = M()->table('case_'.$month)->field('areacode,count(1) as num,alarm_type,case_type')->where($where)->group('areacode,alarm_type,case_type')->select();
+            $caseNUm = array_merge((array)$case,$caseNUm);
+        }
+        //----------------
+        //统计工作站
+        //-----------------
         $wsDb = D($this->models['wsbase']);
-        //工作站统计
-        $wsData = $wsDb->field('areacode,areaname,count(1) as wsnum')->where($wsWhere)->group('areacode,zxzt')->select();
+        $wsData = $wsDb->field('areacode,count(1) as num')->where($wsWhere)->group('areacode,zxzt')->select();
+        //------------
+        //执法记录仪
+        //------------
+        $peDb = D($this->models['pebase']);
+        $peData = $peDb->field('areacode,count(1) as num')->where($peWhere)->group('areacode')->select();
         //------------------
         //数据初始化阶段
         //------------------
         $areaAction = A($this->actions['area']);
         $areadb = D($this->models['area']);
-        $initInfos = $areadb->field('areacode,areaname,fatherareaid as _parentId')->where($showWhere)->select();
-        $keys = array('areaname','empnum','workemp','percent','common','major','major','impede',
-                      'force','spot','disuse','unmark','num','criminal','administration','case_num',
-                      'wsbase_num','wsbase_online','case_num');
-        $this->ajaxReturn(g2us($allEmp));
+        $initInfos = $areadb->field('areaid,areacode,areaname,fatherareaid as _parentId')->select();
+        $keys = array('empnum','recorder','uploadnum','unuploadnum','uploadper','common','major','major','impede',
+                      'force','spot','otherdata','disuse','unmark','num','criminal','administration','case_num',
+                      'wsbase_num','wsbase_online','wsbase_per');
+        $initData = array_fill_keys($keys,0);
+        $data = array();
+        foreach ($initInfos as $key=> &$value) {
+            $data[$value['areacode']] = array_merge($value,$initData);
+        }
+        //--------------------
+        //解析数据
+        //------------------
+        $mark = 'areacode';
+        //---------------
+        //解析案件数
+        //---------------
+        $fields = array('num'=>'num');
+        $paress = array(
+            'alarm_type'=>array(
+                'field'=>'num',
+                'info'=>array(
+                    'unmark'=>0,    //未编辑
+                    'common'=>1,    //一般
+                    'major'=>2,     //重大
+                    'impede'=>3,    //妨碍
+                    'force'=>4,     //强制
+                    'spot'=>5,      //现场
+                    'disuse'=>6,    //无效
+                    'otherdata'=>7, //其他
+                    )
+                ),
+            'case_type'=>array(
+                'field'=>'num',
+                'info'=>array(
+                    'criminal'=>1,  //刑事
+                    'administration'=>2, //行政
+                    )
+                )
+
+            );
+
+        $data = $this->pares_data($data,$caseNUm,$fields,$mark, $paress);
+        //-----------
+        //解析工作站
+        //-----------
+        $fields = array('wsbase_num'=>'num');
+        $paress = array(
+            'zxzt'=>array(
+                'field'=>'num',
+                'info'=>array(
+                    'wsbase_online'=>0,    //在线数
+                    )
+                )
+            );
+        $data = $this->pares_data($data,$wsData,$fields,$mark, $paress);
+        //--------------
+        //解析执法记录仪
+        //--------------
+        $fields = array('recorder'=>'num');
+        $data = $this->pares_data($data,$wsData,$fields,$mark);
+        //--------------
+        //解析总民警
+        //--------------
+        $fields = array('empnum'=>'empnum');
+        $data = $this->pares_data($data,$allEmp,$fields,$mark);
+        //--------------
+        //上传民警
+        //--------------
+        $fields = array('uploadnum'=>'uploadNum');
+        $data = $this->pares_data($data,$uploadNum,$fields,$mark);
+        //-------------
+        //是否进行数据累加
+        //-------------
+        if(isset($request['link'])){
+            $fields = $keys;
+            $pidFiled = '_parentId';
+            $data = $this->ksort_sat_data($data,$pidFiled,$fields);
+        }
+        //---------------
+        //最后数据处理
+        //---------------
+        //显示数据
+        $areaInfo = $areadb->where('areacode="'.$areacode.'"')->find();
+        $show = $areadb->where('fatherareaid="'.$areaInfo['areaid'].'"')->getField('areacode',true);
+        $areacodes = array();
+        if(!empty($show)) $areacodes = $show;
+        $areacodes[] = $areacode;
+        foreach ($data as $key=> &$value) {
+            if(!in_array($value['areacode'],$areacodes)){
+                unset($data[$key]);
+                continue;
+            }
+            if($value['areacode'] == $areacode) unset($value['_parentId']);
+            $value['unuploadnum'] = $value['empnum'] - $value['uploadnum'];                         //未上传民警数
+            $value['uploadper'] = round(($value['uploadnum'] / $value['empnum'])*100,2);            //上传率
+            $value['wsbase_per'] = round(($value['wsbase_online'] / $value['wsbase_num'])*100,2);   //工作站在线率
+            $value['case_num'] = $value['administration'] + $value['criminal'];     //案件数
+        }
+        $this->ajaxReturn(g2us($data));
     }
     /**
      * 分析数据
@@ -413,7 +544,7 @@ class CaseController extends CommonController
      * @param  array $doOne  仅仅处理一次的字段 ['areaname']
      * @return array             整合之后的数据
      */
-    public function pares_data($init,$data,$fields,$mark = '',$paress,$doOne)
+    public function pares_data($init,$data,$fields,$mark = '',$paress = array(),$doOne)
     {
         if(empty($data) || empty($init) || $mark == '') return $init;
         foreach ($data as $info) {
@@ -441,5 +572,32 @@ class CaseController extends CommonController
             }
         }
         return $init;
+    }
+    /**
+     * 按照需求上下级进行数据叠加
+     * @param  array $data   [id]=>['id'=>id,'num'=>num,'pid'=>pid]
+     * @param  string $pidFiled pid字段
+     * @param  array $fields 需要叠加的字段
+     * @param  array $root 根菜单节点
+     * @return array         格式化之后的数据
+     */
+    public function ksort_sat_data($data,$pidFiled,$fields,$root)
+    {
+        krsort($data);
+        foreach ($data as $key => $value) {
+            $checkArr[$value[$pidFiled]][] = $key;
+        }
+        foreach ($data as $key => $value) {
+            if(isset($root)){
+                if($data[$key]['_parentId'] == $root)  unset($data[$key]['_parentId']);
+            }
+            if(empty($checkArr[$key])) continue;
+            foreach ($checkArr[$key] as $val) {
+                foreach ($fields as $field) {
+                    $data[$key][$field] = $data[$key][$field] + $data[$val][$field];
+                }
+            }
+        }
+        return $data;
     }
 }

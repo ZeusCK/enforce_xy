@@ -19,17 +19,38 @@ class MediaController extends CommonController
     public function pack_pop($request)
     {
         //wjbh  拆包的文件编号 多文件,隔开
-        $data['video_id'] = '';
-        $where[] = $this->where_key_or(explode(',',$request['wjbh']),'wjbh');
-        return D($this->models['pe_video_list'])->getTableEdit($where,$data);
+        $wjbhInfo = $request['wjbhInfo'];
+        $video_data['case_key'] = '';
+        foreach ($wjbhInfo as $wjbh => $start_time) {
+            $video_where['wjbh'] = $wjbh;
+            $result = M()->table('case_video_'.date('Ym',strtotime($start_time)))->where($video_where)->save($video_data);
+        }
+        if($result){
+            $res['status'] = true;
+            $res['message'] = '拆分案件成功';
+        }else{
+            $res['status'] = false;
+            $res['message'] = '拆分案件失败';
+        }
     }
     //合包
     public function pack_merage($request)
     {
         //wjbh 合包文件 多文件,隔开
-        //video_id 合包案件
-        $where[] = $this->where_key_or(explode(',',$request['wjbh']),'wjbh');
-        return D(C('MODEL.pe_video_list'))->getTableEdit($where,$request);
+        //case_key 合包案件
+        $wjbhInfo = $request['wjbhInfo'];
+        $video_data['case_key'] = $request['case_key'];
+        foreach ($wjbhInfo as $wjbh => $start_time) {
+            $video_where['wjbh'] = $wjbh;
+            $result = M()->table('case_video_'.date('Ym',strtotime($start_time)))->where($video_where)->save($video_data);
+        }
+        if($result){
+            $res['status'] = true;
+            $res['message'] = '拆分案件成功';
+        }else{
+            $res['status'] = false;
+            $res['message'] = '拆分案件失败';
+        }
     }
     //显示可以合包文件
     public function show_unpack($request)
@@ -37,10 +58,29 @@ class MediaController extends CommonController
         //areaid  部门ID
         //page   页数
         //rows   条数
-        $action = A($this->actions['employee']);
-        $where[] = $action->get_manger_sql($request['areaid']);
-        $where['video_id'] = '';
-        return D($this->models['pe_video_list'])->getTableList($where,$request['page'],$request['rows'],'start_time desc');
+        $where[] = $this->get_manger_sql();
+        $where['case_key'] = '';
+        $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
+        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'] : date('Y-m-d H:i:s');
+        $where['start_time'][] = array('EGT',$btime);      //开始时间
+        $where['start_time'][] = array('ELT',$etime); //结束时间
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $total = array();
+        $tables = $this->get_dbTables();
+        foreach ($months as $month) {
+            if(!in_array('case_video_'.$month,$tables)) continue;
+            $total[$month] = M()->table('case_video_'.$month)->where($where)->count();
+        }
+        $tables = $this->get_query_table($total,$page,$rows);
+        $res = array();
+        $res['total'] = array_sum($total);
+        $res['rows'] = array();
+        foreach ($tables as $table => $start_limit) {
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            $res['rows'] = array_merge($res['rows'],(array)$data);
+        }
+        $this->saveExcel($res); //监测是否为导出
+        return g2us($res);
     }
 
 

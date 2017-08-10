@@ -2,15 +2,15 @@
 Navicat MySQL Data Transfer
 
 Source Server         : localhost
-Source Server Version : 50553
+Source Server Version : 50520
 Source Host           : localhost:3306
 Source Database       : enforce_xy
 
 Target Server Type    : MYSQL
-Target Server Version : 50553
+Target Server Version : 50520
 File Encoding         : 936
 
-Date: 2017-08-02 10:39:50
+Date: 2017-08-10 10:15:10
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,146 +24,491 @@ CREATE TABLE `area_dep` (
   `proid` int(11) DEFAULT '1' COMMENT '暂不用，固定填1',
   `fatherareaid` int(11) NOT NULL COMMENT '部门父ID',
   `areaname` varchar(128) NOT NULL COMMENT '区域(部门)名称',
-  `areacode` varchar(64) DEFAULT '0000000000' COMMENT '暂不用',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '部门代码',
   `rperson` varchar(64) DEFAULT NULL,
   `rphone` varchar(32) DEFAULT NULL,
   `code` varchar(10) DEFAULT '' COMMENT '部门代码,自定义,用于公安用户自动勾选交警部门权限',
-  `type` int(1) NOT NULL COMMENT '0:交警，1:其它',
+  `type` int(1) NOT NULL DEFAULT '1' COMMENT '0:交警，1:其它,2:法制',
+  `is_read` int(1) NOT NULL DEFAULT '1' COMMENT '部门权限；1:读写,0:只读;父级是0，子级必须是0;',
   PRIMARY KEY (`areaid`),
-  KEY `fk_areareg_areapro_proid` (`fatherareaid`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=196 DEFAULT CHARSET=latin1;
+  UNIQUE KEY `idx_areacode` (`areacode`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=668 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of area_dep
 -- ----------------------------
-INSERT INTO `area_dep` VALUES ('57', '1', '55', '机动车监管中心', '3602019902', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('56', '1', '55', '法制科', '3602019901', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('55', '1', '54', '特警大队', '36020199', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('54', '1', '53', '包头市交管支队', '360201', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('53', '1', '52', '包头市公安局', '36', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('58', '1', '54', '昆区大队', '36020101', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('61', '1', '58', '昆区一中队', '3602010102', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('62', '1', '58', '昆区二中队', '3602010104', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('63', '1', '58', '昆区三中队', '3602010103', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('64', '1', '58', '昆区四中队', '3602010106', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('65', '1', '58', '昆区五中队', '3602010101', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('66', '1', '58', '昆区六中队', '3602010105', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('67', '1', '58', '昆区事故中队', '3602010190', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('68', '1', '58', '昆区警务督察办', '3602010100', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('69', '1', '54', '青山区大队', '36020102', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('70', '1', '54', '东河区大队', '36020103', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('71', '1', '54', '九原区大队', '36020104', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('93', '1', '54', '东兴大队', '36020111', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('73', '1', '54', '土右大队', '36020112', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('74', '1', '54', '石拐大队', '36020113', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('75', '1', '54', '固阳大队', '36020117', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('76', '1', '54', '达茂大队', '36020114', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('92', '1', '54', '高新大队', '36020110', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('79', '1', '54', '南绕城大队', '36020116', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('80', '1', '54', '河西大队', '36020106', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('81', '1', '54', '北郊大队', '36020109', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('82', '1', '54', '车管所', '36020108', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('83', '1', '54', '机动大队', '360201123', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('84', '1', '54', '督察大队', '36020107', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('85', '1', '74', '石拐一中队', '3602011301', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('86', '1', '74', '石拐二中队', '3602011302', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('87', '1', '74', '石拐三中队', '3602011303', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('88', '1', '74', '石拐四中队', '3602011304', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('89', '1', '74', '石拐事故中队', '3602011390', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('90', '1', '74', '石拐督察法制办', '3602011300', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('94', '1', '54', '白云大队', '36020115', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('95', '1', '71', '九原督察法制办', '3602010400', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('96', '1', '71', '九原一中队', '3602010401', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('97', '1', '71', '九原二中队', '3602010402', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('98', '1', '71', '九原三中队', '3602010403', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('99', '1', '71', '九原四中队', '3602010404', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('100', '1', '71', '九原事故中队', '3602010490', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('101', '1', '80', '河西督察法制办', '3602010600', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('102', '1', '80', '河西二中队', '3602010601', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('103', '1', '80', '河西一中队', '3602010602', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('104', '1', '80', '河西三中队', '3602010603', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('105', '1', '80', '河西四中队', '3602010604', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('106', '1', '80', '河西事故中队', '3602010690', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('107', '1', '80', '河西检查站', '3602010605', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('108', '1', '84', '督察大队一中队', '3602010701', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('109', '1', '84', '督查大队二中队', '3602010702', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('110', '1', '82', '督车管所考核办', '3602010802', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('111', '1', '82', '车管所监督科', '3602010804', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('112', '1', '82', '车管所外检科', '3602010805', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('113', '1', '82', '车管所考务科', '3602010806', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('114', '1', '81', '北郊园区中队', '3602010905', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('115', '1', '81', '北郊督察法制办', '3602010900', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('116', '1', '81', '北郊一中队', '3602010901', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('117', '1', '81', '北郊二中队', '3602010902', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('118', '1', '81', '北郊三中队', '3602010903', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('119', '1', '81', '北郊四中队', '3602010904', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('120', '1', '81', '北郊事故中队', '3602010990', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('121', '1', '92', '高新督察法制办', '3602011000', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('122', '1', '92', '高新二中队', '3602011001', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('123', '1', '92', '高新一中队', '3602011002', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('124', '1', '92', '高新三中队', '3602011003', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('125', '1', '92', '高新事故中队', '3602011090', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('126', '1', '93', '东兴督察法制办', '3602011100', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('127', '1', '93', '东兴一中队', '3602011101', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('128', '1', '93', '东兴二中队', '3602011102', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('129', '1', '93', '东兴三中队', '3602011103', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('130', '1', '93', '东兴事故中队', '3602011190', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('131', '1', '93', '大队领导', '3602011109', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('132', '1', '73', '土右督察法制办', '3602011200', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('133', '1', '73', '土右一中队', '3602011201', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('134', '1', '73', '土右二中队', '3602011202', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('135', '1', '73', '土右三中队', '3602011203', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('136', '1', '73', '土右四中队', '3602011204', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('137', '1', '73', '土右五中队', '3602011205', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('138', '1', '73', '土右事故中队', '3602011290', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('139', '1', '83', '岗勤中队', '36020112301', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('140', '1', '83', '护校中队', '36020112302', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('141', '1', '76', '达茂督察法制办', '3602011400', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('142', '1', '76', '达茂一中队', '3602011401', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('143', '1', '76', '达茂二中队', '3602011402', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('144', '1', '76', '达茂三中队', '3602011403', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('145', '1', '76', '达茂事故中队', '3602011490', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('146', '1', '94', '白云督察法制办', '3602011500', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('147', '1', '94', '白云一中队', '3602011501', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('148', '1', '94', '白云二中队', '3602011502', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('149', '1', '94', '白云三中队', '3602011503', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('150', '1', '94', '白云事故中队', '3602011590', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('151', '1', '79', '南绕城督察法制办', '3602011600', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('152', '1', '79', '南绕城一中队', '3602011601', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('153', '1', '79', '南绕城二中队', '3602011602', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('154', '1', '79', '南绕城三中队', '3602011603', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('155', '1', '79', '南绕城事故中队', '3602011690', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('156', '1', '75', '固阳五中队', '3602011705', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('157', '1', '75', '固阳警务督察办', '3602011700', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('158', '1', '75', '固阳一中队', '3602011701', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('159', '1', '75', '固阳二中队', '3602011702', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('160', '1', '75', '固阳三中队', '3602011703', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('161', '1', '75', '固阳四中队', '3602011704', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('162', '1', '75', '固阳法制办', '3602011710', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('163', '1', '75', '固阳事故中队', '3602011790', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('164', '1', '69', '青山四级巡控', '3602010207', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('165', '1', '69', '青山督察法制办', '3602010200', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('166', '1', '69', '青山一中队', '3602010201', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('167', '1', '69', '青山二中队', '3602010202', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('168', '1', '69', '青山三中队', '3602010203', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('169', '1', '69', '青山四中队', '3602010204', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('170', '1', '69', '青山五中队', '3602010205', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('171', '1', '69', '青山六中队', '3602010206', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('172', '1', '69', '青山事故中队', '3602010290', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('173', '1', '70', '东河宣传中队', '3602115', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('174', '1', '70', '东河事故中队', '3602010390', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('175', '1', '70', '东河督察法制办', '3602010300', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('176', '1', '70', '东河一中队', '3602010301', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('177', '1', '70', '东河二中队', '3602010302', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('178', '1', '70', '东河三中队', '3602010303', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('179', '1', '70', '东河四中队', '3602010304', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('180', '1', '70', '东河五中队', '3602010305', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('181', '1', '70', '东河六中队', '3602010306', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('182', '1', '70', '东河管理中队', '36031000', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('183', '1', '113', '科目一考场', '360201080601', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('184', '1', '113', '科目二考场', '360201080602', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('185', '1', '113', '科目三考场', '360201080603', '', '', null, '1');
-INSERT INTO `area_dep` VALUES ('52', '1', '0', '内蒙古自治区公安局', '0000000000', null, null, null, '1');
+INSERT INTO `area_dep` VALUES ('196', '1', '0', '河南省公安厅', '41', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('197', '1', '196', '信阳市公安局', '4115', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('198', '1', '197', '老城分局', '411501', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('199', '1', '197', '浉河分局', '411502', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('200', '1', '197', '羊山分局', '411503', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('201', '1', '197', '明港分局', '411504', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('202', '1', '197', '洋河分局', '411505', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('203', '1', '197', '平桥分局', '411506', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('204', '1', '197', '上天梯分局', '411507', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('205', '1', '197', '高新分局', '411508', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('206', '1', '197', '鸡公山分局', '411509', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('207', '1', '197', '南湾分局', '411510', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('208', '1', '197', '淮滨县公安局', '411511', '姜树豪', '13949159672', '411511', '1', '0');
+INSERT INTO `area_dep` VALUES ('209', '1', '197', '直属分局', '411512', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('210', '1', '197', '新县公安局', '411513', null, null, '411513', '1', '0');
+INSERT INTO `area_dep` VALUES ('211', '1', '197', '光山县公安局', '411514', null, null, '411514', '1', '0');
+INSERT INTO `area_dep` VALUES ('212', '1', '197', '潢川县公安局', '411515', '张局长', null, '411515', '1', '0');
+INSERT INTO `area_dep` VALUES ('213', '1', '197', '罗山县公安局', '411516', null, null, '411516', '1', '0');
+INSERT INTO `area_dep` VALUES ('214', '1', '197', '商城县公安局', '411517', null, null, '411517', '1', '0');
+INSERT INTO `area_dep` VALUES ('215', '1', '197', '息县公安局', '411518', '邢磊', '13937666277', '411518', '1', '0');
+INSERT INTO `area_dep` VALUES ('216', '1', '198', '老城分局-老城派出所', '41150101', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('217', '1', '198', '老城分局-民权派出所', '41150102', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('218', '1', '198', '老城分局-车站派出所', '41150103', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('219', '1', '198', '老城分局-五里墩派出所', '41150104', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('220', '1', '198', '老城分局-金牛山派出所', '41150105', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('221', '1', '198', '老城分局-工区派出所', '41150106', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('222', '1', '198', '老城分局-产业集聚区派出所', '41150107', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('223', '1', '198', '老城分局-公交派出所', '41150108', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('224', '1', '198', '老城分局-公园派出所', '41150109', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('225', '1', '198', '老城分局-老城分局警务综合室', '41150110', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('226', '1', '198', '老城分局-老城分局社区警务大队', '41150111', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('227', '1', '198', '老城分局-老城分局执法执纪监督室', '41150112', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('228', '1', '198', '老城分局-老城分局治安管理大队', '41150113', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('229', '1', '198', '老城分局-老城分局案件侦办大队', '41150114', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('230', '1', '198', '老城分局-老城分局巡逻防控大队', '41150115', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('231', '1', '199', '浉河分局-五星派出所', '41150201', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('232', '1', '199', '浉河分局-湖东派出所', '41150202', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('233', '1', '199', '浉河分局-游河派出所', '41150203', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('234', '1', '199', '浉河分局-东双河派出所', '41150204', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('235', '1', '199', '浉河分局-谭家河派出所', '41150205', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('236', '1', '199', '浉河分局-十三里桥派出所', '41150206', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('237', '1', '199', '浉河分局-董家河派出所', '41150207', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('238', '1', '199', '浉河分局-吴家店派出所', '41150208', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('239', '1', '199', '浉河分局-浉河港派出所', '41150209', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('240', '1', '199', '浉河分局-柳林派出所', '41150210', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('241', '1', '199', '浉河分局-浉河分局警务综合室', '41150211', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('242', '1', '199', '浉河分局-浉河分局执法执纪监督室', '41150212', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('243', '1', '199', '浉河分局-浉河分局法制大队', '41150213', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('244', '1', '199', '浉河分局-浉河分局案件侦办大队', '41150214', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('245', '1', '199', '浉河分局-浉河分局交管巡防大队', '41150215', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('246', '1', '199', '浉河分局-浉河分局社区警务大队', '41150216', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('247', '1', '199', '浉河分局-浉河分局治安管理大队', '41150217', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('248', '1', '200', '羊山分局-楚王城派出所', '41150301', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('249', '1', '200', '羊山分局-前进派出所', '41150302', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('250', '1', '200', '羊山分局-龙飞山派出所', '41150303', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('251', '1', '200', '羊山分局-羊山派出所', '41150304', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('252', '1', '200', '羊山分局-行政中心派出所', '41150305', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('253', '1', '200', '羊山分局-北湖派出所', '41150306', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('254', '1', '200', '羊山分局-羊山分局治安大队', '41150307', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('255', '1', '200', '羊山分局-羊山分局案件侦办大队', '41150308', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('256', '1', '200', '羊山分局-羊山分局特勤大队', '41150309', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('257', '1', '200', '羊山分局-羊山分局巡逻防控大队', '41150310', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('258', '1', '200', '羊山分局-羊山分局警务综合室', '41150311', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('259', '1', '200', '羊山分局-羊山分局家居小镇警务室', '41150312', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('260', '1', '200', '羊山分局-羊山派出所社区警务大队', '41150313', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('261', '1', '200', '羊山分局-羊山分局执法执纪监督室', '41150314', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('262', '1', '201', '明港分局-明港派出所', '41150401', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('263', '1', '201', '明港分局-铁东派出所', '41150402', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('264', '1', '201', '明港分局-铁西派出所', '41150403', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('265', '1', '201', '明港分局-兰店派出所', '41150404', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('266', '1', '201', '明港分局-刑集派出所', '41150405', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('267', '1', '201', '明港分局-王岗派出所', '41150406', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('268', '1', '201', '明港分局-甘岸派出所', '41150407', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('269', '1', '201', '明港分局-长台关派出所', '41150408', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('270', '1', '201', '明港分局-城阳城址派出所', '41150409', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('271', '1', '201', '明港分局-明港分局执法执纪监督室', '41150410', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('272', '1', '201', '明港分局-明港分局案件侦办大队', '41150411', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('273', '1', '201', '明港分局-明港分局治安管理大队', '41150412', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('274', '1', '201', '明港分局-明港分局巡防大队', '41150413', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('275', '1', '201', '明港分局-明港分局社区警务大队', '41150414', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('276', '1', '201', '明港分局-明港分局警务综合室', '41150415', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('277', '1', '201', '明港分局-平昌关派出所', '41150416', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('278', '1', '201', '明港分局-查山派出所', '41150417', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('279', '1', '201', '明港分局-高粱店派出所', '41150418', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('280', '1', '202', '洋河分局-洋河派出所', '41150501', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('281', '1', '202', '洋河分局-九店派出所', '41150502', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('282', '1', '202', '洋河分局-彭家湾派出所', '41150503', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('283', '1', '202', '洋河分局-胡店派出所', '41150504', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('284', '1', '202', '洋河分局-肖王派出所', '41150505', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('285', '1', '202', '洋河分局-肖店派出所', '41150506', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('286', '1', '202', '洋河分局-龙井派出所', '41150507', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('287', '1', '202', '洋河分局-洋河分局警务综合室', '41150508', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('288', '1', '202', '洋河分局-洋河分局执法执纪室', '41150509', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('289', '1', '202', '洋河分局-洋河分局案件侦办大队', '41150510', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('290', '1', '202', '洋河分局-洋河分局社区警务大队', '41150511', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('291', '1', '202', '洋河分局-洋河分局巡逻防控大队', '41150512', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('292', '1', '203', '平桥分局-平桥派出所', '41150601', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('293', '1', '203', '平桥分局-工业园派出所', '41150602', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('294', '1', '203', '平桥分局-震雷山派出所', '41150603', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('295', '1', '203', '平桥分局-平西派出所', '41150604', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('296', '1', '203', '平桥分局-五里派出所', '41150605', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('297', '1', '203', '平桥分局-平桥分局警务综合室', '41150606', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('298', '1', '203', '平桥分局-平桥分局执法执纪监督室', '41150607', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('299', '1', '203', '平桥分局-平桥分局治安管理大队', '41150608', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('300', '1', '203', '平桥分局-平桥分局案件侦办大队', '41150609', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('301', '1', '203', '平桥分局-平桥分局交管巡防大队', '41150610', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('302', '1', '203', '平桥分局-平桥分局社区警务大队', '41150611', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('303', '1', '204', '上天梯分局-土城派出所', '41150701', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('304', '1', '204', '上天梯分局-上天梯分局社区警务大队', '41150702', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('305', '1', '204', '上天梯分局-上天梯分局案件侦办大队', '41150703', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('306', '1', '204', '上天梯分局-上天梯分局警务综合室', '41150704', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('307', '1', '204', '上天梯分局-上天梯分局执法执纪监督室', '41150705', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('308', '1', '204', '上天梯分局-上天梯分局', '41150706', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('309', '1', '205', '高新分局-珍珠路派出所', '41150801', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('310', '1', '205', '高新分局-城东派出所', '41150802', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('311', '1', '205', '高新分局-高新分局警务综合室', '41150803', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('312', '1', '205', '高新分局-高新分局社区警务大队', '41150804', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('313', '1', '205', '高新分局-高新分局案件侦办大队', '41150805', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('314', '1', '206', '鸡公山分局-李家寨派出所', '41150901', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('315', '1', '206', '鸡公山分局-鸡公山派出所', '41150902', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('316', '1', '206', '鸡公山分局-鸡公山分局警务综合室', '41150903', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('317', '1', '206', '鸡公山分局-鸡公山分局案件侦办大队', '41150904', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('318', '1', '206', '鸡公山分局-鸡公山分局社区警务大队', '41150905', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('319', '1', '207', '南湾分局-南湾派出所', '41151001', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('320', '1', '207', '南湾分局-贤山派出所', '41151002', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('321', '1', '207', '南湾分局-南湾分局警务综合室', '41151003', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('322', '1', '207', '南湾分局-南湾分局案件侦办大队', '41151004', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('323', '1', '207', '南湾分局-南湾分局社区警务大队', '41151005', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('324', '1', '208', '淮滨县公安局-城关派出所', '41151101', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('325', '1', '208', '淮滨县公安局-北城派出所', '41151102', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('326', '1', '208', '淮滨县公安局-张里派出所', '41151103', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('327', '1', '208', '淮滨县公安局-防胡派出所', '41151104', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('328', '1', '208', '淮滨县公安局-新里派出所', '41151105', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('329', '1', '208', '淮滨县公安局-马集派出所', '41151106', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('330', '1', '208', '淮滨县公安局-芦集派出所', '41151107', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('331', '1', '208', '淮滨县公安局-邓湾派出所', '41151108', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('332', '1', '208', '淮滨县公安局-台头派出所', '41151109', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('333', '1', '208', '淮滨县公安局-巡特警大队', '41151110', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('334', '1', '208', '淮滨县公安局-治安大队', '41151111', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('335', '1', '208', '淮滨县公安局-经侦大队', '41151112', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('336', '1', '208', '淮滨县公安局-刑警大队', '41151113', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('337', '1', '208', '淮滨县公安局-工业园派出所', '41151114', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('338', '1', '208', '淮滨县公安局-期思派出所', '41151115', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('339', '1', '208', '淮滨县公安局-谷堆派出所', '41151116', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('340', '1', '208', '淮滨县公安局-王店派出所', '41151117', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('341', '1', '208', '淮滨县公安局-麻里派出所', '41151118', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('342', '1', '208', '淮滨县公安局-张庄派出所', '41151119', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('343', '1', '208', '淮滨县公安局-固城派出所', '41151120', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('344', '1', '208', '淮滨县公安局-三空桥派出所', '41151121', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('345', '1', '208', '淮滨县公安局-赵集派出所', '41151122', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('346', '1', '208', '淮滨县公安局-栏杆派出所', '41151123', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('347', '1', '208', '淮滨县公安局-王家岗派出所', '41151124', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('348', '1', '209', '信阳市公安局-出入境大队', '41151201', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('349', '1', '209', '信阳市公安局-刑警支队', '41151202', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('350', '1', '209', '信阳市公安局-110勤务大队', '41151203', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('351', '1', '209', '信阳市公安局-法制支队', '41151204', null, null, '', '2', '1');
+INSERT INTO `area_dep` VALUES ('352', '1', '209', '信阳市公安局-巡特警支队', '41151205', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('353', '1', '209', '信阳市公安局-国保支队', '41151206', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('354', '1', '209', '信阳市公安局-禁毒支队', '41151207', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('355', '1', '209', '信阳市公安局-经侦支队', '41151208', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('356', '1', '209', '信阳市公安局-治安支队', '41151209', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('357', '1', '209', '信阳市公安局-网监支队', '41151210', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('358', '1', '209', '信阳市公安局-反恐怖支队', '41151211', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('359', '1', '209', '信阳市公安局-监管支队', '41151212', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('360', '1', '209', '信阳市公安局-交通警察支队', '41151213', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('545', '1', '350', '110勤务大队-110步行街勤务站', '4115120301', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('361', '1', '210', '新县公安局-巡特警大队', '41151301', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('362', '1', '210', '新县公安局-刑警大队', '41151302', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('363', '1', '210', '新县公安局-办案中心', '41151303', null, null, '', '2', '0');
+INSERT INTO `area_dep` VALUES ('364', '1', '210', '新县公安局-城关派出所', '41151304', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('365', '1', '210', '新县公安局-产业集聚区派出所', '41151305', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('366', '1', '210', '新县公安局-新集派出所', '41151306', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('367', '1', '210', '新县公安局-浒湾派出所', '41151307', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('368', '1', '210', '新县公安局-八里贩派出所', '41151308', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('369', '1', '210', '新县公安局-沙窝派出所', '41151309', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('370', '1', '210', '新县公安局-周河派出所', '41151310', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('371', '1', '210', '新县公安局-吴陈河派出所', '41151311', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('372', '1', '210', '新县公安局-千斤派出所', '41151312', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('373', '1', '210', '新县公安局-苏河派出所', '41151313', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('374', '1', '210', '新县公安局-卡房派出所', '41151314', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('375', '1', '210', '新县公安局-陡山河派出所', '41151315', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('376', '1', '210', '新县公安局-郭家河派出所', '41151316', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('377', '1', '210', '新县公安局-陈店派出所', '41151317', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('378', '1', '210', '新县公安局-箭厂河派出所', '41151318', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('379', '1', '210', '新县公安局-泗店派出所', '41151319', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('380', '1', '210', '新县公安局-田铺派出所', '41151320', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('381', '1', '210', '新县公安局-香山湖派出所', '41151321', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('382', '1', '211', '光山县公安局-巡特警大队', '41151401', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('383', '1', '211', '光山县公安局-十里派出所', '41151402', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('384', '1', '211', '光山县公安局-弦山派出所', '41151403', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('385', '1', '211', '光山县公安局-交警大队', '41151404', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('386', '1', '211', '光山县公安局-紫水派出所', '41151405', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('387', '1', '211', '光山县公安局-治安大队', '41151406', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('388', '1', '211', '光山县公安局-寨河派出所', '41151407', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('389', '1', '211', '光山县公安局-槐店派出所', '41151408', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('390', '1', '211', '光山县公安局-晏河派出所', '41151409', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('391', '1', '211', '光山县公安局-孙铁铺派出所', '41151410', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('392', '1', '211', '光山县公安局-泼河派出所', '41151411', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('393', '1', '211', '光山县公安局-马畈派出所', '41151412', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('394', '1', '211', '光山县公安局-白雀派出所', '41151413', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('395', '1', '211', '光山县公安局-刑警大队', '41151414', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('396', '1', '211', '光山县公安局-北项店派出所', '41151415', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('397', '1', '211', '光山县公安局-仙居派出所', '41151416', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('398', '1', '211', '光山县公安局-文殊派出所', '41151417', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('399', '1', '212', '潢川县公安局-北城派出所', '41151501', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('400', '1', '212', '潢川县公安局-南城派出所', '41151502', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('401', '1', '212', '潢川县公安局-环城派出所', '41151503', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('402', '1', '212', '潢川县公安局-东城派出所', '41151504', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('403', '1', '212', '潢川县公安局-产业集聚区派出所', '41151505', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('404', '1', '212', '潢川县公安局-伞陂派出所', '41151506', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('405', '1', '212', '潢川县公安局-付店派出所', '41151507', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('406', '1', '212', '潢川县公安局-魏岗派出所', '41151508', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('407', '1', '212', '潢川县公安局-牛岗派出所', '41151509', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('408', '1', '212', '潢川县公安局-黄岗派出所', '41151510', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('409', '1', '212', '潢川县公安局-110专业勤务大队', '41151511', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('410', '1', '212', '潢川县公安局-办案中心', '41151512', null, null, '', '2', '0');
+INSERT INTO `area_dep` VALUES ('411', '1', '212', '潢川县公安局-巡特警大队', '41151513', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('412', '1', '212', '潢川县公安局-交警大队', '41151514', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('413', '1', '212', '潢川县公安局-刑警大队', '41151515', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('414', '1', '212', '潢川县公安局-森林派出所', '41151516', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('415', '1', '212', '潢川县公安局-隆古派出所', '41151517', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('416', '1', '212', '潢川县公安局-双柳派出所', '41151518', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('417', '1', '212', '潢川县公安局-谈店派出所', '41151519', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('418', '1', '212', '潢川县公安局-小吕店派出所', '41151520', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('419', '1', '212', '潢川县公安局-来龙派出所', '41151521', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('420', '1', '212', '潢川县公安局-踅孜派出所', '41151522', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('421', '1', '212', '潢川县公安局-白店派出所', '41151523', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('422', '1', '212', '潢川县公安局-仁和派出所', '41151524', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('423', '1', '212', '潢川县公安局-卜集派出所', '41151525', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('424', '1', '212', '潢川县公安局-彭店派出所', '41151526', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('425', '1', '212', '潢川县公安局-上油岗派出所', '41151527', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('426', '1', '212', '潢川县公安局-江集派出所', '41151528', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('427', '1', '212', '潢川县公安局-张集派出所', '41151529', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('428', '1', '212', '潢川县公安局-桃林派出所', '41151530', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('429', '1', '212', '潢川县公安局-传流店派出所', '41151531', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('430', '1', '212', '潢川县公安局-新办案中心', '41151532', null, null, '', '2', '0');
+INSERT INTO `area_dep` VALUES ('431', '1', '213', '罗山县公安局-宝城派出所', '41151601', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('432', '1', '213', '罗山县公安局-龙山派出所', '41151602', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('433', '1', '213', '罗山县公安局-刑警大队', '41151603', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('434', '1', '213', '罗山县公安局-丽水派出所', '41151604', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('435', '1', '213', '罗山县公安局-网监大队', '41151605', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('436', '1', '213', '罗山县公安局-巡特警大队', '41151606', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('437', '1', '213', '罗山县公安局-国保大队', '41151607', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('438', '1', '213', '罗山县公安局-治安大队', '41151608', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('439', '1', '213', '罗山县公安局-执法办案中心', '41151609', null, null, '', '2', '0');
+INSERT INTO `area_dep` VALUES ('440', '1', '213', '罗山县公安局-看守所', '41151610', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('441', '1', '213', '罗山县公安局-拘留所', '41151611', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('442', '1', '213', '罗山县公安局-竹竿派出所', '41151612', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('443', '1', '213', '罗山县公安局-东铺派出所', '41151613', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('444', '1', '213', '罗山县公安局-尤店派出所', '41151614', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('445', '1', '213', '罗山县公安局-高店派出所', '41151615', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('446', '1', '213', '罗山县公安局-楠杆派出所', '41151616', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('447', '1', '213', '罗山县公安局-五一派出所', '41151617', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('448', '1', '213', '罗山县公安局-子路派出所', '41151618', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('449', '1', '213', '罗山县公安局-青山派出所', '41151619', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('450', '1', '213', '罗山县公安局-庙仙派出所', '41151620', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('451', '1', '213', '罗山县公安局-莽张派出所', '41151621', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('452', '1', '213', '罗山县公安局-周党派出所', '41151622', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('453', '1', '213', '罗山县公安局-定远派出所', '41151623', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('454', '1', '213', '罗山县公安局-山店派出所', '41151624', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('455', '1', '213', '罗山县公安局-潘新派出所', '41151625', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('456', '1', '213', '罗山县公安局-彭新派出所', '41151626', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('457', '1', '213', '罗山县公安局-灵山派出所', '41151627', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('458', '1', '213', '罗山县公安局-灵山寺派出所', '41151628', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('459', '1', '213', '罗山县公安局-铁铺派出所', '41151629', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('460', '1', '213', '罗山县公安局-朱堂派出所', '41151630', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('461', '1', '213', '罗山县公安局-城关派出所', '41151631', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('462', '1', '213', '罗山县公安局-反恐大队', '41151632', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('463', '1', '213', '罗山县公安局-规范信访秩序执法大队', '41151633', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('464', '1', '213', '罗山县公安局-经侦大队', '41151634', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('465', '1', '213', '罗山县公安局-禁毒大队', '41151635', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('466', '1', '214', '商城县公安局-法制大队', '41151701', null, null, '', '2', '0');
+INSERT INTO `area_dep` VALUES ('467', '1', '214', '商城县公安局-巡特警大队', '41151702', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('468', '1', '214', '商城县公安局-城关派出所', '41151703', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('469', '1', '214', '商城县公安局-鲇鱼山派出所', '41151704', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('470', '1', '214', '商城县公安局-上石桥派出所', '41151705', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('471', '1', '214', '商城县公安局-汪桥派出所', '41151706', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('472', '1', '214', '商城县公安局-刑警大队', '41151707', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('473', '1', '214', '商城县公安局-治安大队', '41151708', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('474', '1', '214', '商城县公安局-双椿铺派出所', '41151709', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('475', '1', '214', '商城县公安局-余集派出所', '41151710', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('476', '1', '214', '商城县公安局-汪岗派出所', '41151711', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('477', '1', '214', '商城县公安局-鄢岗派出所', '41151712', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('478', '1', '214', '商城县公安局-观庙派出所', '41151713', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('479', '1', '214', '商城县公安局-河凤桥派出所', '41151714', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('480', '1', '214', '商城县公安局-伏山派出所', '41151715', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('481', '1', '214', '商城县公安局-达权店派出所', '41151716', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('482', '1', '214', '商城县公安局-禁毒大队', '41151717', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('483', '1', '214', '商城县公安局-金刚台派出所', '41151718', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('484', '1', '214', '商城县公安局-李集派出所', '41151719', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('485', '1', '214', '商城县公安局-吴河派出所', '41151720', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('486', '1', '214', '商城县公安局-丰集派出所', '41151721', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('487', '1', '214', '商城县公安局-冯店派出所', '41151722', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('488', '1', '214', '商城县公安局-产业集聚区派出所', '41151723', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('489', '1', '214', '商城县公安局-长竹园派出所', '41151724', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('490', '1', '214', '商城县公安局-苏仙石派出所', '41151725', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('491', '1', '214', '商城县公安局-汤泉池派出所', '41151726', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('492', '1', '214', '商城县公安局-白塔集派出所', '41151727', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('493', '1', '214', '商城县公安局-经侦大队', '41151728', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('494', '1', '214', '商城县公安局-国保大队', '41151729', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('495', '1', '214', '商城县公安局-出入境管理大队', '41151730', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('496', '1', '214', '商城县公安局-黄柏山国家森林公园派出所', '41151731', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('497', '1', '214', '商城县公安局-网监大队', '41151732', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('498', '1', '214', '商城公安局-鲇水派出所', '41151733', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('499', '1', '215', '息县公安局-经侦大队', '41151801', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('500', '1', '215', '息县公安局-刑警大队', '41151802', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('501', '1', '215', '息县公安局-治安大队', '41151803', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('502', '1', '215', '息县公安局-巡特警大队', '41151804', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('503', '1', '215', '息县公安局-网监大队', '41151805', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('504', '1', '215', '息县公安局-出入境管理股', '41151806', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('505', '1', '215', '息县公安局-国保大队', '41151807', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('506', '1', '215', '息县公安局-禁毒大队', '41151808', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('507', '1', '215', '息县公安局-龙湖派出所', '41151809', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('508', '1', '215', '息县公安局-户政股', '41151810', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('509', '1', '215', '息县公安局-纪委', '41151811', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('510', '1', '215', '息县公安局-督察大队', '41151812', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('511', '1', '215', '息县公安局-警令部', '41151813', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('512', '1', '215', '息县公安局-拘留所', '41151814', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('513', '1', '215', '息县公安局-看守所', '41151815', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('514', '1', '215', '息县公安局-视频监控', '41151816', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('515', '1', '215', '息县公安局-控申股', '41151817', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('516', '1', '215', '息县公安局-情报中心', '41151818', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('517', '1', '215', '息县公安局-通信股', '41151819', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('518', '1', '215', '息县公安局-政治处', '41151820', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('519', '1', '215', '息县公安局-装备财务科', '41151821', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('520', '1', '215', '息县公安局-淮河派出所', '41151822', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('521', '1', '215', '息县公安局-谯楼派出所', '41151823', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('522', '1', '215', '息县公安局-中渡店派出所', '41151824', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('523', '1', '215', '息县公安局-八里岔派出所', '41151825', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('524', '1', '215', '息县公安局-曹黄林派出所', '41151826', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('525', '1', '215', '息县公安局-关店派出所', '41151827', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('526', '1', '215', '息县公安局-杨店派出所', '41151828', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('527', '1', '215', '息县公安局-彭店派出所', '41151829', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('528', '1', '215', '息县公安局-张陶派出所', '41151830', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('529', '1', '215', '息县公安局-东岳派出所', '41151831', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('530', '1', '215', '息县公安局-路口派出所', '41151832', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('531', '1', '215', '息县公安局-白土店派出所', '41151833', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('532', '1', '215', '息县公安局-孙庙派出所', '41151834', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('533', '1', '215', '息县公安局-项店派出所', '41151835', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('534', '1', '215', '息县公安局-夏庄派出所', '41151836', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('535', '1', '215', '息县公安局-小茴派出所', '41151837', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('536', '1', '215', '息县公安局-包信派出所', '41151838', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('537', '1', '215', '息县公安局-岗李店派出所', '41151839', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('538', '1', '215', '息县公安局-陈棚派出所', '41151840', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('539', '1', '215', '息县公安局-长陵派出所', '41151841', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('540', '1', '215', '息县公安局-临河派出所', '41151842', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('541', '1', '215', '息县公安局-金地派出所', '41151843', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('542', '1', '215', '息县公安局-许店派出所', '41151844', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('543', '1', '215', '息县公安局-法制大队', '41151845', null, null, '', '2', '0');
+INSERT INTO `area_dep` VALUES ('544', '1', '215', '息县公安局-消防大队', '41151846', null, null, '', '1', '0');
+INSERT INTO `area_dep` VALUES ('546', '1', '350', '110勤务大队-110浉河勤务站', '4115120302', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('547', '1', '350', '110勤务大队-110平桥勤务站', '4115120303', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('548', '1', '350', '110勤务大队-110羊山勤务站', '4115120304', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('549', '1', '350', '110勤务大队-110领秀城勤务站', '4115120305', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('550', '1', '350', '110勤务大队-110军韵花园勤务站', '4115120306', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('551', '1', '350', '110勤务大队-110小南门勤务站', '4115120307', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('552', '1', '350', '110勤务大队-110文化中心勤务站', '4115120308', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('553', '1', '350', '110勤务大队-110国际商城勤务站', '4115120309', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('554', '1', '350', '110勤务大队-110农林学院勤务站', '4115120310', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('555', '1', '350', '110勤务大队-110博士名城勤务站', '4115120311', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('556', '1', '350', '110勤务大队-110消防队勤务站', '4115120312', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('557', '1', '350', '110勤务大队-110丽宝广场勤务站', '4115120313', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('558', '1', '351', '信阳市案审大队', '4115120401', null, null, '', '2', '1');
+INSERT INTO `area_dep` VALUES ('559', '1', '351', '执法管理大队', '4115120402', null, null, '', '2', '1');
+INSERT INTO `area_dep` VALUES ('560', '1', '351', '信阳市办案中心', '4115120403', null, null, '', '2', '1');
+INSERT INTO `area_dep` VALUES ('561', '1', '352', '巡特警支队机关', '4115120501', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('562', '1', '352', '巡特警支队案件大队', '4115120502', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('563', '1', '352', '巡特警支队突击大队', '4115120503', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('564', '1', '352', '巡特警支队特警大队', '4115120504', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('565', '1', '352', '巡特警支队机动大队', '4115120505', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('566', '1', '359', '看守所', '4115121201', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('567', '1', '360', '浉河勤务大队', '4115121301', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('568', '1', '360', '平桥勤务大队', '4115121302', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('569', '1', '360', '明港勤务大队', '4115121303', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('570', '1', '360', '公路巡逻民警大队', '4115121304', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('571', '1', '360', '交通事故处理大队', '4115121305', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('572', '1', '360', '交通管理综合执法大队', '4115121306', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('573', '1', '360', '车管所', '4115121307', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('574', '1', '360', '考训科', '4115121308', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('575', '1', '360', '法制科', '4115121309', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('576', '1', '360', '交通秩序科', '4115121310', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('577', '1', '360', '事故处理指导科', '4115121311', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('578', '1', '360', '政治处', '4115121312', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('579', '1', '360', '宣传科', '4115121313', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('580', '1', '360', '装备财务科', '4115121314', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('581', '1', '360', '秘书科', '4115121315', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('582', '1', '360', '纪委', '4115121316', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('583', '1', '360', '交通设施管理科', '4115121317', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('584', '1', '360', '老干科', '4115121318', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('585', '1', '360', '机动大队', '4115121319', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('586', '1', '360', '光山县交警大队', '4115121320', null, null, '411514', '0', '0');
+INSERT INTO `area_dep` VALUES ('587', '1', '360', '新县交警大队', '4115121321', null, null, '411513', '0', '0');
+INSERT INTO `area_dep` VALUES ('593', '1', '567', '东风中队', '411512130101', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('588', '1', '360', '商城县交警大队', '4115121322', null, null, '411517', '0', '0');
+INSERT INTO `area_dep` VALUES ('589', '1', '360', '淮滨县交警大队', '4115121323', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('590', '1', '360', '息县公安交通警察大队', '4115121324', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('591', '1', '360', '潢川县公安交通警察大队', '4115121325', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('592', '1', '360', '罗山县公安交通警察大队', '4115121326', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('594', '1', '567', '中山中队', '411512130102', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('595', '1', '567', '车站中队', '411512130103', null, null, '', '0', '1');
+INSERT INTO `area_dep` VALUES ('596', '1', '586', '罗成中队', '411512132001', null, null, '411514', '0', '0');
+INSERT INTO `area_dep` VALUES ('597', '1', '586', '白雀中队', '411512132002', null, null, '411514', '0', '0');
+INSERT INTO `area_dep` VALUES ('598', '1', '586', '事故中队', '411512132003', null, null, '411514', '0', '0');
+INSERT INTO `area_dep` VALUES ('599', '1', '586', '泼河中队', '411512132004', null, null, '411514', '0', '0');
+INSERT INTO `area_dep` VALUES ('600', '1', '587', '箭厂河公安检查站', '411512132101', null, null, '411513', '0', '0');
+INSERT INTO `area_dep` VALUES ('614', '1', '590', '二中队', '411512132403', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('601', '1', '589', '城关中队', '411512132301', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('602', '1', '589', '法制办', '411512132302', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('603', '1', '589', '源头办', '411512132303', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('604', '1', '589', '机动中队', '411512132304', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('605', '1', '589', '办公室', '411512132305', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('606', '1', '589', '车管所', '411512132306', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('607', '1', '589', '赵集中队', '411512132307', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('608', '1', '589', '马集中队', '411512132308', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('609', '1', '589', '王店中队', '411512132309', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('610', '1', '589', '事故中队', '411512132310', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('611', '1', '589', '治超中队', '411512132311', null, null, '411511', '0', '0');
+INSERT INTO `area_dep` VALUES ('612', '1', '590', '城关中队', '411512132401', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('613', '1', '590', '一中队', '411512132402', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('615', '1', '590', '三中队', '411512132404', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('616', '1', '590', '包信中队', '411512132405', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('617', '1', '590', '事故中队', '411512132406', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('618', '1', '590', '治超中队', '411512132407', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('619', '1', '590', '处理办', '411512132408', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('620', '1', '590', '车管所', '411512132409', null, null, '411518', '0', '0');
+INSERT INTO `area_dep` VALUES ('621', '1', '591', '桃林中队', '411512132501', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('622', '1', '591', '付店中队', '411512132502', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('623', '1', '591', '城关中队', '411512132503', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('624', '1', '591', '巍岗中队', '411512132504', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('625', '1', '591', '仁和中队', '411512132505', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('626', '1', '591', '伞陂中队', '411512132506', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('627', '1', '591', '机动中队', '411512132507', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('628', '1', '591', '打黑队', '411512132508', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('629', '1', '591', '科技中队', '411512132509', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('630', '1', '591', '事故中队', '411512132510', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('631', '1', '591', '车驾管', '411512132511', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('632', '1', '591', '违法处理', '411512132512', null, null, '411515', '0', '0');
+INSERT INTO `area_dep` VALUES ('633', '1', '592', '办公室', '411512132601', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('635', '1', '592', '技术中队', '411512132603', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('634', '1', '592', '事故处理中队', '411512132602', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('636', '1', '592', '沙管中队', '411512132604', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('637', '1', '592', '科技中队', '411512132605', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('638', '1', '592', '宣教室', '411512132606', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('639', '1', '592', '车管所', '411512132607', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('640', '1', '592', '城关中队', '411512132608', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('641', '1', '592', '伍家坡中队', '411512132609', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('642', '1', '592', '竹竿中队', '411512132610', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('643', '1', '592', '周党中队', '411512132611', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('644', '1', '592', '涩港中队', '411512132612', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('645', '1', '592', '机动中队', '411512132613', null, null, '411516', '0', '0');
+INSERT INTO `area_dep` VALUES ('647', '1', '228', '二中队', '4115011302', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('648', '1', '228', '三中队', '4115011303', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('646', '1', '228', '一中队', '4115011301', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('649', '1', '229', '一中队', '4115011401', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('650', '1', '229', '二中队', '4115011402', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('651', '1', '229', '三中队', '4115011403', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('652', '1', '229', '四中队', '4115011404', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('653', '1', '229', '五中队', '4115011405', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('654', '1', '229', '六中队', '4115011406', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('655', '1', '229', '七中队', '4115011407', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('656', '1', '229', '八中队', '4115011408', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('657', '1', '229', '九中队', '4115011409', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('658', '1', '230', '一中队', '4115011501', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('659', '1', '230', '二中队', '4115011502', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('660', '1', '230', '三中队', '4115011503', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('661', '1', '230', '四中队', '4115011504', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('662', '1', '566', '管教一中队', '411512120101', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('663', '1', '566', '管教二中队', '411512120102', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('664', '1', '566', '巡视监控中队', '411512120103', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('665', '1', '566', '收押提讯中队', '411512120104', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('666', '1', '566', '后勤保障中队', '411512120105', null, null, '', '1', '1');
+INSERT INTO `area_dep` VALUES ('667', '1', '566', '女子管理中队', '411512120106', null, null, '', '1', '1');
 
 -- ----------------------------
 -- Table structure for `area_pro`
@@ -181,6 +526,330 @@ CREATE TABLE `area_pro` (
 INSERT INTO `area_pro` VALUES ('1', '部门');
 
 -- ----------------------------
+-- Table structure for `case_201706`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_201706`;
+CREATE TABLE `case_201706` (
+  `case_key` varchar(64) NOT NULL COMMENT '案件标识,格式：<yyyymmddHHmiss>_<警号>_<areacode>;不能编辑,内外提供视频时都自动生成;',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标题;',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '案件开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '案件结束时间',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '第1出警人警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '第1出警人警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '第1出警人单位编号',
+  `areaname` varchar(128) DEFAULT '' COMMENT '第1出警人单位名称',
+  `alarm_no` varchar(40) DEFAULT '' COMMENT '警情编号',
+  `alarm_name` varchar(128) DEFAULT '' COMMENT '案事件名称',
+  `alarm_addr` varchar(128) DEFAULT '',
+  `alarm_type` int(1) NOT NULL DEFAULT '0' COMMENT '警情类型;0:未编辑(3个月);1:一般警情(6个月);2:重大警情(永久);3:阻碍民警执法妨碍公务(永久);4:行政强制执行(永久);5:当场盘问检查(6个月);6:无效数据(7天);7:其他(6个月)',
+  `case_no` varchar(40) DEFAULT '' COMMENT '案件编号',
+  `case_name` varchar(128) DEFAULT '' COMMENT '案件名称(描述)',
+  `case_type` int(1) NOT NULL DEFAULT '0' COMMENT '案件类型;0:未知,1:刑事案件(永久),2:行政案件(永久)',
+  `case_dept` varchar(64) DEFAULT NULL COMMENT '办案单位',
+  `case_empl` varchar(16) DEFAULT NULL COMMENT '办案警员',
+  `case_qualify` int(1) NOT NULL DEFAULT '0' COMMENT '执法资格;0:无;1:基本级;2:中级;3:高级;',
+  `remark` varchar(256) DEFAULT '' COMMENT '备注',
+  `apply_jybh` varchar(32) DEFAULT '' COMMENT '案件申请警员编号',
+  `apply_jyxm` varchar(60) DEFAULT '' COMMENT '案件申请警员名',
+  `apply_areacode` varchar(32) DEFAULT '' COMMENT '案件申请人部门ID',
+  `apply_areaname` varchar(128) DEFAULT '' COMMENT '案件申请人部门名',
+  `hand_status` int(1) NOT NULL DEFAULT '0' COMMENT '申请状态，0:初始态;1:待审核;2:移交完成',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `edit_name` varchar(128) DEFAULT NULL COMMENT '编辑人',
+  PRIMARY KEY (`case_key`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_areacode` (`areacode`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_201706
+-- ----------------------------
+INSERT INTO `case_201706` VALUES ('20170623093621_086338_4115', '20170623093621_申忠', '2017-06-23 09:36:21', '2017-06-23 09:36:54', '2017-08-09 15:28:14', '申忠', '086338', '4115', '信阳市公安局', '', '', '', '0', '', '', '0', null, null, '0', '', '', '', '', '', '0', '2017-08-09 15:28:14', null);
+
+-- ----------------------------
+-- Table structure for `case_201707`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_201707`;
+CREATE TABLE `case_201707` (
+  `case_key` varchar(64) NOT NULL COMMENT '案件标识,格式：<yyyymmddHHmiss>_<警号>_<areacode>;不能编辑,内外提供视频时都自动生成;',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标题;',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '案件开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '案件结束时间',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '第1出警人警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '第1出警人警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '第1出警人单位编号',
+  `areaname` varchar(128) DEFAULT '' COMMENT '第1出警人单位名称',
+  `alarm_no` varchar(40) DEFAULT '' COMMENT '警情编号',
+  `alarm_name` varchar(128) DEFAULT '' COMMENT '案事件名称',
+  `alarm_addr` varchar(128) DEFAULT '',
+  `alarm_type` int(1) NOT NULL DEFAULT '0' COMMENT '警情类型;0:未编辑(3个月);1:一般警情(6个月);2:重大警情(永久);3:阻碍民警执法妨碍公务(永久);4:行政强制执行(永久);5:当场盘问检查(6个月);6:无效数据(7天);7:其他(6个月)',
+  `case_no` varchar(40) DEFAULT '' COMMENT '案件编号',
+  `case_name` varchar(128) DEFAULT '' COMMENT '案件名称(描述)',
+  `case_type` int(1) NOT NULL DEFAULT '0' COMMENT '案件类型;0:未知,1:刑事案件(永久),2:行政案件(永久)',
+  `case_dept` varchar(64) DEFAULT NULL COMMENT '办案单位',
+  `case_empl` varchar(16) DEFAULT NULL COMMENT '办案警员',
+  `case_qualify` int(1) NOT NULL DEFAULT '0' COMMENT '执法资格;0:无;1:基本级;2:中级;3:高级;',
+  `remark` varchar(256) DEFAULT '' COMMENT '备注',
+  `apply_jybh` varchar(32) DEFAULT '' COMMENT '案件申请警员编号',
+  `apply_jyxm` varchar(60) DEFAULT '' COMMENT '案件申请警员名',
+  `apply_areacode` varchar(32) DEFAULT '' COMMENT '案件申请人部门ID',
+  `apply_areaname` varchar(128) DEFAULT '' COMMENT '案件申请人部门名',
+  `hand_status` int(1) NOT NULL DEFAULT '0' COMMENT '申请状态，0:初始态;1:待审核;2:移交完成',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `edit_name` varchar(128) DEFAULT NULL COMMENT '编辑人',
+  PRIMARY KEY (`case_key`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_areacode` (`areacode`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_201707
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `case_201708`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_201708`;
+CREATE TABLE `case_201708` (
+  `case_key` varchar(64) NOT NULL COMMENT '案件标识,格式：<yyyymmddHHmiss>_<警号>_<areacode>;不能编辑,内外提供视频时都自动生成;',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标题;',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '案件开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '案件结束时间',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '第1出警人警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '第1出警人警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '第1出警人单位编号',
+  `areaname` varchar(128) DEFAULT '' COMMENT '第1出警人单位名称',
+  `alarm_no` varchar(40) DEFAULT '' COMMENT '警情编号',
+  `alarm_name` varchar(128) DEFAULT '' COMMENT '案事件名称',
+  `alarm_addr` varchar(128) DEFAULT '',
+  `alarm_type` int(1) NOT NULL DEFAULT '0' COMMENT '警情类型;0:未编辑(3个月);1:一般警情(6个月);2:重大警情(永久);3:阻碍民警执法妨碍公务(永久);4:行政强制执行(永久);5:当场盘问检查(6个月);6:无效数据(7天);7:其他(6个月)',
+  `case_no` varchar(40) DEFAULT '' COMMENT '案件编号',
+  `case_name` varchar(128) DEFAULT '' COMMENT '案件名称(描述)',
+  `case_type` int(1) NOT NULL DEFAULT '0' COMMENT '案件类型;0:未知,1:刑事案件(永久),2:行政案件(永久)',
+  `case_dept` varchar(64) DEFAULT NULL COMMENT '办案单位',
+  `case_empl` varchar(16) DEFAULT NULL COMMENT '办案警员',
+  `case_qualify` int(1) NOT NULL DEFAULT '0' COMMENT '执法资格;0:无;1:基本级;2:中级;3:高级;',
+  `remark` varchar(256) DEFAULT '' COMMENT '备注',
+  `apply_jybh` varchar(32) DEFAULT '' COMMENT '案件申请警员编号',
+  `apply_jyxm` varchar(60) DEFAULT '' COMMENT '案件申请警员名',
+  `apply_areacode` varchar(32) DEFAULT '' COMMENT '案件申请人部门ID',
+  `apply_areaname` varchar(128) DEFAULT '' COMMENT '案件申请人部门名',
+  `hand_status` int(1) NOT NULL DEFAULT '0' COMMENT '申请状态，0:初始态;1:待审核;2:移交完成',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `edit_name` varchar(128) DEFAULT NULL COMMENT '编辑人',
+  PRIMARY KEY (`case_key`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_areacode` (`areacode`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_201708
+-- ----------------------------
+INSERT INTO `case_201708` VALUES ('20170807093621_JX0227_3602010201', '20170623093621_王磊', '2017-08-07 09:36:21', '2017-08-07 09:36:54', '2017-08-07 14:03:21', '申忠', '086338', '4115', '信阳市公安局', '', '', '', '0', '', '', '0', '', '', '0', '', '', '', '', '', '0', '2017-08-07 17:37:35', '');
+
+-- ----------------------------
+-- Table structure for `case_201709`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_201709`;
+CREATE TABLE `case_201709` (
+  `case_key` varchar(64) NOT NULL COMMENT '案件标识,格式：<yyyymmddHHmiss>_<警号>_<areacode>;不能编辑,内外提供视频时都自动生成;',
+  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标题;',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '案件开始时间',
+  `end_time` datetime DEFAULT NULL COMMENT '案件结束时间',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '第1出警人警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '第1出警人警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '第1出警人单位编号',
+  `areaname` varchar(128) DEFAULT '' COMMENT '第1出警人单位名称',
+  `alarm_no` varchar(40) DEFAULT '' COMMENT '警情编号',
+  `alarm_name` varchar(128) DEFAULT '' COMMENT '案事件名称',
+  `alarm_addr` varchar(128) DEFAULT '',
+  `alarm_type` int(1) NOT NULL DEFAULT '0' COMMENT '警情类型;0:未编辑(3个月);1:一般警情(6个月);2:重大警情(永久);3:阻碍民警执法妨碍公务(永久);4:行政强制执行(永久);5:当场盘问检查(6个月);6:无效数据(7天);7:其他(6个月)',
+  `case_no` varchar(40) DEFAULT '' COMMENT '案件编号',
+  `case_name` varchar(128) DEFAULT '' COMMENT '案件名称(描述)',
+  `case_type` int(1) NOT NULL DEFAULT '0' COMMENT '案件类型;0:未知,1:刑事案件(永久),2:行政案件(永久)',
+  `case_dept` varchar(64) DEFAULT NULL COMMENT '办案单位',
+  `case_empl` varchar(16) DEFAULT NULL COMMENT '办案警员',
+  `case_qualify` int(1) NOT NULL DEFAULT '0' COMMENT '执法资格;0:无;1:基本级;2:中级;3:高级;',
+  `remark` varchar(256) DEFAULT '' COMMENT '备注',
+  `apply_jybh` varchar(32) DEFAULT '' COMMENT '案件申请警员编号',
+  `apply_jyxm` varchar(60) DEFAULT '' COMMENT '案件申请警员名',
+  `apply_areacode` varchar(32) DEFAULT '' COMMENT '案件申请人部门ID',
+  `apply_areaname` varchar(128) DEFAULT '' COMMENT '案件申请人部门名',
+  `hand_status` int(1) NOT NULL DEFAULT '0' COMMENT '申请状态，0:初始态;1:待审核;2:移交完成',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `edit_name` varchar(128) DEFAULT NULL COMMENT '编辑人',
+  PRIMARY KEY (`case_key`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_areacode` (`areacode`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_201709
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `case_video_201706`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_video_201706`;
+CREATE TABLE `case_video_201706` (
+  `wjbh` varchar(100) NOT NULL DEFAULT '0' COMMENT '文件编号 <产口序号>_<警号>_<年月日时分秒>.<类型>',
+  `case_key` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标识，同case_201708.case_key',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '拍摄时间',
+  `end_time` datetime DEFAULT NULL COMMENT '视频结束时间',
+  `wjcd` int(11) DEFAULT '0' COMMENT '文件长度',
+  `wjlx` int(2) DEFAULT NULL COMMENT '0:未知,1:视频,2:音频,3:图片',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '单位,同area_dep.areacode',
+  `areaname` varchar(128) DEFAULT '' COMMENT '单位名称',
+  `cpxh` varchar(7) NOT NULL DEFAULT '0000000' COMMENT '产品序号(执法仪编号),文件由人工提供时统一填99999',
+  `ccfwq_ip` varchar(64) DEFAULT NULL COMMENT '存储服务器',
+  `ccwz` varchar(200) DEFAULT NULL COMMENT '存储位置',
+  `bfwz` varchar(200) NOT NULL DEFAULT 'http://' COMMENT '播放位置',
+  `wlwz` varchar(200) DEFAULT NULL COMMENT '物理位置,绝对路径',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `bzlx` int(2) DEFAULT '0' COMMENT '标注类型,0:未标注,1:标注(典型案例)',
+  `gzz_ip` varchar(64) DEFAULT NULL COMMENT '工作站IP',
+  `upload` int(2) NOT NULL DEFAULT '0' COMMENT '0:不上传，1：上传到中心服务器(重要视频)',
+  `video_type` int(2) DEFAULT '9' COMMENT '视频分类(1:酒驾、2:事故、3:毒驾、4:违法、9:其他)',
+  `source` int(1) NOT NULL DEFAULT '1' COMMENT '来源;1:执法记录仪,2:公安类,3:非公安类',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `remark` varchar(256) DEFAULT '',
+  PRIMARY KEY (`wjbh`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_case_key` (`case_key`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_video_201706
+-- ----------------------------
+INSERT INTO `case_video_201706` VALUES ('TA00716_086338_20170623093621.MOV', '20170623093621_086338_4115', '2017-06-23 09:36:21', '2017-06-23 09:36:54', '33', '1', '申忠', '086338', '4115', '信阳市公安局', 'TA00716', '192.168.0.26', null, 'http://192.168.0.26:80/pe_fileG/pedata/TA00716/20170623/TA00716_086338_20170623093621.MOV', null, '2017-08-09 15:28:14', '0', '192.168.0.26', '0', '9', '1', '2017-08-09 15:28:14', '');
+
+-- ----------------------------
+-- Table structure for `case_video_201707`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_video_201707`;
+CREATE TABLE `case_video_201707` (
+  `wjbh` varchar(100) NOT NULL DEFAULT '0' COMMENT '文件编号 <产口序号>_<警号>_<年月日时分秒>.<类型>',
+  `case_key` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标识，同case_201708.case_key',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '拍摄时间',
+  `end_time` datetime DEFAULT NULL COMMENT '视频结束时间',
+  `wjcd` int(11) DEFAULT '0' COMMENT '文件长度',
+  `wjlx` int(2) DEFAULT NULL COMMENT '0:未知,1:视频,2:音频,3:图片',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '单位,同area_dep.areacode',
+  `areaname` varchar(128) DEFAULT '' COMMENT '单位名称',
+  `cpxh` varchar(7) NOT NULL DEFAULT '0000000' COMMENT '产品序号(执法仪编号),文件由人工提供时统一填99999',
+  `ccfwq_ip` varchar(64) DEFAULT NULL COMMENT '存储服务器',
+  `ccwz` varchar(200) DEFAULT NULL COMMENT '存储位置',
+  `bfwz` varchar(200) NOT NULL DEFAULT 'http://' COMMENT '播放位置',
+  `wlwz` varchar(200) DEFAULT NULL COMMENT '物理位置,绝对路径',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `bzlx` int(2) DEFAULT '0' COMMENT '标注类型,0:未标注,1:标注(典型案例)',
+  `gzz_ip` varchar(64) DEFAULT NULL COMMENT '工作站IP',
+  `upload` int(2) NOT NULL DEFAULT '0' COMMENT '0:不上传，1：上传到中心服务器(重要视频)',
+  `video_type` int(2) DEFAULT '9' COMMENT '视频分类(1:酒驾、2:事故、3:毒驾、4:违法、9:其他)',
+  `source` int(1) NOT NULL DEFAULT '1' COMMENT '来源;1:执法记录仪,2:公安类,3:非公安类',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `remark` varchar(256) DEFAULT '',
+  PRIMARY KEY (`wjbh`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_case_key` (`case_key`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_video_201707
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `case_video_201708`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_video_201708`;
+CREATE TABLE `case_video_201708` (
+  `wjbh` varchar(100) NOT NULL DEFAULT '0' COMMENT '文件编号 <产口序号>_<警号>_<年月日时分秒>.<类型>',
+  `case_key` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标识，同case_201708.case_key',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '拍摄时间',
+  `end_time` datetime DEFAULT NULL COMMENT '视频结束时间',
+  `wjcd` int(11) DEFAULT '0' COMMENT '文件长度',
+  `wjlx` int(2) DEFAULT NULL COMMENT '0:未知,1:视频,2:音频,3:图片',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '单位,同area_dep.areacode',
+  `areaname` varchar(128) DEFAULT '' COMMENT '单位名称',
+  `cpxh` varchar(7) NOT NULL DEFAULT '0000000' COMMENT '产品序号(执法仪编号),文件由人工提供时统一填99999',
+  `ccfwq_ip` varchar(64) DEFAULT NULL COMMENT '存储服务器',
+  `ccwz` varchar(200) DEFAULT NULL COMMENT '存储位置',
+  `bfwz` varchar(200) NOT NULL DEFAULT 'http://' COMMENT '播放位置',
+  `wlwz` varchar(200) DEFAULT NULL COMMENT '物理位置,绝对路径',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `bzlx` int(2) DEFAULT '0' COMMENT '标注类型,0:未标注,1:标注(典型案例)',
+  `gzz_ip` varchar(64) DEFAULT NULL COMMENT '工作站IP',
+  `upload` int(2) NOT NULL DEFAULT '0' COMMENT '0:不上传，1：上传到中心服务器(重要视频)',
+  `video_type` int(2) DEFAULT '9' COMMENT '视频分类(1:酒驾、2:事故、3:毒驾、4:违法、9:其他)',
+  `source` int(1) NOT NULL DEFAULT '1' COMMENT '来源;1:执法记录仪,2:公安类,3:非公安类',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `remark` varchar(256) DEFAULT '',
+  PRIMARY KEY (`wjbh`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_case_key` (`case_key`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_video_201708
+-- ----------------------------
+INSERT INTO `case_video_201708` VALUES ('TA00716_JX0227_20170807093621.MOV', '20170807093621_JX0227_3602010201', '2017-08-07 09:36:21', '2017-08-07 09:36:54', '33', '1', '申忠', '086338', '4115', '信阳市公安局', 'TA00716', '192.168.0.26', '', 'http://192.168.0.26:80/pe_fileG/pedata/TA00716/20170807/TA00716_JX0227_20170807093621.MOV', '', '2017-08-07 14:16:13', '0', '192.168.0.26', '0', '9', '1', '2017-08-07 14:16:13', '');
+
+-- ----------------------------
+-- Table structure for `case_video_201709`
+-- ----------------------------
+DROP TABLE IF EXISTS `case_video_201709`;
+CREATE TABLE `case_video_201709` (
+  `wjbh` varchar(100) NOT NULL DEFAULT '0' COMMENT '文件编号 <产口序号>_<警号>_<年月日时分秒>.<类型>',
+  `case_key` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标识，同case_201708.case_key',
+  `start_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '拍摄时间',
+  `end_time` datetime DEFAULT NULL COMMENT '视频结束时间',
+  `wjcd` int(11) DEFAULT '0' COMMENT '文件长度',
+  `wjlx` int(2) DEFAULT NULL COMMENT '0:未知,1:视频,2:音频,3:图片',
+  `jyxm` varchar(60) DEFAULT NULL COMMENT '警员姓名',
+  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '警员编号',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '单位,同area_dep.areacode',
+  `areaname` varchar(128) DEFAULT '' COMMENT '单位名称',
+  `cpxh` varchar(7) NOT NULL DEFAULT '0000000' COMMENT '产品序号(执法仪编号),文件由人工提供时统一填99999',
+  `ccfwq_ip` varchar(64) DEFAULT NULL COMMENT '存储服务器',
+  `ccwz` varchar(200) DEFAULT NULL COMMENT '存储位置',
+  `bfwz` varchar(200) NOT NULL DEFAULT 'http://' COMMENT '播放位置',
+  `wlwz` varchar(200) DEFAULT NULL COMMENT '物理位置,绝对路径',
+  `scsj` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '上传时间',
+  `bzlx` int(2) DEFAULT '0' COMMENT '标注类型,0:未标注,1:标注(典型案例)',
+  `gzz_ip` varchar(64) DEFAULT NULL COMMENT '工作站IP',
+  `upload` int(2) NOT NULL DEFAULT '0' COMMENT '0:不上传，1：上传到中心服务器(重要视频)',
+  `video_type` int(2) DEFAULT '9' COMMENT '视频分类(1:酒驾、2:事故、3:毒驾、4:违法、9:其他)',
+  `source` int(1) NOT NULL DEFAULT '1' COMMENT '来源;1:执法记录仪,2:公安类,3:非公安类',
+  `update_time` datetime NOT NULL DEFAULT '2017-01-01 00:00:00' COMMENT '更新时间',
+  `remark` varchar(256) DEFAULT '',
+  PRIMARY KEY (`wjbh`),
+  KEY `idx_update_time` (`update_time`) USING BTREE,
+  KEY `idx_case_key` (`case_key`) USING BTREE,
+  KEY `idx_start_time` (`start_time`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of case_video_201709
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `dictionary`
 -- ----------------------------
 DROP TABLE IF EXISTS `dictionary`;
@@ -192,7 +861,7 @@ CREATE TABLE `dictionary` (
   `item` varchar(255) DEFAULT '' COMMENT '字段值描述',
   `order` int(5) NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`,`type`)
-) ENGINE=MyISAM AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of dictionary
@@ -207,33 +876,9 @@ INSERT INTO `dictionary` VALUES ('7', 'deptype', '部门类型', '', '', '0');
 INSERT INTO `dictionary` VALUES ('9', 'enable', '启用状态', '', '', '0');
 INSERT INTO `dictionary` VALUES ('10', 'enable', '启用状态', '1', '启用', '1');
 INSERT INTO `dictionary` VALUES ('11', 'enable', '启用状态', '0', '停用', '2');
-INSERT INTO `dictionary` VALUES ('33', 'filetype', '文件类型', '1', '视频', '1');
-INSERT INTO `dictionary` VALUES ('32', 'filetype', '文件类型', '0', '未知', '0');
-INSERT INTO `dictionary` VALUES ('16', 'alarm_type', '警情类型', '', '', '0');
-INSERT INTO `dictionary` VALUES ('17', 'alarm_type', '警情类型', '1', '一般警情(6个月)', '1');
-INSERT INTO `dictionary` VALUES ('18', 'alarm_type', '警情类型', '0', '未编辑（3个月）', '0');
-INSERT INTO `dictionary` VALUES ('19', 'alarm_type', '警情类型', '2', '重大警情（永久）', '2');
-INSERT INTO `dictionary` VALUES ('20', 'alarm_type', '警情类型', '3', '阻碍民警执法妨碍公务(永久)', '3');
-INSERT INTO `dictionary` VALUES ('21', 'alarm_type', '警情类型', '4', '行政强制执行(永久)', '4');
-INSERT INTO `dictionary` VALUES ('22', 'alarm_type', '警情类型', '5', '当场盘问检查(6个月)', '5');
-INSERT INTO `dictionary` VALUES ('23', 'alarm_type', '警情类型', '6', '无效数据(7天)', '6');
-INSERT INTO `dictionary` VALUES ('24', 'alarm_type', '警情类型', '7', '其他(6个月)', '7');
-INSERT INTO `dictionary` VALUES ('25', 'case_type', '案件类型', '', '', '0');
-INSERT INTO `dictionary` VALUES ('26', 'case_type', '案件类型', '0', '未知', '0');
-INSERT INTO `dictionary` VALUES ('27', 'case_type', '案件类型', '1', '刑事案件(永久)', '1');
-INSERT INTO `dictionary` VALUES ('28', 'case_type', '案件类型', '2', '行政案件(永久)', '2');
-INSERT INTO `dictionary` VALUES ('29', 'alarm_type', '警情类型', '', '未知', '8');
-INSERT INTO `dictionary` VALUES ('30', 'filetype', '文件类型', '', '', '0');
-INSERT INTO `dictionary` VALUES ('34', 'filetype', '文件类型', '2', '音频', '2');
-INSERT INTO `dictionary` VALUES ('35', 'filetype', '文件类型', '3', '图片', '3');
-INSERT INTO `dictionary` VALUES ('36', 'video_source', '视频来源', '', '', '0');
-INSERT INTO `dictionary` VALUES ('37', 'video_source', '视频来源', '1', '执法记录仪', '1');
-INSERT INTO `dictionary` VALUES ('38', 'video_source', '视频来源', '2', '公安类', '2');
-INSERT INTO `dictionary` VALUES ('39', 'video_source', '视频来源', '3', '非公安类', '3');
-INSERT INTO `dictionary` VALUES ('40', 'hand_status', '申请状态', '', '', '0');
-INSERT INTO `dictionary` VALUES ('42', 'hand_status', '申请状态', '0', '初始状态', '0');
-INSERT INTO `dictionary` VALUES ('43', 'hand_status', '申请状态', '1', '待审核', '1');
-INSERT INTO `dictionary` VALUES ('44', 'hand_status', '申请状态', '2', '已移交', '2');
+INSERT INTO `dictionary` VALUES ('12', 'videotype', '视频类型', '', '', '0');
+INSERT INTO `dictionary` VALUES ('14', 'videotype', '视频类型', '', '未知', '0');
+INSERT INTO `dictionary` VALUES ('15', 'videotype', '视频类型', '1', '音频', '1');
 
 -- ----------------------------
 -- Table structure for `employee`
@@ -241,643 +886,63 @@ INSERT INTO `dictionary` VALUES ('44', 'hand_status', '申请状态', '2', '已移交',
 DROP TABLE IF EXISTS `employee`;
 CREATE TABLE `employee` (
   `empid` int(11) NOT NULL AUTO_INCREMENT,
-  `areaid` int(11) NOT NULL DEFAULT '1' COMMENT '区域(部门)ID',
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '部门代码',
   `name` varchar(32) NOT NULL DEFAULT '无' COMMENT '警员名',
-  `code` varchar(32) NOT NULL DEFAULT '无' COMMENT '登陆账号,一般是警员编号,同时变更user.username',
+  `code` varchar(32) NOT NULL DEFAULT '无' COMMENT '登陆账号,一般是警员编号',
   `sex` char(4) DEFAULT '男',
   `phone` varchar(32) DEFAULT NULL,
   `email` varchar(32) DEFAULT NULL,
   `remark` varchar(200) DEFAULT NULL,
   `photo_path` varchar(128) DEFAULT NULL COMMENT '警员相片绝对位置(URL)',
-  `password` varchar(32) NOT NULL COMMENT '登陆密码',
+  `password` varchar(32) NOT NULL DEFAULT '' COMMENT '登陆密码',
   `roleid` int(11) NOT NULL DEFAULT '1',
   `bindingip` int(11) NOT NULL DEFAULT '0' COMMENT '0:未梆定,1:梆定',
   `clientip` varchar(16) DEFAULT NULL,
   `userarea` text COMMENT '管理员是非空.用户有权限的区域ID集合，逗号分隔',
+  `login` int(1) NOT NULL DEFAULT '1' COMMENT '1:登陆;0:不能',
   PRIMARY KEY (`empid`),
   UNIQUE KEY `idx_code` (`code`) USING BTREE
-) ENGINE=MyISAM AUTO_INCREMENT=650 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=652 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of employee
 -- ----------------------------
-INSERT INTO `employee` VALUES ('86', '133', '张建军', 'JX0438', '男', '', null, '管理', null, 'JX0438', '23', '0', '', '133');
-INSERT INTO `employee` VALUES ('87', '133', '特日贡', 'JX0927', '男', '', null, '警员', null, 'JX0927', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('88', '71', '李国伟', '021022', '男', '', null, '管理', null, '021022', '22', '0', '', '71,100,99,98,97,96,95');
-INSERT INTO `employee` VALUES ('85', '73', '刘剑波', '024086', '男', '', null, '管理', null, '024086', '22', '0', '', '73,138,137,136,135,134,133,132');
-INSERT INTO `employee` VALUES ('84', '85', '孙洋', 'JX1209', '男', '', null, '警员', null, 'JX1209', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('82', '74', '郭红', 'JX1217', '男', '', null, '管理', null, 'JX1217', '22', '0', '', '74,90,89,88,87,86,85');
-INSERT INTO `employee` VALUES ('33', '54', '安锐', '020004', '男', '', '', '管理', '/upload/5949ebc0a2516.jpg', '020004', '19', '0', '', '53,54,94,150,149,148,147,146,93,131,130,129,128,127,126,92,125,124,123,122,121,84,109,108,83,140,139,82,113,185,184,183,112,111,110,81,120,119,118,117,116,115,114,80,107,106,105,104,103,102,101,79,155,154,153,152,151,76,145,144,143,142,141,75,163,162,161,160,159,158,157,156,74,90,89,88,87,86,85,73,138,137,136,135,134,133,132,71,100,99,98,97,96,95,70,182,181,180,179,178,177,176,175,174,173,69,172,171,170,169,168,167,166,165,164,58,68,67,66,65,64,63,62,61,55,57,56,189,190,191,192,193');
-INSERT INTO `employee` VALUES ('1', '0', '系统管理员', 'admin', '男', null, null, null, null, '123456', '1', '0', null, '52,53,54,55,56,57,58,61,62,63,64,65,66,67,68,69,70,71,73,74,75,76,79,80,81,82,83,84,85,86,87,88,89,90,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,189,190,191,192,193');
-INSERT INTO `employee` VALUES ('34', '54', '刑建国', '020764', '男', '', '', '管理', null, '020764', '19', '0', '', '54,94,150,149,148,147,146,93,131,130,129,128,127,126,92,125,124,123,122,121,84,109,108,83,140,139,82,113,185,184,183,112,111,110,81,120,119,118,117,116,115,114,80,107,106,105,104,103,102,101,79,155,154,153,152,151,76,145,144,143,142,141,75,163,162,161,160,159,158,157,156,74,90,89,88,87,86,85,73,138,137,136,135,134,133,132,71,100,99,98,97,96,95,70,182,181,180,179,178,177,176,175,174,173,69,172,171,170,169,168,167,166,165,164,58,68,67,66,65,64,63,62,61,55,57,56,189,190,191,192,193');
-INSERT INTO `employee` VALUES ('83', '85', '高超', 'JX0706', '男', '', null, '管理', null, 'JX0706', '23', '0', '', '85');
-INSERT INTO `employee` VALUES ('35', '166', '熊文涛', '024992', '男', '', '', '管理', null, '024992', '23', '0', '', '166');
-INSERT INTO `employee` VALUES ('36', '54', '吕佳佳', 'JX0714', '男', '', '', '管理', null, 'JX0714', '19', '0', '', '54,94,150,149,148,147,146,93,131,130,129,128,127,126,92,125,124,123,122,121,84,109,108,83,140,139,82,113,185,184,183,112,111,110,81,120,119,118,117,116,115,114,80,107,106,105,104,103,102,101,79,155,154,153,152,151,76,145,144,143,142,141,75,163,162,161,160,159,158,157,156,74,90,89,88,87,86,85,73,138,137,136,135,134,133,132,71,100,99,98,97,96,95,70,182,181,180,179,178,177,176,175,174,173,69,172,171,170,169,168,167,166,165,164,58,68,67,66,65,64,63,62,61,55,57,56');
-INSERT INTO `employee` VALUES ('37', '54', '刘馨', 'JX1110', '男', '', '', '警员', null, 'JX1110', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('38', '54', '任文龙', '000123', '男', '', '', '警员', '/upload/59494433a35d1.jpg', '000123', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('39', '58', '王玉炜', '021249', '男', '', null, '管理', null, '021249', '22', '0', '', '58,68,67,66,65,64,63,62,61');
-INSERT INTO `employee` VALUES ('40', '58', '季成功', '020866', '男', '', null, '管理', null, '020866', '22', '0', '', '58');
-INSERT INTO `employee` VALUES ('41', '58', '张瑞洪', '021229', '男', '', null, '管理', null, '021229', '22', '0', '', '58,68,67,66,65,64,63');
-INSERT INTO `employee` VALUES ('42', '58', '王军', '020954', '男', '', null, '管理', null, '020954', '22', '0', '', '58,68,67,66,65,64,63,62,61');
-INSERT INTO `employee` VALUES ('43', '58', '冯军', '024628', '男', '', null, '管理', null, '024628', '22', '0', '', '58,68,67,66,65,64,63,62,61');
-INSERT INTO `employee` VALUES ('44', '58', '白岩松', '021032', '男', '', null, '管理', null, '021032', '22', '0', '', '58,68,67,66,65,64,63,62,61');
-INSERT INTO `employee` VALUES ('45', '58', '郝胜利', '021074', '男', '', null, '警员', null, '021074', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('46', '69', '张强', '020923', '男', '', null, '管理', null, '020923', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('47', '166', '纪宇宏', '000JJH', '男', '', null, '管理', null, '000JJH', '23', '0', '', '166');
-INSERT INTO `employee` VALUES ('48', '166', '黄猛', '020707', '男', '', null, '警员', null, '020707', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('49', '94', '王振钧', '021115', '男', '', null, '管理', null, '021115', '22', '0', '', '94,150,149,148,147,146');
-INSERT INTO `employee` VALUES ('50', '147', '张建楠', 'JX1177', '男', '', null, '警员', null, 'JX1177', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('51', '93', '陈琪铭', '020810', '男', '', null, '管理', null, '020810', '22', '0', '', '93,131,130,129,128,127,126');
-INSERT INTO `employee` VALUES ('52', '127', '刘奇', 'JX1028', '男', '', null, '警员', null, 'JX1028', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('53', '127', '王帅', '024894', '男', '', null, '管理', null, '024894', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('54', '92', '王玉基', '022820', '男', '', null, '管理', null, '022820', '22', '0', '', '92,125,124,123,122,121');
-INSERT INTO `employee` VALUES ('55', '123', '何飓', 'JX0920', '男', '', null, '管理', null, 'JX0920', '23', '0', '', '123');
-INSERT INTO `employee` VALUES ('56', '123', '赵斌', 'JX0386', '男', '', null, '警员', null, 'JX0386', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('57', '84', '杨来会', '021252', '男', '', null, '管理', null, '021252', '22', '0', '', '84,109,108');
-INSERT INTO `employee` VALUES ('58', '108', '韩永乐', '020694', '男', '', null, '管理', null, '020694', '23', '0', '', '108');
-INSERT INTO `employee` VALUES ('59', '108', '尹明泽', 'JX0112', '男', '', null, '警员', null, 'JX0112', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('60', '83', '徐海心', '021077', '男', '', null, '管理', null, '021077', '22', '0', '', '83,140,139');
-INSERT INTO `employee` VALUES ('61', '83', '解永炯', '021403', '男', '', null, '管理', null, '021403', '22', '0', '', '83,140,139');
-INSERT INTO `employee` VALUES ('62', '82', '燕东', '024529', '男', '', null, '管理', null, '024529', '22', '0', '', '82,113,112,111,110');
-INSERT INTO `employee` VALUES ('63', '112', '王卫东', '020988', '男', '', null, '管理', null, '020988', '23', '0', '', '112');
-INSERT INTO `employee` VALUES ('64', '112', '董立新', '024752', '男', '', null, '警员', null, '024752', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('65', '81', '王秀良', '024622', '男', '', null, '管理', null, '024622', '22', '0', '', '81,120,119,118,117,116,115,114');
-INSERT INTO `employee` VALUES ('66', '116', '郭晓兵', 'JX0702', '男', '', null, '管理', null, 'JX0702', '23', '0', '', '116');
-INSERT INTO `employee` VALUES ('67', '116', '张世民', '023547', '男', '', null, '警员', null, '023547', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('68', '140', '庄莹', 'JX0780', '男', '', null, '管理', null, 'JX0780', '23', '0', '', '140');
-INSERT INTO `employee` VALUES ('69', '140', '杜小利', 'JX0653', '男', '', null, '警员', null, 'JX0653', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('70', '80', '崔志强', '020804', '男', '', null, '管理', null, '020804', '22', '0', '', '80,107,106,105,104,103,102,101');
-INSERT INTO `employee` VALUES ('71', '103', '李永忠', '021722', '男', '', null, '管理', null, '021722', '23', '0', null, null);
-INSERT INTO `employee` VALUES ('72', '103', '郝俊礼', '020920', '男', '', null, '警员', null, '020920', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('73', '79', '孙恒', '020819', '男', '', null, '管理', null, '020819', '22', '0', '', '79,155,154,153,152,151');
-INSERT INTO `employee` VALUES ('74', '153', '赵圣玉', 'JX1081', '男', '', null, '管理', null, 'JX1081', '23', '0', '', '153');
-INSERT INTO `employee` VALUES ('75', '153', '段军', '020907', '男', '', null, '警员', null, '020907', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('76', '76', '刘飞', '021073', '男', '', null, '管理', null, '021073', '22', '0', '', '76,145,144,143,142,141');
-INSERT INTO `employee` VALUES ('77', '142', '苗芝茂', '002030', '男', '', null, '管理', null, '002030', '23', '0', '', '142');
-INSERT INTO `employee` VALUES ('78', '142', '哈斯巴根', 'JX1015', '男', '', null, '警员', null, 'JX1015', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('79', '75', '李杰', '020772', '男', '', null, '管理', null, '020772', '22', '0', '', '75,163,162,161,160,159,158,157,156');
-INSERT INTO `employee` VALUES ('80', '158', '王锦帅', 'JX1231', '男', '', null, '管理', null, 'JX1231', '23', '0', '', '158');
-INSERT INTO `employee` VALUES ('81', '158', '马东兴', 'JX0473', '男', '', null, '警员', null, 'JX0473', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('89', '96', '王建光', 'JX0277', '男', '', null, '管理', null, 'JX0277', '23', '0', '', '96');
-INSERT INTO `employee` VALUES ('90', '96', '张永强', '021173', '男', '', null, '警员', null, '021173', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('91', '70', '朱媛', 'JX0741', '男', '', null, '管理', null, 'JX0741', '22', '0', '', '70,182,181,180,179,178,177,176,175,174,173');
-INSERT INTO `employee` VALUES ('92', '176', '张建基', '020794', '男', '', null, '管理', null, '020794', '23', '0', '', '176');
-INSERT INTO `employee` VALUES ('93', '176', '周建军', '021138', '男', '', null, '警员', null, '021138', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('94', '61', '安满平', '021324', '男', '', null, '管理', null, '021324', '23', '0', '', '61');
-INSERT INTO `employee` VALUES ('95', '61', '张成辉', '020731', '男', '', null, '警员', null, '020731', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('96', '61', '阿力玛斯', '020974', '男', '', null, '警员', null, '020974', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('97', '150', '张海龙', '001919', '男', '', null, '管理', null, '001919', '23', '0', '', '150');
-INSERT INTO `employee` VALUES ('98', '150', '王群', '024942', '男', '', null, '警员', null, '024942', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('99', '167', '田元红', '024888', '男', '', null, '管理', null, '024888', '23', '0', '', '167');
-INSERT INTO `employee` VALUES ('100', '167', '苏涛', '023789', '男', '', null, '警员', null, '023789', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('101', '128', '郝煊', 'JX0099', '男', '', null, '管理', null, 'JX0099', '23', '0', '', '128');
-INSERT INTO `employee` VALUES ('102', '128', '方鹏', 'JX0475', '男', '', null, '警员', null, 'JX0475', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('103', '122', '杨超', 'JX1056', '男', '', null, '管理', null, 'JX1056', '23', '0', '', '122');
-INSERT INTO `employee` VALUES ('104', '122', '王英', 'JX0915', '男', '', null, '警员', null, 'JX0915', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('105', '139', '刘丽', 'JX0659', '男', '', null, '管理', null, 'JX0659', '23', '0', '', '139');
-INSERT INTO `employee` VALUES ('106', '139', '王立兴', 'JX0655', '男', '', null, '警员', null, 'JX0655', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('107', '111', '陈曦', '020406', '男', '', null, '管理', null, '020406', '23', '0', '', '111');
-INSERT INTO `employee` VALUES ('108', '111', '闫守忠', '021231', '男', '', null, '警员', null, '021231', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('109', '117', '马小平', '020911', '男', '', null, '管理', null, '020911', '23', '0', '', '117');
-INSERT INTO `employee` VALUES ('110', '117', '杨建明', '024766', '男', '', null, '警员', null, '024766', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('111', '102', '王培荣', '020997', '男', '', null, '管理', null, '020997', '23', '0', '', '102');
-INSERT INTO `employee` VALUES ('112', '102', '徐建忠', '020985', '男', '', null, '警员', null, '020985', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('113', '152', '乔明', '021078', '男', '', null, '管理', null, '021078', '23', '0', '', '152');
-INSERT INTO `employee` VALUES ('114', '152', '奥东乐', 'JX1148', '男', '', null, '警员', null, 'JX1148', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('115', '143', '湖泊清', '002025', '男', '', null, '管理', null, '002025', '23', '0', '', '143');
-INSERT INTO `employee` VALUES ('116', '143', '张磊', 'JX1163', '男', '', null, '警员', null, 'JX1163', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('117', '159', '王成', 'JX1218', '男', '', null, '管理', null, 'JX1218', '23', '0', '', '159');
-INSERT INTO `employee` VALUES ('118', '159', '郭忠义', 'JX0476', '男', '', null, '警员', null, 'JX0476', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('119', '88', '边志强', '020732', '男', '', null, '管理', null, '020732', '23', '0', '', '88');
-INSERT INTO `employee` VALUES ('120', '88', '丁学彬', 'JX0975', '男', '', null, '警员', null, 'JX0975', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('121', '134', '李仲深', 'O21234', '男', '', null, '警员', null, 'O21234', '23', '0', '', '134');
-INSERT INTO `employee` VALUES ('122', '134', '白禄', 'JX0931', '男', '', null, '警员', null, 'JX0931', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('123', '97', '赵刚', '000320', '男', '', null, '管理', null, '000320', '23', '0', '', '97');
-INSERT INTO `employee` VALUES ('124', '97', '张永彬', 'JX0359', '男', '', null, '警员', null, 'JX0359', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('125', '177', '南涛', '022684', '男', '', null, '管理', null, '022684', '23', '0', '', '177');
-INSERT INTO `employee` VALUES ('126', '177', '李帅', 'JX0317', '男', '', null, '警员', null, 'JX0317', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('127', '62', '刘洪', '024476', '男', '', null, '管理', null, '024476', '23', '0', '', '62');
-INSERT INTO `employee` VALUES ('128', '62', '张斌', 'JX1070', '男', '', null, '警员', null, 'JX1070', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('129', '166', '王磊', 'JX0227', '男', '', null, '警员', null, 'JX0227', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('130', '166', '王飞', 'JX0198', '男', '', null, '管理', null, 'JX0198', '23', '0', '', '166');
-INSERT INTO `employee` VALUES ('131', '166', '张宏硕', 'JX0663', '男', '', null, '管理', null, 'JX0663', '23', '0', '', '166');
-INSERT INTO `employee` VALUES ('132', '166', '刘宇峰', 'JX1271', '男', '', null, '管理', null, 'JX1271', '23', '0', '', '166');
-INSERT INTO `employee` VALUES ('133', '166', '刘德华', 'JX0214', '男', '', null, '警员', null, 'JX0214', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('134', '166', '张成', 'JX0219', '男', '', null, '警员', null, 'JX0219', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('135', '166', '祁博', 'JX0224', '男', '', null, '警员', null, 'JX0224', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('136', '166', '刘欣', 'JX0232', '男', '', null, '警员', null, 'JX0232', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('137', '166', '俎文强', 'JX0233', '男', '', null, '警员', null, 'JX0233', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('138', '166', '张元一', 'JX0243', '男', '', null, '警员', null, 'JX0243', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('139', '166', '满建伟', 'JX0260', '男', '', null, '警员', null, 'JX0260', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('140', '166', '井杨春', 'JX0393', '男', '', null, '警员', null, 'JX0393', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('141', '166', '毕少原', 'JX0856', '男', '', null, '警员', null, 'JX0856', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('142', '166', '冯超', 'JX0858', '男', '', null, '警员', null, 'JX0858', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('143', '166', '王慧博', 'JX0867', '男', '', null, '警员', null, 'JX0867', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('144', '166', '杨毅', 'JX0870', '男', '', null, '警员', null, 'JX0870', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('145', '166', '赵雪峰', 'JX0873', '男', '', null, '警员', null, 'JX0873', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('146', '166', '白鹤', 'JX1084', '男', '', null, '警员', null, 'JX1084', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('147', '166', '刘伟梁', 'JX1109', '男', '', null, '警员', null, 'JX1109', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('148', '166', '王晓栋', 'JX1127', '男', '', null, '警员', null, 'JX1127', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('149', '166', '于晓伟', 'JX1139', '男', '', null, '警员', null, 'JX1139', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('150', '166', '王增平', 'JX0120', '男', '', null, '警员', null, 'JX0120', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('151', '172', '马凤贺', '021061', '男', '', null, '管理', null, '021061', '23', '0', '', '172');
-INSERT INTO `employee` VALUES ('152', '172', '候毅', 'JX0152', '男', '', null, '管理', null, 'JX0152', '23', '0', '', '172');
-INSERT INTO `employee` VALUES ('153', '172', '王帅', 'JX1125', '男', '', null, '管理', null, 'JX1125', '23', '0', '', '172');
-INSERT INTO `employee` VALUES ('154', '172', '苏和', '000811', '男', '', null, '管理', null, '000811', '23', '0', '', '172');
-INSERT INTO `employee` VALUES ('155', '172', '耿鑫', '000805', '男', '', null, '管理', null, '000805', '23', '0', '', '172');
-INSERT INTO `employee` VALUES ('156', '172', '王磊', '023123', '男', '', null, '警员', null, '023123', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('157', '172', '张臻喆', '024444', '男', '', null, '警员', null, '024444', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('158', '172', '刘计林', '024617', '男', '', null, '警员', null, '024617', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('159', '172', '张俊平', '024749', '男', '', null, '警员', null, '024749', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('160', '172', '李岩', '024867', '男', '', null, '警员', null, '024867', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('161', '172', '卜永生', '024916', '男', '', null, '警员', null, '024916', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('162', '172', '宋永超', '024965', '男', '', null, '警员', null, '024965', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('163', '171', '王占山', '024742', '男', '', null, '管理', null, '024742', '23', '0', '', '171');
-INSERT INTO `employee` VALUES ('164', '171', '刘波涛', '021127', '男', '', null, '警员', null, '021127', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('165', '171', '布赫', '024889', '男', '', null, '警员', null, '024889', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('166', '171', '陈磊', 'JX0209', '男', '', null, '警员', null, 'JX0209', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('167', '171', '金晓光', 'JX0222', '男', '', null, '警员', null, 'JX0222', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('168', '171', '曹培', 'JX0225', '男', '', null, '警员', null, 'JX0225', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('169', '171', '高乐', 'JX0266', '男', '', null, '警员', null, 'JX0266', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('170', '171', '满意', 'JX0275', '男', '', null, '警员', null, 'JX0275', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('171', '171', '程胤众', 'JX0469', '男', '', null, '警员', null, 'JX0469', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('172', '171', '程超柏', 'JX0857', '男', '', null, '警员', null, 'JX0857', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('173', '171', '刘帆', 'JX0863', '男', '', null, '警员', null, 'JX0863', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('174', '170', '李包建', '021038', '男', '', null, '管理', null, '021038', '23', '0', '', '170');
-INSERT INTO `employee` VALUES ('175', '170', '孙焕章', '024625', '男', '', null, '警员', null, '024625', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('176', '170', '杜永硕', '024714', '男', '', null, '警员', null, '024714', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('177', '170', '沈万栋', '024832', '男', '', null, '警员', null, '024832', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('178', '170', '田健', 'JX0223', '男', '', null, '警员', null, 'JX0223', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('179', '170', '王林', 'JX0229', '男', '', null, '警员', null, 'JX0229', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('180', '170', '徐楠', 'JX0230', '男', '', null, '警员', null, 'JX0230', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('181', '170', '李伟', 'JX0245', '男', '', null, '警员', null, 'JX0245', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('182', '170', '佘涛', 'JX1130', '男', '', null, '警员', null, 'JX1130', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('183', '170', '魏守奕', 'JX1131', '男', '', null, '警员', null, 'JX1131', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('184', '170', '魏银龙', 'JX1138', '男', '', null, '警员', null, 'JX1138', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('185', '169', '王强', '021063', '男', '', null, '管理', null, '021063', '23', '0', '', '169');
-INSERT INTO `employee` VALUES ('186', '169', '刘青松', '024779', '男', '', null, '管理', null, '024779', '23', '0', '', '169');
-INSERT INTO `employee` VALUES ('187', '169', '冀树忠', '024756', '男', '', null, '管理', null, '024756', '23', '0', '', '169');
-INSERT INTO `employee` VALUES ('188', '169', '付东', '023953', '男', '', null, '警员', null, '023953', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('189', '169', '樊国栋', '024792', '男', '', null, '警员', null, '024792', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('190', '169', '吴建民', 'JX0199', '男', '', null, '警员', null, 'JX0199', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('191', '169', '李刚强', 'JX0200', '男', '', null, '警员', null, 'JX0200', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('192', '169', '呼格', 'JX0235', '男', '', null, '警员', null, 'JX0235', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('193', '169', '王有青', 'JX0252', '男', '', null, '警员', null, 'JX0252', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('194', '169', '杨海', 'JX0255', '男', '', null, '警员', null, 'JX0255', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('195', '169', '潘劲松', 'JX0262', '男', '', null, '警员', null, 'JX0262', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('196', '169', '曹剑锋', 'JX0271', '男', '', null, '警员', null, 'JX0271', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('197', '169', '乔华', 'JX0273', '男', '', null, '警员', null, 'JX0273', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('198', '169', '贾祥', 'JX0860', '男', '', null, '警员', null, 'JX0860', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('199', '169', '要亭', 'JX1075', '男', '', null, '警员', null, 'JX1075', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('200', '169', '郝国庆', 'JX1092', '男', '', null, '警员', null, 'JX1092', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('201', '169', '杨晓暾', 'JX1137', '男', '', null, '警员', null, 'JX1137', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('202', '168', '达来', 'JX0157', '男', '', null, '管理', null, 'JX0157', '23', '0', '', '168');
-INSERT INTO `employee` VALUES ('203', '168', '胡碧宇', 'JX0825', '男', '', null, '管理', null, 'JX0825', '23', '0', '', '168');
-INSERT INTO `employee` VALUES ('204', '168', '于谦', 'JX0095', '男', '', null, '管理', null, 'JX0095', '23', '0', '', '168');
-INSERT INTO `employee` VALUES ('205', '168', '范杰', '000565', '男', '', null, '管理', null, '000565', '23', '0', '', '168');
-INSERT INTO `employee` VALUES ('206', '168', '张永亮', '020086', '男', '', null, '警员', null, '020086', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('207', '168', '孙建国', '020734', '男', '', null, '警员', null, '020734', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('208', '168', '孙铮', '024022', '男', '', null, '警员', null, '024022', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('209', '168', '李利军', '024870', '男', '', null, '警员', null, '024870', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('210', '168', '刘洋', 'JX0201', '男', '', null, '警员', null, 'JX0201', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('211', '168', '马国瑞', 'JX0215', '男', '', null, '警员', null, 'JX0215', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('212', '168', '达来', 'JX0272', '男', '', null, '警员', null, 'JX0272', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('213', '168', '胡碧宇', 'JX0829', '男', '', null, '警员', null, 'JX0829', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('214', '168', '赵宏亮', 'JX0868', '男', '', null, '警员', null, 'JX0868', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('215', '168', '赵宇龙', 'JX1077', '男', '', null, '警员', null, 'JX1077', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('216', '168', '武楠', 'JX1133', '男', '', null, '警员', null, 'JX1133', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('217', '167', '郝明', 'JX0221', '男', '', null, '管理', null, 'JX0221', '23', '0', '', '167');
-INSERT INTO `employee` VALUES ('218', '167', '罗强', 'JX0872', '男', '', null, '管理', null, 'JX0872', '23', '0', '', '167');
-INSERT INTO `employee` VALUES ('219', '167', '胡俊峰', '024962', '男', '', null, '警员', null, '024962', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('220', '167', '乔文章', 'JX0202', '男', '', null, '警员', null, 'JX0202', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('221', '167', '宋泓杨', 'JX0234', '男', '', null, '警员', null, 'JX0234', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('222', '167', '张帅', 'JX0237', '男', '', null, '警员', null, 'JX0237', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('223', '167', '张超', 'JX0270', '男', '', null, '警员', null, 'JX0270', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('224', '167', '刘文彬', 'JX1076', '男', '', null, '警员', null, 'JX1076', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('225', '167', '刘旭', 'JX1111', '男', '', null, '警员', null, 'JX1111', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('226', '167', '王蒙', 'JX1124', '男', '', null, '警员', null, 'JX1124', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('227', '167', '刑智翔', 'JX1134', '男', '', null, '警员', null, 'JX1134', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('228', '69', '李怀忠', '021171', '男', '', null, '管理', null, '021171', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('229', '69', '钟国庆', '020979', '男', '', null, '管理', null, '020979', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('230', '69', '苏彬', '021197', '男', '', null, '管理', null, '021197', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('231', '69', '曹征', '021054', '男', '', null, '管理', null, '021054', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('232', '69', '赵梦武', '021137', '男', '', null, '管理', null, '021137', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('233', '69', '孙瑞安', '021026', '男', '', null, '管理', null, '021026', '22', '0', '', '69,172,171,170,169,168,167,166,165,164');
-INSERT INTO `employee` VALUES ('234', '94', '边雪峰', '025008', '男', '', null, '管理', null, '025008', '22', '0', '', '94,150,149,148,147,146');
-INSERT INTO `employee` VALUES ('235', '94', '胡志明', '023502', '男', '', null, '管理', null, '023502', '22', '0', '', '94,150,149,148,147,146');
-INSERT INTO `employee` VALUES ('236', '147', '乔景哲', 'JX1175', '男', '', null, '警员', null, 'JX1175', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('237', '147', '刘欢', 'JX0983', '男', '', null, '警员', null, 'JX0983', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('238', '148', '郑鸿宇', 'JX1178', '男', '', null, '警员', null, 'JX1178', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('239', '148', '张建平', 'JX0523', '男', '', null, '警员', null, 'JX0523', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('240', '148', '闫帅', 'JX0495', '男', '', null, '警员', null, 'JX0495', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('241', '150', '贺刚', 'JX1176', '男', '', null, '警员', null, 'JX1176', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('242', '150', '邸娜', 'JX1180', '男', '', null, '警员', null, 'JX1180', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('243', '150', '信佳', '024901', '男', '', null, '警员', null, '024901', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('244', '150', '郑国章', 'JX0508', '男', '', null, '管理', null, 'JX0508', '23', '0', '', '150');
-INSERT INTO `employee` VALUES ('245', '150', '许志远', '001911', '男', '', null, '管理', null, '001911', '23', '0', '', '150');
-INSERT INTO `employee` VALUES ('246', '150', '张静', 'JX0487', '男', '', null, '警员', null, 'JX0487', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('247', '93', '李东雄', '021044', '男', '', null, '管理', null, '021044', '22', '0', '', '93,131,130,129,128,127,126');
-INSERT INTO `employee` VALUES ('248', '93', '曹学政', '024089', '男', '', null, '管理', null, '024089', '22', '0', '', '93,131,130,129,128,127,126');
-INSERT INTO `employee` VALUES ('249', '93', '赵宝华', '023667', '男', '', null, '管理', null, '023667', '22', '0', '', '93,131,130,129,128,127,126');
-INSERT INTO `employee` VALUES ('250', '93', '王启', '021145', '男', '', null, '管理', null, '021145', '22', '0', '', '93,131,130,129,128,127,126');
-INSERT INTO `employee` VALUES ('251', '127', '安彪', 'JX1058', '男', '', null, '警员', null, 'JX1058', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('252', '127', '吕德', '020880', '男', '', null, '警员', null, '020880', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('253', '127', '张长青', 'JX1033', '男', '', null, '警员', null, 'JX1033', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('254', '127', '张素敏', 'JX1034', '男', '', null, '警员', null, 'JX1034', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('255', '127', '武建杰', 'JX0488', '男', '', null, '警员', null, 'JX0488', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('256', '127', '苗丽斌', 'JX0494', '男', '', null, '警员', null, 'JX0494', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('257', '127', '杨志彤', 'JX0499', '男', '', null, '警员', null, 'JX0499', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('258', '127', '赵伟', 'JX0501', '男', '', null, '警员', null, 'JX0501', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('259', '127', '康伟', 'JX0503', '男', '', null, '警员', null, 'JX0503', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('260', '127', '杨勇强', 'JX0505', '男', '', null, '警员', null, 'JX0505', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('261', '127', '王楠', 'JX0507', '男', '', null, '警员', null, 'JX0507', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('262', '127', '孙剑波', 'JX0510', '男', '', null, '警员', null, 'JX0510', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('263', '127', '高楠', 'JX0511', '男', '', null, '警员', null, 'JX0511', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('264', '127', '任志超', 'JX0524', '男', '', null, '警员', null, 'JX0524', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('265', '127', '张云波', '024956', '男', '', null, '警员', null, '024956', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('266', '127', '郑强', 'JX0316', '男', '', null, '警员', null, 'JX0316', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('267', '127', '高海波', '022181', '男', '', null, '警员', null, '022181', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('268', '127', '徐海云', '023304', '男', '', null, '警员', null, '023304', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('269', '127', '解树怀', '024125', '男', '', null, '警员', null, '024125', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('270', '127', '张小平', '024224', '男', '', null, '警员', null, '024224', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('271', '127', '史培文', '024732', '男', '', null, '警员', null, '024732', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('272', '127', '孙庆华', '024733', '男', '', null, '警员', null, '024733', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('273', '127', '曹伟', '024751', '男', '', null, '警员', null, '024751', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('274', '127', '杜飙', '024801', '男', '', null, '管理', null, '024801', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('275', '127', '王楠', 'JX0509', '男', '', null, '管理', null, 'JX0509', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('276', '127', '康纬', 'JX0423', '男', '', null, '管理', null, 'JX0423', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('277', '127', '张凯', 'JX0671', '男', '', null, '管理', null, 'JX0671', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('278', '127', '张伟', 'JX0708', '男', '', null, '管理', null, 'JX0708', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('279', '127', '张嘉伦', 'JX0382', '男', '', null, '管理', null, 'JX0382', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('280', '127', '袁博', 'JX0710', '男', '', null, '管理', null, 'JX0710', '23', '0', '', '127');
-INSERT INTO `employee` VALUES ('281', '127', '孟照军', '020837', '男', '', null, '警员', null, '020837', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('282', '127', '白峻屹', '020853', '男', '', null, '警员', null, '020853', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('283', '128', '杜磊', 'JX1024', '男', '', null, '警员', null, 'JX1024', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('284', '128', '李建平', 'JX0497', '男', '', null, '警员', null, 'JX0497', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('285', '128', '张美祥', 'JX0506', '男', '', null, '警员', null, 'JX0506', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('286', '128', '马鸣阳', 'JX0519', '男', '', null, '警员', null, 'JX0519', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('287', '128', '任佳乐', 'JX0730', '男', '', null, '警员', null, 'JX0730', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('288', '128', '何勇', '024824', '男', '', null, '警员', null, '024824', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('289', '128', '贾真', 'JX0330', '男', '', null, '警员', null, 'JX0330', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('290', '128', '孙瑞', '021134', '男', '', null, '警员', null, '021134', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('291', '128', '张慧臣', '023459', '男', '', null, '警员', null, '023459', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('292', '128', '王关春', '024129', '男', '', null, '警员', null, '024129', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('293', '128', '贾文', '024719', '男', '', null, '警员', null, '024719', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('294', '128', '邢亦农', '024745', '男', '', null, '警员', null, '024745', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('295', '128', '韩斌', '024747', '男', '', null, '警员', null, '024747', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('296', '128', '韩婧', 'JX1025', '男', '', null, '警员', null, 'JX1025', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('298', '129', '丁刚', 'JX1085', '男', '', null, '警员', null, 'JX1085', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('299', '129', '张宏伟', 'JX1006', '男', '', null, '警员', null, 'JX1006', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('300', '129', '李振宇', 'JX1027', '男', '', null, '警员', null, 'JX1027', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('301', '129', '徐全有', 'JX1032', '男', '', null, '警员', null, 'JX1032', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('302', '129', '王晓宇', 'JX0483', '男', '', null, '警员', null, 'JX0483', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('303', '129', '程秀丽', 'JX0502', '男', '', null, '警员', null, 'JX0502', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('304', '129', '乔志鹏', 'JX0582', '男', '', null, '警员', null, 'JX0582', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('305', '129', '巴音娜', 'JX0667', '男', '', null, '警员', null, 'JX0667', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('306', '129', '任建军', '024831', '男', '', null, '警员', null, '024831', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('307', '129', '孔飞', '024863', '男', '', null, '警员', null, '024863', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('308', '129', '张志平', '021111', '男', '', null, '警员', null, '021111', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('309', '129', '田景云', '021136', '男', '', null, '警员', null, '021136', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('310', '129', '张子云', '021168', '男', '', null, '警员', null, '021168', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('311', '129', '张宏伟', 'JX0116', '男', '', null, '管理', null, 'JX0116', '23', '0', '', '129');
-INSERT INTO `employee` VALUES ('312', '129', '刘晓龙', 'JX0480', '男', '', null, '管理', null, 'JX0480', '23', '0', '', '129');
-INSERT INTO `employee` VALUES ('313', '129', '张连元', '021270', '男', '', null, '管理', null, '021270', '23', '0', '', '129');
-INSERT INTO `employee` VALUES ('314', '129', '孙亚军', '021104', '男', '', null, '警员', null, '021104', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('315', '130', '谢继国', '021095', '男', '', null, '管理', null, '021095', '23', '0', '', '130');
-INSERT INTO `employee` VALUES ('316', '130', '云欣杰', '020668', '男', '', null, '警员', null, '020668', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('317', '130', '孙鹏飞', '000832', '男', '', null, '管理', null, '000832', '23', '0', '', '130');
-INSERT INTO `employee` VALUES ('318', '130', '世龙', '000836', '男', '', null, '管理', null, '000836', '23', '0', '', '130');
-INSERT INTO `employee` VALUES ('319', '130', '张春乐', 'JX0529', '男', '', null, '管理', null, 'JX0529', '23', '0', '', '130');
-INSERT INTO `employee` VALUES ('320', '130', '沈晓刚', '020956', '男', '', null, '警员', null, '020956', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('321', '130', '任利民', '021166', '男', '', null, '管理', null, '021166', '23', '0', '', '130');
-INSERT INTO `employee` VALUES ('322', '130', '李岩', '023926', '男', '', null, '管理', null, '023926', '23', '0', '', '130');
-INSERT INTO `employee` VALUES ('323', '130', '汪洋', '024804', '男', '', null, '警员', null, '024804', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('324', '130', '李岩', 'T10164', '男', '', null, '警员', null, 'T10164', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('325', '92', '张可成', '021034', '男', '', null, '管理', null, '021034', '22', '0', '', '92,125,124,123,122,121');
-INSERT INTO `employee` VALUES ('326', '92', '王洪利', '021999', '男', '', null, '管理', null, '021999', '22', '0', '', '92,125,124,123,122,121');
-INSERT INTO `employee` VALUES ('327', '92', '李建国', '021695', '男', '', null, '管理', null, '021695', '22', '0', '', '92,125,124,123,122,121');
-INSERT INTO `employee` VALUES ('328', '92', '邢利刚', '021028', '男', '', null, '管理', null, '021028', '22', '0', '', '92,125,124,123,122,121');
-INSERT INTO `employee` VALUES ('329', '122', '刘洋', 'JX0597', '男', '', null, '管理', null, 'JX0597', '23', '0', '', '122');
-INSERT INTO `employee` VALUES ('330', '122', '赵阿杰', 'JX0415', '男', '', null, '警员', null, 'JX0415', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('331', '122', '王建军', 'JX0411', '男', '', null, '警员', null, 'JX0411', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('332', '122', '秦政', '024885', '男', '', null, '警员', null, '024885', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('333', '122', '邢文广', '024784', '男', '', null, '警员', null, '024784', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('334', '122', '刘洋', 'JX0425', '男', '', null, '警员', null, 'JX0425', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('335', '122', '夏曰峰', 'JX0422', '男', '', null, '警员', null, 'JX0422', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('336', '122', '郭永恩', 'JX0421', '男', '', null, '警员', null, 'JX0421', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('337', '122', '吕建国', 'JX0924', '男', '', null, '警员', null, 'JX0924', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('338', '122', '李鹏', 'JX0922', '男', '', null, '警员', null, 'JX0922', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('339', '122', '刘喆', 'JX0916', '男', '', null, '警员', null, 'JX0916', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('340', '122', '杨耀光', '021036', '男', '', null, '警员', null, '021036', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('341', '122', '武建华', 'JX1059', '男', '', null, '警员', null, 'JX1059', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('342', '123', '刘继伟', 'JX0419', '男', '', null, '警员', null, 'JX0419', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('343', '123', '李蓓', 'JX0426', '男', '', null, '警员', null, 'JX0426', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('344', '123', '王长献', 'JX0429', '男', '', null, '警员', null, 'JX0429', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('345', '123', '何飓', 'JX0636', '男', '', null, '警员', null, 'JX0636', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('346', '123', '贾斌', '024861', '男', '', null, '警员', null, '024861', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('347', '123', '胡志强', 'JX0410', '男', '', null, '警员', null, 'JX0410', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('348', '123', '吕彦斌', 'JX0414', '男', '', null, '警员', null, 'JX0414', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('349', '123', '刘会明', '021117', '男', '', null, '警员', null, '021117', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('350', '123', '张守元', '024161', '男', '', null, '警员', null, '024161', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('351', '124', '杨佳根', 'JX0917', '男', '', null, '警员', null, 'JX0917', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('352', '124', '刘小飞', 'JX0923', '男', '', null, '警员', null, 'JX0923', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('353', '124', '张仙民', '024847', '男', '', null, '警员', null, '024847', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('354', '124', '于飞', 'JX0406', '男', '', null, '警员', null, 'JX0406', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('355', '124', '娜仁', 'JX0407', '男', '', null, '警员', null, 'JX0407', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('356', '124', '雷雳', 'JX0408', '男', '', null, '警员', null, 'JX0408', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('357', '124', '慕军效', '020999', '男', '', null, '警员', null, '020999', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('358', '124', '王亮', 'JX0412', '男', '', null, '警员', null, 'JX0412', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('359', '124', '武文斌', 'JX0416', '男', '', null, '警员', null, 'JX0416', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('360', '124', '马靖杰', 'JX0418', '男', '', null, '警员', null, 'JX0418', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('361', '124', '邢海强', '021118', '男', '', null, '警员', null, '021118', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('362', '124', '王钢', '020955', '男', '', null, '警员', null, '020955', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('363', '124', '安占', 'JX0409', '男', '', null, '警员', null, 'JX0409', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('364', '125', '费思坤', 'JX0918', '男', '', null, '警员', null, 'JX0918', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('365', '125', '王玉祥', '023463', '男', '', null, '警员', null, '023463', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('366', '125', '张若超', '021051', '男', '', null, '警员', null, '021051', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('367', '125', '且伟', '000841', '男', '', null, '管理', null, '000841', '23', '0', '', '125');
-INSERT INTO `employee` VALUES ('368', '125', '巴雅尔布赫', '000808', '男', '', null, '管理', null, '000808', '23', '0', '', '125');
-INSERT INTO `employee` VALUES ('369', '125', '石筱池', '024598', '男', '', null, '警员', null, '024598', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('370', '84', '刘义', '021267', '男', '', null, '管理', null, '021267', '22', '0', '', '84,109,108');
-INSERT INTO `employee` VALUES ('371', '84', '张永平', '024646', '男', '', null, '管理', null, '024646', '22', '0', '', '84,109,108');
-INSERT INTO `employee` VALUES ('372', '84', '一帆', 'JX0717', '男', '', null, '管理', null, 'JX0717', '22', '0', '', '84,109,108');
-INSERT INTO `employee` VALUES ('373', '84', '张青', 'JX0719', '男', '', null, '管理', null, 'JX0719', '22', '0', '', '84,109,108');
-INSERT INTO `employee` VALUES ('374', '108', '闫宏斌', '021039', '男', '', null, '警员', null, '021039', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('375', '108', '温磊', '024806', '男', '', null, '警员', null, '024806', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('376', '140', '王硕', 'JX0740', '男', '', null, '警员', null, 'JX0740', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('377', '140', '张诗晗', 'JX0724', '男', '', null, '警员', null, 'JX0724', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('378', '140', '贾艳', 'JX0692', '男', '', null, '警员', null, 'JX0692', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('379', '140', '杨晓婷', 'JX0691', '男', '', null, '警员', null, 'JX0691', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('380', '140', '杨倩', 'JX0738', '男', '', null, '警员', null, 'JX0738', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('381', '140', '郭小雪', 'JX0737', '男', '', null, '警员', null, 'JX0737', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('382', '140', '王倩颖', 'JX0727', '男', '', null, '警员', null, 'JX0727', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('383', '140', '郝茹苑', 'JX0739', '男', '', null, '警员', null, 'JX0739', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('384', '140', '汪润洁', 'JX0712', '男', '', null, '警员', null, 'JX0712', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('385', '140', '张瑶', 'JX1144', '男', '', null, '警员', null, 'JX1144', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('386', '140', '王立军', 'JX1063', '男', '', null, '警员', null, 'JX1063', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('387', '140', '李梦龙', 'JX1066', '男', '', null, '警员', null, 'JX1066', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('388', '140', '史晓蒙', 'JX0744', '男', '', null, '警员', null, 'JX0744', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('389', '140', '谢美玲', 'JX0684', '男', '', null, '警员', null, 'JX0684', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('390', '140', '柴娜', 'JX0797', '男', '', null, '警员', null, 'JX0797', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('391', '140', '王真', 'JX0697', '男', '', null, '警员', null, 'JX0697', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('392', '140', '孙美', 'JX0785', '男', '', null, '警员', null, 'JX0785', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('393', '140', '蔚文', 'JX0795', '男', '', null, '警员', null, 'JX0795', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('394', '140', '王倩', 'JX0683', '男', '', null, '警员', null, 'JX0683', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('395', '140', '张诗迪', 'JX0700', '男', '', null, '警员', null, 'JX0700', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('396', '140', '张文静', 'JX0689', '男', '', null, '警员', null, 'JX0689', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('397', '140', '林彬', 'JX0794', '男', '', null, '警员', null, 'JX0794', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('398', '140', '胡瑞霞', 'JX0709', '男', '', null, '警员', null, 'JX0709', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('399', '140', '孙蔼斯', 'JX0731', '男', '', null, '警员', null, 'JX0731', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('400', '140', '谭菲菲', 'JX0675', '男', '', null, '警员', null, 'JX0675', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('401', '139', '杨浩', 'JX1069', '男', '', null, '警员', null, 'JX1069', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('402', '139', '胡鹏程', 'JX1072', '男', '', null, '警员', null, 'JX1072', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('403', '139', '肖宇', 'JX0766', '男', '', null, '警员', null, 'JX0766', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('404', '139', '王超', 'JX0776', '男', '', null, '警员', null, 'JX0776', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('405', '139', '杨旭', 'JX0640', '男', '', null, '警员', null, 'JX0640', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('406', '139', '安宁', 'JX0793', '男', '', null, '警员', null, 'JX0793', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('407', '139', '张晓洁', 'JX0770', '男', '', null, '警员', null, 'JX0770', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('408', '139', '艾娅提', 'JX0713', '男', '', null, '警员', null, 'JX0713', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('409', '139', '闫雪', '001067', '男', '', null, '警员', null, '001067', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('410', '139', '王治国', 'JX0666', '男', '', null, '警员', null, 'JX0666', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('411', '139', '王娇杨', 'JX0685', '男', '', null, '警员', null, 'JX0685', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('412', '139', '李欣', 'JX0759', '男', '', null, '警员', null, 'JX0759', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('413', '139', '孟颖', 'JX0760', '男', '', null, '警员', null, 'JX0760', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('414', '139', '曹晓燕', 'JX0762', '男', '', null, '警员', null, 'JX0762', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('415', '139', '杨晓蕾', 'JX0764', '男', '', null, '警员', null, 'JX0764', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('416', '139', '马婧然', 'JX0767', '男', '', null, '警员', null, 'JX0767', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('417', '139', '尹路', 'JX0769', '男', '', null, '警员', null, 'JX0769', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('418', '139', '曲薪羽', 'JX0771', '男', '', null, '警员', null, 'JX0771', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('419', '139', '范琳', 'JX0774', '男', '', null, '警员', null, 'JX0774', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('420', '139', '黄世旭', 'JX0777', '男', '', null, '警员', null, 'JX0777', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('421', '139', '赵寒蕊', 'JX0779', '男', '', null, '警员', null, 'JX0779', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('422', '139', '张欣', 'JX1060', '男', '', null, '警员', null, 'JX1060', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('423', '139', '罗健', 'JX1062', '男', '', null, '警员', null, 'JX1062', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('424', '139', '袭阳', 'JX0662', '男', '', null, '警员', null, 'JX0662', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('425', '139', '王雪茹', 'JX0665', '男', '', null, '警员', null, 'JX0665', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('426', '139', '张方华', 'JX0672', '男', '', null, '警员', null, 'JX0672', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('427', '139', '赵鹏飞', 'JX0674', '男', '', null, '警员', null, 'JX0674', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('428', '139', '李卉', 'JX0757', '男', '', null, '警员', null, 'JX0757', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('429', '139', '黄建萍', 'JX0761', '男', '', null, '警员', null, 'JX0761', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('430', '139', '苗波', 'JX0765', '男', '', null, '警员', null, 'JX0765', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('431', '139', '朱琳', 'JX0768', '男', '', null, '警员', null, 'JX0768', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('432', '139', '王超', 'JX0772', '女', '', null, '警员', null, 'JX0772', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('433', '139', '赵蕾', 'JX0775', '女', '', null, '警员', null, 'JX0775', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('434', '139', '王路阳', 'JX0783', '男', '', null, '警员', null, 'JX0783', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('435', '139', '盛伟', 'JX1067', '男', '', null, '警员', null, 'JX1067', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('436', '139', '董薇', 'JX1086', '男', '', null, '警员', null, 'JX1086', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('437', '139', '韩伟', 'JX0763', '男', '', null, '警员', null, 'JX0763', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('438', '139', '武跃庭', 'JX0773', '男', '', null, '警员', null, 'JX0773', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('439', '139', '毕其格', 'JX0657', '男', '', null, '警员', null, 'JX0657', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('440', '139', '陈晨', 'JX0656', '男', '', null, '警员', null, 'JX0656', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('441', '139', '邵晶晶', 'JX0642', '男', '', null, '警员', null, 'JX0642', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('442', '139', '谢照伟', 'JX0643', '男', '', null, '警员', null, 'JX0643', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('443', '139', '于阿拉塔', 'JX0644', '男', '', null, '警员', null, 'JX0644', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('444', '139', '杜丽君', 'JX0645', '男', '', null, '警员', null, 'JX0645', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('445', '139', '葛伟', 'JX0646', '男', '', null, '警员', null, 'JX0646', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('446', '139', '杨馥毓', 'JX0647', '男', '', null, '警员', null, 'JX0647', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('447', '139', '尹一琦', 'JX0649', '男', '', null, '警员', null, 'JX0649', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('448', '139', '乌日娜', 'JX0650', '男', '', null, '警员', null, 'JX0650', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('449', '139', '许佳静', 'JX0651', '男', '', null, '警员', null, 'JX0651', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('450', '139', '李璐瑶', 'JX0652', '男', '', null, '警员', null, 'JX0652', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('451', '82', '郭和义', '020751', '男', '', null, '管理', null, '020751', '22', '0', '', '82,113,112,111,110');
-INSERT INTO `employee` VALUES ('452', '82', '任丽萍', '020831', '男', '', null, '管理', null, '020831', '22', '0', '', '82,113,112,111,110');
-INSERT INTO `employee` VALUES ('453', '82', '郄亮', '021009', '男', '', null, '管理', null, '021009', '22', '0', '', '82,113,112,111,110');
-INSERT INTO `employee` VALUES ('454', '82', '沈成利', '021273', '男', '', null, '管理', null, '021273', '22', '0', '', '82,113,112,111,110');
-INSERT INTO `employee` VALUES ('455', '111', '刘睿', '024803', '男', '', null, '警员', null, '024803', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('456', '111', '侯毅', '024857', '男', '', null, '警员', null, '024857', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('457', '112', '袁永生', '021345', '男', '', null, '管理', null, '021345', '23', '0', '', '112');
-INSERT INTO `employee` VALUES ('458', '112', '化树平', '024825', '男', '', null, '警员', null, '024825', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('459', '112', '李松波', '024872', '男', '', null, '警员', null, '024872', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('460', '112', '李杰', '024929', '男', '', null, '警员', null, '024929', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('461', '112', '陈旭', '025022', '男', '', null, '警员', null, '025022', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('462', '112', '孙立新', '021135', '男', '', null, '警员', null, '021135', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('463', '112', '吕强', '021198', '男', '', null, '警员', null, '021198', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('464', '112', '杨建军', '021242', '男', '', null, '警员', null, '021242', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('465', '112', '刘金柱', '021739', '男', '', null, '警员', null, '021739', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('466', '112', '张利胜', '021908', '男', '', null, '警员', null, '021908', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('467', '112', '张小平', '023494', '男', '', null, '警员', null, '023494', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('468', '112', '陆卫宏', '023708', '男', '', null, '警员', null, '023708', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('469', '112', '许刚', '024623', '男', '', null, '警员', null, '024623', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('470', '112', '葛爱钦', '023950', '男', '', null, '警员', null, '023950', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('471', '113', '王建军管理', '123456', '男', '', null, '管理', null, '123456', '23', '0', '', '113,185,184,183');
-INSERT INTO `employee` VALUES ('472', '113', '马君', '021092', '男', '', null, '警员', null, '021092', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('473', '113', '周德根', '024811', '男', '', null, '警员', null, '024811', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('474', '113', '布赫', '024813', '男', '', null, '警员', null, '024813', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('475', '113', '王志华', '024838', '男', '', null, '警员', null, '024838', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('476', '113', '张军', '024905', '男', '', null, '警员', null, '024905', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('477', '113', '赵香云', '024909', '男', '', null, '警员', null, '024909', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('478', '113', '李风波', '024930', '男', '', null, '警员', null, '024930', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('479', '113', '刘义', '024933', '男', '', null, '警员', null, '024933', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('480', '113', '肖燕', '024949', '男', '', null, '警员', null, '024949', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('481', '113', '邢鹏飞', '024967', '男', '', null, '警员', null, '024967', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('482', '113', '赵雁杰', '025032', '男', '', null, '警员', null, '025032', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('483', '113', '杨磊', '021129', '男', '', null, '警员', null, '021129', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('484', '113', '杨圆虹', '021152', '男', '', null, '警员', null, '021152', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('485', '113', '童慧明', '021161', '男', '', null, '警员', null, '021161', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('486', '113', '刘俊生', '021184', '男', '', null, '警员', null, '021184', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('487', '113', '胡海荣', '021244', '男', '', null, '警员', null, '021244', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('488', '113', '郭志远', '022988', '男', '', null, '警员', null, '022988', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('489', '113', '武连旺', '023545', '男', '', null, '警员', null, '023545', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('490', '113', '焦志辉', '023949', '男', '', null, '警员', null, '023949', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('491', '113', '刘勇', '024726', '男', '', null, '警员', null, '024726', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('492', '113', '刘宝胜', '024760', '男', '', null, '警员', null, '024760', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('493', '113', '房邵伟', '020635', '男', '', null, '警员', null, '020635', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('494', '113', '许志刚', '020695', '男', '', null, '警员', null, '020695', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('495', '113', '白海英', '020703', '男', '', null, '警员', null, '020703', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('496', '113', '王建军', '020941', '男', '', null, '管理', null, '020941', '23', '0', '', '113,185,184,183');
-INSERT INTO `employee` VALUES ('497', '113', '赵冰', '024087', '男', '', null, '管理', null, '024087', '23', '0', '', '113,185,184,183');
-INSERT INTO `employee` VALUES ('498', '81', '赵永斌', '020994', '男', '', null, '管理', null, '020994', '22', '0', '', '81,120,119,118,117,116,115,114');
-INSERT INTO `employee` VALUES ('499', '81', '云允廷', '020253', '男', '', null, '管理', null, '020253', '22', '0', '', '81,120,119,118,117,116,115,114');
-INSERT INTO `employee` VALUES ('500', '81', '高刚', '020902', '男', '', null, '管理', null, '020902', '22', '0', '', '81,120,119,118,117,116,115,114');
-INSERT INTO `employee` VALUES ('501', '81', '宋建刚', '021263', '男', '', null, '管理', null, '021263', '22', '0', '', '81,120,119,118,117,116,115,114');
-INSERT INTO `employee` VALUES ('502', '81', '马利军', '024130', '男', '', null, '警员', null, '024130', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('503', '81', '陈磊', '021052', '男', '', null, '管理', null, '021052', '22', '0', '', '81,120,119,118,117,116,115,114');
-INSERT INTO `employee` VALUES ('504', '116', '李春军', 'JX0572', '男', '', null, '管理', null, 'JX0572', '23', '0', '', '116');
-INSERT INTO `employee` VALUES ('505', '116', '杨睿', 'JX1049', '男', '', null, '警员', null, 'JX1049', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('506', '116', '高扬', 'JX1089', '男', '', null, '警员', null, 'JX1089', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('507', '116', '贾威', 'JX1095', '男', '', null, '警员', null, 'JX1095', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('508', '116', '李铁真', 'JX1102', '男', '', null, '警员', null, 'JX1102', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('509', '116', '王皓誉', 'JX1122', '男', '', null, '警员', null, 'JX1122', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('510', '116', '虞震', 'JX1140', '男', '', null, '警员', null, 'JX1140', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('511', '116', '王守金', '020986', '男', '', null, '警员', null, '020986', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('512', '116', '王康', 'JX0784', '男', '', null, '警员', null, 'JX0784', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('513', '116', '李强', 'JX0592', '男', '', null, '警员', null, 'JX0592', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('514', '116', '张彦波', '024908', '男', '', null, '警员', null, '024908', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('515', '116', '樊嘉琪', '024922', '男', '', null, '警员', null, '024922', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('516', '116', '温永胜', '021125', '男', '', null, '警员', null, '021125', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('517', '116', '刘龙', 'JX1153', '男', '', null, '警员', null, 'JX1153', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('518', '117', '陈政含', 'JX1042', '男', '', null, '警员', null, 'JX1042', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('519', '117', '张永祥', 'JX0570', '男', '', null, '警员', null, 'JX0570', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('520', '117', '程超', 'JX0574', '男', '', null, '警员', null, 'JX0574', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('521', '117', '李磊', 'JX0575', '男', '', null, '警员', null, 'JX0575', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('522', '117', '王敏', 'JX0585', '男', '', null, '警员', null, 'JX0585', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('523', '117', '王伟明', 'JX0595', '男', '', null, '警员', null, 'JX0595', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('524', '117', '武建业', '021055', '男', '', null, '警员', null, '021055', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('525', '117', '裴少华', '024883', '男', '', null, '警员', null, '024883', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('526', '117', '张剑锋', '023481', '男', '', null, '警员', null, '023481', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('527', '117', '达布拉', '023504', '男', '', null, '警员', null, '023504', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('528', '117', '宋铁盛', '020674', '男', '', null, '警员', null, '020674', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('529', '117', '王荣', '020921', '男', '', null, '警员', null, '020921', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('530', '118', '张锐琨', 'JX1288', '男', '', null, '管理', null, 'JX1288', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('531', '118', '赵刚', '020968', '男', '', null, '警员', null, '020968', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('532', '118', '王超', 'JX1119', '男', '', null, '警员', null, 'JX1119', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('533', '118', '李小平', '023724', '男', '', null, '管理', null, '023724', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('534', '118', '祝海', '021068', '男', '', null, '管理', null, '021068', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('535', '118', '高彬', '024755', '男', '', null, '管理', null, '024755', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('536', '118', '胡强国', '023598', '男', '', null, '管理', null, '023598', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('537', '118', '张守荣', 'JX1053', '男', '', null, '管理', null, 'JX1053', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('538', '118', '曹斌', '023727', '男', '', null, '管理', null, '023727', '23', '0', '', '118');
-INSERT INTO `employee` VALUES ('539', '118', '边城', 'JX1041', '男', '', null, '警员', null, 'JX1041', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('540', '118', '宋宜达', 'JX0578', '男', '', null, '警员', null, 'JX0578', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('541', '118', '郭文天', 'JX0633', '男', '', null, '警员', null, 'JX0633', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('542', '118', '许波', '024785', '男', '', null, '警员', null, '024785', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('543', '118', '张敏', '024845', '男', '', null, '警员', null, '024845', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('544', '118', '刘永平', '024939', '男', '', null, '警员', null, '024939', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('545', '118', '杨文强', '24903', '男', '', null, '警员', null, '24903', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('546', '118', '王志', 'JX0211', '男', '', null, '警员', null, 'JX0211', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('547', '118', '刘新法', '024727', '男', '', null, '警员', null, '024727', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('548', '118', '李涛', 'JX1101', '男', '', null, '警员', null, 'JX1101', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('549', '119', '张小平', '024088', '男', '', null, '管理', null, '024088', '23', '0', '', '119');
-INSERT INTO `employee` VALUES ('550', '119', '黄海生', '021067', '男', '', null, '警员', null, '021067', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('551', '119', '尹茂盛', 'JX0586', '男', '', null, '管理', null, 'JX0586', '23', '0', '', '119');
-INSERT INTO `employee` VALUES ('552', '119', '莫晨雨', 'JX1114', '男', '', null, '警员', null, 'JX1114', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('553', '119', '孙平', '001087', '男', '', null, '管理', null, '001087', '23', '0', '', '119');
-INSERT INTO `employee` VALUES ('554', '119', '温都苏', 'JX0593', '男', '', null, '管理', null, 'JX0593', '23', '0', '', '119');
-INSERT INTO `employee` VALUES ('555', '119', '张春明', 'JX1044', '男', '', null, '警员', null, 'JX1044', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('556', '119', '张岩', 'JX0568', '男', '', null, '警员', null, 'JX0568', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('557', '119', '马蓉', 'JX0569', '男', '', null, '警员', null, 'JX0569', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('558', '119', '李磊', 'JX0576', '男', '', null, '警员', null, 'JX0576', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('559', '119', '黄经纬', 'JX0594', '男', '', null, '警员', null, 'JX0594', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('560', '119', '王新民', '024764', '男', '', null, '警员', null, '024764', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('561', '119', '王晓燕', '024947', '男', '', null, '警员', null, '024947', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('562', '119', '殷林', '024995', '男', '', null, '警员', null, '024995', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('563', '119', '王玉明', '021674', '男', '', null, '警员', null, '021674', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('564', '119', '于力', '024027', '男', '', null, '警员', null, '024027', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('565', '119', '于力', '024047', '男', '', null, '警员', null, '024047', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('566', '119', '桂宏刚', '020122', '男', '', null, '警员', null, '020122', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('567', '119', '闫杰', '020886', '男', '', null, '警员', null, '020886', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('568', '119', '王建合', '021190', '男', '', null, '管理', null, '021190', '23', '0', '', '119');
-INSERT INTO `employee` VALUES ('569', '120', '厍建东', '023465', '男', '', null, '管理', null, '023465', '23', '0', '', '120');
-INSERT INTO `employee` VALUES ('570', '120', '刘强', '000840', '男', '', null, '管理', null, '000840', '23', '0', '', '120');
-INSERT INTO `employee` VALUES ('571', '120', '刘占军', '000839', '男', '', null, '管理', null, '000839', '23', '0', '', '120');
-INSERT INTO `employee` VALUES ('572', '120', '苏瑜', 'JX1055', '男', '', null, '警员', null, 'JX1055', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('573', '120', '王冠方', 'JX1121', '男', '', null, '警员', null, 'JX1121', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('574', '120', '胡晓宇', '021194', '男', '', null, '管理', null, '021194', '23', '0', '', '120');
-INSERT INTO `employee` VALUES ('575', '120', '吕永全', '023541', '男', '', null, '警员', null, '023541', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('576', '120', '安德稳', '021069', '男', '', null, '管理', null, '021069', '23', '0', '', '120');
-INSERT INTO `employee` VALUES ('577', '120', '栗博', 'JX1045', '男', '', null, '警员', null, 'JX1045', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('578', '120', '李波', 'JX1048', '男', '', null, '警员', null, 'JX1048', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('579', '120', '李昊峰', 'JX0735', '男', '', null, '警员', null, 'JX0735', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('580', '120', '张宏军', '024809', '男', '', null, '警员', null, '024809', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('581', '120', '许鑫', '024968', '男', '', null, '警员', null, '024968', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('582', '120', '屠明', '021053', '男', '', null, '警员', null, '021053', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('583', '107', '张磊', '021010', '男', '', null, '管理', null, '021010', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('584', '107', '赵东', '020697', '男', '', null, '管理', null, '020697', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('585', '107', '杜慧军', 'JX0444', '男', '', null, '管理', null, 'JX0444', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('586', '107', '吴斌', '021966', '男', '', null, '管理', null, '021966', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('587', '107', '任平均', '023540', '男', '', null, '管理', null, '023540', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('588', '107', '刘耀春', '023837', '男', '', null, '管理', null, '023837', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('589', '107', '燕永飞', '001009', '男', '', null, '管理', null, '001009', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('590', '107', '姚尧', 'JX0561', '男', '', null, '管理', null, 'JX0561', '23', '0', '', '107');
-INSERT INTO `employee` VALUES ('591', '107', '焦志涛', 'JX0565', '男', '', null, '警员', null, 'JX0565', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('592', '107', '赵振铎', 'JX1038', '男', '', null, '警员', null, 'JX1038', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('593', '107', '周文龙', 'JX1039', '男', '', null, '警员', null, 'JX1039', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('594', '114', '杨大年', '020711', '男', '', null, '管理', null, '020711', '23', '0', '', '114');
-INSERT INTO `employee` VALUES ('595', '114', '孟繁强', '020938', '男', '', null, '管理', null, '020938', '23', '0', '', '114');
-INSERT INTO `employee` VALUES ('596', '114', '焦文翔', 'JX1247', '男', '', null, '警员', null, 'JX1247', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('597', '114', '王庆杰', '021344', '男', '', null, '警员', null, '021344', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('598', '114', '杨国强', '024026', '男', '', null, '警员', null, '024026', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('599', '114', '王峰', 'JX0500', '男', '', null, '警员', null, 'JX0500', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('600', '114', '张建斌', '020995', '男', '', null, '警员', null, '020995', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('601', '114', '王浩鹏', 'JX1194', '男', '', null, '警员', null, 'JX1194', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('602', '114', '常超', 'JX0992', '男', '', null, '警员', null, 'JX0992', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('603', '114', '赵永来', 'JX0577', '男', '', null, '警员', null, 'JX0577', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('604', '164', '权瑞宝', '021064', '男', '', null, '管理', null, '021064', '23', '0', '', '164');
-INSERT INTO `employee` VALUES ('605', '164', '樊鹏举', '021033', '男', '', null, '管理', null, '021033', '23', '0', '', '164');
-INSERT INTO `employee` VALUES ('606', '164', '樊利生', '021070', '男', '', null, '管理', null, '021070', '23', '0', '', '164');
-INSERT INTO `employee` VALUES ('607', '164', '郭永强', 'JX0261', '男', '', null, '管理', null, 'JX0261', '23', '0', '', '164');
-INSERT INTO `employee` VALUES ('608', '164', '巴图', 'JX0265', '男', '', null, '警员', null, 'JX0265', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('609', '164', '满意', 'JX0241', '男', '', null, '警员', null, 'JX0241', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('610', '164', '史佐', '021075', '男', '', null, '警员', null, '021075', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('611', '164', '罗保全', '021226', '男', '', null, '警员', null, '021226', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('612', '164', '徐宝基', '024019', '男', '', null, '警员', null, '024019', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('613', '164', '陈庆林', '024024', '男', '', null, '警员', null, '024024', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('614', '164', '魏杰', '024979', '男', '', null, '警员', null, '024979', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('615', '164', '刘伟', '024996', '男', '', null, '警员', null, '024996', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('616', '80', '杨鸿', '021007', '男', '', null, '管理', null, '021007', '22', '0', '', '80,107,106,105,104,103,102,101');
-INSERT INTO `employee` VALUES ('617', '80', '刘晓东', '021059', '男', '', null, '管理', null, '021059', '22', '0', '', '80,107,106,105,104,103,102,101');
-INSERT INTO `employee` VALUES ('618', '80', '孔令杰', '020898', '男', '', null, '管理', null, '020898', '22', '0', '', '80,107,106,105,104,103,102,101');
-INSERT INTO `employee` VALUES ('619', '80', '朱胜龙', '023518', '男', '', null, '管理', null, '023518', '22', '0', '', '80,107,106,105,104,103,102,101');
-INSERT INTO `employee` VALUES ('620', '80', '蒋保国', '020981', '男', '', null, '管理', null, '020981', '22', '0', '', '80,107,106,105,104,103,102,101');
-INSERT INTO `employee` VALUES ('621', '102', '胡格吉勒图', '020975', '男', '', null, '管理', null, '020975', '23', '0', '', '102');
-INSERT INTO `employee` VALUES ('622', '102', '袁海峰', '021880', '男', '', null, '警员', null, '021880', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('623', '102', '张河刚', '023718', '男', '', null, '警员', null, '023718', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('624', '102', '郝国栋', '024797', '男', '', null, '警员', null, '024797', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('625', '102', '武晓钢', '024839', '男', '', null, '警员', null, '024839', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('626', '102', '张荣', 'JX0435', '男', '', null, '警员', null, 'JX0435', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('627', '102', '段海威', 'JX0547', '男', '', null, '警员', null, 'JX0547', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('628', '102', '郭同旭', 'JX0548', '男', '', null, '警员', null, 'JX0548', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('629', '102', '魏强', 'JX0552', '男', '', null, '警员', null, 'JX0552', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('630', '102', '郝璐璐', 'JX0553', '男', '', null, '警员', null, 'JX0553', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('631', '102', '谢博文', 'JX0554', '男', '', null, '警员', null, 'JX0554', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('632', '102', '李柏江', 'JX0563', '男', '', null, '警员', null, 'JX0563', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('633', '102', '吴红艳', 'JX0604', '男', '', null, '警员', null, 'JX0604', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('634', '102', '贺文', 'JX1073', '男', '', null, '警员', null, 'JX1073', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('635', '103', '鲍强', 'JX0360', '男', '', null, '管理', null, 'JX0360', '23', '0', '', '103');
-INSERT INTO `employee` VALUES ('636', '103', '赵永忠', '021014', '男', '', null, '警员', null, '021014', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('637', '103', '李海波', '024197', '男', '', null, '警员', null, '024197', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('638', '103', '贾志强', '024721', '男', '', null, '警员', null, '024721', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('639', '103', '郜飞', '024961', '男', '', null, '警员', null, '024961', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('640', '103', '李庆林', '024999', '男', '', null, '警员', null, '024999', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('641', '103', '葛庆飞', 'JX0432', '男', '', null, '警员', null, 'JX0432', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('642', '103', '赵勇', 'JX0545', '男', '', null, '警员', null, 'JX0545', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('643', '103', '王娟', 'JX0558', '男', '', null, '警员', null, 'JX0558', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('644', '103', '刘治国', 'JX0648', '男', '', null, '警员', null, 'JX0648', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('645', '103', '陈诚', 'JX0695', '男', '', null, '警员', null, 'JX0695', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('646', '103', '云梦瑶', 'JX0799', '男', '', null, '警员', null, 'JX0799', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('647', '103', '任学枫', 'JX1185', '男', '', null, '警员', null, 'JX1185', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('648', '103', '郝冀昆', 'JX1186', '男', '', null, '警员', null, 'JX1186', '20', '0', null, null);
-INSERT INTO `employee` VALUES ('649', '103', '潘奕辰', 'JX1190', '男', '', null, '警员', null, 'JX1190', '20', '0', null, null);
+INSERT INTO `employee` VALUES ('650', '41', '超级管理员', 'admin', '男', null, null, '管理', null, '123456', '1', '0', null, '41', '1');
+INSERT INTO `employee` VALUES ('651', '4115', '申忠', '086338', '男', '13849752188', null, '管理', null, '086338', '19', '0', null, '4115', '1');
+
+-- ----------------------------
+-- Table structure for `ftp_dir`
+-- ----------------------------
+DROP TABLE IF EXISTS `ftp_dir`;
+CREATE TABLE `ftp_dir` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ftp_ip` varchar(20) NOT NULL DEFAULT '127.0.0.1' COMMENT 'ftp服务器ip',
+  `ftp_port` int(11) NOT NULL DEFAULT '21',
+  `ftp_user` varchar(20) NOT NULL DEFAULT 'dh',
+  `ftp_pwd` varchar(20) NOT NULL DEFAULT '123456',
+  `web_path` varchar(128) NOT NULL DEFAULT '/pe_file/' COMMENT '站点下数据目录,格式:/pe_file<1位或0位盘符>,如/pe_fileD；',
+  `ftp_path` varchar(128) NOT NULL COMMENT '绝对路径.FTP数据上传到该目录',
+  `is_ftp_dir` int(1) NOT NULL DEFAULT '0' COMMENT '0:不是;1:是',
+  `ftp_lock` int(1) NOT NULL DEFAULT '0' COMMENT '0:可切换目录；1：锁定FTP用户的目录；',
+  `enable` int(1) NOT NULL DEFAULT '0' COMMENT '0:不启用ftp;1:启用ftp',
+  `symbol` varchar(20) DEFAULT NULL COMMENT 'ftp路径所在的盘符',
+  `total` double(20,0) DEFAULT '0' COMMENT 'ftp目录的空间大小',
+  `free` double(20,0) DEFAULT '0' COMMENT 'ftp目录的剩余空间大小(M)',
+  `usage` double(6,2) DEFAULT '0.00' COMMENT 'ftp目录的空间使用率',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_web_path` (`web_path`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of ftp_dir
+-- ----------------------------
+INSERT INTO `ftp_dir` VALUES ('1', '192.168.0.26', '621', 'dh', '123456', '/pe_file/', 'D:\\Workspace\\pe_file\\', '0', '0', '0', 'D:\\', '199999', '188578', '5.00');
+INSERT INTO `ftp_dir` VALUES ('2', '192.168.0.26', '621', 'dh', '123456', '/pe_fileI/', 'I:\\', '1', '0', '0', 'I:\\', '0', '0', '0.00');
+INSERT INTO `ftp_dir` VALUES ('3', '192.168.0.26', '621', 'dh', '123456', '/pe_fileJ/', 'J:\\', '1', '0', '0', 'J:\\', '0', '0', '0.00');
+INSERT INTO `ftp_dir` VALUES ('4', '192.168.0.26', '621', 'dh', '123456', '/pe_fileK/', 'K:\\', '1', '0', '0', 'K:\\', '0', '0', '0.00');
+INSERT INTO `ftp_dir` VALUES ('5', '192.168.0.26', '621', 'dh', '123456', '/pe_fileG/', 'G:\\', '1', '0', '1', 'G:\\', '199998', '197662', '1.00');
+INSERT INTO `ftp_dir` VALUES ('6', '192.168.0.26', '21', 'dh', '123456', '/pe_fileH/', 'H:\\', '1', '0', '0', 'H:\\', '0', '0', '0.00');
+INSERT INTO `ftp_dir` VALUES ('7', '192.168.0.26', '21', 'dh', '123456', '/pe_fileF/', 'F:\\', '1', '0', '0', 'F:\\', '199999', '161122', '19.00');
 
 -- ----------------------------
 -- Table structure for `menu`
@@ -932,7 +997,7 @@ CREATE TABLE `pe_base` (
   `cpxh` varchar(7) NOT NULL COMMENT '产品(执法仪)序号 ',
   `standard` varchar(30) DEFAULT NULL COMMENT '设备规格',
   `product` varchar(100) DEFAULT NULL COMMENT '生产厂家',
-  `areaid` int(11) NOT NULL,
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '单位,同area_dep.areacode',
   `areaname` varchar(128) DEFAULT NULL COMMENT '单位,同area_dep.areaname',
   `jybh` varchar(6) NOT NULL COMMENT '警员编号',
   `jyxm` varchar(32) DEFAULT NULL COMMENT '警员姓名',
@@ -945,15 +1010,15 @@ CREATE TABLE `pe_base` (
 -- ----------------------------
 -- Records of pe_base
 -- ----------------------------
-INSERT INTO `pe_base` VALUES ('1000478', null, null, '53', null, 'JX0232', '刘欣', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('1234511', null, null, '54', null, '020004', '安锐', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00382', null, null, '55', null, '020707', '黄猛', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00471', null, null, '56', null, 'JX0856', '毕少原', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00472', null, null, '57', null, 'JX0224', '祁博', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00474', null, null, '58', null, 'JX0867', '王慧博', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00475', null, null, '59', null, 'JX1084', '白鹤', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00716', null, null, '60', null, 'JX0227', '王磊', '0', '0', null);
-INSERT INTO `pe_base` VALUES ('TA00720', null, null, '61', null, 'JX0243', '张元一', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('1000478', null, null, '0', null, 'JX0232', '刘欣', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('1234511', null, null, '0', null, '020004', '安锐', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00382', null, null, '0', null, '020707', '黄猛', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00471', null, null, '0', null, 'JX0856', '毕少原', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00472', null, null, '0', null, 'JX0224', '祁博', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00474', null, null, '0', null, 'JX0867', '王慧博', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00475', null, null, '0', null, 'JX1084', '白鹤', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00716', null, null, '4115', '信阳市公安局', '086338', '申忠', '0', '0', null);
+INSERT INTO `pe_base` VALUES ('TA00720', null, null, '0', null, 'JX0243', '张元一', '0', '0', null);
 
 -- ----------------------------
 -- Table structure for `pe_log_list`
@@ -974,1392 +1039,6 @@ CREATE TABLE `pe_log_list` (
 -- ----------------------------
 -- Records of pe_log_list
 -- ----------------------------
-
--- ----------------------------
--- Table structure for `pe_video`
--- ----------------------------
-DROP TABLE IF EXISTS `pe_video`;
-CREATE TABLE `pe_video` (
-  `video_id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) NOT NULL DEFAULT '' COMMENT '案件标题,格式：<yyyymmddHHmiss>-<警员名>;不能编辑,内外提供视频时都自动生成;',
-  `start_time` datetime NOT NULL COMMENT '案件开始时间',
-  `end_time` datetime DEFAULT NULL COMMENT '案件结束时间',
-  `scsj` datetime NOT NULL,
-  `jyxm` varchar(60) DEFAULT NULL COMMENT '第1出警人警员姓名',
-  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '第1出警人警员编号',
-  `areaid` int(11) NOT NULL DEFAULT '1' COMMENT '第1出警人单位编号',
-  `areaname` varchar(128) DEFAULT '' COMMENT '第1出警人单位名称',
-  `alarm_no` varchar(40) DEFAULT '' COMMENT '警情编号',
-  `alarm_name` varchar(128) DEFAULT '' COMMENT '案事件名称',
-  `alarm_addr` varchar(128) DEFAULT '',
-  `alarm_type` int(1) NOT NULL DEFAULT '0' COMMENT '警情类型;0:未编辑(3个月);1:一般警情(6个月);2:重大警情(永久);3:阻碍民警执法妨碍公务(永久);4:行政强制执行(永久);5:当场盘问检查(6个月);6:无效数据(7天);7:其他(6个月)',
-  `case_no` varchar(40) DEFAULT '' COMMENT '案件编号',
-  `case_name` varchar(128) DEFAULT '' COMMENT '案件名称(描述)',
-  `case_type` int(1) NOT NULL DEFAULT '0' COMMENT '案件类型;0:未知,1:刑事案件(永久),2:行政案件(永久)',
-  `case_dept` varchar(64) DEFAULT NULL COMMENT '办案单位',
-  `case_empl` varchar(16) DEFAULT NULL COMMENT '办案警员',
-  `case_qualify` int(1) NOT NULL DEFAULT '0' COMMENT '执法资格;0:无;1:基本级;2:中级;3:高级;',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `remark` varchar(256) DEFAULT '' COMMENT '备注',
-  `apply_jybh` varchar(32) DEFAULT '' COMMENT '案件申请警员编号',
-  `apply_jyxm` varchar(60) DEFAULT '' COMMENT '案件申请警员名',
-  `apply_areaid` int(11) DEFAULT NULL COMMENT '案件申请人部门ID',
-  `apply_areaname` varchar(128) DEFAULT '' COMMENT '案件申请人部门名',
-  `hand_status` int(1) NOT NULL DEFAULT '0' COMMENT '申请状态，0:初始态;1:待审核;2:移交完成',
-  PRIMARY KEY (`video_id`),
-  UNIQUE KEY `idx_title` (`title`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=339 DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of pe_video
--- ----------------------------
-INSERT INTO `pe_video` VALUES ('6', '2017-07-23 16:38:01 孔令杰 data', '2017-07-23 16:38:01', '2017-07-23 17:05:18', '0000-00-00 00:00:00', '孔令杰', '020898', '80', '河西大队', '12331', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:55:00', '', '020694', '韩永乐', '108', '', '0');
-INSERT INTO `pe_video` VALUES ('7', '2017-07-25 09:45:18 王立军 data', '2017-07-25 09:45:18', '2017-07-25 10:08:36', '0000-00-00 00:00:00', '王立军', 'JX1063', '140', '护校中队', '3123', '', '', '0', '', '', '0', null, null, '0', '2017-08-01 09:48:44', '', '021966', '吴斌', '107', '', '0');
-INSERT INTO `pe_video` VALUES ('8', '2017-07-22 15:14:49 马国瑞 data', '2017-07-22 15:14:49', '2017-07-22 15:42:57', '0000-00-00 00:00:00', '马国瑞', 'JX0215', '168', '青山三中队', '123', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '0');
-INSERT INTO `pe_video` VALUES ('9', '2017-07-25 19:31:01 任学枫 data', '2017-07-25 19:31:01', '2017-07-25 19:48:30', '0000-00-00 00:00:00', '任学枫', 'JX1185', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '0');
-INSERT INTO `pe_video` VALUES ('10', '2017-07-25 23:43:05 谢照伟 data', '2017-07-25 23:43:05', '2017-07-26 00:00:25', '0000-00-00 00:00:00', '谢照伟', 'JX0643', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '0');
-INSERT INTO `pe_video` VALUES ('11', '2017-07-24 17:48:01 王冠方 data', '2017-07-24 17:48:01', '2017-07-24 18:07:37', '0000-00-00 00:00:00', '王冠方', 'JX1121', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('12', '2017-07-25 05:44:56 布赫 data', '2017-07-25 05:44:56', '2017-07-25 06:13:56', '0000-00-00 00:00:00', '布赫', '024813', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('13', '2017-07-24 16:50:44 张敏 data', '2017-07-24 16:50:44', '2017-07-24 17:13:46', '0000-00-00 00:00:00', '张敏', '024845', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('14', '2017-07-22 18:45:49 满意 data', '2017-07-22 18:45:49', '2017-07-22 19:03:46', '0000-00-00 00:00:00', '满意', 'JX0241', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('15', '2017-07-22 03:08:02 张荣 data', '2017-07-22 03:08:02', '2017-07-22 03:37:15', '0000-00-00 00:00:00', '张荣', 'JX0435', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('16', '2017-07-23 00:33:18 王荣 data', '2017-07-23 00:33:18', '2017-07-23 01:01:32', '0000-00-00 00:00:00', '王荣', '020921', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('17', '2017-07-25 23:38:02 李卉 data', '2017-07-25 23:38:02', '2017-07-26 00:03:36', '0000-00-00 00:00:00', '李卉', 'JX0757', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('18', '2017-07-22 12:14:02 王建军管理 data', '2017-07-22 12:14:02', '2017-07-22 12:42:46', '0000-00-00 00:00:00', '王建军管理', '123456', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('19', '2017-07-25 22:16:58 张方华 data', '2017-07-25 22:16:58', '2017-07-25 22:43:30', '0000-00-00 00:00:00', '张方华', 'JX0672', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('20', '2017-07-24 01:21:09 张美祥 data', '2017-07-24 01:21:09', '2017-07-24 01:43:32', '0000-00-00 00:00:00', '张美祥', 'JX0506', '128', '东兴二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('21', '2017-07-26 19:15:40 张河刚 data', '2017-07-26 19:15:40', '2017-07-26 19:40:43', '0000-00-00 00:00:00', '张河刚', '023718', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('22', '2017-07-23 18:20:23 刘晓东 data', '2017-07-23 18:20:23', '2017-07-23 18:43:12', '0000-00-00 00:00:00', '刘晓东', '021059', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('23', '2017-07-26 07:59:11 王浩鹏 data', '2017-07-26 07:59:11', '2017-07-26 08:28:51', '0000-00-00 00:00:00', '王浩鹏', 'JX1194', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('24', '2017-07-23 07:17:25 刘龙 data', '2017-07-23 07:17:25', '2017-07-23 07:36:48', '0000-00-00 00:00:00', '刘龙', 'JX1153', '116', '北郊一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('25', '2017-07-24 16:30:13 陈政含 data', '2017-07-24 16:30:13', '2017-07-24 16:54:45', '0000-00-00 00:00:00', '陈政含', 'JX1042', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('26', '2017-07-22 16:08:31 王娟 data', '2017-07-22 16:08:31', '2017-07-22 16:36:00', '0000-00-00 00:00:00', '王娟', 'JX0558', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('27', '2017-07-25 16:10:41 杨鸿 data', '2017-07-25 16:10:41', '2017-07-25 16:33:51', '0000-00-00 00:00:00', '杨鸿', '021007', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('28', '2017-07-26 16:42:21 安宁 data', '2017-07-26 16:42:21', '2017-07-26 17:12:14', '0000-00-00 00:00:00', '安宁', 'JX0793', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('29', '2017-07-25 08:10:29 贾威 data', '2017-07-25 08:10:29', '2017-07-25 08:38:43', '0000-00-00 00:00:00', '贾威', 'JX1095', '116', '北郊一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('30', '2017-07-24 11:46:20 杨建军 data', '2017-07-24 11:46:20', '2017-07-24 12:10:49', '0000-00-00 00:00:00', '杨建军', '021242', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('31', '2017-07-26 01:25:57 郜飞 data', '2017-07-26 01:25:57', '2017-07-26 01:54:40', '0000-00-00 00:00:00', '郜飞', '024961', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('32', '2017-07-23 01:18:58 焦志辉 data', '2017-07-23 01:18:58', '2017-07-23 01:43:05', '0000-00-00 00:00:00', '焦志辉', '023949', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('33', '2017-07-23 23:41:31 苏瑜 data', '2017-07-23 23:41:31', '2017-07-24 00:04:30', '0000-00-00 00:00:00', '苏瑜', 'JX1055', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('34', '2017-07-25 06:32:44 张锐琨 data', '2017-07-25 06:32:44', '2017-07-25 06:56:04', '0000-00-00 00:00:00', '张锐琨', 'JX1288', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('35', '2017-07-22 07:05:34 张荣 data', '2017-07-22 07:05:34', '2017-07-22 07:26:43', '0000-00-00 00:00:00', '张荣', 'JX0435', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('36', '2017-07-24 20:53:55 杨建军 data', '2017-07-24 20:53:55', '2017-07-24 21:13:48', '0000-00-00 00:00:00', '杨建军', '021242', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('37', '2017-07-25 09:37:51 徐全有 data', '2017-07-25 09:37:51', '2017-07-25 09:57:55', '0000-00-00 00:00:00', '徐全有', 'JX1032', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('38', '2017-07-24 17:00:51 张敏 data', '2017-07-24 17:00:51', '2017-07-24 17:26:18', '0000-00-00 00:00:00', '张敏', '024845', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('39', '2017-07-21 14:16:13 夏曰峰 data', '2017-07-21 14:16:13', '2017-07-21 14:35:33', '0000-00-00 00:00:00', '夏曰峰', 'JX0422', '122', '高新二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('40', '2017-07-26 13:05:21 武建业 data', '2017-07-26 13:05:21', '2017-07-26 13:28:02', '0000-00-00 00:00:00', '武建业', '021055', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('41', '2017-07-22 10:07:55 陈磊 data', '2017-07-22 10:07:55', '2017-07-22 10:25:39', '0000-00-00 00:00:00', '陈磊', '021052', '81', '北郊大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('42', '2017-07-24 00:05:01 罗保全 data', '2017-07-24 00:05:01', '2017-07-24 00:30:11', '0000-00-00 00:00:00', '罗保全', '021226', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('43', '2017-07-22 17:37:28 樊利生 data', '2017-07-22 17:37:28', '2017-07-22 18:03:51', '0000-00-00 00:00:00', '樊利生', '021070', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('44', '2017-07-22 11:28:52 王伟明 data', '2017-07-22 11:28:52', '2017-07-22 11:48:34', '0000-00-00 00:00:00', '王伟明', 'JX0595', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('45', '2017-07-25 02:41:47 安德稳 data', '2017-07-25 02:41:47', '2017-07-25 03:09:52', '0000-00-00 00:00:00', '安德稳', '021069', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('46', '2017-07-22 12:09:26 于阿拉塔 data', '2017-07-22 12:09:26', '2017-07-22 12:27:03', '0000-00-00 00:00:00', '于阿拉塔', 'JX0644', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('47', '2017-07-21 14:40:45 杜慧军 data', '2017-07-21 14:40:45', '2017-07-21 15:04:30', '0000-00-00 00:00:00', '杜慧军', 'JX0444', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('48', '2017-07-23 00:14:50 樊鹏举 data', '2017-07-23 00:14:50', '2017-07-23 00:41:16', '0000-00-00 00:00:00', '樊鹏举', '021033', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('49', '2017-07-22 11:44:18 安德稳 data', '2017-07-22 11:44:18', '2017-07-22 12:04:28', '0000-00-00 00:00:00', '安德稳', '021069', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('50', '2017-07-24 18:27:41 闫帅 data', '2017-07-24 18:27:41', '2017-07-24 18:46:20', '0000-00-00 00:00:00', '闫帅', 'JX0495', '148', '白云二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('51', '2017-07-22 00:56:19 焦志辉 data', '2017-07-22 00:56:19', '2017-07-22 01:24:52', '0000-00-00 00:00:00', '焦志辉', '023949', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('52', '2017-07-25 21:38:46 温磊 data', '2017-07-25 21:38:46', '2017-07-25 22:06:32', '0000-00-00 00:00:00', '温磊', '024806', '108', '督察大队一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('53', '2017-07-25 02:34:12 李昊峰 data', '2017-07-25 02:34:12', '2017-07-25 03:04:10', '0000-00-00 00:00:00', '李昊峰', 'JX0735', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('54', '2017-07-25 11:03:02 王超 data', '2017-07-25 11:03:02', '2017-07-25 11:24:46', '0000-00-00 00:00:00', '王超', 'JX1119', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('55', '2017-07-24 04:11:32 闫帅 data', '2017-07-24 04:11:32', '2017-07-24 04:41:29', '0000-00-00 00:00:00', '闫帅', 'JX0495', '148', '白云二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('56', '2017-07-21 19:52:05 杨建军 data', '2017-07-21 19:52:05', '2017-07-21 20:12:37', '0000-00-00 00:00:00', '杨建军', '021242', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('57', '2017-07-26 09:15:03 孙美 data', '2017-07-26 09:15:03', '2017-07-26 09:40:16', '0000-00-00 00:00:00', '孙美', 'JX0785', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('58', '2017-07-24 09:44:56 罗保全 data', '2017-07-24 09:44:56', '2017-07-24 10:03:41', '0000-00-00 00:00:00', '罗保全', '021226', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('59', '2017-07-26 03:51:16 王建军 data', '2017-07-26 03:51:16', '2017-07-26 04:16:27', '0000-00-00 00:00:00', '王建军', '020941', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('60', '2017-07-22 14:36:35 桂宏刚 data', '2017-07-22 14:36:35', '2017-07-22 14:56:58', '0000-00-00 00:00:00', '桂宏刚', '020122', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('61', '2017-07-26 00:47:45 李振宇 data', '2017-07-26 00:47:45', '2017-07-26 01:15:35', '0000-00-00 00:00:00', '李振宇', 'JX1027', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('62', '2017-07-27 02:15:03 程超柏 data', '2017-07-27 02:15:03', '2017-07-27 02:43:00', '0000-00-00 00:00:00', '程超柏', 'JX0857', '171', '青山六中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('63', '2017-07-24 02:56:50 郜飞 data', '2017-07-24 02:56:50', '2017-07-24 03:24:05', '0000-00-00 00:00:00', '郜飞', '024961', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('64', '2017-07-25 09:55:49 赵东 data', '2017-07-25 09:55:49', '2017-07-25 10:24:00', '0000-00-00 00:00:00', '赵东', '020697', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('65', '2017-07-22 05:33:01 张河刚 data', '2017-07-22 05:33:01', '2017-07-22 05:59:33', '0000-00-00 00:00:00', '张河刚', '023718', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('66', '2017-07-24 15:30:41 李松波 data', '2017-07-24 15:30:41', '2017-07-24 15:59:00', '0000-00-00 00:00:00', '李松波', '024872', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('67', '2017-07-24 21:47:34 李风波 data', '2017-07-24 21:47:34', '2017-07-24 22:10:15', '0000-00-00 00:00:00', '李风波', '024930', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('68', '2017-07-27 05:57:11 王玉祥 data', '2017-07-27 05:57:11', '2017-07-27 06:18:30', '0000-00-00 00:00:00', '王玉祥', '023463', '125', '高新事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('69', '2017-07-26 10:16:02 姚尧 data', '2017-07-26 10:16:02', '2017-07-26 10:34:42', '0000-00-00 00:00:00', '姚尧', 'JX0561', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('70', '2017-07-23 06:32:52 谢博文 data', '2017-07-23 06:32:52', '2017-07-23 06:55:05', '0000-00-00 00:00:00', '谢博文', 'JX0554', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('71', '2017-07-24 06:26:45 权瑞宝 data', '2017-07-24 06:26:45', '2017-07-24 06:44:37', '0000-00-00 00:00:00', '权瑞宝', '021064', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('72', '2017-07-27 06:33:11 张敏 data', '2017-07-27 06:33:11', '2017-07-27 06:53:00', '0000-00-00 00:00:00', '张敏', '024845', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('73', '2017-07-26 19:20:01 孙平 data', '2017-07-26 19:20:01', '2017-07-26 19:40:57', '0000-00-00 00:00:00', '孙平', '001087', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('74', '2017-07-24 07:05:09 赵永忠 data', '2017-07-24 07:05:09', '2017-07-24 07:34:59', '0000-00-00 00:00:00', '赵永忠', '021014', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('75', '2017-07-26 00:20:18 郝璐璐 data', '2017-07-26 00:20:18', '2017-07-26 00:38:27', '0000-00-00 00:00:00', '郝璐璐', 'JX0553', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('76', '2017-07-23 04:33:27 刘俊生 data', '2017-07-23 04:33:27', '2017-07-23 05:03:23', '0000-00-00 00:00:00', '刘俊生', '021184', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('77', '2017-07-25 09:59:43 张文静 data', '2017-07-25 09:59:43', '2017-07-25 10:28:22', '0000-00-00 00:00:00', '张文静', 'JX0689', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('78', '2017-07-21 18:32:23 孔令杰 data', '2017-07-21 18:32:23', '2017-07-21 19:00:48', '0000-00-00 00:00:00', '孔令杰', '020898', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('79', '2017-07-22 11:30:32 李璐瑶 data', '2017-07-22 11:30:32', '2017-07-22 11:59:42', '0000-00-00 00:00:00', '李璐瑶', 'JX0652', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('80', '2017-07-26 22:44:15 张小平 data', '2017-07-26 22:44:15', '2017-07-26 23:06:02', '0000-00-00 00:00:00', '张小平', '024224', '127', '东兴一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('81', '2017-07-23 15:13:07 郭同旭 data', '2017-07-23 15:13:07', '2017-07-23 15:38:58', '0000-00-00 00:00:00', '郭同旭', 'JX0548', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('82', '2017-07-21 12:44:20 任学枫 data', '2017-07-21 12:44:20', '2017-07-21 13:04:44', '0000-00-00 00:00:00', '任学枫', 'JX1185', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('83', '2017-07-24 21:42:20 任平均 data', '2017-07-24 21:42:20', '2017-07-24 22:00:05', '0000-00-00 00:00:00', '任平均', '023540', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('84', '2017-07-26 13:42:38 陈庆林 data', '2017-07-26 13:42:38', '2017-07-26 14:05:11', '0000-00-00 00:00:00', '陈庆林', '024024', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('85', '2017-07-22 21:27:23 杨文强 data', '2017-07-22 21:27:23', '2017-07-22 21:44:39', '0000-00-00 00:00:00', '杨文强', '24903', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('86', '2017-07-23 13:22:08 王志 data', '2017-07-23 13:22:08', '2017-07-23 13:49:13', '0000-00-00 00:00:00', '王志', 'JX0211', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('87', '2017-07-21 20:22:48 于力 data', '2017-07-21 20:22:48', '2017-07-21 20:46:00', '0000-00-00 00:00:00', '于力', '024027', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('88', '2017-07-24 23:16:44 王建合 data', '2017-07-24 23:16:44', '2017-07-24 23:36:14', '0000-00-00 00:00:00', '王建合', '021190', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('89', '2017-07-26 03:42:44 张锐琨 data', '2017-07-26 03:42:44', '2017-07-26 04:05:49', '0000-00-00 00:00:00', '张锐琨', 'JX1288', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('90', '2017-07-24 17:26:06 刘小飞 data', '2017-07-24 17:26:06', '2017-07-24 17:48:05', '0000-00-00 00:00:00', '刘小飞', 'JX0923', '124', '高新三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('91', '2017-07-24 03:41:54 张河刚 data', '2017-07-24 03:41:54', '2017-07-24 04:00:49', '0000-00-00 00:00:00', '张河刚', '023718', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('92', '2017-07-26 10:18:19 郭小雪 data', '2017-07-26 10:18:19', '2017-07-26 10:37:27', '0000-00-00 00:00:00', '郭小雪', 'JX0737', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('93', '2017-07-22 17:20:49 张云波 data', '2017-07-22 17:20:49', '2017-07-22 17:49:32', '0000-00-00 00:00:00', '张云波', '024956', '127', '东兴一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('94', '2017-07-21 15:45:11 巴图 data', '2017-07-21 15:45:11', '2017-07-21 16:09:54', '0000-00-00 00:00:00', '巴图', 'JX0265', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('95', '2017-07-26 15:11:31 段海威 data', '2017-07-26 15:11:31', '2017-07-26 15:28:48', '0000-00-00 00:00:00', '段海威', 'JX0547', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('96', '2017-07-23 07:58:58 杨大年 data', '2017-07-23 07:58:58', '2017-07-23 08:20:23', '0000-00-00 00:00:00', '杨大年', '020711', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('97', '2017-07-26 02:06:12 秦政 data', '2017-07-26 02:06:12', '2017-07-26 02:34:39', '0000-00-00 00:00:00', '秦政', '024885', '122', '高新二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('98', '2017-07-24 21:46:21 尹一琦 data', '2017-07-24 21:46:21', '2017-07-24 22:09:23', '0000-00-00 00:00:00', '尹一琦', 'JX0649', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('99', '2017-07-23 02:18:38 侯毅 data', '2017-07-23 02:18:38', '2017-07-23 02:41:19', '0000-00-00 00:00:00', '侯毅', '024857', '111', '车管所监督科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('100', '2017-07-21 13:17:16 罗强 data', '2017-07-21 13:17:16', '2017-07-21 13:37:39', '0000-00-00 00:00:00', '罗强', 'JX0872', '167', '青山二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('101', '2017-07-25 17:04:55 殷林 data', '2017-07-25 17:04:55', '2017-07-25 17:32:58', '0000-00-00 00:00:00', '殷林', '024995', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('102', '2017-07-25 04:00:20 史佐 data', '2017-07-25 04:00:20', '2017-07-25 04:26:38', '0000-00-00 00:00:00', '史佐', '021075', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('103', '2017-07-21 12:37:01 张青 data', '2017-07-21 12:37:01', '2017-07-21 13:00:43', '0000-00-00 00:00:00', '张青', 'JX0719', '84', '督察大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('104', '2017-07-22 22:13:12 杨大年 data', '2017-07-22 22:13:12', '2017-07-22 22:39:09', '0000-00-00 00:00:00', '杨大年', '020711', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('105', '2017-07-25 23:13:01 张宏军 data', '2017-07-25 23:13:01', '2017-07-25 23:32:58', '0000-00-00 00:00:00', '张宏军', '024809', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('106', '2017-07-23 03:54:24 杨海 data', '2017-07-23 03:54:24', '2017-07-23 04:11:49', '0000-00-00 00:00:00', '杨海', 'JX0255', '169', '青山四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('107', '2017-07-21 23:44:41 盛伟 data', '2017-07-21 23:44:41', '2017-07-22 00:04:55', '0000-00-00 00:00:00', '盛伟', 'JX1067', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('108', '2017-07-26 20:45:40 朱胜龙 data', '2017-07-26 20:45:40', '2017-07-26 21:08:38', '0000-00-00 00:00:00', '朱胜龙', '023518', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('109', '2017-07-25 09:31:18 郑鸿宇 data', '2017-07-25 09:31:18', '2017-07-25 09:59:26', '0000-00-00 00:00:00', '郑鸿宇', 'JX1178', '148', '白云二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('110', '2017-07-25 02:37:08 张守荣 data', '2017-07-25 02:37:08', '2017-07-25 03:02:48', '0000-00-00 00:00:00', '张守荣', 'JX1053', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('111', '2017-07-24 01:27:32 张建斌 data', '2017-07-24 01:27:32', '2017-07-24 01:48:36', '0000-00-00 00:00:00', '张建斌', '020995', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('112', '2017-07-22 13:49:03 杨大年 data', '2017-07-22 13:49:03', '2017-07-22 14:17:54', '0000-00-00 00:00:00', '杨大年', '020711', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('113', '2017-07-21 23:06:23 焦志涛 data', '2017-07-21 23:06:23', '2017-07-21 23:26:31', '0000-00-00 00:00:00', '焦志涛', 'JX0565', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('114', '2017-07-23 17:29:17 焦志涛 data', '2017-07-23 17:29:17', '2017-07-23 17:49:23', '0000-00-00 00:00:00', '焦志涛', 'JX0565', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('115', '2017-07-24 21:24:06 云梦瑶 data', '2017-07-24 21:24:06', '2017-07-24 21:49:27', '0000-00-00 00:00:00', '云梦瑶', 'JX0799', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('116', '2017-07-21 10:12:01 张建斌 data', '2017-07-21 10:12:01', '2017-07-21 10:36:45', '0000-00-00 00:00:00', '张建斌', '020995', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('117', '2017-07-27 05:57:43 范琳 data', '2017-07-27 05:57:43', '2017-07-27 06:17:37', '0000-00-00 00:00:00', '范琳', 'JX0774', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('118', '2017-07-25 03:36:38 高刚 data', '2017-07-25 03:36:38', '2017-07-25 04:05:08', '0000-00-00 00:00:00', '高刚', '020902', '81', '北郊大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('119', '2017-07-26 21:05:15 杨睿 data', '2017-07-26 21:05:15', '2017-07-26 21:31:46', '0000-00-00 00:00:00', '杨睿', 'JX1049', '116', '北郊一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('120', '2017-07-22 12:06:37 任学枫 data', '2017-07-22 12:06:37', '2017-07-22 12:35:01', '0000-00-00 00:00:00', '任学枫', 'JX1185', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('121', '2017-07-24 20:03:08 王皓誉 data', '2017-07-24 20:03:08', '2017-07-24 20:30:10', '0000-00-00 00:00:00', '王皓誉', 'JX1122', '116', '北郊一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('122', '2017-07-24 17:54:56 于力 data', '2017-07-24 17:54:56', '2017-07-24 18:19:29', '0000-00-00 00:00:00', '于力', '024027', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('123', '2017-07-24 21:25:15 安德稳 data', '2017-07-24 21:25:15', '2017-07-24 21:54:22', '0000-00-00 00:00:00', '安德稳', '021069', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('124', '2017-07-24 12:49:17 侯毅 data', '2017-07-24 12:49:17', '2017-07-24 13:12:55', '0000-00-00 00:00:00', '侯毅', '024857', '111', '车管所监督科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('125', '2017-07-24 04:12:56 许志远 data', '2017-07-24 04:12:56', '2017-07-24 04:36:38', '0000-00-00 00:00:00', '许志远', '001911', '150', '白云事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('126', '2017-07-27 03:48:50 陆卫宏 data', '2017-07-27 03:48:50', '2017-07-27 04:18:19', '0000-00-00 00:00:00', '陆卫宏', '023708', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('127', '2017-07-23 01:35:48 宋宜达 data', '2017-07-23 01:35:48', '2017-07-23 01:54:40', '0000-00-00 00:00:00', '宋宜达', 'JX0578', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('128', '2017-07-23 19:15:43 郜飞 data', '2017-07-23 19:15:43', '2017-07-23 19:34:36', '0000-00-00 00:00:00', '郜飞', '024961', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('129', '2017-07-24 15:12:44 苏瑜 data', '2017-07-24 15:12:44', '2017-07-24 15:35:23', '0000-00-00 00:00:00', '苏瑜', 'JX1055', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('130', '2017-07-26 17:54:16 化树平 data', '2017-07-26 17:54:16', '2017-07-26 18:11:32', '0000-00-00 00:00:00', '化树平', '024825', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('131', '2017-07-24 04:45:44 陈庆林 data', '2017-07-24 04:45:44', '2017-07-24 05:12:02', '0000-00-00 00:00:00', '陈庆林', '024024', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('132', '2017-07-25 20:11:56 刘伟 data', '2017-07-25 20:11:56', '2017-07-25 20:37:06', '0000-00-00 00:00:00', '刘伟', '024996', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('133', '2017-07-25 14:21:32 杨国强 data', '2017-07-25 14:21:32', '2017-07-25 14:48:58', '0000-00-00 00:00:00', '杨国强', '024026', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('134', '2017-07-22 21:26:35 许鑫 data', '2017-07-22 21:26:35', '2017-07-22 21:52:27', '0000-00-00 00:00:00', '许鑫', '024968', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('135', '2017-07-21 15:38:23 杨旭 data', '2017-07-21 15:38:23', '2017-07-21 16:02:31', '0000-00-00 00:00:00', '杨旭', 'JX0640', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('136', '2017-07-24 17:36:30 吴红艳 data', '2017-07-24 17:36:30', '2017-07-24 17:55:46', '0000-00-00 00:00:00', '吴红艳', 'JX0604', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('137', '2017-07-22 02:41:14 云梦瑶 data', '2017-07-22 02:41:14', '2017-07-22 03:11:03', '0000-00-00 00:00:00', '云梦瑶', 'JX0799', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('138', '2017-07-26 23:04:07 朱胜龙 data', '2017-07-26 23:04:07', '2017-07-26 23:27:52', '0000-00-00 00:00:00', '朱胜龙', '023518', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('139', '2017-07-26 11:46:18 陈庆林 data', '2017-07-26 11:46:18', '2017-07-26 12:14:40', '0000-00-00 00:00:00', '陈庆林', '024024', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('140', '2017-07-21 14:17:21 陈旭 data', '2017-07-21 14:17:21', '2017-07-21 14:45:43', '0000-00-00 00:00:00', '陈旭', '025022', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('141', '2017-07-25 23:03:51 武晓钢 data', '2017-07-25 23:03:51', '2017-07-25 23:31:14', '0000-00-00 00:00:00', '武晓钢', '024839', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('142', '2017-07-21 17:14:59 吴斌 data', '2017-07-21 17:14:59', '2017-07-21 17:37:41', '0000-00-00 00:00:00', '吴斌', '021966', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('143', '2017-07-24 19:10:12 刘义 data', '2017-07-24 19:10:12', '2017-07-24 19:29:40', '0000-00-00 00:00:00', '刘义', '024933', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('144', '2017-07-27 05:35:41 许鑫 data', '2017-07-27 05:35:41', '2017-07-27 06:00:03', '0000-00-00 00:00:00', '许鑫', '024968', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('145', '2017-07-23 11:44:38 吕强 data', '2017-07-23 11:44:38', '2017-07-23 12:13:35', '0000-00-00 00:00:00', '吕强', '021198', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('146', '2017-07-21 14:35:31 朱胜龙 data', '2017-07-21 14:35:31', '2017-07-21 14:59:07', '0000-00-00 00:00:00', '朱胜龙', '023518', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('147', '2017-07-25 14:04:08 贺文 data', '2017-07-25 14:04:08', '2017-07-25 14:26:41', '0000-00-00 00:00:00', '贺文', 'JX1073', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('148', '2017-07-26 20:28:02 史晓蒙 data', '2017-07-26 20:28:02', '2017-07-26 20:47:06', '0000-00-00 00:00:00', '史晓蒙', 'JX0744', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('149', '2017-07-26 05:15:09 潘奕辰 data', '2017-07-26 05:15:09', '2017-07-26 05:38:06', '0000-00-00 00:00:00', '潘奕辰', 'JX1190', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('150', '2017-07-25 16:53:25 杨馥毓 data', '2017-07-25 16:53:25', '2017-07-25 17:13:14', '0000-00-00 00:00:00', '杨馥毓', 'JX0647', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('151', '2017-07-22 00:47:14 刘晓龙 data', '2017-07-22 00:47:14', '2017-07-22 01:06:49', '0000-00-00 00:00:00', '刘晓龙', 'JX0480', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('152', '2017-07-21 11:04:19 贾真 data', '2017-07-21 11:04:19', '2017-07-21 11:32:46', '0000-00-00 00:00:00', '贾真', 'JX0330', '128', '东兴二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('153', '2017-07-24 03:52:57 杨国强 data', '2017-07-24 03:52:57', '2017-07-24 04:13:48', '0000-00-00 00:00:00', '杨国强', '024026', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('154', '2017-07-26 17:26:04 张军 data', '2017-07-26 17:26:04', '2017-07-26 17:47:57', '0000-00-00 00:00:00', '张军', '024905', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('155', '2017-07-25 10:25:47 白海英 data', '2017-07-25 10:25:47', '2017-07-25 10:47:49', '0000-00-00 00:00:00', '白海英', '020703', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('156', '2017-07-26 02:45:07 曹斌 data', '2017-07-26 02:45:07', '2017-07-26 03:07:10', '0000-00-00 00:00:00', '曹斌', '023727', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('157', '2017-07-23 07:14:33 武连旺 data', '2017-07-23 07:14:33', '2017-07-23 07:36:17', '0000-00-00 00:00:00', '武连旺', '023545', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('158', '2017-07-24 12:08:36 杨磊 data', '2017-07-24 12:08:36', '2017-07-24 12:29:43', '0000-00-00 00:00:00', '杨磊', '021129', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('159', '2017-07-26 21:09:36 燕永飞 data', '2017-07-26 21:09:36', '2017-07-26 21:38:06', '0000-00-00 00:00:00', '燕永飞', '001009', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('160', '2017-07-26 06:29:22 赵永来 data', '2017-07-26 06:29:22', '2017-07-26 06:55:34', '0000-00-00 00:00:00', '赵永来', 'JX0577', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('161', '2017-07-23 01:04:46 刘强 data', '2017-07-23 01:04:46', '2017-07-23 01:33:44', '0000-00-00 00:00:00', '刘强', '000840', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('162', '2017-07-23 06:15:55 权瑞宝 data', '2017-07-23 06:15:55', '2017-07-23 06:33:45', '0000-00-00 00:00:00', '权瑞宝', '021064', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('163', '2017-07-23 22:39:41 杜慧军 data', '2017-07-23 22:39:41', '2017-07-23 23:02:27', '0000-00-00 00:00:00', '杜慧军', 'JX0444', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('164', '2017-07-21 08:19:23 鲍强 data', '2017-07-21 08:19:23', '2017-07-21 08:39:49', '0000-00-00 00:00:00', '鲍强', 'JX0360', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('165', '2017-07-25 16:03:02 程超 data', '2017-07-25 16:03:02', '2017-07-25 16:28:33', '0000-00-00 00:00:00', '程超', 'JX0574', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('166', '2017-07-21 11:32:28 田景云 data', '2017-07-21 11:32:28', '2017-07-21 12:01:40', '0000-00-00 00:00:00', '田景云', '021136', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('167', '2017-07-23 03:02:34 陈磊 data', '2017-07-23 03:02:34', '2017-07-23 03:30:53', '0000-00-00 00:00:00', '陈磊', '021052', '81', '北郊大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('168', '2017-07-24 11:56:25 程秀丽 data', '2017-07-24 11:56:25', '2017-07-24 12:13:48', '0000-00-00 00:00:00', '程秀丽', 'JX0502', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('169', '2017-07-25 22:48:24 郝璐璐 data', '2017-07-25 22:48:24', '2017-07-25 23:17:57', '0000-00-00 00:00:00', '郝璐璐', 'JX0553', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('170', '2017-07-24 06:59:46 任学枫 data', '2017-07-24 06:59:46', '2017-07-24 07:19:41', '0000-00-00 00:00:00', '任学枫', 'JX1185', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('171', '2017-07-22 07:22:53 张帅 data', '2017-07-22 07:22:53', '2017-07-22 07:41:57', '0000-00-00 00:00:00', '张帅', 'JX0237', '167', '青山二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('172', '2017-07-23 21:57:50 程超 data', '2017-07-23 21:57:50', '2017-07-23 22:26:27', '0000-00-00 00:00:00', '程超', 'JX0574', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('173', '2017-07-24 02:19:16 王硕 data', '2017-07-24 02:19:16', '2017-07-24 02:47:38', '0000-00-00 00:00:00', '王硕', 'JX0740', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('174', '2017-07-24 14:24:45 刘睿 data', '2017-07-24 14:24:45', '2017-07-24 14:47:02', '0000-00-00 00:00:00', '刘睿', '024803', '111', '车管所监督科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('175', '2017-07-24 09:18:31 孔令杰 data', '2017-07-24 09:18:31', '2017-07-24 09:46:34', '0000-00-00 00:00:00', '孔令杰', '020898', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('176', '2017-07-21 19:41:13 张守荣 data', '2017-07-21 19:41:13', '2017-07-21 20:05:18', '0000-00-00 00:00:00', '张守荣', 'JX1053', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('177', '2017-07-22 03:54:09 王庆杰 data', '2017-07-22 03:54:09', '2017-07-22 04:16:15', '0000-00-00 00:00:00', '王庆杰', '021344', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('178', '2017-07-21 22:59:11 常超 data', '2017-07-21 22:59:11', '2017-07-21 23:28:56', '0000-00-00 00:00:00', '常超', 'JX0992', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('179', '2017-07-25 02:05:49 郝明 data', '2017-07-25 02:05:49', '2017-07-25 02:27:54', '0000-00-00 00:00:00', '郝明', 'JX0221', '167', '青山二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('180', '2017-07-26 14:28:21 杨馥毓 data', '2017-07-26 14:28:21', '2017-07-26 14:51:53', '0000-00-00 00:00:00', '杨馥毓', 'JX0647', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('181', '2017-07-22 23:11:49 李海波 data', '2017-07-22 23:11:49', '2017-07-22 23:40:04', '0000-00-00 00:00:00', '李海波', '024197', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('182', '2017-07-24 23:31:10 樊鹏举 data', '2017-07-24 23:31:10', '2017-07-24 23:51:33', '0000-00-00 00:00:00', '樊鹏举', '021033', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('183', '2017-07-26 15:56:29 张嘉伦 data', '2017-07-26 15:56:29', '2017-07-26 16:14:53', '0000-00-00 00:00:00', '张嘉伦', 'JX0382', '127', '东兴一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('184', '2017-07-25 19:41:48 张春明 data', '2017-07-25 19:41:48', '2017-07-25 20:01:30', '0000-00-00 00:00:00', '张春明', 'JX1044', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('185', '2017-07-26 02:03:58 张锐琨 data', '2017-07-26 02:03:58', '2017-07-26 02:33:20', '0000-00-00 00:00:00', '张锐琨', 'JX1288', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('186', '2017-07-25 14:44:33 且伟 data', '2017-07-25 14:44:33', '2017-07-25 15:10:47', '0000-00-00 00:00:00', '且伟', '000841', '125', '高新事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('187', '2017-07-26 19:42:25 董薇 data', '2017-07-26 19:42:25', '2017-07-26 20:03:24', '0000-00-00 00:00:00', '董薇', 'JX1086', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('188', '2017-07-28 04:00:11 郭小雪 data', '2017-07-28 04:00:11', '2017-07-28 04:29:39', '0000-00-00 00:00:00', '郭小雪', 'JX0737', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('189', '2017-07-28 07:42:28 张方华 data', '2017-07-28 07:42:28', '2017-07-28 08:06:28', '0000-00-00 00:00:00', '张方华', 'JX0672', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('190', '2017-07-29 02:32:56 樊利生 data', '2017-07-29 02:32:56', '2017-07-29 02:57:30', '0000-00-00 00:00:00', '樊利生', '021070', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('191', '2017-07-29 20:40:28 莫晨雨 data', '2017-07-29 20:40:28', '2017-07-29 20:59:31', '0000-00-00 00:00:00', '莫晨雨', 'JX1114', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('192', '2017-07-28 18:32:39 布赫 data', '2017-07-28 18:32:39', '2017-07-28 18:52:42', '0000-00-00 00:00:00', '布赫', '024813', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('193', '2017-07-26 15:08:14 王倩 data', '2017-07-26 15:08:14', '2017-07-26 15:29:14', '0000-00-00 00:00:00', '王倩', 'JX0683', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('194', '2017-07-24 10:18:02 胡瑞霞 data', '2017-07-24 10:18:02', '2017-07-24 10:42:50', '0000-00-00 00:00:00', '胡瑞霞', 'JX0709', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('195', '2017-07-28 21:39:27 赵振铎 data', '2017-07-28 21:39:27', '2017-07-28 22:01:02', '0000-00-00 00:00:00', '赵振铎', 'JX1038', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('196', '2017-07-28 21:22:37 赵寒蕊 data', '2017-07-28 21:22:37', '2017-07-28 21:43:35', '0000-00-00 00:00:00', '赵寒蕊', 'JX0779', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('197', '2017-07-28 07:36:44 于飞 data', '2017-07-28 07:36:44', '2017-07-28 08:03:26', '0000-00-00 00:00:00', '于飞', 'JX0406', '124', '高新三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('198', '2017-07-24 23:50:11 朱胜龙 data', '2017-07-24 23:50:11', '2017-07-25 00:14:03', '0000-00-00 00:00:00', '朱胜龙', '023518', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('199', '2017-07-24 10:00:41 安德稳 data', '2017-07-24 10:00:41', '2017-07-24 10:21:20', '0000-00-00 00:00:00', '安德稳', '021069', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('200', '2017-07-26 09:45:59 王新民 data', '2017-07-26 09:45:59', '2017-07-26 10:07:09', '0000-00-00 00:00:00', '王新民', '024764', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('201', '2017-07-27 10:21:09 张宏伟 data', '2017-07-27 10:21:09', '2017-07-27 10:46:22', '0000-00-00 00:00:00', '张宏伟', 'JX1006', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('202', '2017-07-25 19:11:18 鲍强 data', '2017-07-25 19:11:18', '2017-07-25 19:31:04', '0000-00-00 00:00:00', '鲍强', 'JX0360', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('203', '2017-07-26 13:18:56 孙蔼斯 data', '2017-07-26 13:18:56', '2017-07-26 13:47:52', '0000-00-00 00:00:00', '孙蔼斯', 'JX0731', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('204', '2017-07-28 00:36:43 黄建萍 data', '2017-07-28 00:36:43', '2017-07-28 00:54:59', '0000-00-00 00:00:00', '黄建萍', 'JX0761', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('205', '2017-07-25 02:43:15 孟繁强 data', '2017-07-25 02:43:15', '2017-07-25 03:02:16', '0000-00-00 00:00:00', '孟繁强', '020938', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('206', '2017-07-26 23:20:44 陈晨 data', '2017-07-26 23:20:44', '2017-07-26 23:42:04', '0000-00-00 00:00:00', '陈晨', 'JX0656', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('207', '2017-07-28 08:16:05 张永平 data', '2017-07-28 08:16:05', '2017-07-28 08:39:03', '0000-00-00 00:00:00', '张永平', '024646', '84', '督察大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('208', '2017-07-24 12:08:58 郭同旭 data', '2017-07-24 12:08:58', '2017-07-24 12:30:48', '0000-00-00 00:00:00', '郭同旭', 'JX0548', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('209', '2017-07-24 18:40:47 王超 data', '2017-07-24 18:40:47', '2017-07-24 19:01:14', '0000-00-00 00:00:00', '王超', 'JX0772', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('210', '2017-07-29 02:07:22 李磊 data', '2017-07-29 02:07:22', '2017-07-29 02:37:02', '0000-00-00 00:00:00', '李磊', 'JX0575', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('211', '2017-07-25 19:21:30 李风波 data', '2017-07-25 19:21:30', '2017-07-25 19:46:13', '0000-00-00 00:00:00', '李风波', '024930', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('212', '2017-07-29 08:38:44 郭和义 data', '2017-07-29 08:38:44', '2017-07-29 09:05:38', '0000-00-00 00:00:00', '郭和义', '020751', '82', '车管所', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('213', '2017-07-28 04:48:23 刘勇 data', '2017-07-28 04:48:23', '2017-07-28 05:11:40', '0000-00-00 00:00:00', '刘勇', '024726', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('214', '2017-07-24 20:50:26 毕其格 data', '2017-07-24 20:50:26', '2017-07-24 21:19:47', '0000-00-00 00:00:00', '毕其格', 'JX0657', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('215', '2017-07-25 06:10:45 云梦瑶 data', '2017-07-25 06:10:45', '2017-07-25 06:35:10', '0000-00-00 00:00:00', '云梦瑶', 'JX0799', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('216', '2017-07-29 00:38:26 郭永强 data', '2017-07-29 00:38:26', '2017-07-29 00:56:23', '0000-00-00 00:00:00', '郭永强', 'JX0261', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('217', '2017-07-25 02:30:26 费思坤 data', '2017-07-25 02:30:26', '2017-07-25 02:52:03', '0000-00-00 00:00:00', '费思坤', 'JX0918', '125', '高新事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('218', '2017-07-27 09:32:53 常超 data', '2017-07-27 09:32:53', '2017-07-27 10:00:01', '0000-00-00 00:00:00', '常超', 'JX0992', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('219', '2017-07-25 09:12:52 葛伟 data', '2017-07-25 09:12:52', '2017-07-25 09:37:08', '0000-00-00 00:00:00', '葛伟', 'JX0646', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('220', '2017-07-29 03:55:10 刘睿 data', '2017-07-29 03:55:10', '2017-07-29 04:19:29', '0000-00-00 00:00:00', '刘睿', '024803', '111', '车管所监督科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('221', '2017-07-25 18:31:18 许志刚 data', '2017-07-25 18:31:18', '2017-07-25 18:56:44', '0000-00-00 00:00:00', '许志刚', '020695', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('222', '2017-07-24 09:18:35 赵宝华 data', '2017-07-24 09:18:35', '2017-07-24 09:37:06', '0000-00-00 00:00:00', '赵宝华', '023667', '93', '东兴大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('223', '2017-07-27 08:04:07 徐宝基 data', '2017-07-27 08:04:07', '2017-07-27 08:24:50', '0000-00-00 00:00:00', '徐宝基', '024019', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('224', '2017-07-27 19:12:48 刘义 data', '2017-07-27 19:12:48', '2017-07-27 19:42:14', '0000-00-00 00:00:00', '刘义', '021267', '84', '督察大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('225', '2017-07-29 19:38:41 张剑锋 data', '2017-07-29 19:38:41', '2017-07-29 20:06:45', '0000-00-00 00:00:00', '张剑锋', '023481', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('226', '2017-07-25 04:07:55 孔令杰 data', '2017-07-25 04:07:55', '2017-07-25 04:35:20', '0000-00-00 00:00:00', '孔令杰', '020898', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('227', '2017-07-27 23:26:19 范琳 data', '2017-07-27 23:26:19', '2017-07-27 23:52:55', '0000-00-00 00:00:00', '范琳', 'JX0774', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('228', '2017-07-25 07:05:00 郜飞 data', '2017-07-25 07:05:00', '2017-07-25 07:32:53', '0000-00-00 00:00:00', '郜飞', '024961', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('229', '2017-07-25 15:33:14 张若超 data', '2017-07-25 15:33:14', '2017-07-25 15:52:43', '0000-00-00 00:00:00', '张若超', '021051', '125', '高新事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('230', '2017-07-24 09:29:46 田景云 data', '2017-07-24 09:29:46', '2017-07-24 09:59:23', '0000-00-00 00:00:00', '田景云', '021136', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('231', '2017-07-29 22:30:04 葛伟 data', '2017-07-29 22:30:04', '2017-07-29 22:48:51', '0000-00-00 00:00:00', '葛伟', 'JX0646', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('232', '2017-07-26 07:05:22 郝国栋 data', '2017-07-26 07:05:22', '2017-07-26 07:27:08', '0000-00-00 00:00:00', '郝国栋', '024797', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('233', '2017-07-28 21:00:08 信佳 data', '2017-07-28 21:00:08', '2017-07-28 21:27:45', '0000-00-00 00:00:00', '信佳', '024901', '150', '白云事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('234', '2017-07-28 04:10:32 张河刚 data', '2017-07-28 04:10:32', '2017-07-28 04:29:49', '0000-00-00 00:00:00', '张河刚', '023718', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('235', '2017-07-26 09:35:14 郝国栋 data', '2017-07-26 09:35:14', '2017-07-26 09:58:01', '0000-00-00 00:00:00', '郝国栋', '024797', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('236', '2017-07-29 19:38:33 张永祥 data', '2017-07-29 19:38:33', '2017-07-29 19:58:13', '0000-00-00 00:00:00', '张永祥', 'JX0570', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('237', '2017-07-24 14:02:43 李蓓 data', '2017-07-24 14:02:43', '2017-07-24 14:32:25', '0000-00-00 00:00:00', '李蓓', 'JX0426', '123', '高新一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('238', '2017-07-28 20:23:14 刘宝胜 data', '2017-07-28 20:23:14', '2017-07-28 20:41:43', '0000-00-00 00:00:00', '刘宝胜', '024760', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('239', '2017-07-25 09:09:00 胡碧宇 data', '2017-07-25 09:09:00', '2017-07-25 09:37:38', '0000-00-00 00:00:00', '胡碧宇', 'JX0829', '168', '青山三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('240', '2017-07-26 23:39:09 孙平 data', '2017-07-26 23:39:09', '2017-07-27 00:00:28', '0000-00-00 00:00:00', '孙平', '001087', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('241', '2017-07-25 06:12:20 高刚 data', '2017-07-25 06:12:20', '2017-07-25 06:35:00', '0000-00-00 00:00:00', '高刚', '020902', '81', '北郊大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('242', '2017-07-27 20:37:11 王庆杰 data', '2017-07-27 20:37:11', '2017-07-27 20:55:33', '0000-00-00 00:00:00', '王庆杰', '021344', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('243', '2017-07-26 08:33:29 曹征 data', '2017-07-26 08:33:29', '2017-07-26 08:56:42', '0000-00-00 00:00:00', '曹征', '021054', '69', '青山区大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('244', '2017-07-29 10:20:45 杨来会 data', '2017-07-29 10:20:45', '2017-07-29 10:47:57', '0000-00-00 00:00:00', '杨来会', '021252', '84', '督察大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('245', '2017-07-27 09:36:52 王立军 data', '2017-07-27 09:36:52', '2017-07-27 10:01:02', '0000-00-00 00:00:00', '王立军', 'JX1063', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('246', '2017-07-28 21:33:48 任学枫 data', '2017-07-28 21:33:48', '2017-07-28 21:52:07', '0000-00-00 00:00:00', '任学枫', 'JX1185', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('247', '2017-07-26 03:33:51 刘耀春 data', '2017-07-26 03:33:51', '2017-07-26 04:00:29', '0000-00-00 00:00:00', '刘耀春', '023837', '107', '河西检查站', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('248', '2017-07-25 12:12:01 王志 data', '2017-07-25 12:12:01', '2017-07-25 12:30:26', '0000-00-00 00:00:00', '王志', 'JX0211', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('249', '2017-07-29 16:14:49 史培文 data', '2017-07-29 16:14:49', '2017-07-29 16:36:41', '0000-00-00 00:00:00', '史培文', '024732', '127', '东兴一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('250', '2017-07-25 04:14:16 陈诚 data', '2017-07-25 04:14:16', '2017-07-25 04:39:28', '0000-00-00 00:00:00', '陈诚', 'JX0695', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('251', '2017-07-27 19:06:57 王超 data', '2017-07-27 19:06:57', '2017-07-27 19:24:53', '0000-00-00 00:00:00', '王超', 'JX0772', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('252', '2017-07-26 23:40:29 任学枫 data', '2017-07-26 23:40:29', '2017-07-27 00:10:08', '0000-00-00 00:00:00', '任学枫', 'JX1185', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('253', '2017-07-29 05:50:10 王超 data', '2017-07-29 05:50:10', '2017-07-29 06:14:20', '0000-00-00 00:00:00', '王超', 'JX0772', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('254', '2017-07-26 08:40:38 吕强 data', '2017-07-26 08:40:38', '2017-07-26 09:01:50', '0000-00-00 00:00:00', '吕强', '021198', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('255', '2017-07-25 01:13:03 王治国 data', '2017-07-25 01:13:03', '2017-07-25 01:38:18', '0000-00-00 00:00:00', '王治国', 'JX0666', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('256', '2017-07-29 09:14:03 朱琳 data', '2017-07-29 09:14:03', '2017-07-29 09:31:40', '0000-00-00 00:00:00', '朱琳', 'JX0768', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('257', '2017-07-25 04:32:40 张嘉伦 data', '2017-07-25 04:32:40', '2017-07-25 04:51:46', '0000-00-00 00:00:00', '张嘉伦', 'JX0382', '127', '东兴一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('258', '2017-07-26 13:22:43 张建斌 data', '2017-07-26 13:22:43', '2017-07-26 13:45:49', '0000-00-00 00:00:00', '张建斌', '020995', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('259', '2017-07-28 14:22:03 王志 data', '2017-07-28 14:22:03', '2017-07-28 14:45:39', '0000-00-00 00:00:00', '王志', 'JX0211', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('260', '2017-07-28 10:52:58 蔚文 data', '2017-07-28 10:52:58', '2017-07-28 11:14:53', '0000-00-00 00:00:00', '蔚文', 'JX0795', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('261', '2017-07-26 08:57:37 王新民 data', '2017-07-26 08:57:37', '2017-07-26 09:27:16', '0000-00-00 00:00:00', '王新民', '024764', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('262', '2017-07-25 21:52:07 刘占军 data', '2017-07-25 21:52:07', '2017-07-25 22:17:09', '0000-00-00 00:00:00', '刘占军', '000839', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('263', '2017-07-25 04:24:30 巴图 data', '2017-07-25 04:24:30', '2017-07-25 04:48:35', '0000-00-00 00:00:00', '巴图', 'JX0265', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('264', '2017-07-27 03:56:53 闫宏斌 data', '2017-07-27 03:56:53', '2017-07-27 04:26:41', '0000-00-00 00:00:00', '闫宏斌', '021039', '108', '督察大队一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('265', '2017-07-24 15:42:48 赵雁杰 data', '2017-07-24 15:42:48', '2017-07-24 16:03:42', '0000-00-00 00:00:00', '赵雁杰', '025032', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('266', '2017-07-27 21:12:26 尹一琦 data', '2017-07-27 21:12:26', '2017-07-27 21:40:48', '0000-00-00 00:00:00', '尹一琦', 'JX0649', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('267', '2017-07-26 06:16:03 赵永来 data', '2017-07-26 06:16:03', '2017-07-26 06:33:33', '0000-00-00 00:00:00', '赵永来', 'JX0577', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('268', '2017-07-28 20:18:58 吴红艳 data', '2017-07-28 20:18:58', '2017-07-28 20:39:37', '0000-00-00 00:00:00', '吴红艳', 'JX0604', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('269', '2017-07-24 09:21:32 张文静 data', '2017-07-24 09:21:32', '2017-07-24 09:45:36', '0000-00-00 00:00:00', '张文静', 'JX0689', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('270', '2017-07-26 22:35:28 孙蔼斯 data', '2017-07-26 22:35:28', '2017-07-26 23:02:43', '0000-00-00 00:00:00', '孙蔼斯', 'JX0731', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('271', '2017-07-29 06:46:07 湖泊清 data', '2017-07-29 06:46:07', '2017-07-29 07:07:31', '0000-00-00 00:00:00', '湖泊清', '002025', '143', '达茂二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('272', '2017-07-27 12:28:39 闫杰 data', '2017-07-27 12:28:39', '2017-07-27 12:53:18', '0000-00-00 00:00:00', '闫杰', '020886', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('273', '2017-07-30 05:52:09 樊嘉琪 data', '2017-07-30 05:52:09', '2017-07-30 06:11:09', '0000-00-00 00:00:00', '樊嘉琪', '024922', '116', '北郊一中队', '', '', '', '0', '', '1312a12', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '12', '0');
-INSERT INTO `pe_video` VALUES ('274', '2017-07-28 02:50:05 王庆杰 data', '2017-07-28 02:50:05', '2017-07-28 03:08:30', '0000-00-00 00:00:00', '王庆杰', '021344', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('275', '2017-07-29 13:49:11 许志刚 data', '2017-07-29 13:49:11', '2017-07-29 14:12:32', '0000-00-00 00:00:00', '许志刚', '020695', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('276', '2017-07-26 19:16:00 苏瑜 data', '2017-07-26 19:16:00', '2017-07-26 19:35:35', '0000-00-00 00:00:00', '苏瑜', 'JX1055', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('277', '2017-07-26 02:58:18 王晓宇 data', '2017-07-26 02:58:18', '2017-07-26 03:16:40', '0000-00-00 00:00:00', '王晓宇', 'JX0483', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('278', '2017-07-30 05:20:19 王敏 data', '2017-07-30 05:20:19', '2017-07-30 05:46:34', '0000-00-00 00:00:00', '王敏', 'JX0585', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '0');
-INSERT INTO `pe_video` VALUES ('279', '2017-07-24 06:40:34 赵永来 data', '2017-07-24 06:40:34', '2017-07-24 07:05:59', '0000-00-00 00:00:00', '赵永来', 'JX0577', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('280', '2017-07-25 10:09:13 王晓宇 data', '2017-07-25 10:09:13', '2017-07-25 10:29:58', '0000-00-00 00:00:00', '王晓宇', 'JX0483', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('281', '2017-07-26 13:15:21 李卉 data', '2017-07-26 13:15:21', '2017-07-26 13:38:19', '0000-00-00 00:00:00', '李卉', 'JX0757', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('282', '2017-07-30 02:55:21 黄建萍 data', '2017-07-30 02:55:21', '2017-07-30 03:22:43', '0000-00-00 00:00:00', '黄建萍', 'JX0761', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('283', '2017-07-28 21:39:49 孙剑波 data', '2017-07-28 21:39:49', '2017-07-28 21:58:41', '0000-00-00 00:00:00', '孙剑波', 'JX0510', '127', '东兴一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('284', '2017-07-29 19:19:28 赵蕾 data', '2017-07-29 19:19:28', '2017-07-29 19:46:05', '0000-00-00 00:00:00', '赵蕾', 'JX0775', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('285', '2017-07-26 12:07:56 焦文翔 data', '2017-07-26 12:07:56', '2017-07-26 12:36:46', '0000-00-00 00:00:00', '焦文翔', 'JX1247', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('286', '2017-07-25 23:40:00 王钢 data', '2017-07-25 23:40:00', '2017-07-26 00:01:41', '0000-00-00 00:00:00', '王钢', '020955', '124', '高新三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('287', '2017-07-29 00:38:00 鲍强 data', '2017-07-29 00:38:00', '2017-07-29 00:55:56', '0000-00-00 00:00:00', '鲍强', 'JX0360', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('288', '2017-07-26 12:37:56 曲薪羽 data', '2017-07-26 12:37:56', '2017-07-26 13:05:25', '0000-00-00 00:00:00', '曲薪羽', 'JX0771', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('289', '2017-07-26 05:03:54 鲍强 data', '2017-07-26 05:03:54', '2017-07-26 05:28:45', '0000-00-00 00:00:00', '鲍强', 'JX0360', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('290', '2017-07-29 10:20:14 胡强国 data', '2017-07-29 10:20:14', '2017-07-29 10:41:04', '0000-00-00 00:00:00', '胡强国', '023598', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('291', '2017-07-24 09:30:23 杨磊 data', '2017-07-24 09:30:23', '2017-07-24 09:54:39', '0000-00-00 00:00:00', '杨磊', '021129', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('292', '2017-07-27 07:49:17 李强 data', '2017-07-27 07:49:17', '2017-07-27 08:17:07', '0000-00-00 00:00:00', '李强', 'JX0592', '116', '北郊一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('293', '2017-07-27 22:05:37 秦政 data', '2017-07-27 22:05:37', '2017-07-27 22:29:42', '0000-00-00 00:00:00', '秦政', '024885', '122', '高新二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('294', '2017-07-27 02:17:50 史晓蒙 data', '2017-07-27 02:17:50', '2017-07-27 02:44:23', '0000-00-00 00:00:00', '史晓蒙', 'JX0744', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('295', '2017-07-25 06:41:22 段海威 data', '2017-07-25 06:41:22', '2017-07-25 07:08:23', '0000-00-00 00:00:00', '段海威', 'JX0547', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('296', '2017-07-29 10:03:30 张岩 data', '2017-07-29 10:03:30', '2017-07-29 10:32:25', '0000-00-00 00:00:00', '张岩', 'JX0568', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('297', '2017-07-28 04:15:51 李小平 data', '2017-07-28 04:15:51', '2017-07-28 04:33:07', '0000-00-00 00:00:00', '李小平', '023724', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('298', '2017-07-29 04:09:47 许佳静 data', '2017-07-29 04:09:47', '2017-07-29 04:29:49', '0000-00-00 00:00:00', '许佳静', 'JX0651', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('299', '2017-07-26 18:13:05 张建斌 data', '2017-07-26 18:13:05', '2017-07-26 18:31:32', '0000-00-00 00:00:00', '张建斌', '020995', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('300', '2017-07-29 17:20:51 世龙 data', '2017-07-29 17:20:51', '2017-07-29 17:41:23', '0000-00-00 00:00:00', '世龙', '000836', '130', '东兴事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('301', '2017-07-26 18:03:56 刘晓东 data', '2017-07-26 18:03:56', '2017-07-26 18:27:11', '0000-00-00 00:00:00', '刘晓东', '021059', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('302', '2017-07-28 08:39:16 谢博文 data', '2017-07-28 08:39:16', '2017-07-28 09:08:07', '0000-00-00 00:00:00', '谢博文', 'JX0554', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('303', '2017-07-26 05:01:16 白海英 data', '2017-07-26 05:01:16', '2017-07-26 05:23:56', '0000-00-00 00:00:00', '白海英', '020703', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('304', '2017-07-29 21:22:14 焦文翔 data', '2017-07-29 21:22:14', '2017-07-29 21:44:08', '0000-00-00 00:00:00', '焦文翔', 'JX1247', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('305', '2017-07-26 13:13:07 陆卫宏 data', '2017-07-26 13:13:07', '2017-07-26 13:31:19', '0000-00-00 00:00:00', '陆卫宏', '023708', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('306', '2017-07-29 14:38:47 蒋保国 data', '2017-07-29 14:38:47', '2017-07-29 15:07:37', '0000-00-00 00:00:00', '蒋保国', '020981', '80', '河西大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('307', '2017-07-30 03:07:19 黄海生 data', '2017-07-30 03:07:19', '2017-07-30 03:27:43', '0000-00-00 00:00:00', '黄海生', '021067', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('308', '2017-07-29 22:12:32 张荣 data', '2017-07-29 22:12:32', '2017-07-29 22:36:46', '0000-00-00 00:00:00', '张荣', 'JX0435', '102', '河西二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('309', '2017-07-28 02:24:24 汪洋 data', '2017-07-28 02:24:24', '2017-07-28 02:53:03', '0000-00-00 00:00:00', '汪洋', '024804', '130', '东兴事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('310', '2017-07-27 12:24:14 樊鹏举 data', '2017-07-27 12:24:14', '2017-07-27 12:48:01', '0000-00-00 00:00:00', '樊鹏举', '021033', '164', '青山四级巡控', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('311', '2017-07-27 01:15:08 李庆林 data', '2017-07-27 01:15:08', '2017-07-27 01:37:03', '0000-00-00 00:00:00', '李庆林', '024999', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('312', '2017-07-29 20:40:02 张守荣 data', '2017-07-29 20:40:02', '2017-07-29 21:09:26', '0000-00-00 00:00:00', '张守荣', 'JX1053', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('313', '2017-07-27 12:52:07 李涛 data', '2017-07-27 12:52:07', '2017-07-27 13:11:49', '0000-00-00 00:00:00', '李涛', 'JX1101', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('314', '2017-07-29 05:24:45 达布拉 data', '2017-07-29 05:24:45', '2017-07-29 05:48:38', '0000-00-00 00:00:00', '达布拉', '023504', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('315', '2017-07-26 20:32:23 吕强 data', '2017-07-26 20:32:23', '2017-07-26 20:52:11', '0000-00-00 00:00:00', '吕强', '021198', '112', '车管所外检科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('316', '2017-07-29 03:22:20 王玉祥 data', '2017-07-29 03:22:20', '2017-07-29 03:45:38', '0000-00-00 00:00:00', '王玉祥', '023463', '125', '高新事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('317', '2017-07-24 11:08:32 刘永平 data', '2017-07-24 11:08:32', '2017-07-24 11:35:07', '0000-00-00 00:00:00', '刘永平', '024939', '118', '北郊三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('318', '2017-07-30 00:01:16 焦志辉 data', '2017-07-30 00:01:16', '2017-07-30 00:20:46', '0000-00-00 00:00:00', '焦志辉', '023949', '113', '车管所考务科', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('319', '2017-07-25 08:12:26 张建斌 data', '2017-07-25 08:12:26', '2017-07-25 08:35:08', '0000-00-00 00:00:00', '张建斌', '020995', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('320', '2017-07-30 04:32:52 郝冀昆 data', '2017-07-30 04:32:52', '2017-07-30 04:53:20', '0000-00-00 00:00:00', '郝冀昆', 'JX1186', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('321', '2017-07-28 02:40:35 李鹏 data', '2017-07-28 02:40:35', '2017-07-28 03:10:01', '0000-00-00 00:00:00', '李鹏', 'JX0922', '122', '高新二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('322', '2017-07-26 03:05:53 赵寒蕊 data', '2017-07-26 03:05:53', '2017-07-26 03:26:53', '0000-00-00 00:00:00', '赵寒蕊', 'JX0779', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('323', '2017-07-29 17:41:39 汪洋 data', '2017-07-29 17:41:39', '2017-07-29 18:00:47', '0000-00-00 00:00:00', '汪洋', '024804', '130', '东兴事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('324', '2017-07-28 00:07:45 赵永斌 data', '2017-07-28 00:07:45', '2017-07-28 00:29:50', '0000-00-00 00:00:00', '赵永斌', '020994', '81', '北郊大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('325', '2017-07-28 10:12:09 马凤贺 data', '2017-07-28 10:12:09', '2017-07-28 10:36:33', '0000-00-00 00:00:00', '马凤贺', '021061', '172', '青山事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('326', '2017-07-28 22:10:06 高刚 data', '2017-07-28 22:10:06', '2017-07-28 22:29:31', '0000-00-00 00:00:00', '高刚', '020902', '81', '北郊大队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('327', '2017-07-27 15:58:11 王晓燕 data', '2017-07-27 15:58:11', '2017-07-27 16:27:37', '0000-00-00 00:00:00', '王晓燕', '024947', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('328', '2017-07-26 21:59:25 林彬 data', '2017-07-26 21:59:25', '2017-07-26 22:24:16', '0000-00-00 00:00:00', '林彬', 'JX0794', '140', '护校中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('329', '2017-07-28 08:30:33 黄建萍 data', '2017-07-28 08:30:33', '2017-07-28 08:50:51', '0000-00-00 00:00:00', '黄建萍', 'JX0761', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('330', '2017-07-29 20:36:59 田景云 data', '2017-07-29 20:36:59', '2017-07-29 21:04:26', '0000-00-00 00:00:00', '田景云', '021136', '129', '东兴三中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('331', '2017-07-26 04:45:29 武建华 data', '2017-07-26 04:45:29', '2017-07-26 05:08:35', '0000-00-00 00:00:00', '武建华', 'JX1059', '122', '高新二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('332', '2017-07-27 18:55:34 郄亮 data', '2017-07-27 18:55:34', '2017-07-27 19:16:12', '0000-00-00 00:00:00', '郄亮', '021009', '82', '车管所', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('333', '2017-07-27 10:21:42 胡晓宇 data', '2017-07-27 10:21:42', '2017-07-27 10:45:19', '0000-00-00 00:00:00', '胡晓宇', '021194', '120', '北郊事故中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('334', '2017-07-26 21:22:45 裴少华 data', '2017-07-26 21:22:45', '2017-07-26 21:44:48', '0000-00-00 00:00:00', '裴少华', '024883', '117', '北郊二中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('335', '2017-07-26 13:52:03 潘奕辰 data', '2017-07-26 13:52:03', '2017-07-26 14:19:45', '0000-00-00 00:00:00', '潘奕辰', 'JX1190', '103', '河西一中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('336', '2017-07-26 21:07:06 张岩 data', '2017-07-26 21:07:06', '2017-07-26 21:35:35', '0000-00-00 00:00:00', '张岩', 'JX0568', '119', '北郊四中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('337', '2017-07-25 05:41:55 葛伟 data', '2017-07-25 05:41:55', '2017-07-25 06:06:53', '0000-00-00 00:00:00', '葛伟', 'JX0646', '139', '岗勤中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-INSERT INTO `pe_video` VALUES ('338', '2017-07-28 22:17:31 赵永来 data', '2017-07-28 22:17:31', '2017-07-28 22:42:23', '0000-00-00 00:00:00', '赵永来', 'JX0577', '114', '北郊园区中队', '', '', '', '0', '', '', '0', null, null, '0', '2017-07-31 15:53:45', '', '020694', '韩永乐', '108', '', '1');
-
--- ----------------------------
--- Table structure for `pe_video_list`
--- ----------------------------
-DROP TABLE IF EXISTS `pe_video_list`;
-CREATE TABLE `pe_video_list` (
-  `wjbh` varchar(100) NOT NULL DEFAULT '0' COMMENT '文件编号 <产口序号>_<警号>_<年月日时分秒>.<类型>',
-  `video_id` int(11) NOT NULL COMMENT '案件ID，同pe_video.video_id',
-  `start_time` datetime NOT NULL COMMENT '拍摄时间',
-  `end_time` datetime DEFAULT NULL COMMENT '视频结束时间',
-  `wjcd` int(11) DEFAULT '0' COMMENT '文件长度',
-  `wjlx` int(2) DEFAULT NULL COMMENT '0:未知,1:视频,2:音频,3:图片',
-  `jyxm` varchar(60) DEFAULT NULL COMMENT '警员姓名',
-  `jybh` varchar(6) NOT NULL DEFAULT '000000' COMMENT '警员编号',
-  `areaid` int(11) NOT NULL DEFAULT '1' COMMENT '单位编号',
-  `areaname` varchar(128) DEFAULT '' COMMENT '单位名称',
-  `cpxh` varchar(7) NOT NULL DEFAULT '0000000' COMMENT '产品序号(执法仪编号),文件由人工提供时统一填99999',
-  `ccfwq_ip` varchar(64) DEFAULT NULL COMMENT '存储服务器',
-  `ccwz` varchar(200) DEFAULT NULL COMMENT '存储位置',
-  `bfwz` varchar(200) NOT NULL DEFAULT 'http://' COMMENT '播放位置',
-  `wlwz` varchar(200) DEFAULT NULL COMMENT '物理位置',
-  `scsj` datetime NOT NULL COMMENT '上传时间',
-  `bzlx` int(2) DEFAULT '0' COMMENT '标注类型,0:未标注,1:标注(典型案例)',
-  `gzz_ip` varchar(64) NOT NULL COMMENT '工作站IP',
-  `upload` int(2) NOT NULL DEFAULT '0' COMMENT '0:不上传，1：上传到中心服务器(重要视频)',
-  `video_type` int(2) DEFAULT '9' COMMENT '视频分类(1:酒驾、2:事故、3:毒驾、4:违法、9:其他)',
-  `source` int(1) NOT NULL DEFAULT '1' COMMENT '来源;1:执法记录仪,2:公安类,3:非公安类',
-  `update_time` datetime DEFAULT NULL COMMENT '更新时间',
-  `remark` varchar(256) DEFAULT '',
-  PRIMARY KEY (`wjbh`),
-  KEY `idx_video_id` (`video_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of pe_video_list
--- ----------------------------
-INSERT INTO `pe_video_list` VALUES ('@2017072100192344666', '1', '2017-07-21 00:19:23', null, '0', '3', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1500596363.0/@2017072100192344666', 'http://localhost/file/1500596363.0/@2017072100192344666', null, '2017-07-21 16:47:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072100192353128', '1', '2017-07-21 00:19:23', null, '0', '2', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1500596363.0/@2017072100192353128', 'http://localhost/file/1500596363.0/@2017072100192353128', null, '2017-07-21 16:55:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072100192354560', '1', '2017-07-21 00:19:23', null, '0', '0', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1500596363.0/@2017072100192354560', 'http://localhost/file/1500596363.0/@2017072100192354560', null, '2017-07-21 16:31:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072102120125363', '1', '2017-07-21 02:12:01', null, '0', '3', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500603121.0/@2017072102120125363', 'http://localhost/file/1500603121.0/@2017072102120125363', null, '2017-07-21 19:21:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072102120126511', '1', '2017-07-21 02:12:01', null, '0', '2', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500603121.0/@2017072102120126511', 'http://localhost/file/1500603121.0/@2017072102120126511', null, '2017-07-21 19:49:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072102120140521', '1', '2017-07-21 02:12:01', null, '0', '2', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500603121.0/@2017072102120140521', 'http://localhost/file/1500603121.0/@2017072102120140521', null, '2017-07-21 18:38:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072103041932933', '1', '2017-07-21 03:04:19', null, '0', '3', '贾真', 'JX0330', '128', '东兴二中队', '0000000', null, 'file/1500606259.0/@2017072103041932933', 'http://localhost/file/1500606259.0/@2017072103041932933', null, '2017-07-21 19:46:38', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072103041951953', '1', '2017-07-21 03:04:19', '2017-07-21 03:07:00', '161', '1', '贾真', 'JX0330', '128', '东兴二中队', '0000000', null, 'file/1500606259.0/@2017072103041951953', 'http://localhost/file/1500606259.0/@2017072103041951953', null, '2017-07-21 20:03:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072103041952913', '1', '2017-07-21 03:04:19', '2017-07-21 03:09:11', '292', '1', '贾真', 'JX0330', '128', '东兴二中队', '0000000', null, 'file/1500606259.0/@2017072103041952913', 'http://localhost/file/1500606259.0/@2017072103041952913', null, '2017-07-21 20:53:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072103322826005', '1', '2017-07-21 03:32:28', null, '0', '3', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1500607948.0/@2017072103322826005', 'http://localhost/file/1500607948.0/@2017072103322826005', null, '2017-07-21 21:26:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072103322834951', '1', '2017-07-21 03:32:28', null, '0', '0', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1500607948.0/@2017072103322834951', 'http://localhost/file/1500607948.0/@2017072103322834951', null, '2017-07-21 20:03:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072103322857563', '1', '2017-07-21 03:32:28', null, '0', '0', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1500607948.0/@2017072103322857563', 'http://localhost/file/1500607948.0/@2017072103322857563', null, '2017-07-21 20:49:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072104370122766', '1', '2017-07-21 04:37:01', null, '0', '0', '张青', 'JX0719', '84', '督察大队', '0000000', null, 'file/1500611821.0/@2017072104370122766', 'http://localhost/file/1500611821.0/@2017072104370122766', null, '2017-07-21 22:16:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072104370137894', '1', '2017-07-21 04:37:01', null, '0', '0', '张青', 'JX0719', '84', '督察大队', '0000000', null, 'file/1500611821.0/@2017072104370137894', 'http://localhost/file/1500611821.0/@2017072104370137894', null, '2017-07-21 21:45:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072104370149270', '1', '2017-07-21 04:37:01', '2017-07-21 04:39:30', '149', '1', '张青', 'JX0719', '84', '督察大队', '0000000', null, 'file/1500611821.0/@2017072104370149270', 'http://localhost/file/1500611821.0/@2017072104370149270', null, '2017-07-21 21:00:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072104442023505', '1', '2017-07-21 04:44:20', null, '0', '0', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500612260.0/@2017072104442023505', 'http://localhost/file/1500612260.0/@2017072104442023505', null, '2017-07-21 22:30:42', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072104442034262', '1', '2017-07-21 04:44:20', null, '0', '2', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500612260.0/@2017072104442034262', 'http://localhost/file/1500612260.0/@2017072104442034262', null, '2017-07-21 22:06:56', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072104442055882', '1', '2017-07-21 04:44:20', null, '0', '2', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500612260.0/@2017072104442055882', 'http://localhost/file/1500612260.0/@2017072104442055882', null, '2017-07-21 22:27:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072105171615691', '1', '2017-07-21 05:17:16', null, '0', '0', '罗强', 'JX0872', '167', '青山二中队', '0000000', null, 'file/1500614236.0/@2017072105171615691', 'http://localhost/file/1500614236.0/@2017072105171615691', null, '2017-07-21 22:53:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707210517163625', '1', '2017-07-21 05:17:16', null, '0', '2', '罗强', 'JX0872', '167', '青山二中队', '0000000', null, 'file/1500614236.0/@201707210517163625', 'http://localhost/file/1500614236.0/@201707210517163625', null, '2017-07-21 21:49:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072105171652925', '1', '2017-07-21 05:17:16', null, '0', '2', '罗强', 'JX0872', '167', '青山二中队', '0000000', null, 'file/1500614236.0/@2017072105171652925', 'http://localhost/file/1500614236.0/@2017072105171652925', null, '2017-07-21 22:46:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106161354041', '1', '2017-07-21 06:16:13', '2017-07-21 06:18:37', '144', '1', '夏曰峰', 'JX0422', '122', '高新二中队', '0000000', null, 'file/1500617773.0/@2017072106161354041', 'http://localhost/file/1500617773.0/@2017072106161354041', null, '2017-07-21 23:52:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106161363141', '1', '2017-07-21 06:16:13', '2017-07-21 06:18:42', '149', '1', '夏曰峰', 'JX0422', '122', '高新二中队', '0000000', null, 'file/1500617773.0/@2017072106161363141', 'http://localhost/file/1500617773.0/@2017072106161363141', null, '2017-07-21 22:28:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707210616138337', '1', '2017-07-21 06:16:13', null, '0', '3', '夏曰峰', 'JX0422', '122', '高新二中队', '0000000', null, 'file/1500617773.0/@201707210616138337', 'http://localhost/file/1500617773.0/@201707210616138337', null, '2017-07-21 23:31:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106172118808', '1', '2017-07-21 06:17:21', null, '0', '3', '陈旭', '025022', '112', '车管所外检科', '0000000', null, 'file/1500617841.0/@2017072106172118808', 'http://localhost/file/1500617841.0/@2017072106172118808', null, '2017-07-21 23:51:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106172135587', '1', '2017-07-21 06:17:21', null, '0', '0', '陈旭', '025022', '112', '车管所外检科', '0000000', null, 'file/1500617841.0/@2017072106172135587', 'http://localhost/file/1500617841.0/@2017072106172135587', null, '2017-07-21 23:40:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707210617219641', '1', '2017-07-21 06:17:21', null, '0', '2', '陈旭', '025022', '112', '车管所外检科', '0000000', null, 'file/1500617841.0/@201707210617219641', 'http://localhost/file/1500617841.0/@201707210617219641', null, '2017-07-21 23:28:00', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106353140515', '1', '2017-07-21 06:35:31', null, '0', '2', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1500618931.0/@2017072106353140515', 'http://localhost/file/1500618931.0/@2017072106353140515', null, '2017-07-21 23:31:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106353143527', '1', '2017-07-21 06:35:31', null, '0', '3', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1500618931.0/@2017072106353143527', 'http://localhost/file/1500618931.0/@2017072106353143527', null, '2017-07-21 22:37:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106353160695', '1', '2017-07-21 06:35:31', null, '0', '0', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1500618931.0/@2017072106353160695', 'http://localhost/file/1500618931.0/@2017072106353160695', null, '2017-07-21 23:57:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106404552792', '1', '2017-07-21 06:40:45', null, '0', '2', '杜慧军', 'JX0444', '107', '河西检查站', '0000000', null, 'file/1500619245.0/@2017072106404552792', 'http://localhost/file/1500619245.0/@2017072106404552792', null, '2017-07-21 23:18:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072106404553424', '1', '2017-07-21 06:40:45', '2017-07-21 06:42:58', '133', '1', '杜慧军', 'JX0444', '107', '河西检查站', '0000000', null, 'file/1500619245.0/@2017072106404553424', 'http://localhost/file/1500619245.0/@2017072106404553424', null, '2017-07-22 00:06:14', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707210640455492', '1', '2017-07-21 06:40:45', '2017-07-21 06:43:41', '176', '1', '杜慧军', 'JX0444', '107', '河西检查站', '0000000', null, 'file/1500619245.0/@201707210640455492', 'http://localhost/file/1500619245.0/@201707210640455492', null, '2017-07-22 00:29:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072107382322940', '1', '2017-07-21 07:38:23', null, '0', '3', '杨旭', 'JX0640', '139', '岗勤中队', '0000000', null, 'file/1500622703.0/@2017072107382322940', 'http://localhost/file/1500622703.0/@2017072107382322940', null, '2017-07-22 01:16:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072107382347108', '1', '2017-07-21 07:38:23', '2017-07-21 07:42:42', '259', '1', '杨旭', 'JX0640', '139', '岗勤中队', '0000000', null, 'file/1500622703.0/@2017072107382347108', 'http://localhost/file/1500622703.0/@2017072107382347108', null, '2017-07-22 00:44:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072107382348920', '1', '2017-07-21 07:38:23', null, '0', '3', '杨旭', 'JX0640', '139', '岗勤中队', '0000000', null, 'file/1500622703.0/@2017072107382348920', 'http://localhost/file/1500622703.0/@2017072107382348920', null, '2017-07-22 01:30:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072107451121716', '1', '2017-07-21 07:45:11', null, '0', '0', '巴图', 'JX0265', '164', '青山四级巡控', '0000000', null, 'file/1500623111.0/@2017072107451121716', 'http://localhost/file/1500623111.0/@2017072107451121716', null, '2017-07-22 00:22:56', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072107451131245', '1', '2017-07-21 07:45:11', null, '0', '3', '巴图', 'JX0265', '164', '青山四级巡控', '0000000', null, 'file/1500623111.0/@2017072107451131245', 'http://localhost/file/1500623111.0/@2017072107451131245', null, '2017-07-21 23:57:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072107451153262', '1', '2017-07-21 07:45:11', null, '0', '0', '巴图', 'JX0265', '164', '青山四级巡控', '0000000', null, 'file/1500623111.0/@2017072107451153262', 'http://localhost/file/1500623111.0/@2017072107451153262', null, '2017-07-22 00:32:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072109145946424', '1', '2017-07-21 09:14:59', null, '0', '3', '吴斌', '021966', '107', '河西检查站', '0000000', null, 'file/1500628499.0/@2017072109145946424', 'http://localhost/file/1500628499.0/@2017072109145946424', null, '2017-07-22 02:49:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707210914594939', '1', '2017-07-21 09:14:59', '2017-07-21 09:19:52', '293', '1', '吴斌', '021966', '107', '河西检查站', '0000000', null, 'file/1500628499.0/@201707210914594939', 'http://localhost/file/1500628499.0/@201707210914594939', null, '2017-07-22 02:12:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072109145954551', '1', '2017-07-21 09:14:59', '2017-07-21 09:18:55', '236', '1', '吴斌', '021966', '107', '河西检查站', '0000000', null, 'file/1500628499.0/@2017072109145954551', 'http://localhost/file/1500628499.0/@2017072109145954551', null, '2017-07-22 01:45:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072110322325228', '1', '2017-07-21 10:32:23', null, '0', '3', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500633143.0/@2017072110322325228', 'http://localhost/file/1500633143.0/@2017072110322325228', null, '2017-07-22 03:05:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072110322352508', '1', '2017-07-21 10:32:23', '2017-07-21 10:34:45', '142', '1', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500633143.0/@2017072110322352508', 'http://localhost/file/1500633143.0/@2017072110322352508', null, '2017-07-22 03:52:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707211032237149', '1', '2017-07-21 10:32:23', null, '0', '3', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500633143.0/@201707211032237149', 'http://localhost/file/1500633143.0/@201707211032237149', null, '2017-07-22 02:40:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072111411324013', '1', '2017-07-21 11:41:13', null, '0', '0', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1500637273.0/@2017072111411324013', 'http://localhost/file/1500637273.0/@2017072111411324013', null, '2017-07-22 05:01:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072111411342121', '1', '2017-07-21 11:41:13', null, '0', '0', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1500637273.0/@2017072111411342121', 'http://localhost/file/1500637273.0/@2017072111411342121', null, '2017-07-22 03:53:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072111411343375', '1', '2017-07-21 11:41:13', null, '0', '0', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1500637273.0/@2017072111411343375', 'http://localhost/file/1500637273.0/@2017072111411343375', null, '2017-07-22 04:32:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072111520534850', '1', '2017-07-21 11:52:05', null, '0', '0', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500637925.0/@2017072111520534850', 'http://localhost/file/1500637925.0/@2017072111520534850', null, '2017-07-22 04:33:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707211152056883', '1', '2017-07-21 11:52:05', null, '0', '2', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500637925.0/@201707211152056883', 'http://localhost/file/1500637925.0/@201707211152056883', null, '2017-07-22 05:47:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707211152059036', '1', '2017-07-21 11:52:05', null, '0', '2', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500637925.0/@201707211152059036', 'http://localhost/file/1500637925.0/@201707211152059036', null, '2017-07-22 04:48:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072112224823603', '1', '2017-07-21 12:22:48', null, '0', '3', '于力', '024027', '119', '北郊四中队', '0000000', null, 'file/1500639768.0/@2017072112224823603', 'http://localhost/file/1500639768.0/@2017072112224823603', null, '2017-07-22 04:28:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072112224834162', '1', '2017-07-21 12:22:48', null, '0', '2', '于力', '024027', '119', '北郊四中队', '0000000', null, 'file/1500639768.0/@2017072112224834162', 'http://localhost/file/1500639768.0/@2017072112224834162', null, '2017-07-22 06:09:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072112224842718', '1', '2017-07-21 12:22:48', null, '0', '2', '于力', '024027', '119', '北郊四中队', '0000000', null, 'file/1500639768.0/@2017072112224842718', 'http://localhost/file/1500639768.0/@2017072112224842718', null, '2017-07-22 05:21:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072114591114657', '1', '2017-07-21 14:59:11', '2017-07-21 15:03:02', '231', '1', '常超', 'JX0992', '114', '北郊园区中队', '0000000', null, 'file/1500649151.0/@2017072114591114657', 'http://localhost/file/1500649151.0/@2017072114591114657', null, '2017-07-22 07:21:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072114591123226', '1', '2017-07-21 14:59:11', null, '0', '3', '常超', 'JX0992', '114', '北郊园区中队', '0000000', null, 'file/1500649151.0/@2017072114591123226', 'http://localhost/file/1500649151.0/@2017072114591123226', null, '2017-07-22 08:49:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072114591131411', '1', '2017-07-21 14:59:11', null, '0', '0', '常超', 'JX0992', '114', '北郊园区中队', '0000000', null, 'file/1500649151.0/@2017072114591131411', 'http://localhost/file/1500649151.0/@2017072114591131411', null, '2017-07-22 08:52:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072115062310274', '1', '2017-07-21 15:06:23', null, '0', '3', '焦志涛', 'JX0565', '107', '河西检查站', '0000000', null, 'file/1500649583.0/@2017072115062310274', 'http://localhost/file/1500649583.0/@2017072115062310274', null, '2017-07-22 07:39:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072115062311117', '1', '2017-07-21 15:06:23', '2017-07-21 15:10:39', '256', '1', '焦志涛', 'JX0565', '107', '河西检查站', '0000000', null, 'file/1500649583.0/@2017072115062311117', 'http://localhost/file/1500649583.0/@2017072115062311117', null, '2017-07-22 07:49:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072115062319509', '1', '2017-07-21 15:06:23', null, '0', '0', '焦志涛', 'JX0565', '107', '河西检查站', '0000000', null, 'file/1500649583.0/@2017072115062319509', 'http://localhost/file/1500649583.0/@2017072115062319509', null, '2017-07-22 08:43:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072115444132961', '1', '2017-07-21 15:44:41', null, '0', '3', '盛伟', 'JX1067', '139', '岗勤中队', '0000000', null, 'file/1500651881.0/@2017072115444132961', 'http://localhost/file/1500651881.0/@2017072115444132961', null, '2017-07-22 08:36:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072115444147089', '1', '2017-07-21 15:44:41', null, '0', '3', '盛伟', 'JX1067', '139', '岗勤中队', '0000000', null, 'file/1500651881.0/@2017072115444147089', 'http://localhost/file/1500651881.0/@2017072115444147089', null, '2017-07-22 08:39:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072115444159205', '1', '2017-07-21 15:44:41', null, '0', '2', '盛伟', 'JX1067', '139', '岗勤中队', '0000000', null, 'file/1500651881.0/@2017072115444159205', 'http://localhost/file/1500651881.0/@2017072115444159205', null, '2017-07-22 08:30:01', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072116471426596', '1', '2017-07-21 16:47:14', '2017-07-21 16:50:45', '211', '1', '刘晓龙', 'JX0480', '129', '东兴三中队', '0000000', null, 'file/1500655634.0/@2017072116471426596', 'http://localhost/file/1500655634.0/@2017072116471426596', null, '2017-07-22 10:23:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072116471447354', '1', '2017-07-21 16:47:14', null, '0', '3', '刘晓龙', 'JX0480', '129', '东兴三中队', '0000000', null, 'file/1500655634.0/@2017072116471447354', 'http://localhost/file/1500655634.0/@2017072116471447354', null, '2017-07-22 10:20:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072116471454360', '1', '2017-07-21 16:47:14', null, '0', '0', '刘晓龙', 'JX0480', '129', '东兴三中队', '0000000', null, 'file/1500655634.0/@2017072116471454360', 'http://localhost/file/1500655634.0/@2017072116471454360', null, '2017-07-22 09:40:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072116561940484', '1', '2017-07-21 16:56:19', null, '0', '2', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1500656179.0/@2017072116561940484', 'http://localhost/file/1500656179.0/@2017072116561940484', null, '2017-07-22 10:01:10', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072116561951835', '1', '2017-07-21 16:56:19', null, '0', '2', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1500656179.0/@2017072116561951835', 'http://localhost/file/1500656179.0/@2017072116561951835', null, '2017-07-22 09:57:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072116561963068', '1', '2017-07-21 16:56:19', null, '0', '0', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1500656179.0/@2017072116561963068', 'http://localhost/file/1500656179.0/@2017072116561963068', null, '2017-07-22 09:18:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072118411439645', '1', '2017-07-21 18:41:14', null, '0', '0', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500662474.0/@2017072118411439645', 'http://localhost/file/1500662474.0/@2017072118411439645', null, '2017-07-22 11:27:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072118411446052', '1', '2017-07-21 18:41:14', null, '0', '2', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500662474.0/@2017072118411446052', 'http://localhost/file/1500662474.0/@2017072118411446052', null, '2017-07-22 12:38:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072118411448273', '1', '2017-07-21 18:41:14', '2017-07-21 18:44:21', '187', '1', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500662474.0/@2017072118411448273', 'http://localhost/file/1500662474.0/@2017072118411448273', null, '2017-07-22 12:07:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072119080228097', '1', '2017-07-21 19:08:02', '2017-07-21 19:11:31', '209', '1', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1500664082.0/@2017072119080228097', 'http://localhost/file/1500664082.0/@2017072119080228097', null, '2017-07-22 11:51:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072119080245825', '1', '2017-07-21 19:08:02', null, '0', '0', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1500664082.0/@2017072119080245825', 'http://localhost/file/1500664082.0/@2017072119080245825', null, '2017-07-22 11:52:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707211908025251', '1', '2017-07-21 19:08:02', null, '0', '2', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1500664082.0/@201707211908025251', 'http://localhost/file/1500664082.0/@201707211908025251', null, '2017-07-22 12:51:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072119540910366', '1', '2017-07-21 19:54:09', null, '0', '0', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1500666849.0/@2017072119540910366', 'http://localhost/file/1500666849.0/@2017072119540910366', null, '2017-07-22 12:05:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072119540932921', '1', '2017-07-21 19:54:09', '2017-07-21 19:57:32', '203', '1', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1500666849.0/@2017072119540932921', 'http://localhost/file/1500666849.0/@2017072119540932921', null, '2017-07-22 12:38:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072119540959179', '1', '2017-07-21 19:54:09', null, '0', '0', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1500666849.0/@2017072119540959179', 'http://localhost/file/1500666849.0/@2017072119540959179', null, '2017-07-22 13:22:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072121330128267', '1', '2017-07-21 21:33:01', null, '0', '2', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1500672781.0/@2017072121330128267', 'http://localhost/file/1500672781.0/@2017072121330128267', null, '2017-07-22 15:01:01', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072121330138221', '1', '2017-07-21 21:33:01', null, '0', '0', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1500672781.0/@2017072121330138221', 'http://localhost/file/1500672781.0/@2017072121330138221', null, '2017-07-22 14:46:53', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072121330141525', '1', '2017-07-21 21:33:01', '2017-07-21 21:36:34', '213', '1', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1500672781.0/@2017072121330141525', 'http://localhost/file/1500672781.0/@2017072121330141525', null, '2017-07-22 14:44:43', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072123053413397', '1', '2017-07-21 23:05:34', null, '0', '2', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1500678334.0/@2017072123053413397', 'http://localhost/file/1500678334.0/@2017072123053413397', null, '2017-07-22 16:50:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072123053448690', '1', '2017-07-21 23:05:34', '2017-07-21 23:08:04', '150', '1', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1500678334.0/@2017072123053448690', 'http://localhost/file/1500678334.0/@2017072123053448690', null, '2017-07-22 15:18:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072123053456387', '1', '2017-07-21 23:05:34', null, '0', '3', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1500678334.0/@2017072123053456387', 'http://localhost/file/1500678334.0/@2017072123053456387', null, '2017-07-22 16:50:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072123225312192', '1', '2017-07-21 23:22:53', null, '0', '0', '张帅', 'JX0237', '167', '青山二中队', '0000000', null, 'file/1500679373.0/@2017072123225312192', 'http://localhost/file/1500679373.0/@2017072123225312192', null, '2017-07-22 16:17:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707212322534995', '1', '2017-07-21 23:22:53', null, '0', '2', '张帅', 'JX0237', '167', '青山二中队', '0000000', null, 'file/1500679373.0/@201707212322534995', 'http://localhost/file/1500679373.0/@201707212322534995', null, '2017-07-22 15:56:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707212322536252', '1', '2017-07-21 23:22:53', null, '0', '2', '张帅', 'JX0237', '167', '青山二中队', '0000000', null, 'file/1500679373.0/@201707212322536252', 'http://localhost/file/1500679373.0/@201707212322536252', null, '2017-07-22 16:22:47', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072202075514363', '1', '2017-07-22 02:07:55', null, '0', '3', '陈磊', '021052', '81', '北郊大队', '0000000', null, 'file/1500689275.0/@2017072202075514363', 'http://localhost/file/1500689275.0/@2017072202075514363', null, '2017-07-22 19:01:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072202075534478', '1', '2017-07-22 02:07:55', '2017-07-22 02:12:27', '272', '1', '陈磊', '021052', '81', '北郊大队', '0000000', null, 'file/1500689275.0/@2017072202075534478', 'http://localhost/file/1500689275.0/@2017072202075534478', null, '2017-07-22 19:24:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072202075556820', '1', '2017-07-22 02:07:55', '2017-07-22 02:12:49', '294', '1', '陈磊', '021052', '81', '北郊大队', '0000000', null, 'file/1500689275.0/@2017072202075556820', 'http://localhost/file/1500689275.0/@2017072202075556820', null, '2017-07-22 19:57:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203285217987', '1', '2017-07-22 03:28:52', null, '0', '3', '王伟明', 'JX0595', '117', '北郊二中队', '0000000', null, 'file/1500694132.0/@2017072203285217987', 'http://localhost/file/1500694132.0/@2017072203285217987', null, '2017-07-22 21:06:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203285231881', '1', '2017-07-22 03:28:52', null, '0', '0', '王伟明', 'JX0595', '117', '北郊二中队', '0000000', null, 'file/1500694132.0/@2017072203285231881', 'http://localhost/file/1500694132.0/@2017072203285231881', null, '2017-07-22 20:17:19', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203285240140', '1', '2017-07-22 03:28:52', null, '0', '2', '王伟明', 'JX0595', '117', '北郊二中队', '0000000', null, 'file/1500694132.0/@2017072203285240140', 'http://localhost/file/1500694132.0/@2017072203285240140', null, '2017-07-22 21:10:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203303223867', '1', '2017-07-22 03:30:32', null, '0', '0', '李璐瑶', 'JX0652', '139', '岗勤中队', '0000000', null, 'file/1500694232.0/@2017072203303223867', 'http://localhost/file/1500694232.0/@2017072203303223867', null, '2017-07-22 21:17:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203303228544', '1', '2017-07-22 03:30:32', null, '0', '2', '李璐瑶', 'JX0652', '139', '岗勤中队', '0000000', null, 'file/1500694232.0/@2017072203303228544', 'http://localhost/file/1500694232.0/@2017072203303228544', null, '2017-07-22 20:06:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203303246100', '1', '2017-07-22 03:30:32', null, '0', '0', '李璐瑶', 'JX0652', '139', '岗勤中队', '0000000', null, 'file/1500694232.0/@2017072203303246100', 'http://localhost/file/1500694232.0/@2017072203303246100', null, '2017-07-22 20:52:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203441857063', '1', '2017-07-22 03:44:18', null, '0', '0', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500695058.0/@2017072203441857063', 'http://localhost/file/1500695058.0/@2017072203441857063', null, '2017-07-22 20:39:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072203441858757', '1', '2017-07-22 03:44:18', null, '0', '0', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500695058.0/@2017072203441858757', 'http://localhost/file/1500695058.0/@2017072203441858757', null, '2017-07-22 20:02:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707220344185950', '1', '2017-07-22 03:44:18', null, '0', '3', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500695058.0/@201707220344185950', 'http://localhost/file/1500695058.0/@201707220344185950', null, '2017-07-22 20:41:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204063730922', '1', '2017-07-22 04:06:37', null, '0', '3', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500696397.0/@2017072204063730922', 'http://localhost/file/1500696397.0/@2017072204063730922', null, '2017-07-22 20:48:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204063750604', '1', '2017-07-22 04:06:37', null, '0', '0', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500696397.0/@2017072204063750604', 'http://localhost/file/1500696397.0/@2017072204063750604', null, '2017-07-22 20:23:16', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204063758634', '1', '2017-07-22 04:06:37', null, '0', '3', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500696397.0/@2017072204063758634', 'http://localhost/file/1500696397.0/@2017072204063758634', null, '2017-07-22 20:34:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204092612938', '1', '2017-07-22 04:09:26', null, '0', '3', '于阿拉塔', 'JX0644', '139', '岗勤中队', '0000000', null, 'file/1500696566.0/@2017072204092612938', 'http://localhost/file/1500696566.0/@2017072204092612938', null, '2017-07-22 21:31:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204092658030', '1', '2017-07-22 04:09:26', null, '0', '2', '于阿拉塔', 'JX0644', '139', '岗勤中队', '0000000', null, 'file/1500696566.0/@2017072204092658030', 'http://localhost/file/1500696566.0/@2017072204092658030', null, '2017-07-22 20:09:58', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204092662677', '1', '2017-07-22 04:09:26', null, '0', '3', '于阿拉塔', 'JX0644', '139', '岗勤中队', '0000000', null, 'file/1500696566.0/@2017072204092662677', 'http://localhost/file/1500696566.0/@2017072204092662677', null, '2017-07-22 20:11:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204140218480', '1', '2017-07-22 04:14:02', null, '0', '0', '王建军管理', '123456', '113', '车管所考务科', '0000000', null, 'file/1500696842.0/@2017072204140218480', 'http://localhost/file/1500696842.0/@2017072204140218480', null, '2017-07-22 21:51:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072204140230244', '1', '2017-07-22 04:14:02', null, '0', '3', '王建军管理', '123456', '113', '车管所考务科', '0000000', null, 'file/1500696842.0/@2017072204140230244', 'http://localhost/file/1500696842.0/@2017072204140230244', null, '2017-07-22 22:13:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707220414029034', '1', '2017-07-22 04:14:02', null, '0', '0', '王建军管理', '123456', '113', '车管所考务科', '0000000', null, 'file/1500696842.0/@201707220414029034', 'http://localhost/file/1500696842.0/@201707220414029034', null, '2017-07-22 20:51:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072205490312617', '1', '2017-07-22 05:49:03', null, '0', '2', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500702543.0/@2017072205490312617', 'http://localhost/file/1500702543.0/@2017072205490312617', null, '2017-07-22 23:44:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072205490347753', '1', '2017-07-22 05:49:03', null, '0', '3', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500702543.0/@2017072205490347753', 'http://localhost/file/1500702543.0/@2017072205490347753', null, '2017-07-22 23:25:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072205490357717', '1', '2017-07-22 05:49:03', null, '0', '3', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500702543.0/@2017072205490357717', 'http://localhost/file/1500702543.0/@2017072205490357717', null, '2017-07-22 22:03:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072206363513134', '1', '2017-07-22 06:36:35', null, '0', '0', '桂宏刚', '020122', '119', '北郊四中队', '0000000', null, 'file/1500705395.0/@2017072206363513134', 'http://localhost/file/1500705395.0/@2017072206363513134', null, '2017-07-22 23:43:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072206363517096', '1', '2017-07-22 06:36:35', null, '0', '3', '桂宏刚', '020122', '119', '北郊四中队', '0000000', null, 'file/1500705395.0/@2017072206363517096', 'http://localhost/file/1500705395.0/@2017072206363517096', null, '2017-07-22 23:49:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072206363517637', '1', '2017-07-22 06:36:35', null, '0', '3', '桂宏刚', '020122', '119', '北郊四中队', '0000000', null, 'file/1500705395.0/@2017072206363517637', 'http://localhost/file/1500705395.0/@2017072206363517637', null, '2017-07-22 23:17:54', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072208083131068', '1', '2017-07-22 08:08:31', '2017-07-22 08:13:16', '285', '1', '王娟', 'JX0558', '103', '河西一中队', '0000000', null, 'file/1500710911.0/@2017072208083131068', 'http://localhost/file/1500710911.0/@2017072208083131068', null, '2017-07-23 01:41:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072208083132324', '1', '2017-07-22 08:08:31', null, '0', '3', '王娟', 'JX0558', '103', '河西一中队', '0000000', null, 'file/1500710911.0/@2017072208083132324', 'http://localhost/file/1500710911.0/@2017072208083132324', null, '2017-07-23 02:01:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707220808319337', '1', '2017-07-22 08:08:31', null, '0', '0', '王娟', 'JX0558', '103', '河西一中队', '0000000', null, 'file/1500710911.0/@201707220808319337', 'http://localhost/file/1500710911.0/@201707220808319337', null, '2017-07-23 00:40:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072209204918562', '1', '2017-07-22 09:20:49', null, '0', '3', '张云波', '024956', '127', '东兴一中队', '0000000', null, 'file/1500715249.0/@2017072209204918562', 'http://localhost/file/1500715249.0/@2017072209204918562', null, '2017-07-23 03:01:45', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072209204925234', '1', '2017-07-22 09:20:49', '2017-07-22 09:23:06', '137', '1', '张云波', '024956', '127', '东兴一中队', '0000000', null, 'file/1500715249.0/@2017072209204925234', 'http://localhost/file/1500715249.0/@2017072209204925234', null, '2017-07-23 02:54:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072209204958994', '1', '2017-07-22 09:20:49', null, '0', '0', '张云波', '024956', '127', '东兴一中队', '0000000', null, 'file/1500715249.0/@2017072209204958994', 'http://localhost/file/1500715249.0/@2017072209204958994', null, '2017-07-23 01:28:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072209372817654', '1', '2017-07-22 09:37:28', null, '0', '0', '樊利生', '021070', '164', '青山四级巡控', '0000000', null, 'file/1500716248.0/@2017072209372817654', 'http://localhost/file/1500716248.0/@2017072209372817654', null, '2017-07-23 02:52:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072209372841865', '1', '2017-07-22 09:37:28', null, '0', '3', '樊利生', '021070', '164', '青山四级巡控', '0000000', null, 'file/1500716248.0/@2017072209372841865', 'http://localhost/file/1500716248.0/@2017072209372841865', null, '2017-07-23 02:13:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707220937286492', '1', '2017-07-22 09:37:28', '2017-07-22 09:40:08', '160', '1', '樊利生', '021070', '164', '青山四级巡控', '0000000', null, 'file/1500716248.0/@201707220937286492', 'http://localhost/file/1500716248.0/@201707220937286492', null, '2017-07-23 03:22:21', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072210454926123', '1', '2017-07-22 10:45:49', null, '0', '3', '满意', 'JX0241', '164', '青山四级巡控', '0000000', null, 'file/1500720349.0/@2017072210454926123', 'http://localhost/file/1500720349.0/@2017072210454926123', null, '2017-07-23 03:33:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072210454945927', '1', '2017-07-22 10:45:49', null, '0', '2', '满意', 'JX0241', '164', '青山四级巡控', '0000000', null, 'file/1500720349.0/@2017072210454945927', 'http://localhost/file/1500720349.0/@2017072210454945927', null, '2017-07-23 02:46:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072210454955035', '1', '2017-07-22 10:45:49', null, '0', '0', '满意', 'JX0241', '164', '青山四级巡控', '0000000', null, 'file/1500720349.0/@2017072210454955035', 'http://localhost/file/1500720349.0/@2017072210454955035', null, '2017-07-23 04:36:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072213263531109', '1', '2017-07-22 13:26:35', null, '0', '3', '许鑫', '024968', '120', '北郊事故中队', '0000000', null, 'file/1500729995.0/@2017072213263531109', 'http://localhost/file/1500729995.0/@2017072213263531109', null, '2017-07-23 06:03:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072213263542086', '1', '2017-07-22 13:26:35', '2017-07-22 13:29:39', '184', '1', '许鑫', '024968', '120', '北郊事故中队', '0000000', null, 'file/1500729995.0/@2017072213263542086', 'http://localhost/file/1500729995.0/@2017072213263542086', null, '2017-07-23 07:16:37', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072213263554998', '1', '2017-07-22 13:26:35', '2017-07-22 13:28:40', '125', '1', '许鑫', '024968', '120', '北郊事故中队', '0000000', null, 'file/1500729995.0/@2017072213263554998', 'http://localhost/file/1500729995.0/@2017072213263554998', null, '2017-07-23 06:11:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072213272347121', '1', '2017-07-22 13:27:23', '2017-07-22 13:31:14', '231', '1', '杨文强', '24903', '118', '北郊三中队', '0000000', null, 'file/1500730043.0/@2017072213272347121', 'http://localhost/file/1500730043.0/@2017072213272347121', null, '2017-07-23 05:47:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072213272358275', '1', '2017-07-22 13:27:23', null, '0', '0', '杨文强', '24903', '118', '北郊三中队', '0000000', null, 'file/1500730043.0/@2017072213272358275', 'http://localhost/file/1500730043.0/@2017072213272358275', null, '2017-07-23 05:45:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072213272362330', '1', '2017-07-22 13:27:23', '2017-07-22 13:29:45', '142', '1', '杨文强', '24903', '118', '北郊三中队', '0000000', null, 'file/1500730043.0/@2017072213272362330', 'http://localhost/file/1500730043.0/@2017072213272362330', null, '2017-07-23 06:39:45', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072214131227777', '1', '2017-07-22 14:13:12', null, '0', '2', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500732792.0/@2017072214131227777', 'http://localhost/file/1500732792.0/@2017072214131227777', null, '2017-07-23 07:34:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072214131243224', '1', '2017-07-22 14:13:12', null, '0', '0', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500732792.0/@2017072214131243224', 'http://localhost/file/1500732792.0/@2017072214131243224', null, '2017-07-23 06:46:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072214131245537', '1', '2017-07-22 14:13:12', null, '0', '2', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500732792.0/@2017072214131245537', 'http://localhost/file/1500732792.0/@2017072214131245537', null, '2017-07-23 07:42:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072215114917277', '1', '2017-07-22 15:11:49', '2017-07-22 15:14:39', '170', '1', '李海波', '024197', '103', '河西一中队', '0000000', null, 'file/1500736309.0/@2017072215114917277', 'http://localhost/file/1500736309.0/@2017072215114917277', null, '2017-07-23 07:25:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072215114947482', '1', '2017-07-22 15:11:49', null, '0', '3', '李海波', '024197', '103', '河西一中队', '0000000', null, 'file/1500736309.0/@2017072215114947482', 'http://localhost/file/1500736309.0/@2017072215114947482', null, '2017-07-23 08:00:37', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072215114953153', '1', '2017-07-22 15:11:49', null, '0', '2', '李海波', '024197', '103', '河西一中队', '0000000', null, 'file/1500736309.0/@2017072215114953153', 'http://localhost/file/1500736309.0/@2017072215114953153', null, '2017-07-23 09:00:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072216145021788', '1', '2017-07-22 16:14:50', null, '0', '2', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1500740090.0/@2017072216145021788', 'http://localhost/file/1500740090.0/@2017072216145021788', null, '2017-07-23 09:53:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072216145044468', '1', '2017-07-22 16:14:50', null, '0', '3', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1500740090.0/@2017072216145044468', 'http://localhost/file/1500740090.0/@2017072216145044468', null, '2017-07-23 08:57:45', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072216145058978', '1', '2017-07-22 16:14:50', null, '0', '2', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1500740090.0/@2017072216145058978', 'http://localhost/file/1500740090.0/@2017072216145058978', null, '2017-07-23 09:08:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072216331815306', '1', '2017-07-22 16:33:18', '2017-07-22 16:38:05', '287', '1', '王荣', '020921', '117', '北郊二中队', '0000000', null, 'file/1500741198.0/@2017072216331815306', 'http://localhost/file/1500741198.0/@2017072216331815306', null, '2017-07-23 10:01:10', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072216331835867', '1', '2017-07-22 16:33:18', null, '0', '0', '王荣', '020921', '117', '北郊二中队', '0000000', null, 'file/1500741198.0/@2017072216331835867', 'http://localhost/file/1500741198.0/@2017072216331835867', null, '2017-07-23 09:34:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072216331845879', '1', '2017-07-22 16:33:18', null, '0', '2', '王荣', '020921', '117', '北郊二中队', '0000000', null, 'file/1500741198.0/@2017072216331845879', 'http://localhost/file/1500741198.0/@2017072216331845879', null, '2017-07-23 08:37:21', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217044626396', '1', '2017-07-22 17:04:46', '2017-07-22 17:07:09', '143', '1', '刘强', '000840', '120', '北郊事故中队', '0000000', null, 'file/1500743086.0/@2017072217044626396', 'http://localhost/file/1500743086.0/@2017072217044626396', null, '2017-07-23 10:42:37', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217044657917', '1', '2017-07-22 17:04:46', '2017-07-22 17:08:16', '210', '1', '刘强', '000840', '120', '北郊事故中队', '0000000', null, 'file/1500743086.0/@2017072217044657917', 'http://localhost/file/1500743086.0/@2017072217044657917', null, '2017-07-23 10:45:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217044662085', '1', '2017-07-22 17:04:46', null, '0', '3', '刘强', '000840', '120', '北郊事故中队', '0000000', null, 'file/1500743086.0/@2017072217044662085', 'http://localhost/file/1500743086.0/@2017072217044662085', null, '2017-07-23 11:00:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217185835714', '1', '2017-07-22 17:18:58', null, '0', '0', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1500743938.0/@2017072217185835714', 'http://localhost/file/1500743938.0/@2017072217185835714', null, '2017-07-23 10:22:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217185851478', '1', '2017-07-22 17:18:58', null, '0', '0', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1500743938.0/@2017072217185851478', 'http://localhost/file/1500743938.0/@2017072217185851478', null, '2017-07-23 10:10:58', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217185855511', '1', '2017-07-22 17:18:58', null, '0', '3', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1500743938.0/@2017072217185855511', 'http://localhost/file/1500743938.0/@2017072217185855511', null, '2017-07-23 10:08:53', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072217354844949', '1', '2017-07-22 17:35:48', null, '0', '3', '宋宜达', 'JX0578', '118', '北郊三中队', '0000000', null, 'file/1500744948.0/@2017072217354844949', 'http://localhost/file/1500744948.0/@2017072217354844949', null, '2017-07-23 11:13:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707221735487035', '1', '2017-07-22 17:35:48', null, '0', '0', '宋宜达', 'JX0578', '118', '北郊三中队', '0000000', null, 'file/1500744948.0/@201707221735487035', 'http://localhost/file/1500744948.0/@201707221735487035', null, '2017-07-23 10:13:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707221735488399', '1', '2017-07-22 17:35:48', '2017-07-22 17:39:51', '243', '1', '宋宜达', 'JX0578', '118', '北郊三中队', '0000000', null, 'file/1500744948.0/@201707221735488399', 'http://localhost/file/1500744948.0/@201707221735488399', null, '2017-07-23 10:09:59', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072218183820500', '1', '2017-07-22 18:18:38', '2017-07-22 18:22:11', '213', '1', '侯毅', '024857', '111', '车管所监督科', '0000000', null, 'file/1500747518.0/@2017072218183820500', 'http://localhost/file/1500747518.0/@2017072218183820500', null, '2017-07-23 11:27:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072218183824689', '1', '2017-07-22 18:18:38', '2017-07-22 18:22:01', '203', '1', '侯毅', '024857', '111', '车管所监督科', '0000000', null, 'file/1500747518.0/@2017072218183824689', 'http://localhost/file/1500747518.0/@2017072218183824689', null, '2017-07-23 10:52:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072218183834553', '1', '2017-07-22 18:18:38', null, '0', '0', '侯毅', '024857', '111', '车管所监督科', '0000000', null, 'file/1500747518.0/@2017072218183834553', 'http://localhost/file/1500747518.0/@2017072218183834553', null, '2017-07-23 10:48:56', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072219023414781', '1', '2017-07-22 19:02:34', null, '0', '2', '陈磊', '021052', '81', '北郊大队', '0000000', null, 'file/1500750154.0/@2017072219023414781', 'http://localhost/file/1500750154.0/@2017072219023414781', null, '2017-07-23 11:20:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072219023425722', '1', '2017-07-22 19:02:34', '2017-07-22 19:05:48', '194', '1', '陈磊', '021052', '81', '北郊大队', '0000000', null, 'file/1500750154.0/@2017072219023425722', 'http://localhost/file/1500750154.0/@2017072219023425722', null, '2017-07-23 12:51:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072219023461723', '1', '2017-07-22 19:02:34', null, '0', '0', '陈磊', '021052', '81', '北郊大队', '0000000', null, 'file/1500750154.0/@2017072219023461723', 'http://localhost/file/1500750154.0/@2017072219023461723', null, '2017-07-23 11:32:53', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072219542413152', '1', '2017-07-22 19:54:24', null, '0', '2', '杨海', 'JX0255', '169', '青山四中队', '0000000', null, 'file/1500753264.0/@2017072219542413152', 'http://localhost/file/1500753264.0/@2017072219542413152', null, '2017-07-23 12:29:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072219542418208', '1', '2017-07-22 19:54:24', null, '0', '3', '杨海', 'JX0255', '169', '青山四中队', '0000000', null, 'file/1500753264.0/@2017072219542418208', 'http://localhost/file/1500753264.0/@2017072219542418208', null, '2017-07-23 12:27:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072219542447734', '1', '2017-07-22 19:54:24', null, '0', '3', '杨海', 'JX0255', '169', '青山四中队', '0000000', null, 'file/1500753264.0/@2017072219542447734', 'http://localhost/file/1500753264.0/@2017072219542447734', null, '2017-07-23 11:58:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072220332718943', '1', '2017-07-22 20:33:27', '2017-07-22 20:35:28', '121', '1', '刘俊生', '021184', '113', '车管所考务科', '0000000', null, 'file/1500755607.0/@2017072220332718943', 'http://localhost/file/1500755607.0/@2017072220332718943', null, '2017-07-23 14:13:19', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072220332727492', '1', '2017-07-22 20:33:27', null, '0', '2', '刘俊生', '021184', '113', '车管所考务科', '0000000', null, 'file/1500755607.0/@2017072220332727492', 'http://localhost/file/1500755607.0/@2017072220332727492', null, '2017-07-23 13:54:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072220332762493', '1', '2017-07-22 20:33:27', '2017-07-22 20:36:55', '208', '1', '刘俊生', '021184', '113', '车管所考务科', '0000000', null, 'file/1500755607.0/@2017072220332762493', 'http://localhost/file/1500755607.0/@2017072220332762493', null, '2017-07-23 13:40:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072222155520561', '1', '2017-07-22 22:15:55', '2017-07-22 22:18:05', '130', '1', '权瑞宝', '021064', '164', '青山四级巡控', '0000000', null, 'file/1500761755.0/@2017072222155520561', 'http://localhost/file/1500761755.0/@2017072222155520561', null, '2017-07-23 15:04:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072222155543915', '1', '2017-07-22 22:15:55', null, '0', '0', '权瑞宝', '021064', '164', '青山四级巡控', '0000000', null, 'file/1500761755.0/@2017072222155543915', 'http://localhost/file/1500761755.0/@2017072222155543915', null, '2017-07-23 15:25:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072222155551013', '1', '2017-07-22 22:15:55', null, '0', '3', '权瑞宝', '021064', '164', '青山四级巡控', '0000000', null, 'file/1500761755.0/@2017072222155551013', 'http://localhost/file/1500761755.0/@2017072222155551013', null, '2017-07-23 15:45:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072222325245855', '1', '2017-07-22 22:32:52', null, '0', '2', '谢博文', 'JX0554', '102', '河西二中队', '0000000', null, 'file/1500762772.0/@2017072222325245855', 'http://localhost/file/1500762772.0/@2017072222325245855', null, '2017-07-23 15:17:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072222325247589', '1', '2017-07-22 22:32:52', null, '0', '3', '谢博文', 'JX0554', '102', '河西二中队', '0000000', null, 'file/1500762772.0/@2017072222325247589', 'http://localhost/file/1500762772.0/@2017072222325247589', null, '2017-07-23 16:26:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072222325258089', '1', '2017-07-22 22:32:52', '2017-07-22 22:37:16', '264', '1', '谢博文', 'JX0554', '102', '河西二中队', '0000000', null, 'file/1500762772.0/@2017072222325258089', 'http://localhost/file/1500762772.0/@2017072222325258089', null, '2017-07-23 15:44:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707222314333852', '1', '2017-07-22 23:14:33', null, '0', '2', '武连旺', '023545', '113', '车管所考务科', '0000000', null, 'file/1500765273.0/@201707222314333852', 'http://localhost/file/1500765273.0/@201707222314333852', null, '2017-07-23 16:37:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223143341370', '1', '2017-07-22 23:14:33', null, '0', '3', '武连旺', '023545', '113', '车管所考务科', '0000000', null, 'file/1500765273.0/@2017072223143341370', 'http://localhost/file/1500765273.0/@2017072223143341370', null, '2017-07-23 16:03:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223143349229', '1', '2017-07-22 23:14:33', '2017-07-22 23:18:10', '217', '1', '武连旺', '023545', '113', '车管所考务科', '0000000', null, 'file/1500765273.0/@2017072223143349229', 'http://localhost/file/1500765273.0/@2017072223143349229', null, '2017-07-23 15:29:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223172555861', '1', '2017-07-22 23:17:25', '2017-07-22 23:19:49', '144', '1', '刘龙', 'JX1153', '116', '北郊一中队', '0000000', null, 'file/1500765445.0/@2017072223172555861', 'http://localhost/file/1500765445.0/@2017072223172555861', null, '2017-07-23 16:01:03', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223172557735', '1', '2017-07-22 23:17:25', '2017-07-22 23:20:28', '183', '1', '刘龙', 'JX1153', '116', '北郊一中队', '0000000', null, 'file/1500765445.0/@2017072223172557735', 'http://localhost/file/1500765445.0/@2017072223172557735', null, '2017-07-23 15:46:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223172560809', '1', '2017-07-22 23:17:25', null, '0', '3', '刘龙', 'JX1153', '116', '北郊一中队', '0000000', null, 'file/1500765445.0/@2017072223172560809', 'http://localhost/file/1500765445.0/@2017072223172560809', null, '2017-07-23 16:50:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223585823781', '1', '2017-07-22 23:58:58', null, '0', '3', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500767938.0/@2017072223585823781', 'http://localhost/file/1500767938.0/@2017072223585823781', null, '2017-07-23 16:08:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223585825856', '1', '2017-07-22 23:58:58', '2017-07-23 00:02:21', '203', '1', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500767938.0/@2017072223585825856', 'http://localhost/file/1500767938.0/@2017072223585825856', null, '2017-07-23 16:09:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072223585854675', '1', '2017-07-22 23:58:58', null, '0', '3', '杨大年', '020711', '114', '北郊园区中队', '0000000', null, 'file/1500767938.0/@2017072223585854675', 'http://localhost/file/1500767938.0/@2017072223585854675', null, '2017-07-23 17:06:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072303443835462', '1', '2017-07-23 03:44:38', null, '0', '2', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1500781478.0/@2017072303443835462', 'http://localhost/file/1500781478.0/@2017072303443835462', null, '2017-07-23 21:43:47', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072303443853032', '1', '2017-07-23 03:44:38', null, '0', '0', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1500781478.0/@2017072303443853032', 'http://localhost/file/1500781478.0/@2017072303443853032', null, '2017-07-23 20:39:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707230344386422', '1', '2017-07-23 03:44:38', null, '0', '0', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1500781478.0/@201707230344386422', 'http://localhost/file/1500781478.0/@201707230344386422', null, '2017-07-23 21:18:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072305220815093', '1', '2017-07-23 05:22:08', null, '0', '2', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1500787328.0/@2017072305220815093', 'http://localhost/file/1500787328.0/@2017072305220815093', null, '2017-07-23 22:36:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072305220824184', '1', '2017-07-23 05:22:08', null, '0', '3', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1500787328.0/@2017072305220824184', 'http://localhost/file/1500787328.0/@2017072305220824184', null, '2017-07-23 22:00:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072305220850509', '1', '2017-07-23 05:22:08', null, '0', '3', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1500787328.0/@2017072305220850509', 'http://localhost/file/1500787328.0/@2017072305220850509', null, '2017-07-23 22:29:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072307130737509', '1', '2017-07-23 07:13:07', null, '0', '0', '郭同旭', 'JX0548', '102', '河西二中队', '0000000', null, 'file/1500793987.0/@2017072307130737509', 'http://localhost/file/1500793987.0/@2017072307130737509', null, '2017-07-24 01:01:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707230713075065', '1', '2017-07-23 07:13:07', '2017-07-23 07:16:29', '202', '1', '郭同旭', 'JX0548', '102', '河西二中队', '0000000', null, 'file/1500793987.0/@201707230713075065', 'http://localhost/file/1500793987.0/@201707230713075065', null, '2017-07-24 00:49:10', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072307130751933', '1', '2017-07-23 07:13:07', null, '0', '2', '郭同旭', 'JX0548', '102', '河西二中队', '0000000', null, 'file/1500793987.0/@2017072307130751933', 'http://localhost/file/1500793987.0/@2017072307130751933', null, '2017-07-24 00:06:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072309291754948', '1', '2017-07-23 09:29:17', '2017-07-23 09:31:44', '147', '1', '焦志涛', 'JX0565', '107', '河西检查站', '0000000', null, 'file/1500802157.0/@2017072309291754948', 'http://localhost/file/1500802157.0/@2017072309291754948', null, '2017-07-24 03:23:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072309291761902', '1', '2017-07-23 09:29:17', '2017-07-23 09:32:58', '221', '1', '焦志涛', 'JX0565', '107', '河西检查站', '0000000', null, 'file/1500802157.0/@2017072309291761902', 'http://localhost/file/1500802157.0/@2017072309291761902', null, '2017-07-24 03:29:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707230929179003', '1', '2017-07-23 09:29:17', '2017-07-23 09:31:54', '157', '1', '焦志涛', 'JX0565', '107', '河西检查站', '0000000', null, 'file/1500802157.0/@201707230929179003', 'http://localhost/file/1500802157.0/@201707230929179003', null, '2017-07-24 01:56:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072310202338143', '1', '2017-07-23 10:20:23', null, '0', '3', '刘晓东', '021059', '80', '河西大队', '0000000', null, 'file/1500805223.0/@2017072310202338143', 'http://localhost/file/1500805223.0/@2017072310202338143', null, '2017-07-24 03:11:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072310202345142', '1', '2017-07-23 10:20:23', null, '0', '0', '刘晓东', '021059', '80', '河西大队', '0000000', null, 'file/1500805223.0/@2017072310202345142', 'http://localhost/file/1500805223.0/@2017072310202345142', null, '2017-07-24 03:32:42', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072310202347026', '1', '2017-07-23 10:20:23', null, '0', '2', '刘晓东', '021059', '80', '河西大队', '0000000', null, 'file/1500805223.0/@2017072310202347026', 'http://localhost/file/1500805223.0/@2017072310202347026', null, '2017-07-24 02:24:58', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072311154329925', '1', '2017-07-23 11:15:43', '2017-07-23 11:20:24', '281', '1', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500808543.0/@2017072311154329925', 'http://localhost/file/1500808543.0/@2017072311154329925', null, '2017-07-24 05:04:42', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707231115435192', '1', '2017-07-23 11:15:43', null, '0', '2', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500808543.0/@201707231115435192', 'http://localhost/file/1500808543.0/@201707231115435192', null, '2017-07-24 04:02:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707231115436945', '1', '2017-07-23 11:15:43', null, '0', '3', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500808543.0/@201707231115436945', 'http://localhost/file/1500808543.0/@201707231115436945', null, '2017-07-24 04:58:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072313575028396', '1', '2017-07-23 13:57:50', null, '0', '3', '程超', 'JX0574', '117', '北郊二中队', '0000000', null, 'file/1500818270.0/@2017072313575028396', 'http://localhost/file/1500818270.0/@2017072313575028396', null, '2017-07-24 07:50:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072313575054723', '1', '2017-07-23 13:57:50', null, '0', '0', '程超', 'JX0574', '117', '北郊二中队', '0000000', null, 'file/1500818270.0/@2017072313575054723', 'http://localhost/file/1500818270.0/@2017072313575054723', null, '2017-07-24 07:48:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072313575060227', '1', '2017-07-23 13:57:50', null, '0', '3', '程超', 'JX0574', '117', '北郊二中队', '0000000', null, 'file/1500818270.0/@2017072313575060227', 'http://localhost/file/1500818270.0/@2017072313575060227', null, '2017-07-24 06:05:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072314394136915', '1', '2017-07-23 14:39:41', null, '0', '0', '杜慧军', 'JX0444', '107', '河西检查站', '0000000', null, 'file/1500820781.0/@2017072314394136915', 'http://localhost/file/1500820781.0/@2017072314394136915', null, '2017-07-24 07:33:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072314394138629', '1', '2017-07-23 14:39:41', '2017-07-23 14:44:19', '278', '1', '杜慧军', 'JX0444', '107', '河西检查站', '0000000', null, 'file/1500820781.0/@2017072314394138629', 'http://localhost/file/1500820781.0/@2017072314394138629', null, '2017-07-24 06:57:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072314394158445', '1', '2017-07-23 14:39:41', null, '0', '0', '杜慧军', 'JX0444', '107', '河西检查站', '0000000', null, 'file/1500820781.0/@2017072314394158445', 'http://localhost/file/1500820781.0/@2017072314394158445', null, '2017-07-24 08:05:42', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072315413111538', '1', '2017-07-23 15:41:31', null, '0', '0', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1500824491.0/@2017072315413111538', 'http://localhost/file/1500824491.0/@2017072315413111538', null, '2017-07-24 08:28:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072315413144534', '1', '2017-07-23 15:41:31', null, '0', '2', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1500824491.0/@2017072315413144534', 'http://localhost/file/1500824491.0/@2017072315413144534', null, '2017-07-24 09:20:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072315413158593', '1', '2017-07-23 15:41:31', null, '0', '2', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1500824491.0/@2017072315413158593', 'http://localhost/file/1500824491.0/@2017072315413158593', null, '2017-07-24 08:05:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072316050119026', '1', '2017-07-23 16:05:01', null, '0', '3', '罗保全', '021226', '164', '青山四级巡控', '0000000', null, 'file/1500825901.0/@2017072316050119026', 'http://localhost/file/1500825901.0/@2017072316050119026', null, '2017-07-24 09:23:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072316050142490', '1', '2017-07-23 16:05:01', null, '0', '0', '罗保全', '021226', '164', '青山四级巡控', '0000000', null, 'file/1500825901.0/@2017072316050142490', 'http://localhost/file/1500825901.0/@2017072316050142490', null, '2017-07-24 09:30:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707231605014835', '1', '2017-07-23 16:05:01', null, '0', '0', '罗保全', '021226', '164', '青山四级巡控', '0000000', null, 'file/1500825901.0/@201707231605014835', 'http://localhost/file/1500825901.0/@201707231605014835', null, '2017-07-24 09:44:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072317210928307', '1', '2017-07-23 17:21:09', null, '0', '3', '张美祥', 'JX0506', '128', '东兴二中队', '0000000', null, 'file/1500830469.0/@2017072317210928307', 'http://localhost/file/1500830469.0/@2017072317210928307', null, '2017-07-24 09:47:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707231721096615', '1', '2017-07-23 17:21:09', null, '0', '0', '张美祥', 'JX0506', '128', '东兴二中队', '0000000', null, 'file/1500830469.0/@201707231721096615', 'http://localhost/file/1500830469.0/@201707231721096615', null, '2017-07-24 10:49:39', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707231721097714', '1', '2017-07-23 17:21:09', null, '0', '3', '张美祥', 'JX0506', '128', '东兴二中队', '0000000', null, 'file/1500830469.0/@201707231721097714', 'http://localhost/file/1500830469.0/@201707231721097714', null, '2017-07-24 09:51:49', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072317273244926', '1', '2017-07-23 17:27:32', '2017-07-23 17:29:52', '140', '1', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500830852.0/@2017072317273244926', 'http://localhost/file/1500830852.0/@2017072317273244926', null, '2017-07-24 10:34:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072317273244952', '1', '2017-07-23 17:27:32', null, '0', '3', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500830852.0/@2017072317273244952', 'http://localhost/file/1500830852.0/@2017072317273244952', null, '2017-07-24 09:49:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072317273261164', '1', '2017-07-23 17:27:32', null, '0', '3', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500830852.0/@2017072317273261164', 'http://localhost/file/1500830852.0/@2017072317273261164', null, '2017-07-24 11:12:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072318191617529', '1', '2017-07-23 18:19:16', null, '0', '2', '王硕', 'JX0740', '140', '护校中队', '0000000', null, 'file/1500833956.0/@2017072318191617529', 'http://localhost/file/1500833956.0/@2017072318191617529', null, '2017-07-24 12:03:33', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072318191630381', '1', '2017-07-23 18:19:16', null, '0', '2', '王硕', 'JX0740', '140', '护校中队', '0000000', null, 'file/1500833956.0/@2017072318191630381', 'http://localhost/file/1500833956.0/@2017072318191630381', null, '2017-07-24 10:42:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072318191641060', '1', '2017-07-23 18:19:16', '2017-07-23 18:23:31', '255', '1', '王硕', 'JX0740', '140', '护校中队', '0000000', null, 'file/1500833956.0/@2017072318191641060', 'http://localhost/file/1500833956.0/@2017072318191641060', null, '2017-07-24 11:00:17', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072318565014098', '1', '2017-07-23 18:56:50', null, '0', '0', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500836210.0/@2017072318565014098', 'http://localhost/file/1500836210.0/@2017072318565014098', null, '2017-07-24 12:33:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072318565014317', '1', '2017-07-23 18:56:50', null, '0', '2', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500836210.0/@2017072318565014317', 'http://localhost/file/1500836210.0/@2017072318565014317', null, '2017-07-24 12:47:39', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072318565016880', '1', '2017-07-23 18:56:50', null, '0', '2', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500836210.0/@2017072318565016880', 'http://localhost/file/1500836210.0/@2017072318565016880', null, '2017-07-24 11:02:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072319415429517', '1', '2017-07-23 19:41:54', null, '0', '2', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1500838914.0/@2017072319415429517', 'http://localhost/file/1500838914.0/@2017072319415429517', null, '2017-07-24 13:15:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072319415432691', '1', '2017-07-23 19:41:54', null, '0', '3', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1500838914.0/@2017072319415432691', 'http://localhost/file/1500838914.0/@2017072319415432691', null, '2017-07-24 13:10:03', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072319415439723', '1', '2017-07-23 19:41:54', null, '0', '2', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1500838914.0/@2017072319415439723', 'http://localhost/file/1500838914.0/@2017072319415439723', null, '2017-07-24 12:19:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072319525734878', '1', '2017-07-23 19:52:57', null, '0', '0', '杨国强', '024026', '114', '北郊园区中队', '0000000', null, 'file/1500839577.0/@2017072319525734878', 'http://localhost/file/1500839577.0/@2017072319525734878', null, '2017-07-24 13:21:48', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072319525755391', '1', '2017-07-23 19:52:57', null, '0', '0', '杨国强', '024026', '114', '北郊园区中队', '0000000', null, 'file/1500839577.0/@2017072319525755391', 'http://localhost/file/1500839577.0/@2017072319525755391', null, '2017-07-24 13:18:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072319525757131', '1', '2017-07-23 19:52:57', null, '0', '2', '杨国强', '024026', '114', '北郊园区中队', '0000000', null, 'file/1500839577.0/@2017072319525757131', 'http://localhost/file/1500839577.0/@2017072319525757131', null, '2017-07-24 12:04:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320113224856', '1', '2017-07-23 20:11:32', null, '0', '3', '闫帅', 'JX0495', '148', '白云二中队', '0000000', null, 'file/1500840692.0/@2017072320113224856', 'http://localhost/file/1500840692.0/@2017072320113224856', null, '2017-07-24 12:27:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320113233625', '1', '2017-07-23 20:11:32', null, '0', '2', '闫帅', 'JX0495', '148', '白云二中队', '0000000', null, 'file/1500840692.0/@2017072320113233625', 'http://localhost/file/1500840692.0/@2017072320113233625', null, '2017-07-24 13:29:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320113248656', '1', '2017-07-23 20:11:32', null, '0', '3', '闫帅', 'JX0495', '148', '白云二中队', '0000000', null, 'file/1500840692.0/@2017072320113248656', 'http://localhost/file/1500840692.0/@2017072320113248656', null, '2017-07-24 13:17:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320125633174', '1', '2017-07-23 20:12:56', null, '0', '0', '许志远', '001911', '150', '白云事故中队', '0000000', null, 'file/1500840776.0/@2017072320125633174', 'http://localhost/file/1500840776.0/@2017072320125633174', null, '2017-07-24 13:16:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320125653229', '1', '2017-07-23 20:12:56', null, '0', '2', '许志远', '001911', '150', '白云事故中队', '0000000', null, 'file/1500840776.0/@2017072320125653229', 'http://localhost/file/1500840776.0/@2017072320125653229', null, '2017-07-24 13:32:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320125659204', '1', '2017-07-23 20:12:56', null, '0', '2', '许志远', '001911', '150', '白云事故中队', '0000000', null, 'file/1500840776.0/@2017072320125659204', 'http://localhost/file/1500840776.0/@2017072320125659204', null, '2017-07-24 13:06:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707232045443817', '1', '2017-07-23 20:45:44', null, '0', '0', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1500842744.0/@201707232045443817', 'http://localhost/file/1500842744.0/@201707232045443817', null, '2017-07-24 14:28:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320454449407', '1', '2017-07-23 20:45:44', null, '0', '2', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1500842744.0/@2017072320454449407', 'http://localhost/file/1500842744.0/@2017072320454449407', null, '2017-07-24 14:35:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072320454453003', '1', '2017-07-23 20:45:44', null, '0', '3', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1500842744.0/@2017072320454453003', 'http://localhost/file/1500842744.0/@2017072320454453003', null, '2017-07-24 13:13:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322264541169', '1', '2017-07-23 22:26:45', null, '0', '2', '权瑞宝', '021064', '164', '青山四级巡控', '0000000', null, 'file/1500848805.0/@2017072322264541169', 'http://localhost/file/1500848805.0/@2017072322264541169', null, '2017-07-24 15:57:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322264549248', '1', '2017-07-23 22:26:45', null, '0', '0', '权瑞宝', '021064', '164', '青山四级巡控', '0000000', null, 'file/1500848805.0/@2017072322264549248', 'http://localhost/file/1500848805.0/@2017072322264549248', null, '2017-07-24 15:54:17', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707232226459957', '1', '2017-07-23 22:26:45', null, '0', '0', '权瑞宝', '021064', '164', '青山四级巡控', '0000000', null, 'file/1500848805.0/@201707232226459957', 'http://localhost/file/1500848805.0/@201707232226459957', null, '2017-07-24 16:10:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322403414987', '1', '2017-07-23 22:40:34', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1500849634.0/@2017072322403414987', 'http://localhost/file/1500849634.0/@2017072322403414987', null, '2017-07-24 16:25:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322403428721', '1', '2017-07-23 22:40:34', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1500849634.0/@2017072322403428721', 'http://localhost/file/1500849634.0/@2017072322403428721', null, '2017-07-24 15:30:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322403429043', '1', '2017-07-23 22:40:34', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1500849634.0/@2017072322403429043', 'http://localhost/file/1500849634.0/@2017072322403429043', null, '2017-07-24 16:24:43', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322594615801', '1', '2017-07-23 22:59:46', null, '0', '3', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500850786.0/@2017072322594615801', 'http://localhost/file/1500850786.0/@2017072322594615801', null, '2017-07-24 16:08:14', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322594626542', '1', '2017-07-23 22:59:46', '2017-07-23 23:02:31', '165', '1', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500850786.0/@2017072322594626542', 'http://localhost/file/1500850786.0/@2017072322594626542', null, '2017-07-24 16:54:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072322594654154', '1', '2017-07-23 22:59:46', null, '0', '3', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1500850786.0/@2017072322594654154', 'http://localhost/file/1500850786.0/@2017072322594654154', null, '2017-07-24 16:56:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072323050923519', '1', '2017-07-23 23:05:09', null, '0', '0', '赵永忠', '021014', '103', '河西一中队', '0000000', null, 'file/1500851109.0/@2017072323050923519', 'http://localhost/file/1500851109.0/@2017072323050923519', null, '2017-07-24 15:24:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072323050952189', '1', '2017-07-23 23:05:09', null, '0', '2', '赵永忠', '021014', '103', '河西一中队', '0000000', null, 'file/1500851109.0/@2017072323050952189', 'http://localhost/file/1500851109.0/@2017072323050952189', null, '2017-07-24 16:38:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707232305097294', '1', '2017-07-23 23:05:09', null, '0', '2', '赵永忠', '021014', '103', '河西一中队', '0000000', null, 'file/1500851109.0/@201707232305097294', 'http://localhost/file/1500851109.0/@201707232305097294', null, '2017-07-24 15:18:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401183125321', '1', '2017-07-24 01:18:31', null, '0', '2', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500859111.0/@2017072401183125321', 'http://localhost/file/1500859111.0/@2017072401183125321', null, '2017-07-24 18:49:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401183153112', '1', '2017-07-24 01:18:31', null, '0', '3', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500859111.0/@2017072401183153112', 'http://localhost/file/1500859111.0/@2017072401183153112', null, '2017-07-24 18:54:42', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401183159461', '1', '2017-07-24 01:18:31', null, '0', '2', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500859111.0/@2017072401183159461', 'http://localhost/file/1500859111.0/@2017072401183159461', null, '2017-07-24 17:47:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401183527522', '1', '2017-07-24 01:18:35', '2017-07-24 01:23:25', '290', '1', '赵宝华', '023667', '93', '东兴大队', '0000000', null, 'file/1500859115.0/@2017072401183527522', 'http://localhost/file/1500859115.0/@2017072401183527522', null, '2017-07-24 19:01:45', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401183557784', '1', '2017-07-24 01:18:35', null, '0', '0', '赵宝华', '023667', '93', '东兴大队', '0000000', null, 'file/1500859115.0/@2017072401183557784', 'http://localhost/file/1500859115.0/@2017072401183557784', null, '2017-07-24 18:59:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401183559588', '1', '2017-07-24 01:18:35', null, '0', '0', '赵宝华', '023667', '93', '东兴大队', '0000000', null, 'file/1500859115.0/@2017072401183559588', 'http://localhost/file/1500859115.0/@2017072401183559588', null, '2017-07-24 19:09:53', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401213220888', '1', '2017-07-24 01:21:32', '2017-07-24 01:24:24', '172', '1', '张文静', 'JX0689', '140', '护校中队', '0000000', null, 'file/1500859292.0/@2017072401213220888', 'http://localhost/file/1500859292.0/@2017072401213220888', null, '2017-07-24 17:46:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401213226532', '1', '2017-07-24 01:21:32', null, '0', '2', '张文静', 'JX0689', '140', '护校中队', '0000000', null, 'file/1500859292.0/@2017072401213226532', 'http://localhost/file/1500859292.0/@2017072401213226532', null, '2017-07-24 19:01:53', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401213243081', '1', '2017-07-24 01:21:32', '2017-07-24 01:25:32', '240', '1', '张文静', 'JX0689', '140', '护校中队', '0000000', null, 'file/1500859292.0/@2017072401213243081', 'http://localhost/file/1500859292.0/@2017072401213243081', null, '2017-07-24 17:33:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401294610226', '1', '2017-07-24 01:29:46', null, '0', '2', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1500859786.0/@2017072401294610226', 'http://localhost/file/1500859786.0/@2017072401294610226', null, '2017-07-24 17:33:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401294622172', '1', '2017-07-24 01:29:46', null, '0', '2', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1500859786.0/@2017072401294622172', 'http://localhost/file/1500859786.0/@2017072401294622172', null, '2017-07-24 18:45:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401294650012', '1', '2017-07-24 01:29:46', null, '0', '2', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1500859786.0/@2017072401294650012', 'http://localhost/file/1500859786.0/@2017072401294650012', null, '2017-07-24 19:20:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401302345873', '1', '2017-07-24 01:30:23', '2017-07-24 01:33:51', '208', '1', '杨磊', '021129', '113', '车管所考务科', '0000000', null, 'file/1500859823.0/@2017072401302345873', 'http://localhost/file/1500859823.0/@2017072401302345873', null, '2017-07-24 18:29:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401302348159', '1', '2017-07-24 01:30:23', null, '0', '2', '杨磊', '021129', '113', '车管所考务科', '0000000', null, 'file/1500859823.0/@2017072401302348159', 'http://localhost/file/1500859823.0/@2017072401302348159', null, '2017-07-24 18:14:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401302360970', '1', '2017-07-24 01:30:23', '2017-07-24 01:32:56', '153', '1', '杨磊', '021129', '113', '车管所考务科', '0000000', null, 'file/1500859823.0/@2017072401302360970', 'http://localhost/file/1500859823.0/@2017072401302360970', null, '2017-07-24 18:42:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401445635017', '1', '2017-07-24 01:44:56', null, '0', '2', '罗保全', '021226', '164', '青山四级巡控', '0000000', null, 'file/1500860696.0/@2017072401445635017', 'http://localhost/file/1500860696.0/@2017072401445635017', null, '2017-07-24 17:50:47', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401445648229', '1', '2017-07-24 01:44:56', null, '0', '3', '罗保全', '021226', '164', '青山四级巡控', '0000000', null, 'file/1500860696.0/@2017072401445648229', 'http://localhost/file/1500860696.0/@2017072401445648229', null, '2017-07-24 19:28:43', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072401445653551', '1', '2017-07-24 01:44:56', null, '0', '3', '罗保全', '021226', '164', '青山四级巡控', '0000000', null, 'file/1500860696.0/@2017072401445653551', 'http://localhost/file/1500860696.0/@2017072401445653551', null, '2017-07-24 18:04:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072402004127167', '1', '2017-07-24 02:00:41', null, '0', '3', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500861641.0/@2017072402004127167', 'http://localhost/file/1500861641.0/@2017072402004127167', null, '2017-07-24 18:32:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072402004134446', '1', '2017-07-24 02:00:41', null, '0', '2', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500861641.0/@2017072402004134446', 'http://localhost/file/1500861641.0/@2017072402004134446', null, '2017-07-24 19:44:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072402004159904', '1', '2017-07-24 02:00:41', null, '0', '3', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500861641.0/@2017072402004159904', 'http://localhost/file/1500861641.0/@2017072402004159904', null, '2017-07-24 19:02:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072402180235149', '1', '2017-07-24 02:18:02', null, '0', '2', '胡瑞霞', 'JX0709', '140', '护校中队', '0000000', null, 'file/1500862682.0/@2017072402180235149', 'http://localhost/file/1500862682.0/@2017072402180235149', null, '2017-07-24 19:10:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072402180237056', '1', '2017-07-24 02:18:02', null, '0', '0', '胡瑞霞', 'JX0709', '140', '护校中队', '0000000', null, 'file/1500862682.0/@2017072402180237056', 'http://localhost/file/1500862682.0/@2017072402180237056', null, '2017-07-24 19:38:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072402180253342', '1', '2017-07-24 02:18:02', null, '0', '3', '胡瑞霞', 'JX0709', '140', '护校中队', '0000000', null, 'file/1500862682.0/@2017072402180253342', 'http://localhost/file/1500862682.0/@2017072402180253342', null, '2017-07-24 19:57:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403083238619', '1', '2017-07-24 03:08:32', null, '0', '0', '刘永平', '024939', '118', '北郊三中队', '0000000', null, 'file/1500865712.0/@2017072403083238619', 'http://localhost/file/1500865712.0/@2017072403083238619', null, '2017-07-24 21:05:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403083245307', '1', '2017-07-24 03:08:32', null, '0', '2', '刘永平', '024939', '118', '北郊三中队', '0000000', null, 'file/1500865712.0/@2017072403083245307', 'http://localhost/file/1500865712.0/@2017072403083245307', null, '2017-07-24 19:39:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403083249604', '1', '2017-07-24 03:08:32', null, '0', '2', '刘永平', '024939', '118', '北郊三中队', '0000000', null, 'file/1500865712.0/@2017072403083249604', 'http://localhost/file/1500865712.0/@2017072403083249604', null, '2017-07-24 20:53:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403462020416', '1', '2017-07-24 03:46:20', '2017-07-24 03:49:57', '217', '1', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500867980.0/@2017072403462020416', 'http://localhost/file/1500867980.0/@2017072403462020416', null, '2017-07-24 20:59:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403462044302', '1', '2017-07-24 03:46:20', null, '0', '3', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500867980.0/@2017072403462044302', 'http://localhost/file/1500867980.0/@2017072403462044302', null, '2017-07-24 21:10:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403462060620', '1', '2017-07-24 03:46:20', '2017-07-24 03:48:35', '135', '1', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500867980.0/@2017072403462060620', 'http://localhost/file/1500867980.0/@2017072403462060620', null, '2017-07-24 19:58:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403562516791', '1', '2017-07-24 03:56:25', null, '0', '2', '程秀丽', 'JX0502', '129', '东兴三中队', '0000000', null, 'file/1500868585.0/@2017072403562516791', 'http://localhost/file/1500868585.0/@2017072403562516791', null, '2017-07-24 21:13:16', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403562519169', '1', '2017-07-24 03:56:25', null, '0', '0', '程秀丽', 'JX0502', '129', '东兴三中队', '0000000', null, 'file/1500868585.0/@2017072403562519169', 'http://localhost/file/1500868585.0/@2017072403562519169', null, '2017-07-24 20:10:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072403562538718', '1', '2017-07-24 03:56:25', null, '0', '0', '程秀丽', 'JX0502', '129', '东兴三中队', '0000000', null, 'file/1500868585.0/@2017072403562538718', 'http://localhost/file/1500868585.0/@2017072403562538718', null, '2017-07-24 20:09:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404083617887', '1', '2017-07-24 04:08:36', null, '0', '3', '杨磊', '021129', '113', '车管所考务科', '0000000', null, 'file/1500869316.0/@2017072404083617887', 'http://localhost/file/1500869316.0/@2017072404083617887', null, '2017-07-24 20:14:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404083622688', '1', '2017-07-24 04:08:36', '2017-07-24 04:12:58', '262', '1', '杨磊', '021129', '113', '车管所考务科', '0000000', null, 'file/1500869316.0/@2017072404083622688', 'http://localhost/file/1500869316.0/@2017072404083622688', null, '2017-07-24 21:10:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404083646282', '1', '2017-07-24 04:08:36', '2017-07-24 04:11:53', '197', '1', '杨磊', '021129', '113', '车管所考务科', '0000000', null, 'file/1500869316.0/@2017072404083646282', 'http://localhost/file/1500869316.0/@2017072404083646282', null, '2017-07-24 20:31:49', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404085813789', '1', '2017-07-24 04:08:58', null, '0', '2', '郭同旭', 'JX0548', '102', '河西二中队', '0000000', null, 'file/1500869338.0/@2017072404085813789', 'http://localhost/file/1500869338.0/@2017072404085813789', null, '2017-07-24 20:52:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404085832639', '1', '2017-07-24 04:08:58', null, '0', '0', '郭同旭', 'JX0548', '102', '河西二中队', '0000000', null, 'file/1500869338.0/@2017072404085832639', 'http://localhost/file/1500869338.0/@2017072404085832639', null, '2017-07-24 20:18:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404085837646', '1', '2017-07-24 04:08:58', '2017-07-24 04:13:46', '288', '1', '郭同旭', 'JX0548', '102', '河西二中队', '0000000', null, 'file/1500869338.0/@2017072404085837646', 'http://localhost/file/1500869338.0/@2017072404085837646', null, '2017-07-24 21:54:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404491736493', '1', '2017-07-24 04:49:17', null, '0', '2', '侯毅', '024857', '111', '车管所监督科', '0000000', null, 'file/1500871757.0/@2017072404491736493', 'http://localhost/file/1500871757.0/@2017072404491736493', null, '2017-07-24 21:27:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404491760283', '1', '2017-07-24 04:49:17', '2017-07-24 04:53:08', '231', '1', '侯毅', '024857', '111', '车管所监督科', '0000000', null, 'file/1500871757.0/@2017072404491760283', 'http://localhost/file/1500871757.0/@2017072404491760283', null, '2017-07-24 20:52:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072404491761583', '1', '2017-07-24 04:49:17', null, '0', '0', '侯毅', '024857', '111', '车管所监督科', '0000000', null, 'file/1500871757.0/@2017072404491761583', 'http://localhost/file/1500871757.0/@2017072404491761583', null, '2017-07-24 21:45:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072406024332090', '1', '2017-07-24 06:02:43', null, '0', '3', '李蓓', 'JX0426', '123', '高新一中队', '0000000', null, 'file/1500876163.0/@2017072406024332090', 'http://localhost/file/1500876163.0/@2017072406024332090', null, '2017-07-24 23:09:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072406024358412', '1', '2017-07-24 06:02:43', null, '0', '0', '李蓓', 'JX0426', '123', '高新一中队', '0000000', null, 'file/1500876163.0/@2017072406024358412', 'http://localhost/file/1500876163.0/@2017072406024358412', null, '2017-07-24 22:53:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072406024363109', '1', '2017-07-24 06:02:43', null, '0', '3', '李蓓', 'JX0426', '123', '高新一中队', '0000000', null, 'file/1500876163.0/@2017072406024363109', 'http://localhost/file/1500876163.0/@2017072406024363109', null, '2017-07-24 23:49:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072406244510846', '1', '2017-07-24 06:24:45', null, '0', '0', '刘睿', '024803', '111', '车管所监督科', '0000000', null, 'file/1500877485.0/@2017072406244510846', 'http://localhost/file/1500877485.0/@2017072406244510846', null, '2017-07-24 22:36:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072406244529721', '1', '2017-07-24 06:24:45', '2017-07-24 06:27:32', '167', '1', '刘睿', '024803', '111', '车管所监督科', '0000000', null, 'file/1500877485.0/@2017072406244529721', 'http://localhost/file/1500877485.0/@2017072406244529721', null, '2017-07-24 23:48:16', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072406244531987', '1', '2017-07-24 06:24:45', '2017-07-24 06:28:46', '241', '1', '刘睿', '024803', '111', '车管所监督科', '0000000', null, 'file/1500877485.0/@2017072406244531987', 'http://localhost/file/1500877485.0/@2017072406244531987', null, '2017-07-24 22:31:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407124447555', '1', '2017-07-24 07:12:44', null, '0', '3', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1500880364.0/@2017072407124447555', 'http://localhost/file/1500880364.0/@2017072407124447555', null, '2017-07-25 00:10:14', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407124448286', '1', '2017-07-24 07:12:44', null, '0', '2', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1500880364.0/@2017072407124448286', 'http://localhost/file/1500880364.0/@2017072407124448286', null, '2017-07-24 23:55:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407124455312', '1', '2017-07-24 07:12:44', null, '0', '0', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1500880364.0/@2017072407124455312', 'http://localhost/file/1500880364.0/@2017072407124455312', null, '2017-07-25 00:31:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407304124030', '1', '2017-07-24 07:30:41', '2017-07-24 07:34:44', '243', '1', '李松波', '024872', '112', '车管所外检科', '0000000', null, 'file/1500881441.0/@2017072407304124030', 'http://localhost/file/1500881441.0/@2017072407304124030', null, '2017-07-25 00:50:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407304141297', '1', '2017-07-24 07:30:41', null, '0', '2', '李松波', '024872', '112', '车管所外检科', '0000000', null, 'file/1500881441.0/@2017072407304141297', 'http://localhost/file/1500881441.0/@2017072407304141297', null, '2017-07-25 01:20:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407304147661', '1', '2017-07-24 07:30:41', null, '0', '3', '李松波', '024872', '112', '车管所外检科', '0000000', null, 'file/1500881441.0/@2017072407304147661', 'http://localhost/file/1500881441.0/@2017072407304147661', null, '2017-07-25 00:11:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407424815587', '1', '2017-07-24 07:42:48', null, '0', '2', '赵雁杰', '025032', '113', '车管所考务科', '0000000', null, 'file/1500882168.0/@2017072407424815587', 'http://localhost/file/1500882168.0/@2017072407424815587', null, '2017-07-25 00:47:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407424841112', '1', '2017-07-24 07:42:48', null, '0', '3', '赵雁杰', '025032', '113', '车管所考务科', '0000000', null, 'file/1500882168.0/@2017072407424841112', 'http://localhost/file/1500882168.0/@2017072407424841112', null, '2017-07-24 23:44:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072407424862219', '1', '2017-07-24 07:42:48', '2017-07-24 07:45:43', '175', '1', '赵雁杰', '025032', '113', '车管所考务科', '0000000', null, 'file/1500882168.0/@2017072407424862219', 'http://localhost/file/1500882168.0/@2017072407424862219', null, '2017-07-24 23:58:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072408301353371', '1', '2017-07-24 08:30:13', null, '0', '0', '陈政含', 'JX1042', '117', '北郊二中队', '0000000', null, 'file/1500885013.0/@2017072408301353371', 'http://localhost/file/1500885013.0/@2017072408301353371', null, '2017-07-25 01:28:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072408301355185', '1', '2017-07-24 08:30:13', null, '0', '3', '陈政含', 'JX1042', '117', '北郊二中队', '0000000', null, 'file/1500885013.0/@2017072408301355185', 'http://localhost/file/1500885013.0/@2017072408301355185', null, '2017-07-25 01:07:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707240830137999', '1', '2017-07-24 08:30:13', null, '0', '0', '陈政含', 'JX1042', '117', '北郊二中队', '0000000', null, 'file/1500885013.0/@201707240830137999', 'http://localhost/file/1500885013.0/@201707240830137999', null, '2017-07-25 01:22:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707240850444221', '1', '2017-07-24 08:50:44', null, '0', '3', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1500886244.0/@201707240850444221', 'http://localhost/file/1500886244.0/@201707240850444221', null, '2017-07-25 02:40:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072408504456260', '1', '2017-07-24 08:50:44', null, '0', '0', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1500886244.0/@2017072408504456260', 'http://localhost/file/1500886244.0/@2017072408504456260', null, '2017-07-25 02:15:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072408504462266', '1', '2017-07-24 08:50:44', null, '0', '2', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1500886244.0/@2017072408504462266', 'http://localhost/file/1500886244.0/@2017072408504462266', null, '2017-07-25 02:02:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409005144178', '1', '2017-07-24 09:00:51', '2017-07-24 09:05:27', '276', '1', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1500886851.0/@2017072409005144178', 'http://localhost/file/1500886851.0/@2017072409005144178', null, '2017-07-25 01:07:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409005162764', '1', '2017-07-24 09:00:51', '2017-07-24 09:03:24', '153', '1', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1500886851.0/@2017072409005162764', 'http://localhost/file/1500886851.0/@2017072409005162764', null, '2017-07-25 02:15:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707240900517407', '1', '2017-07-24 09:00:51', null, '0', '0', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1500886851.0/@201707240900517407', 'http://localhost/file/1500886851.0/@201707240900517407', null, '2017-07-25 01:42:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409260623565', '1', '2017-07-24 09:26:06', null, '0', '0', '刘小飞', 'JX0923', '124', '高新三中队', '0000000', null, 'file/1500888366.0/@2017072409260623565', 'http://localhost/file/1500888366.0/@2017072409260623565', null, '2017-07-25 01:59:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409260644230', '1', '2017-07-24 09:26:06', null, '0', '3', '刘小飞', 'JX0923', '124', '高新三中队', '0000000', null, 'file/1500888366.0/@2017072409260644230', 'http://localhost/file/1500888366.0/@2017072409260644230', null, '2017-07-25 01:26:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707240926068295', '1', '2017-07-24 09:26:06', null, '0', '3', '刘小飞', 'JX0923', '124', '高新三中队', '0000000', null, 'file/1500888366.0/@201707240926068295', 'http://localhost/file/1500888366.0/@201707240926068295', null, '2017-07-25 01:39:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409363033600', '1', '2017-07-24 09:36:30', null, '0', '3', '吴红艳', 'JX0604', '102', '河西二中队', '0000000', null, 'file/1500888990.0/@2017072409363033600', 'http://localhost/file/1500888990.0/@2017072409363033600', null, '2017-07-25 02:26:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409363039842', '1', '2017-07-24 09:36:30', null, '0', '0', '吴红艳', 'JX0604', '102', '河西二中队', '0000000', null, 'file/1500888990.0/@2017072409363039842', 'http://localhost/file/1500888990.0/@2017072409363039842', null, '2017-07-25 02:30:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409363055405', '1', '2017-07-24 09:36:30', '2017-07-24 09:41:01', '271', '1', '吴红艳', 'JX0604', '102', '河西二中队', '0000000', null, 'file/1500888990.0/@2017072409363055405', 'http://localhost/file/1500888990.0/@2017072409363055405', null, '2017-07-25 01:39:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409545639490', '1', '2017-07-24 09:54:56', null, '0', '0', '于力', '024027', '119', '北郊四中队', '0000000', null, 'file/1500890096.0/@2017072409545639490', 'http://localhost/file/1500890096.0/@2017072409545639490', null, '2017-07-25 02:14:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409545655077', '1', '2017-07-24 09:54:56', '2017-07-24 09:58:17', '201', '1', '于力', '024027', '119', '北郊四中队', '0000000', null, 'file/1500890096.0/@2017072409545655077', 'http://localhost/file/1500890096.0/@2017072409545655077', null, '2017-07-25 02:38:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072409545662932', '1', '2017-07-24 09:54:56', null, '0', '2', '于力', '024027', '119', '北郊四中队', '0000000', null, 'file/1500890096.0/@2017072409545662932', 'http://localhost/file/1500890096.0/@2017072409545662932', null, '2017-07-25 02:57:42', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072410274114543', '1', '2017-07-24 10:27:41', null, '0', '2', '闫帅', 'JX0495', '148', '白云二中队', '0000000', null, 'file/1500892061.0/@2017072410274114543', 'http://localhost/file/1500892061.0/@2017072410274114543', null, '2017-07-25 03:45:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072410274129187', '1', '2017-07-24 10:27:41', '2017-07-24 10:29:57', '136', '1', '闫帅', 'JX0495', '148', '白云二中队', '0000000', null, 'file/1500892061.0/@2017072410274129187', 'http://localhost/file/1500892061.0/@2017072410274129187', null, '2017-07-25 04:12:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072410274161666', '1', '2017-07-24 10:27:41', '2017-07-24 10:32:33', '292', '1', '闫帅', 'JX0495', '148', '白云二中队', '0000000', null, 'file/1500892061.0/@2017072410274161666', 'http://localhost/file/1500892061.0/@2017072410274161666', null, '2017-07-25 03:17:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072410404715484', '1', '2017-07-24 10:40:47', null, '0', '2', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1500892847.0/@2017072410404715484', 'http://localhost/file/1500892847.0/@2017072410404715484', null, '2017-07-25 04:27:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072410404759843', '1', '2017-07-24 10:40:47', null, '0', '3', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1500892847.0/@2017072410404759843', 'http://localhost/file/1500892847.0/@2017072410404759843', null, '2017-07-25 04:26:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241040477949', '1', '2017-07-24 10:40:47', null, '0', '2', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1500892847.0/@201707241040477949', 'http://localhost/file/1500892847.0/@201707241040477949', null, '2017-07-25 03:00:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072411101220385', '1', '2017-07-24 11:10:12', null, '0', '0', '刘义', '024933', '113', '车管所考务科', '0000000', null, 'file/1500894612.0/@2017072411101220385', 'http://localhost/file/1500894612.0/@2017072411101220385', null, '2017-07-25 03:52:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241110125402', '1', '2017-07-24 11:10:12', null, '0', '0', '刘义', '024933', '113', '车管所考务科', '0000000', null, 'file/1500894612.0/@201707241110125402', 'http://localhost/file/1500894612.0/@201707241110125402', null, '2017-07-25 03:43:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072411101258929', '1', '2017-07-24 11:10:12', '2017-07-24 11:13:55', '223', '1', '刘义', '024933', '113', '车管所考务科', '0000000', null, 'file/1500894612.0/@2017072411101258929', 'http://localhost/file/1500894612.0/@2017072411101258929', null, '2017-07-25 04:29:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412030822130', '1', '2017-07-24 12:03:08', '2017-07-24 12:07:02', '234', '1', '王皓誉', 'JX1122', '116', '北郊一中队', '0000000', null, 'file/1500897788.0/@2017072412030822130', 'http://localhost/file/1500897788.0/@2017072412030822130', null, '2017-07-25 04:42:33', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412030827132', '1', '2017-07-24 12:03:08', null, '0', '2', '王皓誉', 'JX1122', '116', '北郊一中队', '0000000', null, 'file/1500897788.0/@2017072412030827132', 'http://localhost/file/1500897788.0/@2017072412030827132', null, '2017-07-25 05:58:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412030839152', '1', '2017-07-24 12:03:08', null, '0', '3', '王皓誉', 'JX1122', '116', '北郊一中队', '0000000', null, 'file/1500897788.0/@2017072412030839152', 'http://localhost/file/1500897788.0/@2017072412030839152', null, '2017-07-25 05:32:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412502616735', '1', '2017-07-24 12:50:26', null, '0', '3', '毕其格', 'JX0657', '139', '岗勤中队', '0000000', null, 'file/1500900626.0/@2017072412502616735', 'http://localhost/file/1500900626.0/@2017072412502616735', null, '2017-07-25 05:05:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412502625378', '1', '2017-07-24 12:50:26', null, '0', '2', '毕其格', 'JX0657', '139', '岗勤中队', '0000000', null, 'file/1500900626.0/@2017072412502625378', 'http://localhost/file/1500900626.0/@2017072412502625378', null, '2017-07-25 05:22:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412502645988', '1', '2017-07-24 12:50:26', '2017-07-24 12:54:51', '265', '1', '毕其格', 'JX0657', '139', '岗勤中队', '0000000', null, 'file/1500900626.0/@2017072412502645988', 'http://localhost/file/1500900626.0/@2017072412502645988', null, '2017-07-25 06:06:47', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412535542339', '1', '2017-07-24 12:53:55', null, '0', '3', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500900835.0/@2017072412535542339', 'http://localhost/file/1500900835.0/@2017072412535542339', null, '2017-07-25 06:22:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412535558460', '1', '2017-07-24 12:53:55', null, '0', '2', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500900835.0/@2017072412535558460', 'http://localhost/file/1500900835.0/@2017072412535558460', null, '2017-07-25 05:56:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072412535559995', '1', '2017-07-24 12:53:55', null, '0', '3', '杨建军', '021242', '112', '车管所外检科', '0000000', null, 'file/1500900835.0/@2017072412535559995', 'http://localhost/file/1500900835.0/@2017072412535559995', null, '2017-07-25 05:41:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413240626668', '1', '2017-07-24 13:24:06', null, '0', '3', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500902646.0/@2017072413240626668', 'http://localhost/file/1500902646.0/@2017072413240626668', null, '2017-07-25 06:36:42', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413240632448', '1', '2017-07-24 13:24:06', null, '0', '3', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500902646.0/@2017072413240632448', 'http://localhost/file/1500902646.0/@2017072413240632448', null, '2017-07-25 06:46:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413240650077', '1', '2017-07-24 13:24:06', null, '0', '0', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500902646.0/@2017072413240650077', 'http://localhost/file/1500902646.0/@2017072413240650077', null, '2017-07-25 06:10:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413251526636', '1', '2017-07-24 13:25:15', null, '0', '3', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500902715.0/@2017072413251526636', 'http://localhost/file/1500902715.0/@2017072413251526636', null, '2017-07-25 05:56:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413251532658', '1', '2017-07-24 13:25:15', '2017-07-24 13:27:28', '133', '1', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500902715.0/@2017072413251532658', 'http://localhost/file/1500902715.0/@2017072413251532658', null, '2017-07-25 07:04:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413251537932', '1', '2017-07-24 13:25:15', null, '0', '3', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500902715.0/@2017072413251537932', 'http://localhost/file/1500902715.0/@2017072413251537932', null, '2017-07-25 06:27:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413422057169', '1', '2017-07-24 13:42:20', '2017-07-24 13:46:12', '232', '1', '任平均', '023540', '107', '河西检查站', '0000000', null, 'file/1500903740.0/@2017072413422057169', 'http://localhost/file/1500903740.0/@2017072413422057169', null, '2017-07-25 07:18:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413422057182', '1', '2017-07-24 13:42:20', null, '0', '3', '任平均', '023540', '107', '河西检查站', '0000000', null, 'file/1500903740.0/@2017072413422057182', 'http://localhost/file/1500903740.0/@2017072413422057182', null, '2017-07-25 06:08:17', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413422062484', '1', '2017-07-24 13:42:20', '2017-07-24 13:46:56', '276', '1', '任平均', '023540', '107', '河西检查站', '0000000', null, 'file/1500903740.0/@2017072413422062484', 'http://localhost/file/1500903740.0/@2017072413422062484', null, '2017-07-25 07:06:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413462128155', '1', '2017-07-24 13:46:21', null, '0', '0', '尹一琦', 'JX0649', '139', '岗勤中队', '0000000', null, 'file/1500903981.0/@2017072413462128155', 'http://localhost/file/1500903981.0/@2017072413462128155', null, '2017-07-25 06:20:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413462139713', '1', '2017-07-24 13:46:21', '2017-07-24 13:50:10', '229', '1', '尹一琦', 'JX0649', '139', '岗勤中队', '0000000', null, 'file/1500903981.0/@2017072413462139713', 'http://localhost/file/1500903981.0/@2017072413462139713', null, '2017-07-25 06:53:58', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413462141171', '1', '2017-07-24 13:46:21', '2017-07-24 13:49:07', '166', '1', '尹一琦', 'JX0649', '139', '岗勤中队', '0000000', null, 'file/1500903981.0/@2017072413462141171', 'http://localhost/file/1500903981.0/@2017072413462141171', null, '2017-07-25 07:07:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413473424683', '1', '2017-07-24 13:47:34', null, '0', '3', '李风波', '024930', '113', '车管所考务科', '0000000', null, 'file/1500904054.0/@2017072413473424683', 'http://localhost/file/1500904054.0/@2017072413473424683', null, '2017-07-25 07:20:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413473439771', '1', '2017-07-24 13:47:34', '2017-07-24 13:50:39', '185', '1', '李风波', '024930', '113', '车管所考务科', '0000000', null, 'file/1500904054.0/@2017072413473439771', 'http://localhost/file/1500904054.0/@2017072413473439771', null, '2017-07-25 07:25:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072413473450602', '1', '2017-07-24 13:47:34', null, '0', '0', '李风波', '024930', '113', '车管所考务科', '0000000', null, 'file/1500904054.0/@2017072413473450602', 'http://localhost/file/1500904054.0/@2017072413473450602', null, '2017-07-25 07:01:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415164425968', '1', '2017-07-24 15:16:44', null, '0', '0', '王建合', '021190', '119', '北郊四中队', '0000000', null, 'file/1500909404.0/@2017072415164425968', 'http://localhost/file/1500909404.0/@2017072415164425968', null, '2017-07-25 07:57:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241516444016', '1', '2017-07-24 15:16:44', null, '0', '0', '王建合', '021190', '119', '北郊四中队', '0000000', null, 'file/1500909404.0/@201707241516444016', 'http://localhost/file/1500909404.0/@201707241516444016', null, '2017-07-25 09:06:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415164441032', '1', '2017-07-24 15:16:44', '2017-07-24 15:19:27', '163', '1', '王建合', '021190', '119', '北郊四中队', '0000000', null, 'file/1500909404.0/@2017072415164441032', 'http://localhost/file/1500909404.0/@2017072415164441032', null, '2017-07-25 07:45:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415311057482', '1', '2017-07-24 15:31:10', '2017-07-24 15:33:31', '141', '1', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1500910270.0/@2017072415311057482', 'http://localhost/file/1500910270.0/@2017072415311057482', null, '2017-07-25 08:01:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415311061664', '1', '2017-07-24 15:31:10', '2017-07-24 15:33:27', '137', '1', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1500910270.0/@2017072415311061664', 'http://localhost/file/1500910270.0/@2017072415311061664', null, '2017-07-25 09:16:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241531108087', '1', '2017-07-24 15:31:10', null, '0', '2', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1500910270.0/@201707241531108087', 'http://localhost/file/1500910270.0/@201707241531108087', null, '2017-07-25 09:11:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415501121980', '1', '2017-07-24 15:50:11', null, '0', '3', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1500911411.0/@2017072415501121980', 'http://localhost/file/1500911411.0/@2017072415501121980', null, '2017-07-25 07:59:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415501134383', '1', '2017-07-24 15:50:11', '2017-07-24 15:52:32', '141', '1', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1500911411.0/@2017072415501134383', 'http://localhost/file/1500911411.0/@2017072415501134383', null, '2017-07-25 07:59:01', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072415501153393', '1', '2017-07-24 15:50:11', '2017-07-24 15:52:46', '155', '1', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1500911411.0/@2017072415501153393', 'http://localhost/file/1500911411.0/@2017072415501153393', null, '2017-07-25 09:14:36', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072417130316874', '1', '2017-07-24 17:13:03', null, '0', '0', '王治国', 'JX0666', '139', '岗勤中队', '0000000', null, 'file/1500916383.0/@2017072417130316874', 'http://localhost/file/1500916383.0/@2017072417130316874', null, '2017-07-25 10:21:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072417130321512', '1', '2017-07-24 17:13:03', '2017-07-24 17:15:10', '127', '1', '王治国', 'JX0666', '139', '岗勤中队', '0000000', null, 'file/1500916383.0/@2017072417130321512', 'http://localhost/file/1500916383.0/@2017072417130321512', null, '2017-07-25 10:05:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241713037475', '1', '2017-07-24 17:13:03', null, '0', '2', '王治国', 'JX0666', '139', '岗勤中队', '0000000', null, 'file/1500916383.0/@201707241713037475', 'http://localhost/file/1500916383.0/@201707241713037475', null, '2017-07-25 09:51:38', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418054926682', '1', '2017-07-24 18:05:49', null, '0', '2', '郝明', 'JX0221', '167', '青山二中队', '0000000', null, 'file/1500919549.0/@2017072418054926682', 'http://localhost/file/1500919549.0/@2017072418054926682', null, '2017-07-25 12:01:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418054945553', '1', '2017-07-24 18:05:49', '2017-07-24 18:10:32', '283', '1', '郝明', 'JX0221', '167', '青山二中队', '0000000', null, 'file/1500919549.0/@2017072418054945553', 'http://localhost/file/1500919549.0/@2017072418054945553', null, '2017-07-25 10:29:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418054945645', '1', '2017-07-24 18:05:49', null, '0', '2', '郝明', 'JX0221', '167', '青山二中队', '0000000', null, 'file/1500919549.0/@2017072418054945645', 'http://localhost/file/1500919549.0/@2017072418054945645', null, '2017-07-25 12:05:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418302620619', '1', '2017-07-24 18:30:26', '2017-07-24 18:34:21', '235', '1', '费思坤', 'JX0918', '125', '高新事故中队', '0000000', null, 'file/1500921026.0/@2017072418302620619', 'http://localhost/file/1500921026.0/@2017072418302620619', null, '2017-07-25 11:40:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418302652414', '1', '2017-07-24 18:30:26', null, '0', '3', '费思坤', 'JX0918', '125', '高新事故中队', '0000000', null, 'file/1500921026.0/@2017072418302652414', 'http://localhost/file/1500921026.0/@2017072418302652414', null, '2017-07-25 12:21:56', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418302659274', '1', '2017-07-24 18:30:26', '2017-07-24 18:34:25', '239', '1', '费思坤', 'JX0918', '125', '高新事故中队', '0000000', null, 'file/1500921026.0/@2017072418302659274', 'http://localhost/file/1500921026.0/@2017072418302659274', null, '2017-07-25 10:42:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418341235365', '1', '2017-07-24 18:34:12', null, '0', '2', '李昊峰', 'JX0735', '120', '北郊事故中队', '0000000', null, 'file/1500921252.0/@2017072418341235365', 'http://localhost/file/1500921252.0/@2017072418341235365', null, '2017-07-25 11:16:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418341240419', '1', '2017-07-24 18:34:12', null, '0', '0', '李昊峰', 'JX0735', '120', '北郊事故中队', '0000000', null, 'file/1500921252.0/@2017072418341240419', 'http://localhost/file/1500921252.0/@2017072418341240419', null, '2017-07-25 11:51:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241834125117', '1', '2017-07-24 18:34:12', null, '0', '0', '李昊峰', 'JX0735', '120', '北郊事故中队', '0000000', null, 'file/1500921252.0/@201707241834125117', 'http://localhost/file/1500921252.0/@201707241834125117', null, '2017-07-25 11:09:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418370847291', '1', '2017-07-24 18:37:08', null, '0', '0', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1500921428.0/@2017072418370847291', 'http://localhost/file/1500921428.0/@2017072418370847291', null, '2017-07-25 11:03:48', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418370851556', '1', '2017-07-24 18:37:08', '2017-07-24 18:39:16', '128', '1', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1500921428.0/@2017072418370851556', 'http://localhost/file/1500921428.0/@2017072418370851556', null, '2017-07-25 10:47:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418370853678', '1', '2017-07-24 18:37:08', '2017-07-24 18:41:19', '251', '1', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1500921428.0/@2017072418370853678', 'http://localhost/file/1500921428.0/@2017072418370853678', null, '2017-07-25 11:28:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418414723416', '1', '2017-07-24 18:41:47', null, '0', '0', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500921707.0/@2017072418414723416', 'http://localhost/file/1500921707.0/@2017072418414723416', null, '2017-07-25 11:40:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418414728154', '1', '2017-07-24 18:41:47', '2017-07-24 18:46:45', '298', '1', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500921707.0/@2017072418414728154', 'http://localhost/file/1500921707.0/@2017072418414728154', null, '2017-07-25 10:46:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418414755195', '1', '2017-07-24 18:41:47', null, '0', '3', '安德稳', '021069', '120', '北郊事故中队', '0000000', null, 'file/1500921707.0/@2017072418414755195', 'http://localhost/file/1500921707.0/@2017072418414755195', null, '2017-07-25 12:14:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418431525027', '1', '2017-07-24 18:43:15', null, '0', '0', '孟繁强', '020938', '114', '北郊园区中队', '0000000', null, 'file/1500921795.0/@2017072418431525027', 'http://localhost/file/1500921795.0/@2017072418431525027', null, '2017-07-25 11:07:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072418431527165', '1', '2017-07-24 18:43:15', null, '0', '2', '孟繁强', '020938', '114', '北郊园区中队', '0000000', null, 'file/1500921795.0/@2017072418431527165', 'http://localhost/file/1500921795.0/@2017072418431527165', null, '2017-07-25 10:46:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241843159395', '1', '2017-07-24 18:43:15', '2017-07-24 18:47:18', '243', '1', '孟繁强', '020938', '114', '北郊园区中队', '0000000', null, 'file/1500921795.0/@201707241843159395', 'http://localhost/file/1500921795.0/@201707241843159395', null, '2017-07-25 12:21:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072419363826378', '1', '2017-07-24 19:36:38', '2017-07-24 19:39:19', '161', '1', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1500924998.0/@2017072419363826378', 'http://localhost/file/1500924998.0/@2017072419363826378', null, '2017-07-25 13:01:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241936388282', '1', '2017-07-24 19:36:38', null, '0', '2', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1500924998.0/@201707241936388282', 'http://localhost/file/1500924998.0/@201707241936388282', null, '2017-07-25 11:45:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707241936388606', '1', '2017-07-24 19:36:38', null, '0', '3', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1500924998.0/@201707241936388606', 'http://localhost/file/1500924998.0/@201707241936388606', null, '2017-07-25 12:44:11', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420002048423', '1', '2017-07-24 20:00:20', null, '0', '3', '史佐', '021075', '164', '青山四级巡控', '0000000', null, 'file/1500926420.0/@2017072420002048423', 'http://localhost/file/1500926420.0/@2017072420002048423', null, '2017-07-25 13:56:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420002049940', '1', '2017-07-24 20:00:20', null, '0', '3', '史佐', '021075', '164', '青山四级巡控', '0000000', null, 'file/1500926420.0/@2017072420002049940', 'http://localhost/file/1500926420.0/@2017072420002049940', null, '2017-07-25 13:47:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420002059910', '1', '2017-07-24 20:00:20', null, '0', '0', '史佐', '021075', '164', '青山四级巡控', '0000000', null, 'file/1500926420.0/@2017072420002059910', 'http://localhost/file/1500926420.0/@2017072420002059910', null, '2017-07-25 12:25:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420075559091', '1', '2017-07-24 20:07:55', null, '0', '0', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500926875.0/@2017072420075559091', 'http://localhost/file/1500926875.0/@2017072420075559091', null, '2017-07-25 13:22:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420075563679', '1', '2017-07-24 20:07:55', null, '0', '0', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500926875.0/@2017072420075563679', 'http://localhost/file/1500926875.0/@2017072420075563679', null, '2017-07-25 12:44:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707242007556737', '1', '2017-07-24 20:07:55', null, '0', '2', '孔令杰', '020898', '80', '河西大队', '0000000', null, 'file/1500926875.0/@201707242007556737', 'http://localhost/file/1500926875.0/@201707242007556737', null, '2017-07-25 13:51:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420141615539', '1', '2017-07-24 20:14:16', '2017-07-24 20:17:02', '166', '1', '陈诚', 'JX0695', '103', '河西一中队', '0000000', null, 'file/1500927256.0/@2017072420141615539', 'http://localhost/file/1500927256.0/@2017072420141615539', null, '2017-07-25 13:21:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420141627002', '1', '2017-07-24 20:14:16', null, '0', '3', '陈诚', 'JX0695', '103', '河西一中队', '0000000', null, 'file/1500927256.0/@2017072420141627002', 'http://localhost/file/1500927256.0/@2017072420141627002', null, '2017-07-25 12:46:35', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420141635398', '1', '2017-07-24 20:14:16', '2017-07-24 20:16:49', '153', '1', '陈诚', 'JX0695', '103', '河西一中队', '0000000', null, 'file/1500927256.0/@2017072420141635398', 'http://localhost/file/1500927256.0/@2017072420141635398', null, '2017-07-25 13:29:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420243023600', '1', '2017-07-24 20:24:30', '2017-07-24 20:29:30', '300', '1', '巴图', 'JX0265', '164', '青山四级巡控', '0000000', null, 'file/1500927870.0/@2017072420243023600', 'http://localhost/file/1500927870.0/@2017072420243023600', null, '2017-07-25 13:22:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420243037838', '1', '2017-07-24 20:24:30', null, '0', '0', '巴图', 'JX0265', '164', '青山四级巡控', '0000000', null, 'file/1500927870.0/@2017072420243037838', 'http://localhost/file/1500927870.0/@2017072420243037838', null, '2017-07-25 12:48:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420243046722', '1', '2017-07-24 20:24:30', '2017-07-24 20:26:47', '137', '1', '巴图', 'JX0265', '164', '青山四级巡控', '0000000', null, 'file/1500927870.0/@2017072420243046722', 'http://localhost/file/1500927870.0/@2017072420243046722', null, '2017-07-25 14:17:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420324053469', '1', '2017-07-24 20:32:40', null, '0', '0', '张嘉伦', 'JX0382', '127', '东兴一中队', '0000000', null, 'file/1500928360.0/@2017072420324053469', 'http://localhost/file/1500928360.0/@2017072420324053469', null, '2017-07-25 12:33:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072420324063346', '1', '2017-07-24 20:32:40', null, '0', '2', '张嘉伦', 'JX0382', '127', '东兴一中队', '0000000', null, 'file/1500928360.0/@2017072420324063346', 'http://localhost/file/1500928360.0/@2017072420324063346', null, '2017-07-25 13:25:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707242032409047', '1', '2017-07-24 20:32:40', null, '0', '2', '张嘉伦', 'JX0382', '127', '东兴一中队', '0000000', null, 'file/1500928360.0/@201707242032409047', 'http://localhost/file/1500928360.0/@201707242032409047', null, '2017-07-25 14:25:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072421415513706', '1', '2017-07-24 21:41:55', '2017-07-24 21:45:50', '235', '1', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1500932515.0/@2017072421415513706', 'http://localhost/file/1500932515.0/@2017072421415513706', null, '2017-07-25 14:26:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072421415534525', '1', '2017-07-24 21:41:55', null, '0', '0', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1500932515.0/@2017072421415534525', 'http://localhost/file/1500932515.0/@2017072421415534525', null, '2017-07-25 14:10:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072421415547410', '1', '2017-07-24 21:41:55', null, '0', '3', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1500932515.0/@2017072421415547410', 'http://localhost/file/1500932515.0/@2017072421415547410', null, '2017-07-25 14:37:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422104526760', '1', '2017-07-24 22:10:45', null, '0', '2', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500934245.0/@2017072422104526760', 'http://localhost/file/1500934245.0/@2017072422104526760', null, '2017-07-25 15:48:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422104534139', '1', '2017-07-24 22:10:45', null, '0', '3', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500934245.0/@2017072422104534139', 'http://localhost/file/1500934245.0/@2017072422104534139', null, '2017-07-25 15:44:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422104544847', '1', '2017-07-24 22:10:45', null, '0', '3', '云梦瑶', 'JX0799', '103', '河西一中队', '0000000', null, 'file/1500934245.0/@2017072422104544847', 'http://localhost/file/1500934245.0/@2017072422104544847', null, '2017-07-25 14:55:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422122027504', '1', '2017-07-24 22:12:20', null, '0', '2', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1500934340.0/@2017072422122027504', 'http://localhost/file/1500934340.0/@2017072422122027504', null, '2017-07-25 14:49:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422122042163', '1', '2017-07-24 22:12:20', '2017-07-24 22:14:32', '132', '1', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1500934340.0/@2017072422122042163', 'http://localhost/file/1500934340.0/@2017072422122042163', null, '2017-07-25 15:08:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422122052579', '1', '2017-07-24 22:12:20', null, '0', '2', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1500934340.0/@2017072422122052579', 'http://localhost/file/1500934340.0/@2017072422122052579', null, '2017-07-25 15:03:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422324423855', '1', '2017-07-24 22:32:44', null, '0', '3', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1500935564.0/@2017072422324423855', 'http://localhost/file/1500935564.0/@2017072422324423855', null, '2017-07-25 15:07:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422324439522', '1', '2017-07-24 22:32:44', null, '0', '2', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1500935564.0/@2017072422324439522', 'http://localhost/file/1500935564.0/@2017072422324439522', null, '2017-07-25 15:09:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422324447050', '1', '2017-07-24 22:32:44', null, '0', '0', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1500935564.0/@2017072422324447050', 'http://localhost/file/1500935564.0/@2017072422324447050', null, '2017-07-25 15:06:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422412222028', '1', '2017-07-24 22:41:22', '2017-07-24 22:45:24', '242', '1', '段海威', 'JX0547', '102', '河西二中队', '0000000', null, 'file/1500936082.0/@2017072422412222028', 'http://localhost/file/1500936082.0/@2017072422412222028', null, '2017-07-25 14:49:35', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072422412253675', '1', '2017-07-24 22:41:22', null, '0', '2', '段海威', 'JX0547', '102', '河西二中队', '0000000', null, 'file/1500936082.0/@2017072422412253675', 'http://localhost/file/1500936082.0/@2017072422412253675', null, '2017-07-25 15:20:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707242241229523', '1', '2017-07-24 22:41:22', '2017-07-24 22:44:34', '192', '1', '段海威', 'JX0547', '102', '河西二中队', '0000000', null, 'file/1500936082.0/@201707242241229523', 'http://localhost/file/1500936082.0/@201707242241229523', null, '2017-07-25 14:57:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072423050012312', '1', '2017-07-24 23:05:00', '2017-07-24 23:09:17', '257', '1', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500937500.0/@2017072423050012312', 'http://localhost/file/1500937500.0/@2017072423050012312', null, '2017-07-25 16:07:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072423050039824', '1', '2017-07-24 23:05:00', null, '0', '0', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500937500.0/@2017072423050039824', 'http://localhost/file/1500937500.0/@2017072423050039824', null, '2017-07-25 15:47:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072423050058265', '1', '2017-07-24 23:05:00', null, '0', '2', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1500937500.0/@2017072423050058265', 'http://localhost/file/1500937500.0/@2017072423050058265', null, '2017-07-25 16:24:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072500102917450', '1', '2017-07-25 00:10:29', null, '0', '0', '贾威', 'JX1095', '116', '北郊一中队', '0000000', null, 'file/1500941429.0/@2017072500102917450', 'http://localhost/file/1500941429.0/@2017072500102917450', null, '2017-07-25 18:10:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072500102955846', '1', '2017-07-25 00:10:29', null, '0', '2', '贾威', 'JX1095', '116', '北郊一中队', '0000000', null, 'file/1500941429.0/@2017072500102955846', 'http://localhost/file/1500941429.0/@2017072500102955846', null, '2017-07-25 18:00:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072500102958727', '1', '2017-07-25 00:10:29', '2017-07-25 00:14:54', '265', '1', '贾威', 'JX1095', '116', '北郊一中队', '0000000', null, 'file/1500941429.0/@2017072500102958727', 'http://localhost/file/1500941429.0/@2017072500102958727', null, '2017-07-25 17:54:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072500122611746', '1', '2017-07-25 00:12:26', null, '0', '0', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500941546.0/@2017072500122611746', 'http://localhost/file/1500941546.0/@2017072500122611746', null, '2017-07-25 16:45:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072500122635081', '1', '2017-07-25 00:12:26', null, '0', '0', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500941546.0/@2017072500122635081', 'http://localhost/file/1500941546.0/@2017072500122635081', null, '2017-07-25 16:21:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072500122635186', '1', '2017-07-25 00:12:26', null, '0', '2', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1500941546.0/@2017072500122635186', 'http://localhost/file/1500941546.0/@2017072500122635186', null, '2017-07-25 17:53:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707250109003817', '1', '2017-07-25 01:09:00', '2017-07-25 01:12:37', '217', '1', '胡碧宇', 'JX0829', '168', '青山三中队', '0000000', null, 'file/1500944940.0/@201707250109003817', 'http://localhost/file/1500944940.0/@201707250109003817', null, '2017-07-25 17:27:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501090049931', '1', '2017-07-25 01:09:00', '2017-07-25 01:12:19', '199', '1', '胡碧宇', 'JX0829', '168', '青山三中队', '0000000', null, 'file/1500944940.0/@2017072501090049931', 'http://localhost/file/1500944940.0/@2017072501090049931', null, '2017-07-25 17:23:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501090055020', '1', '2017-07-25 01:09:00', '2017-07-25 01:11:12', '132', '1', '胡碧宇', 'JX0829', '168', '青山三中队', '0000000', null, 'file/1500944940.0/@2017072501090055020', 'http://localhost/file/1500944940.0/@2017072501090055020', null, '2017-07-25 18:53:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501125226745', '1', '2017-07-25 01:12:52', null, '0', '0', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1500945172.0/@2017072501125226745', 'http://localhost/file/1500945172.0/@2017072501125226745', null, '2017-07-25 17:47:58', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707250112527765', '1', '2017-07-25 01:12:52', null, '0', '3', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1500945172.0/@201707250112527765', 'http://localhost/file/1500945172.0/@201707250112527765', null, '2017-07-25 18:26:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707250112528584', '1', '2017-07-25 01:12:52', '2017-07-25 01:15:59', '187', '1', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1500945172.0/@201707250112528584', 'http://localhost/file/1500945172.0/@201707250112528584', null, '2017-07-25 17:29:17', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501311827377', '1', '2017-07-25 01:31:18', '2017-07-25 01:36:18', '300', '1', '郑鸿宇', 'JX1178', '148', '白云二中队', '0000000', null, 'file/1500946278.0/@2017072501311827377', 'http://localhost/file/1500946278.0/@2017072501311827377', null, '2017-07-25 19:01:19', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501311840486', '1', '2017-07-25 01:31:18', null, '0', '0', '郑鸿宇', 'JX1178', '148', '白云二中队', '0000000', null, 'file/1500946278.0/@2017072501311840486', 'http://localhost/file/1500946278.0/@2017072501311840486', null, '2017-07-25 18:53:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501311849999', '1', '2017-07-25 01:31:18', null, '0', '3', '郑鸿宇', 'JX1178', '148', '白云二中队', '0000000', null, 'file/1500946278.0/@2017072501311849999', 'http://localhost/file/1500946278.0/@2017072501311849999', null, '2017-07-25 18:39:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501375111894', '1', '2017-07-25 01:37:51', null, '0', '0', '徐全有', 'JX1032', '129', '东兴三中队', '0000000', null, 'file/1500946671.0/@2017072501375111894', 'http://localhost/file/1500946671.0/@2017072501375111894', null, '2017-07-25 18:23:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501375146592', '1', '2017-07-25 01:37:51', '2017-07-25 01:41:48', '237', '1', '徐全有', 'JX1032', '129', '东兴三中队', '0000000', null, 'file/1500946671.0/@2017072501375146592', 'http://localhost/file/1500946671.0/@2017072501375146592', null, '2017-07-25 19:18:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501375157217', '1', '2017-07-25 01:37:51', null, '0', '2', '徐全有', 'JX1032', '129', '东兴三中队', '0000000', null, 'file/1500946671.0/@2017072501375157217', 'http://localhost/file/1500946671.0/@2017072501375157217', null, '2017-07-25 19:03:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501554933784', '1', '2017-07-25 01:55:49', null, '0', '0', '赵东', '020697', '107', '河西检查站', '0000000', null, 'file/1500947749.0/@2017072501554933784', 'http://localhost/file/1500947749.0/@2017072501554933784', null, '2017-07-25 19:51:36', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501554944253', '1', '2017-07-25 01:55:49', null, '0', '2', '赵东', '020697', '107', '河西检查站', '0000000', null, 'file/1500947749.0/@2017072501554944253', 'http://localhost/file/1500947749.0/@2017072501554944253', null, '2017-07-25 19:44:20', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707250155498260', '1', '2017-07-25 01:55:49', null, '0', '2', '赵东', '020697', '107', '河西检查站', '0000000', null, 'file/1500947749.0/@201707250155498260', 'http://localhost/file/1500947749.0/@201707250155498260', null, '2017-07-25 19:00:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501594340589', '1', '2017-07-25 01:59:43', null, '0', '0', '张文静', 'JX0689', '140', '护校中队', '0000000', null, 'file/1500947983.0/@2017072501594340589', 'http://localhost/file/1500947983.0/@2017072501594340589', null, '2017-07-25 19:31:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072501594345294', '1', '2017-07-25 01:59:43', null, '0', '0', '张文静', 'JX0689', '140', '护校中队', '0000000', null, 'file/1500947983.0/@2017072501594345294', 'http://localhost/file/1500947983.0/@2017072501594345294', null, '2017-07-25 19:16:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707250159439604', '1', '2017-07-25 01:59:43', null, '0', '3', '张文静', 'JX0689', '140', '护校中队', '0000000', null, 'file/1500947983.0/@201707250159439604', 'http://localhost/file/1500947983.0/@201707250159439604', null, '2017-07-25 19:14:33', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072502091313996', '1', '2017-07-25 02:09:13', null, '0', '0', '王晓宇', 'JX0483', '129', '东兴三中队', '0000000', null, 'file/1500948553.0/@2017072502091313996', 'http://localhost/file/1500948553.0/@2017072502091313996', null, '2017-07-25 19:49:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072502091331174', '1', '2017-07-25 02:09:13', null, '0', '0', '王晓宇', 'JX0483', '129', '东兴三中队', '0000000', null, 'file/1500948553.0/@2017072502091331174', 'http://localhost/file/1500948553.0/@2017072502091331174', null, '2017-07-25 18:49:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072502091351458', '1', '2017-07-25 02:09:13', null, '0', '3', '王晓宇', 'JX0483', '129', '东兴三中队', '0000000', null, 'file/1500948553.0/@2017072502091351458', 'http://localhost/file/1500948553.0/@2017072502091351458', null, '2017-07-25 18:35:33', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072502254727019', '1', '2017-07-25 02:25:47', null, '0', '3', '白海英', '020703', '113', '车管所考务科', '0000000', null, 'file/1500949547.0/@2017072502254727019', 'http://localhost/file/1500949547.0/@2017072502254727019', null, '2017-07-25 19:22:54', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072502254748073', '1', '2017-07-25 02:25:47', null, '0', '2', '白海英', '020703', '113', '车管所考务科', '0000000', null, 'file/1500949547.0/@2017072502254748073', 'http://localhost/file/1500949547.0/@2017072502254748073', null, '2017-07-25 19:55:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072502254756898', '1', '2017-07-25 02:25:47', '2017-07-25 02:30:08', '261', '1', '白海英', '020703', '113', '车管所考务科', '0000000', null, 'file/1500949547.0/@2017072502254756898', 'http://localhost/file/1500949547.0/@2017072502254756898', null, '2017-07-25 19:29:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072503030215229', '1', '2017-07-25 03:03:02', null, '0', '2', '王超', 'JX1119', '118', '北郊三中队', '0000000', null, 'file/1500951782.0/@2017072503030215229', 'http://localhost/file/1500951782.0/@2017072503030215229', null, '2017-07-25 19:42:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072503030231368', '1', '2017-07-25 03:03:02', null, '0', '2', '王超', 'JX1119', '118', '北郊三中队', '0000000', null, 'file/1500951782.0/@2017072503030231368', 'http://localhost/file/1500951782.0/@2017072503030231368', null, '2017-07-25 19:17:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072503030232672', '1', '2017-07-25 03:03:02', null, '0', '3', '王超', 'JX1119', '118', '北郊三中队', '0000000', null, 'file/1500951782.0/@2017072503030232672', 'http://localhost/file/1500951782.0/@2017072503030232672', null, '2017-07-25 20:19:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072504120130384', '1', '2017-07-25 04:12:01', null, '0', '0', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1500955921.0/@2017072504120130384', 'http://localhost/file/1500955921.0/@2017072504120130384', null, '2017-07-25 20:55:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072504120149893', '1', '2017-07-25 04:12:01', '2017-07-25 04:15:08', '187', '1', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1500955921.0/@2017072504120149893', 'http://localhost/file/1500955921.0/@2017072504120149893', null, '2017-07-25 20:30:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072504120155337', '1', '2017-07-25 04:12:01', null, '0', '3', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1500955921.0/@2017072504120155337', 'http://localhost/file/1500955921.0/@2017072504120155337', null, '2017-07-25 20:58:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506040815063', '1', '2017-07-25 06:04:08', null, '0', '2', '贺文', 'JX1073', '102', '河西二中队', '0000000', null, 'file/1500962648.0/@2017072506040815063', 'http://localhost/file/1500962648.0/@2017072506040815063', null, '2017-07-26 00:03:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506040823934', '1', '2017-07-25 06:04:08', '2017-07-25 06:06:59', '171', '1', '贺文', 'JX1073', '102', '河西二中队', '0000000', null, 'file/1500962648.0/@2017072506040823934', 'http://localhost/file/1500962648.0/@2017072506040823934', null, '2017-07-25 23:44:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506040862513', '1', '2017-07-25 06:04:08', null, '0', '3', '贺文', 'JX1073', '102', '河西二中队', '0000000', null, 'file/1500962648.0/@2017072506040862513', 'http://localhost/file/1500962648.0/@2017072506040862513', null, '2017-07-25 23:38:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506213213989', '1', '2017-07-25 06:21:32', null, '0', '0', '杨国强', '024026', '114', '北郊园区中队', '0000000', null, 'file/1500963692.0/@2017072506213213989', 'http://localhost/file/1500963692.0/@2017072506213213989', null, '2017-07-25 23:07:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506213232629', '1', '2017-07-25 06:21:32', '2017-07-25 06:23:59', '147', '1', '杨国强', '024026', '114', '北郊园区中队', '0000000', null, 'file/1500963692.0/@2017072506213232629', 'http://localhost/file/1500963692.0/@2017072506213232629', null, '2017-07-25 23:50:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707250621325092', '1', '2017-07-25 06:21:32', null, '0', '2', '杨国强', '024026', '114', '北郊园区中队', '0000000', null, 'file/1500963692.0/@201707250621325092', 'http://localhost/file/1500963692.0/@201707250621325092', null, '2017-07-25 23:37:16', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506443332746', '1', '2017-07-25 06:44:33', null, '0', '2', '且伟', '000841', '125', '高新事故中队', '0000000', null, 'file/1500965073.0/@2017072506443332746', 'http://localhost/file/1500965073.0/@2017072506443332746', null, '2017-07-25 23:23:35', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506443350666', '1', '2017-07-25 06:44:33', null, '0', '3', '且伟', '000841', '125', '高新事故中队', '0000000', null, 'file/1500965073.0/@2017072506443350666', 'http://localhost/file/1500965073.0/@2017072506443350666', null, '2017-07-25 23:18:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072506443352746', '1', '2017-07-25 06:44:33', '2017-07-25 06:47:42', '189', '1', '且伟', '000841', '125', '高新事故中队', '0000000', null, 'file/1500965073.0/@2017072506443352746', 'http://localhost/file/1500965073.0/@2017072506443352746', null, '2017-07-25 23:14:53', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072507331420374', '1', '2017-07-25 07:33:14', null, '0', '0', '张若超', '021051', '125', '高新事故中队', '0000000', null, 'file/1500967994.0/@2017072507331420374', 'http://localhost/file/1500967994.0/@2017072507331420374', null, '2017-07-26 01:14:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072507331438615', '1', '2017-07-25 07:33:14', null, '0', '3', '张若超', '021051', '125', '高新事故中队', '0000000', null, 'file/1500967994.0/@2017072507331438615', 'http://localhost/file/1500967994.0/@2017072507331438615', null, '2017-07-26 00:24:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072507331464253', '1', '2017-07-25 07:33:14', null, '0', '2', '张若超', '021051', '125', '高新事故中队', '0000000', null, 'file/1500967994.0/@2017072507331464253', 'http://localhost/file/1500967994.0/@2017072507331464253', null, '2017-07-26 01:24:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508030230746', '1', '2017-07-25 08:03:02', '2017-07-25 08:05:25', '143', '1', '程超', 'JX0574', '117', '北郊二中队', '0000000', null, 'file/1500969782.0/@2017072508030230746', 'http://localhost/file/1500969782.0/@2017072508030230746', null, '2017-07-26 01:29:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508030244821', '1', '2017-07-25 08:03:02', '2017-07-25 08:07:58', '296', '1', '程超', 'JX0574', '117', '北郊二中队', '0000000', null, 'file/1500969782.0/@2017072508030244821', 'http://localhost/file/1500969782.0/@2017072508030244821', null, '2017-07-26 00:13:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508030264376', '1', '2017-07-25 08:03:02', '2017-07-25 08:07:26', '264', '1', '程超', 'JX0574', '117', '北郊二中队', '0000000', null, 'file/1500969782.0/@2017072508030264376', 'http://localhost/file/1500969782.0/@2017072508030264376', null, '2017-07-26 01:57:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508104135613', '1', '2017-07-25 08:10:41', null, '0', '3', '杨鸿', '021007', '80', '河西大队', '0000000', null, 'file/1500970241.0/@2017072508104135613', 'http://localhost/file/1500970241.0/@2017072508104135613', null, '2017-07-26 01:53:14', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508104140053', '1', '2017-07-25 08:10:41', null, '0', '2', '杨鸿', '021007', '80', '河西大队', '0000000', null, 'file/1500970241.0/@2017072508104140053', 'http://localhost/file/1500970241.0/@2017072508104140053', null, '2017-07-26 00:41:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508104163641', '1', '2017-07-25 08:10:41', null, '0', '3', '杨鸿', '021007', '80', '河西大队', '0000000', null, 'file/1500970241.0/@2017072508104163641', 'http://localhost/file/1500970241.0/@2017072508104163641', null, '2017-07-26 00:23:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508532510014', '1', '2017-07-25 08:53:25', null, '0', '0', '杨馥毓', 'JX0647', '139', '岗勤中队', '0000000', null, 'file/1500972805.0/@2017072508532510014', 'http://localhost/file/1500972805.0/@2017072508532510014', null, '2017-07-26 02:03:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508532514008', '1', '2017-07-25 08:53:25', null, '0', '3', '杨馥毓', 'JX0647', '139', '岗勤中队', '0000000', null, 'file/1500972805.0/@2017072508532514008', 'http://localhost/file/1500972805.0/@2017072508532514008', null, '2017-07-26 01:22:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072508532555035', '1', '2017-07-25 08:53:25', null, '0', '2', '杨馥毓', 'JX0647', '139', '岗勤中队', '0000000', null, 'file/1500972805.0/@2017072508532555035', 'http://localhost/file/1500972805.0/@2017072508532555035', null, '2017-07-26 02:19:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072509045525525', '1', '2017-07-25 09:04:55', '2017-07-25 09:08:31', '216', '1', '殷林', '024995', '119', '北郊四中队', '0000000', null, 'file/1500973495.0/@2017072509045525525', 'http://localhost/file/1500973495.0/@2017072509045525525', null, '2017-07-26 01:27:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072509045541149', '1', '2017-07-25 09:04:55', null, '0', '3', '殷林', '024995', '119', '北郊四中队', '0000000', null, 'file/1500973495.0/@2017072509045541149', 'http://localhost/file/1500973495.0/@2017072509045541149', null, '2017-07-26 02:38:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072509045541785', '1', '2017-07-25 09:04:55', null, '0', '3', '殷林', '024995', '119', '北郊四中队', '0000000', null, 'file/1500973495.0/@2017072509045541785', 'http://localhost/file/1500973495.0/@2017072509045541785', null, '2017-07-26 01:50:59', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072510311817651', '1', '2017-07-25 10:31:18', '2017-07-25 10:35:52', '274', '1', '许志刚', '020695', '113', '车管所考务科', '0000000', null, 'file/1500978678.0/@2017072510311817651', 'http://localhost/file/1500978678.0/@2017072510311817651', null, '2017-07-26 04:21:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072510311819450', '1', '2017-07-25 10:31:18', null, '0', '0', '许志刚', '020695', '113', '车管所考务科', '0000000', null, 'file/1500978678.0/@2017072510311819450', 'http://localhost/file/1500978678.0/@2017072510311819450', null, '2017-07-26 04:02:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072510311832352', '1', '2017-07-25 10:31:18', null, '0', '2', '许志刚', '020695', '113', '车管所考务科', '0000000', null, 'file/1500978678.0/@2017072510311832352', 'http://localhost/file/1500978678.0/@2017072510311832352', null, '2017-07-26 04:30:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511111837049', '1', '2017-07-25 11:11:18', '2017-07-25 11:15:35', '257', '1', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1500981078.0/@2017072511111837049', 'http://localhost/file/1500981078.0/@2017072511111837049', null, '2017-07-26 03:30:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251111183769', '1', '2017-07-25 11:11:18', null, '0', '3', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1500981078.0/@201707251111183769', 'http://localhost/file/1500981078.0/@201707251111183769', null, '2017-07-26 04:20:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511111847837', '1', '2017-07-25 11:11:18', null, '0', '2', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1500981078.0/@2017072511111847837', 'http://localhost/file/1500981078.0/@2017072511111847837', null, '2017-07-26 04:37:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511213045561', '1', '2017-07-25 11:21:30', '2017-07-25 11:23:59', '149', '1', '李风波', '024930', '113', '车管所考务科', '0000000', null, 'file/1500981690.0/@2017072511213045561', 'http://localhost/file/1500981690.0/@2017072511213045561', null, '2017-07-26 05:15:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511213053883', '1', '2017-07-25 11:21:30', '2017-07-25 11:26:06', '276', '1', '李风波', '024930', '113', '车管所考务科', '0000000', null, 'file/1500981690.0/@2017072511213053883', 'http://localhost/file/1500981690.0/@2017072511213053883', null, '2017-07-26 04:20:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511213060602', '1', '2017-07-25 11:21:30', '2017-07-25 11:25:44', '254', '1', '李风波', '024930', '113', '车管所考务科', '0000000', null, 'file/1500981690.0/@2017072511213060602', 'http://localhost/file/1500981690.0/@2017072511213060602', null, '2017-07-26 04:42:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511414822170', '1', '2017-07-25 11:41:48', null, '0', '2', '张春明', 'JX1044', '119', '北郊四中队', '0000000', null, 'file/1500982908.0/@2017072511414822170', 'http://localhost/file/1500982908.0/@2017072511414822170', null, '2017-07-26 04:00:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511414823053', '1', '2017-07-25 11:41:48', '2017-07-25 11:44:06', '138', '1', '张春明', 'JX1044', '119', '北郊四中队', '0000000', null, 'file/1500982908.0/@2017072511414823053', 'http://localhost/file/1500982908.0/@2017072511414823053', null, '2017-07-26 04:17:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072511414835828', '1', '2017-07-25 11:41:48', null, '0', '2', '张春明', 'JX1044', '119', '北郊四中队', '0000000', null, 'file/1500982908.0/@2017072511414835828', 'http://localhost/file/1500982908.0/@2017072511414835828', null, '2017-07-26 05:24:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072512115628705', '1', '2017-07-25 12:11:56', null, '0', '2', '刘伟', '024996', '164', '青山四级巡控', '0000000', null, 'file/1500984716.0/@2017072512115628705', 'http://localhost/file/1500984716.0/@2017072512115628705', null, '2017-07-26 05:42:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251211563801', '1', '2017-07-25 12:11:56', null, '0', '3', '刘伟', '024996', '164', '青山四级巡控', '0000000', null, 'file/1500984716.0/@201707251211563801', 'http://localhost/file/1500984716.0/@201707251211563801', null, '2017-07-26 05:13:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072512115641471', '1', '2017-07-25 12:11:56', null, '0', '2', '刘伟', '024996', '164', '青山四级巡控', '0000000', null, 'file/1500984716.0/@2017072512115641471', 'http://localhost/file/1500984716.0/@2017072512115641471', null, '2017-07-26 05:57:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072513384625835', '1', '2017-07-25 13:38:46', null, '0', '0', '温磊', '024806', '108', '督察大队一中队', '0000000', null, 'file/1500989926.0/@2017072513384625835', 'http://localhost/file/1500989926.0/@2017072513384625835', null, '2017-07-26 05:47:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072513384632101', '1', '2017-07-25 13:38:46', null, '0', '3', '温磊', '024806', '108', '督察大队一中队', '0000000', null, 'file/1500989926.0/@2017072513384632101', 'http://localhost/file/1500989926.0/@2017072513384632101', null, '2017-07-26 07:22:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072513384652967', '1', '2017-07-25 13:38:46', null, '0', '2', '温磊', '024806', '108', '督察大队一中队', '0000000', null, 'file/1500989926.0/@2017072513384652967', 'http://localhost/file/1500989926.0/@2017072513384652967', null, '2017-07-26 06:50:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072513520715819', '1', '2017-07-25 13:52:07', null, '0', '0', '刘占军', '000839', '120', '北郊事故中队', '0000000', null, 'file/1500990727.0/@2017072513520715819', 'http://localhost/file/1500990727.0/@2017072513520715819', null, '2017-07-26 05:54:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072513520722175', '1', '2017-07-25 13:52:07', null, '0', '3', '刘占军', '000839', '120', '北郊事故中队', '0000000', null, 'file/1500990727.0/@2017072513520722175', 'http://localhost/file/1500990727.0/@2017072513520722175', null, '2017-07-26 06:53:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072513520733693', '1', '2017-07-25 13:52:07', null, '0', '3', '刘占军', '000839', '120', '北郊事故中队', '0000000', null, 'file/1500990727.0/@2017072513520733693', 'http://localhost/file/1500990727.0/@2017072513520733693', null, '2017-07-26 07:10:43', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072514165824201', '1', '2017-07-25 14:16:58', null, '0', '2', '张方华', 'JX0672', '139', '岗勤中队', '0000000', null, 'file/1500992218.0/@2017072514165824201', 'http://localhost/file/1500992218.0/@2017072514165824201', null, '2017-07-26 06:37:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072514165852541', '1', '2017-07-25 14:16:58', '2017-07-25 14:20:50', '232', '1', '张方华', 'JX0672', '139', '岗勤中队', '0000000', null, 'file/1500992218.0/@2017072514165852541', 'http://localhost/file/1500992218.0/@2017072514165852541', null, '2017-07-26 08:03:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251416588642', '1', '2017-07-25 14:16:58', '2017-07-25 14:21:27', '269', '1', '张方华', 'JX0672', '139', '岗勤中队', '0000000', null, 'file/1500992218.0/@201707251416588642', 'http://localhost/file/1500992218.0/@201707251416588642', null, '2017-07-26 06:29:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072514482440866', '1', '2017-07-25 14:48:24', '2017-07-25 14:53:10', '286', '1', '郝璐璐', 'JX0553', '102', '河西二中队', '0000000', null, 'file/1500994104.0/@2017072514482440866', 'http://localhost/file/1500994104.0/@2017072514482440866', null, '2017-07-26 08:35:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072514482448434', '1', '2017-07-25 14:48:24', null, '0', '3', '郝璐璐', 'JX0553', '102', '河西二中队', '0000000', null, 'file/1500994104.0/@2017072514482448434', 'http://localhost/file/1500994104.0/@2017072514482448434', null, '2017-07-26 07:45:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251448249042', '1', '2017-07-25 14:48:24', null, '0', '0', '郝璐璐', 'JX0553', '102', '河西二中队', '0000000', null, 'file/1500994104.0/@201707251448249042', 'http://localhost/file/1500994104.0/@201707251448249042', null, '2017-07-26 08:15:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515035111843', '1', '2017-07-25 15:03:51', null, '0', '0', '武晓钢', '024839', '102', '河西二中队', '0000000', null, 'file/1500995031.0/@2017072515035111843', 'http://localhost/file/1500995031.0/@2017072515035111843', null, '2017-07-26 08:43:37', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515035121536', '1', '2017-07-25 15:03:51', '2017-07-25 15:06:05', '134', '1', '武晓钢', '024839', '102', '河西二中队', '0000000', null, 'file/1500995031.0/@2017072515035121536', 'http://localhost/file/1500995031.0/@2017072515035121536', null, '2017-07-26 08:49:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515035147204', '1', '2017-07-25 15:03:51', null, '0', '0', '武晓钢', '024839', '102', '河西二中队', '0000000', null, 'file/1500995031.0/@2017072515035147204', 'http://localhost/file/1500995031.0/@2017072515035147204', null, '2017-07-26 07:51:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515130113766', '1', '2017-07-25 15:13:01', null, '0', '2', '张宏军', '024809', '120', '北郊事故中队', '0000000', null, 'file/1500995581.0/@2017072515130113766', 'http://localhost/file/1500995581.0/@2017072515130113766', null, '2017-07-26 07:42:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251513014044', '1', '2017-07-25 15:13:01', '2017-07-25 15:17:43', '282', '1', '张宏军', '024809', '120', '北郊事故中队', '0000000', null, 'file/1500995581.0/@201707251513014044', 'http://localhost/file/1500995581.0/@201707251513014044', null, '2017-07-26 08:37:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515130141099', '1', '2017-07-25 15:13:01', '2017-07-25 15:17:46', '285', '1', '张宏军', '024809', '120', '北郊事故中队', '0000000', null, 'file/1500995581.0/@2017072515130141099', 'http://localhost/file/1500995581.0/@2017072515130141099', null, '2017-07-26 08:48:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515380253271', '1', '2017-07-25 15:38:02', '2017-07-25 15:42:31', '269', '1', '李卉', 'JX0757', '139', '岗勤中队', '0000000', null, 'file/1500997082.0/@2017072515380253271', 'http://localhost/file/1500997082.0/@2017072515380253271', null, '2017-07-26 07:45:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515380255665', '1', '2017-07-25 15:38:02', null, '0', '0', '李卉', 'JX0757', '139', '岗勤中队', '0000000', null, 'file/1500997082.0/@2017072515380255665', 'http://localhost/file/1500997082.0/@2017072515380255665', null, '2017-07-26 08:47:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251538028556', '1', '2017-07-25 15:38:02', '2017-07-25 15:40:59', '177', '1', '李卉', 'JX0757', '139', '岗勤中队', '0000000', null, 'file/1500997082.0/@201707251538028556', 'http://localhost/file/1500997082.0/@201707251538028556', null, '2017-07-26 08:23:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515400034192', '1', '2017-07-25 15:40:00', null, '0', '2', '王钢', '020955', '124', '高新三中队', '0000000', null, 'file/1500997200.0/@2017072515400034192', 'http://localhost/file/1500997200.0/@2017072515400034192', null, '2017-07-26 07:59:59', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515400054000', '1', '2017-07-25 15:40:00', null, '0', '3', '王钢', '020955', '124', '高新三中队', '0000000', null, 'file/1500997200.0/@2017072515400054000', 'http://localhost/file/1500997200.0/@2017072515400054000', null, '2017-07-26 07:49:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072515400060910', '1', '2017-07-25 15:40:00', '2017-07-25 15:42:41', '161', '1', '王钢', '020955', '124', '高新三中队', '0000000', null, 'file/1500997200.0/@2017072515400060910', 'http://localhost/file/1500997200.0/@2017072515400060910', null, '2017-07-26 08:17:33', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072516201818590', '1', '2017-07-25 16:20:18', '2017-07-25 16:23:36', '198', '1', '郝璐璐', 'JX0553', '102', '河西二中队', '0000000', null, 'file/1500999618.0/@2017072516201818590', 'http://localhost/file/1500999618.0/@2017072516201818590', null, '2017-07-26 10:00:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072516201828385', '1', '2017-07-25 16:20:18', null, '0', '0', '郝璐璐', 'JX0553', '102', '河西二中队', '0000000', null, 'file/1500999618.0/@2017072516201828385', 'http://localhost/file/1500999618.0/@2017072516201828385', null, '2017-07-26 10:06:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072516201861647', '1', '2017-07-25 16:20:18', null, '0', '2', '郝璐璐', 'JX0553', '102', '河西二中队', '0000000', null, 'file/1500999618.0/@2017072516201861647', 'http://localhost/file/1500999618.0/@2017072516201861647', null, '2017-07-26 09:14:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072516474527312', '1', '2017-07-25 16:47:45', '2017-07-25 16:52:17', '272', '1', '李振宇', 'JX1027', '129', '东兴三中队', '0000000', null, 'file/1501001265.0/@2017072516474527312', 'http://localhost/file/1501001265.0/@2017072516474527312', null, '2017-07-26 10:36:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072516474529072', '1', '2017-07-25 16:47:45', null, '0', '3', '李振宇', 'JX1027', '129', '东兴三中队', '0000000', null, 'file/1501001265.0/@2017072516474529072', 'http://localhost/file/1501001265.0/@2017072516474529072', null, '2017-07-26 09:16:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072516474534574', '1', '2017-07-25 16:47:45', null, '0', '2', '李振宇', 'JX1027', '129', '东兴三中队', '0000000', null, 'file/1501001265.0/@2017072516474534574', 'http://localhost/file/1501001265.0/@2017072516474534574', null, '2017-07-26 10:13:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072517255745873', '1', '2017-07-25 17:25:57', null, '0', '3', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1501003557.0/@2017072517255745873', 'http://localhost/file/1501003557.0/@2017072517255745873', null, '2017-07-26 10:01:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072517255753369', '1', '2017-07-25 17:25:57', null, '0', '0', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1501003557.0/@2017072517255753369', 'http://localhost/file/1501003557.0/@2017072517255753369', null, '2017-07-26 09:29:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072517255761579', '1', '2017-07-25 17:25:57', null, '0', '0', '郜飞', '024961', '103', '河西一中队', '0000000', null, 'file/1501003557.0/@2017072517255761579', 'http://localhost/file/1501003557.0/@2017072517255761579', null, '2017-07-26 10:26:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518035823487', '1', '2017-07-25 18:03:58', null, '0', '2', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1501005838.0/@2017072518035823487', 'http://localhost/file/1501005838.0/@2017072518035823487', null, '2017-07-26 10:46:11', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518035826264', '1', '2017-07-25 18:03:58', null, '0', '3', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1501005838.0/@2017072518035826264', 'http://localhost/file/1501005838.0/@2017072518035826264', null, '2017-07-26 10:32:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518035841194', '1', '2017-07-25 18:03:58', '2017-07-25 18:07:46', '228', '1', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1501005838.0/@2017072518035841194', 'http://localhost/file/1501005838.0/@2017072518035841194', null, '2017-07-26 11:43:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518061244759', '1', '2017-07-25 18:06:12', '2017-07-25 18:09:56', '224', '1', '秦政', '024885', '122', '高新二中队', '0000000', null, 'file/1501005972.0/@2017072518061244759', 'http://localhost/file/1501005972.0/@2017072518061244759', null, '2017-07-26 11:20:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518061247863', '1', '2017-07-25 18:06:12', null, '0', '2', '秦政', '024885', '122', '高新二中队', '0000000', null, 'file/1501005972.0/@2017072518061247863', 'http://localhost/file/1501005972.0/@2017072518061247863', null, '2017-07-26 10:28:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707251806128139', '1', '2017-07-25 18:06:12', null, '0', '0', '秦政', '024885', '122', '高新二中队', '0000000', null, 'file/1501005972.0/@201707251806128139', 'http://localhost/file/1501005972.0/@201707251806128139', null, '2017-07-26 10:52:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518450712461', '1', '2017-07-25 18:45:07', '2017-07-25 18:47:09', '122', '1', '曹斌', '023727', '118', '北郊三中队', '0000000', null, 'file/1501008307.0/@2017072518450712461', 'http://localhost/file/1501008307.0/@2017072518450712461', null, '2017-07-26 11:51:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518450713882', '1', '2017-07-25 18:45:07', '2017-07-25 18:47:12', '125', '1', '曹斌', '023727', '118', '北郊三中队', '0000000', null, 'file/1501008307.0/@2017072518450713882', 'http://localhost/file/1501008307.0/@2017072518450713882', null, '2017-07-26 12:05:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518450736635', '1', '2017-07-25 18:45:07', '2017-07-25 18:48:30', '203', '1', '曹斌', '023727', '118', '北郊三中队', '0000000', null, 'file/1501008307.0/@2017072518450736635', 'http://localhost/file/1501008307.0/@2017072518450736635', null, '2017-07-26 12:31:19', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518581825746', '1', '2017-07-25 18:58:18', null, '0', '3', '王晓宇', 'JX0483', '129', '东兴三中队', '0000000', null, 'file/1501009098.0/@2017072518581825746', 'http://localhost/file/1501009098.0/@2017072518581825746', null, '2017-07-26 12:25:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518581830715', '1', '2017-07-25 18:58:18', null, '0', '3', '王晓宇', 'JX0483', '129', '东兴三中队', '0000000', null, 'file/1501009098.0/@2017072518581830715', 'http://localhost/file/1501009098.0/@2017072518581830715', null, '2017-07-26 11:38:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072518581852301', '1', '2017-07-25 18:58:18', null, '0', '3', '王晓宇', 'JX0483', '129', '东兴三中队', '0000000', null, 'file/1501009098.0/@2017072518581852301', 'http://localhost/file/1501009098.0/@2017072518581852301', null, '2017-07-26 11:04:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519055319716', '1', '2017-07-25 19:05:53', null, '0', '2', '赵寒蕊', 'JX0779', '139', '岗勤中队', '0000000', null, 'file/1501009553.0/@2017072519055319716', 'http://localhost/file/1501009553.0/@2017072519055319716', null, '2017-07-26 11:26:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519055321675', '1', '2017-07-25 19:05:53', '2017-07-25 19:07:53', '120', '1', '赵寒蕊', 'JX0779', '139', '岗勤中队', '0000000', null, 'file/1501009553.0/@2017072519055321675', 'http://localhost/file/1501009553.0/@2017072519055321675', null, '2017-07-26 12:08:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519055350183', '1', '2017-07-25 19:05:53', null, '0', '3', '赵寒蕊', 'JX0779', '139', '岗勤中队', '0000000', null, 'file/1501009553.0/@2017072519055350183', 'http://localhost/file/1501009553.0/@2017072519055350183', null, '2017-07-26 12:58:59', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519335140155', '1', '2017-07-25 19:33:51', null, '0', '3', '刘耀春', '023837', '107', '河西检查站', '0000000', null, 'file/1501011231.0/@2017072519335140155', 'http://localhost/file/1501011231.0/@2017072519335140155', null, '2017-07-26 11:54:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519335158443', '1', '2017-07-25 19:33:51', null, '0', '3', '刘耀春', '023837', '107', '河西检查站', '0000000', null, 'file/1501011231.0/@2017072519335158443', 'http://localhost/file/1501011231.0/@2017072519335158443', null, '2017-07-26 12:04:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519335161823', '1', '2017-07-25 19:33:51', null, '0', '3', '刘耀春', '023837', '107', '河西检查站', '0000000', null, 'file/1501011231.0/@2017072519335161823', 'http://localhost/file/1501011231.0/@2017072519335161823', null, '2017-07-26 12:24:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519424416952', '1', '2017-07-25 19:42:44', null, '0', '3', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1501011764.0/@2017072519424416952', 'http://localhost/file/1501011764.0/@2017072519424416952', null, '2017-07-26 12:58:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519424421698', '1', '2017-07-25 19:42:44', null, '0', '2', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1501011764.0/@2017072519424421698', 'http://localhost/file/1501011764.0/@2017072519424421698', null, '2017-07-26 12:16:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519424424639', '1', '2017-07-25 19:42:44', '2017-07-25 19:46:01', '197', '1', '张锐琨', 'JX1288', '118', '北郊三中队', '0000000', null, 'file/1501011764.0/@2017072519424424639', 'http://localhost/file/1501011764.0/@2017072519424424639', null, '2017-07-26 12:07:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519511630716', '1', '2017-07-25 19:51:16', null, '0', '0', '王建军', '020941', '113', '车管所考务科', '0000000', null, 'file/1501012276.0/@2017072519511630716', 'http://localhost/file/1501012276.0/@2017072519511630716', null, '2017-07-26 12:34:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519511659707', '1', '2017-07-25 19:51:16', '2017-07-25 19:54:59', '223', '1', '王建军', '020941', '113', '车管所考务科', '0000000', null, 'file/1501012276.0/@2017072519511659707', 'http://localhost/file/1501012276.0/@2017072519511659707', null, '2017-07-26 12:04:27', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072519511663926', '1', '2017-07-25 19:51:16', null, '0', '0', '王建军', '020941', '113', '车管所考务科', '0000000', null, 'file/1501012276.0/@2017072519511663926', 'http://localhost/file/1501012276.0/@2017072519511663926', null, '2017-07-26 13:44:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072520452936311', '1', '2017-07-25 20:45:29', '2017-07-25 20:49:52', '263', '1', '武建华', 'JX1059', '122', '高新二中队', '0000000', null, 'file/1501015529.0/@2017072520452936311', 'http://localhost/file/1501015529.0/@2017072520452936311', null, '2017-07-26 13:45:54', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072520452938439', '1', '2017-07-25 20:45:29', null, '0', '0', '武建华', 'JX1059', '122', '高新二中队', '0000000', null, 'file/1501015529.0/@2017072520452938439', 'http://localhost/file/1501015529.0/@2017072520452938439', null, '2017-07-26 12:49:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072520452947031', '1', '2017-07-25 20:45:29', null, '0', '0', '武建华', 'JX1059', '122', '高新二中队', '0000000', null, 'file/1501015529.0/@2017072520452947031', 'http://localhost/file/1501015529.0/@2017072520452947031', null, '2017-07-26 13:10:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521011616615', '1', '2017-07-25 21:01:16', '2017-07-25 21:05:10', '234', '1', '白海英', '020703', '113', '车管所考务科', '0000000', null, 'file/1501016476.0/@2017072521011616615', 'http://localhost/file/1501016476.0/@2017072521011616615', null, '2017-07-26 14:20:56', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521011639289', '1', '2017-07-25 21:01:16', null, '0', '2', '白海英', '020703', '113', '车管所考务科', '0000000', null, 'file/1501016476.0/@2017072521011639289', 'http://localhost/file/1501016476.0/@2017072521011639289', null, '2017-07-26 14:28:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521011655119', '1', '2017-07-25 21:01:16', '2017-07-25 21:03:38', '142', '1', '白海英', '020703', '113', '车管所考务科', '0000000', null, 'file/1501016476.0/@2017072521011655119', 'http://localhost/file/1501016476.0/@2017072521011655119', null, '2017-07-26 14:27:17', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521035417376', '1', '2017-07-25 21:03:54', null, '0', '2', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1501016634.0/@2017072521035417376', 'http://localhost/file/1501016634.0/@2017072521035417376', null, '2017-07-26 13:32:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521035424761', '1', '2017-07-25 21:03:54', '2017-07-25 21:08:11', '257', '1', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1501016634.0/@2017072521035424761', 'http://localhost/file/1501016634.0/@2017072521035424761', null, '2017-07-26 14:01:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707252103546492', '1', '2017-07-25 21:03:54', null, '0', '3', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1501016634.0/@201707252103546492', 'http://localhost/file/1501016634.0/@201707252103546492', null, '2017-07-26 14:03:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521150938194', '1', '2017-07-25 21:15:09', '2017-07-25 21:19:21', '252', '1', '潘奕辰', 'JX1190', '103', '河西一中队', '0000000', null, 'file/1501017309.0/@2017072521150938194', 'http://localhost/file/1501017309.0/@2017072521150938194', null, '2017-07-26 14:02:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521150942063', '1', '2017-07-25 21:15:09', null, '0', '0', '潘奕辰', 'JX1190', '103', '河西一中队', '0000000', null, 'file/1501017309.0/@2017072521150942063', 'http://localhost/file/1501017309.0/@2017072521150942063', null, '2017-07-26 14:04:56', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072521150955028', '1', '2017-07-25 21:15:09', null, '0', '0', '潘奕辰', 'JX1190', '103', '河西一中队', '0000000', null, 'file/1501017309.0/@2017072521150955028', 'http://localhost/file/1501017309.0/@2017072521150955028', null, '2017-07-26 14:41:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072522160312809', '1', '2017-07-25 22:16:03', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501020963.0/@2017072522160312809', 'http://localhost/file/1501020963.0/@2017072522160312809', null, '2017-07-26 14:41:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072522160332842', '1', '2017-07-25 22:16:03', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501020963.0/@2017072522160332842', 'http://localhost/file/1501020963.0/@2017072522160332842', null, '2017-07-26 15:06:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072522160344826', '1', '2017-07-25 22:16:03', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501020963.0/@2017072522160344826', 'http://localhost/file/1501020963.0/@2017072522160344826', null, '2017-07-26 15:59:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072522292240307', '1', '2017-07-25 22:29:22', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501021762.0/@2017072522292240307', 'http://localhost/file/1501021762.0/@2017072522292240307', null, '2017-07-26 15:43:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072522292250793', '1', '2017-07-25 22:29:22', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501021762.0/@2017072522292250793', 'http://localhost/file/1501021762.0/@2017072522292250793', null, '2017-07-26 14:34:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707252229228024', '1', '2017-07-25 22:29:22', null, '0', '3', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501021762.0/@201707252229228024', 'http://localhost/file/1501021762.0/@201707252229228024', null, '2017-07-26 16:28:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072523052220175', '1', '2017-07-25 23:05:22', null, '0', '0', '郝国栋', '024797', '102', '河西二中队', '0000000', null, 'file/1501023922.0/@2017072523052220175', 'http://localhost/file/1501023922.0/@2017072523052220175', null, '2017-07-26 16:43:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072523052223547', '1', '2017-07-25 23:05:22', '2017-07-25 23:09:41', '259', '1', '郝国栋', '024797', '102', '河西二中队', '0000000', null, 'file/1501023922.0/@2017072523052223547', 'http://localhost/file/1501023922.0/@2017072523052223547', null, '2017-07-26 16:44:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072523052242150', '1', '2017-07-25 23:05:22', null, '0', '3', '郝国栋', '024797', '102', '河西二中队', '0000000', null, 'file/1501023922.0/@2017072523052242150', 'http://localhost/file/1501023922.0/@2017072523052242150', null, '2017-07-26 15:39:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072523591118868', '1', '2017-07-25 23:59:11', null, '0', '0', '王浩鹏', 'JX1194', '114', '北郊园区中队', '0000000', null, 'file/1501027151.0/@2017072523591118868', 'http://localhost/file/1501027151.0/@2017072523591118868', null, '2017-07-26 17:36:00', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072523591161123', '1', '2017-07-25 23:59:11', null, '0', '2', '王浩鹏', 'JX1194', '114', '北郊园区中队', '0000000', null, 'file/1501027151.0/@2017072523591161123', 'http://localhost/file/1501027151.0/@2017072523591161123', null, '2017-07-26 17:03:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072523591162922', '1', '2017-07-25 23:59:11', null, '0', '2', '王浩鹏', 'JX1194', '114', '北郊园区中队', '0000000', null, 'file/1501027151.0/@2017072523591162922', 'http://localhost/file/1501027151.0/@2017072523591162922', null, '2017-07-26 16:10:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600332922659', '1', '2017-07-26 00:33:29', null, '0', '3', '曹征', '021054', '69', '青山区大队', '0000000', null, 'file/1501029209.0/@2017072600332922659', 'http://localhost/file/1501029209.0/@2017072600332922659', null, '2017-07-26 17:30:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600332931271', '1', '2017-07-26 00:33:29', null, '0', '0', '曹征', '021054', '69', '青山区大队', '0000000', null, 'file/1501029209.0/@2017072600332931271', 'http://localhost/file/1501029209.0/@2017072600332931271', null, '2017-07-26 17:14:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600332962489', '1', '2017-07-26 00:33:29', null, '0', '0', '曹征', '021054', '69', '青山区大队', '0000000', null, 'file/1501029209.0/@2017072600332962489', 'http://localhost/file/1501029209.0/@2017072600332962489', null, '2017-07-26 17:18:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600403818424', '1', '2017-07-26 00:40:38', null, '0', '3', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1501029638.0/@2017072600403818424', 'http://localhost/file/1501029638.0/@2017072600403818424', null, '2017-07-26 16:43:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600403829751', '1', '2017-07-26 00:40:38', null, '0', '0', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1501029638.0/@2017072600403829751', 'http://localhost/file/1501029638.0/@2017072600403829751', null, '2017-07-26 18:12:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600403848799', '1', '2017-07-26 00:40:38', '2017-07-26 00:42:43', '125', '1', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1501029638.0/@2017072600403848799', 'http://localhost/file/1501029638.0/@2017072600403848799', null, '2017-07-26 16:59:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600573722645', '1', '2017-07-26 00:57:37', '2017-07-26 01:00:29', '172', '1', '王新民', '024764', '119', '北郊四中队', '0000000', null, 'file/1501030657.0/@2017072600573722645', 'http://localhost/file/1501030657.0/@2017072600573722645', null, '2017-07-26 17:45:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600573741074', '1', '2017-07-26 00:57:37', null, '0', '0', '王新民', '024764', '119', '北郊四中队', '0000000', null, 'file/1501030657.0/@2017072600573741074', 'http://localhost/file/1501030657.0/@2017072600573741074', null, '2017-07-26 17:28:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072600573759300', '1', '2017-07-26 00:57:37', null, '0', '3', '王新民', '024764', '119', '北郊四中队', '0000000', null, 'file/1501030657.0/@2017072600573759300', 'http://localhost/file/1501030657.0/@2017072600573759300', null, '2017-07-26 17:24:36', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601150351365', '1', '2017-07-26 01:15:03', null, '0', '0', '孙美', 'JX0785', '140', '护校中队', '0000000', null, 'file/1501031703.0/@2017072601150351365', 'http://localhost/file/1501031703.0/@2017072601150351365', null, '2017-07-26 18:38:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601150357762', '1', '2017-07-26 01:15:03', '2017-07-26 01:18:55', '232', '1', '孙美', 'JX0785', '140', '护校中队', '0000000', null, 'file/1501031703.0/@2017072601150357762', 'http://localhost/file/1501031703.0/@2017072601150357762', null, '2017-07-26 18:50:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601150363511', '1', '2017-07-26 01:15:03', '2017-07-26 01:17:04', '121', '1', '孙美', 'JX0785', '140', '护校中队', '0000000', null, 'file/1501031703.0/@2017072601150363511', 'http://localhost/file/1501031703.0/@2017072601150363511', null, '2017-07-26 19:13:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601351424710', '1', '2017-07-26 01:35:14', null, '0', '2', '郝国栋', '024797', '102', '河西二中队', '0000000', null, 'file/1501032914.0/@2017072601351424710', 'http://localhost/file/1501032914.0/@2017072601351424710', null, '2017-07-26 18:13:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601351442279', '1', '2017-07-26 01:35:14', null, '0', '2', '郝国栋', '024797', '102', '河西二中队', '0000000', null, 'file/1501032914.0/@2017072601351442279', 'http://localhost/file/1501032914.0/@2017072601351442279', null, '2017-07-26 19:25:14', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707260135146566', '1', '2017-07-26 01:35:14', '2017-07-26 01:37:30', '136', '1', '郝国栋', '024797', '102', '河西二中队', '0000000', null, 'file/1501032914.0/@201707260135146566', 'http://localhost/file/1501032914.0/@201707260135146566', null, '2017-07-26 18:17:10', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601455911996', '1', '2017-07-26 01:45:59', null, '0', '0', '王新民', '024764', '119', '北郊四中队', '0000000', null, 'file/1501033559.0/@2017072601455911996', 'http://localhost/file/1501033559.0/@2017072601455911996', null, '2017-07-26 19:16:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601455912109', '1', '2017-07-26 01:45:59', '2017-07-26 01:48:47', '168', '1', '王新民', '024764', '119', '北郊四中队', '0000000', null, 'file/1501033559.0/@2017072601455912109', 'http://localhost/file/1501033559.0/@2017072601455912109', null, '2017-07-26 18:02:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072601455944309', '1', '2017-07-26 01:45:59', null, '0', '2', '王新民', '024764', '119', '北郊四中队', '0000000', null, 'file/1501033559.0/@2017072601455944309', 'http://localhost/file/1501033559.0/@2017072601455944309', null, '2017-07-26 19:33:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072602160215680', '1', '2017-07-26 02:16:02', null, '0', '3', '姚尧', 'JX0561', '107', '河西检查站', '0000000', null, 'file/1501035362.0/@2017072602160215680', 'http://localhost/file/1501035362.0/@2017072602160215680', null, '2017-07-26 18:17:27', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072602160236669', '1', '2017-07-26 02:16:02', null, '0', '0', '姚尧', 'JX0561', '107', '河西检查站', '0000000', null, 'file/1501035362.0/@2017072602160236669', 'http://localhost/file/1501035362.0/@2017072602160236669', null, '2017-07-26 19:46:59', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072602160242360', '1', '2017-07-26 02:16:02', null, '0', '2', '姚尧', 'JX0561', '107', '河西检查站', '0000000', null, 'file/1501035362.0/@2017072602160242360', 'http://localhost/file/1501035362.0/@2017072602160242360', null, '2017-07-26 19:59:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072602181935197', '1', '2017-07-26 02:18:19', null, '0', '0', '郭小雪', 'JX0737', '140', '护校中队', '0000000', null, 'file/1501035499.0/@2017072602181935197', 'http://localhost/file/1501035499.0/@2017072602181935197', null, '2017-07-26 18:46:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072602181944090', '1', '2017-07-26 02:18:19', null, '0', '0', '郭小雪', 'JX0737', '140', '护校中队', '0000000', null, 'file/1501035499.0/@2017072602181944090', 'http://localhost/file/1501035499.0/@2017072602181944090', null, '2017-07-26 19:08:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072602181952660', '1', '2017-07-26 02:18:19', '2017-07-26 02:21:46', '207', '1', '郭小雪', 'JX0737', '140', '护校中队', '0000000', null, 'file/1501035499.0/@2017072602181952660', 'http://localhost/file/1501035499.0/@2017072602181952660', null, '2017-07-26 19:45:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072603461816727', '1', '2017-07-26 03:46:18', null, '0', '0', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1501040778.0/@2017072603461816727', 'http://localhost/file/1501040778.0/@2017072603461816727', null, '2017-07-26 20:48:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072603461854095', '1', '2017-07-26 03:46:18', '2017-07-26 03:48:45', '147', '1', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1501040778.0/@2017072603461854095', 'http://localhost/file/1501040778.0/@2017072603461854095', null, '2017-07-26 20:44:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072603461855730', '1', '2017-07-26 03:46:18', null, '0', '0', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1501040778.0/@2017072603461855730', 'http://localhost/file/1501040778.0/@2017072603461855730', null, '2017-07-26 19:56:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072604075619818', '1', '2017-07-26 04:07:56', null, '0', '2', '焦文翔', 'JX1247', '114', '北郊园区中队', '0000000', null, 'file/1501042076.0/@2017072604075619818', 'http://localhost/file/1501042076.0/@2017072604075619818', null, '2017-07-26 20:46:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072604075631115', '1', '2017-07-26 04:07:56', '2017-07-26 04:12:45', '289', '1', '焦文翔', 'JX1247', '114', '北郊园区中队', '0000000', null, 'file/1501042076.0/@2017072604075631115', 'http://localhost/file/1501042076.0/@2017072604075631115', null, '2017-07-26 21:42:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072604075661349', '1', '2017-07-26 04:07:56', null, '0', '3', '焦文翔', 'JX1247', '114', '北郊园区中队', '0000000', null, 'file/1501042076.0/@2017072604075661349', 'http://localhost/file/1501042076.0/@2017072604075661349', null, '2017-07-26 21:17:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072604375617506', '1', '2017-07-26 04:37:56', null, '0', '2', '曲薪羽', 'JX0771', '139', '岗勤中队', '0000000', null, 'file/1501043876.0/@2017072604375617506', 'http://localhost/file/1501043876.0/@2017072604375617506', null, '2017-07-26 22:15:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072604375625567', '1', '2017-07-26 04:37:56', null, '0', '0', '曲薪羽', 'JX0771', '139', '岗勤中队', '0000000', null, 'file/1501043876.0/@2017072604375625567', 'http://localhost/file/1501043876.0/@2017072604375625567', null, '2017-07-26 21:24:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072604375630565', '1', '2017-07-26 04:37:56', '2017-07-26 04:41:14', '198', '1', '曲薪羽', 'JX0771', '139', '岗勤中队', '0000000', null, 'file/1501043876.0/@2017072604375630565', 'http://localhost/file/1501043876.0/@2017072604375630565', null, '2017-07-26 22:25:49', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605052115085', '1', '2017-07-26 05:05:21', '2017-07-26 05:08:44', '203', '1', '武建业', '021055', '117', '北郊二中队', '0000000', null, 'file/1501045521.0/@2017072605052115085', 'http://localhost/file/1501045521.0/@2017072605052115085', null, '2017-07-26 22:02:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605052128867', '1', '2017-07-26 05:05:21', null, '0', '3', '武建业', '021055', '117', '北郊二中队', '0000000', null, 'file/1501045521.0/@2017072605052128867', 'http://localhost/file/1501045521.0/@2017072605052128867', null, '2017-07-26 22:42:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605052164178', '1', '2017-07-26 05:05:21', '2017-07-26 05:10:15', '294', '1', '武建业', '021055', '117', '北郊二中队', '0000000', null, 'file/1501045521.0/@2017072605052164178', 'http://localhost/file/1501045521.0/@2017072605052164178', null, '2017-07-26 22:03:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605130714196', '1', '2017-07-26 05:13:07', '2017-07-26 05:16:43', '216', '1', '陆卫宏', '023708', '112', '车管所外检科', '0000000', null, 'file/1501045987.0/@2017072605130714196', 'http://localhost/file/1501045987.0/@2017072605130714196', null, '2017-07-26 21:59:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605130724822', '1', '2017-07-26 05:13:07', null, '0', '2', '陆卫宏', '023708', '112', '车管所外检科', '0000000', null, 'file/1501045987.0/@2017072605130724822', 'http://localhost/file/1501045987.0/@2017072605130724822', null, '2017-07-26 22:44:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605130748772', '1', '2017-07-26 05:13:07', null, '0', '2', '陆卫宏', '023708', '112', '车管所外检科', '0000000', null, 'file/1501045987.0/@2017072605130748772', 'http://localhost/file/1501045987.0/@2017072605130748772', null, '2017-07-26 21:21:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605152121592', '1', '2017-07-26 05:15:21', '2017-07-26 05:17:45', '144', '1', '李卉', 'JX0757', '139', '岗勤中队', '0000000', null, 'file/1501046121.0/@2017072605152121592', 'http://localhost/file/1501046121.0/@2017072605152121592', null, '2017-07-26 21:27:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605152131367', '1', '2017-07-26 05:15:21', '2017-07-26 05:18:56', '215', '1', '李卉', 'JX0757', '139', '岗勤中队', '0000000', null, 'file/1501046121.0/@2017072605152131367', 'http://localhost/file/1501046121.0/@2017072605152131367', null, '2017-07-26 22:42:35', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605152136862', '1', '2017-07-26 05:15:21', null, '0', '3', '李卉', 'JX0757', '139', '岗勤中队', '0000000', null, 'file/1501046121.0/@2017072605152136862', 'http://localhost/file/1501046121.0/@2017072605152136862', null, '2017-07-26 23:03:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605185617316', '1', '2017-07-26 05:18:56', null, '0', '3', '孙蔼斯', 'JX0731', '140', '护校中队', '0000000', null, 'file/1501046336.0/@2017072605185617316', 'http://localhost/file/1501046336.0/@2017072605185617316', null, '2017-07-26 23:09:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605185636270', '1', '2017-07-26 05:18:56', null, '0', '2', '孙蔼斯', 'JX0731', '140', '护校中队', '0000000', null, 'file/1501046336.0/@2017072605185636270', 'http://localhost/file/1501046336.0/@2017072605185636270', null, '2017-07-26 22:41:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605185648416', '1', '2017-07-26 05:18:56', null, '0', '0', '孙蔼斯', 'JX0731', '140', '护校中队', '0000000', null, 'file/1501046336.0/@2017072605185648416', 'http://localhost/file/1501046336.0/@2017072605185648416', null, '2017-07-26 21:19:16', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605224320399', '1', '2017-07-26 05:22:43', '2017-07-26 05:26:14', '211', '1', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1501046563.0/@2017072605224320399', 'http://localhost/file/1501046563.0/@2017072605224320399', null, '2017-07-26 22:05:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605224343348', '1', '2017-07-26 05:22:43', null, '0', '0', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1501046563.0/@2017072605224343348', 'http://localhost/file/1501046563.0/@2017072605224343348', null, '2017-07-26 22:56:20', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707260522439602', '1', '2017-07-26 05:22:43', null, '0', '3', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1501046563.0/@201707260522439602', 'http://localhost/file/1501046563.0/@201707260522439602', null, '2017-07-26 21:36:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605423828514', '1', '2017-07-26 05:42:38', null, '0', '2', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1501047758.0/@2017072605423828514', 'http://localhost/file/1501047758.0/@2017072605423828514', null, '2017-07-26 22:16:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605423832654', '1', '2017-07-26 05:42:38', null, '0', '2', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1501047758.0/@2017072605423832654', 'http://localhost/file/1501047758.0/@2017072605423832654', null, '2017-07-26 21:48:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605423860231', '1', '2017-07-26 05:42:38', null, '0', '0', '陈庆林', '024024', '164', '青山四级巡控', '0000000', null, 'file/1501047758.0/@2017072605423860231', 'http://localhost/file/1501047758.0/@2017072605423860231', null, '2017-07-26 22:33:36', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605520311534', '1', '2017-07-26 05:52:03', null, '0', '2', '潘奕辰', 'JX1190', '103', '河西一中队', '0000000', null, 'file/1501048323.0/@2017072605520311534', 'http://localhost/file/1501048323.0/@2017072605520311534', null, '2017-07-26 23:20:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605520318957', '1', '2017-07-26 05:52:03', null, '0', '0', '潘奕辰', 'JX1190', '103', '河西一中队', '0000000', null, 'file/1501048323.0/@2017072605520318957', 'http://localhost/file/1501048323.0/@2017072605520318957', null, '2017-07-26 22:06:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072605520335979', '1', '2017-07-26 05:52:03', null, '0', '0', '潘奕辰', 'JX1190', '103', '河西一中队', '0000000', null, 'file/1501048323.0/@2017072605520335979', 'http://localhost/file/1501048323.0/@2017072605520335979', null, '2017-07-26 22:51:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072606282130041', '1', '2017-07-26 06:28:21', null, '0', '2', '杨馥毓', 'JX0647', '139', '岗勤中队', '0000000', null, 'file/1501050501.0/@2017072606282130041', 'http://localhost/file/1501050501.0/@2017072606282130041', null, '2017-07-26 22:47:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072606282161751', '1', '2017-07-26 06:28:21', null, '0', '0', '杨馥毓', 'JX0647', '139', '岗勤中队', '0000000', null, 'file/1501050501.0/@2017072606282161751', 'http://localhost/file/1501050501.0/@2017072606282161751', null, '2017-07-26 23:23:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707260628217766', '1', '2017-07-26 06:28:21', null, '0', '2', '杨馥毓', 'JX0647', '139', '岗勤中队', '0000000', null, 'file/1501050501.0/@201707260628217766', 'http://localhost/file/1501050501.0/@201707260628217766', null, '2017-07-27 00:01:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607081438506', '1', '2017-07-26 07:08:14', '2017-07-26 07:12:45', '271', '1', '王倩', 'JX0683', '140', '护校中队', '0000000', null, 'file/1501052894.0/@2017072607081438506', 'http://localhost/file/1501052894.0/@2017072607081438506', null, '2017-07-27 00:48:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607081451158', '1', '2017-07-26 07:08:14', '2017-07-26 07:12:56', '282', '1', '王倩', 'JX0683', '140', '护校中队', '0000000', null, 'file/1501052894.0/@2017072607081451158', 'http://localhost/file/1501052894.0/@2017072607081451158', null, '2017-07-26 23:41:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707260708148610', '1', '2017-07-26 07:08:14', '2017-07-26 07:11:45', '211', '1', '王倩', 'JX0683', '140', '护校中队', '0000000', null, 'file/1501052894.0/@201707260708148610', 'http://localhost/file/1501052894.0/@201707260708148610', null, '2017-07-27 00:50:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607113111875', '1', '2017-07-26 07:11:31', null, '0', '2', '段海威', 'JX0547', '102', '河西二中队', '0000000', null, 'file/1501053091.0/@2017072607113111875', 'http://localhost/file/1501053091.0/@2017072607113111875', null, '2017-07-27 00:29:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607113127513', '1', '2017-07-26 07:11:31', null, '0', '2', '段海威', 'JX0547', '102', '河西二中队', '0000000', null, 'file/1501053091.0/@2017072607113127513', 'http://localhost/file/1501053091.0/@2017072607113127513', null, '2017-07-27 00:38:16', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607113135836', '1', '2017-07-26 07:11:31', '2017-07-26 07:14:09', '158', '1', '段海威', 'JX0547', '102', '河西二中队', '0000000', null, 'file/1501053091.0/@2017072607113135836', 'http://localhost/file/1501053091.0/@2017072607113135836', null, '2017-07-26 23:48:43', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607562921725', '1', '2017-07-26 07:56:29', '2017-07-26 08:01:20', '291', '1', '张嘉伦', 'JX0382', '127', '东兴一中队', '0000000', null, 'file/1501055789.0/@2017072607562921725', 'http://localhost/file/1501055789.0/@2017072607562921725', null, '2017-07-27 01:54:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607562930634', '1', '2017-07-26 07:56:29', null, '0', '0', '张嘉伦', 'JX0382', '127', '东兴一中队', '0000000', null, 'file/1501055789.0/@2017072607562930634', 'http://localhost/file/1501055789.0/@2017072607562930634', null, '2017-07-27 01:55:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072607562963230', '1', '2017-07-26 07:56:29', null, '0', '2', '张嘉伦', 'JX0382', '127', '东兴一中队', '0000000', null, 'file/1501055789.0/@2017072607562963230', 'http://localhost/file/1501055789.0/@2017072607562963230', null, '2017-07-27 01:20:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072608422143390', '1', '2017-07-26 08:42:21', null, '0', '3', '安宁', 'JX0793', '139', '岗勤中队', '0000000', null, 'file/1501058541.0/@2017072608422143390', 'http://localhost/file/1501058541.0/@2017072608422143390', null, '2017-07-27 01:25:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707260842216429', '1', '2017-07-26 08:42:21', null, '0', '0', '安宁', 'JX0793', '139', '岗勤中队', '0000000', null, 'file/1501058541.0/@201707260842216429', 'http://localhost/file/1501058541.0/@201707260842216429', null, '2017-07-27 01:11:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707260842217329', '1', '2017-07-26 08:42:21', null, '0', '3', '安宁', 'JX0793', '139', '岗勤中队', '0000000', null, 'file/1501058541.0/@201707260842217329', 'http://localhost/file/1501058541.0/@201707260842217329', null, '2017-07-27 02:35:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072609260416148', '1', '2017-07-26 09:26:04', '2017-07-26 09:28:51', '167', '1', '张军', '024905', '113', '车管所考务科', '0000000', null, 'file/1501061164.0/@2017072609260416148', 'http://localhost/file/1501061164.0/@2017072609260416148', null, '2017-07-27 02:37:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072609260433675', '1', '2017-07-26 09:26:04', null, '0', '2', '张军', '024905', '113', '车管所考务科', '0000000', null, 'file/1501061164.0/@2017072609260433675', 'http://localhost/file/1501061164.0/@2017072609260433675', null, '2017-07-27 03:24:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072609260447061', '1', '2017-07-26 09:26:04', null, '0', '2', '张军', '024905', '113', '车管所考务科', '0000000', null, 'file/1501061164.0/@2017072609260447061', 'http://localhost/file/1501061164.0/@2017072609260447061', null, '2017-07-27 03:17:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072609541638229', '1', '2017-07-26 09:54:16', null, '0', '0', '化树平', '024825', '112', '车管所外检科', '0000000', null, 'file/1501062856.0/@2017072609541638229', 'http://localhost/file/1501062856.0/@2017072609541638229', null, '2017-07-27 02:56:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072609541640486', '1', '2017-07-26 09:54:16', '2017-07-26 09:57:58', '222', '1', '化树平', '024825', '112', '车管所外检科', '0000000', null, 'file/1501062856.0/@2017072609541640486', 'http://localhost/file/1501062856.0/@2017072609541640486', null, '2017-07-27 03:20:19', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072609541644048', '1', '2017-07-26 09:54:16', null, '0', '0', '化树平', '024825', '112', '车管所外检科', '0000000', null, 'file/1501062856.0/@2017072609541644048', 'http://localhost/file/1501062856.0/@2017072609541644048', null, '2017-07-27 02:06:12', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072610035621575', '1', '2017-07-26 10:03:56', null, '0', '2', '刘晓东', '021059', '80', '河西大队', '0000000', null, 'file/1501063436.0/@2017072610035621575', 'http://localhost/file/1501063436.0/@2017072610035621575', null, '2017-07-27 02:07:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072610035648769', '1', '2017-07-26 10:03:56', '2017-07-26 10:06:36', '160', '1', '刘晓东', '021059', '80', '河西大队', '0000000', null, 'file/1501063436.0/@2017072610035648769', 'http://localhost/file/1501063436.0/@2017072610035648769', null, '2017-07-27 02:21:20', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707261003565278', '1', '2017-07-26 10:03:56', null, '0', '2', '刘晓东', '021059', '80', '河西大队', '0000000', null, 'file/1501063436.0/@201707261003565278', 'http://localhost/file/1501063436.0/@201707261003565278', null, '2017-07-27 03:19:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072610130531810', '1', '2017-07-26 10:13:05', null, '0', '0', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1501063985.0/@2017072610130531810', 'http://localhost/file/1501063985.0/@2017072610130531810', null, '2017-07-27 03:34:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072610130541081', '1', '2017-07-26 10:13:05', null, '0', '2', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1501063985.0/@2017072610130541081', 'http://localhost/file/1501063985.0/@2017072610130541081', null, '2017-07-27 02:28:19', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072610130561660', '1', '2017-07-26 10:13:05', null, '0', '3', '张建斌', '020995', '114', '北郊园区中队', '0000000', null, 'file/1501063985.0/@2017072610130561660', 'http://localhost/file/1501063985.0/@2017072610130561660', null, '2017-07-27 02:33:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611154030467', '1', '2017-07-26 11:15:40', null, '0', '3', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1501067740.0/@2017072611154030467', 'http://localhost/file/1501067740.0/@2017072611154030467', null, '2017-07-27 05:02:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611154054968', '1', '2017-07-26 11:15:40', '2017-07-26 11:18:48', '188', '1', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1501067740.0/@2017072611154054968', 'http://localhost/file/1501067740.0/@2017072611154054968', null, '2017-07-27 03:23:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611154060178', '1', '2017-07-26 11:15:40', null, '0', '2', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1501067740.0/@2017072611154060178', 'http://localhost/file/1501067740.0/@2017072611154060178', null, '2017-07-27 04:01:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611160035518', '1', '2017-07-26 11:16:00', null, '0', '2', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1501067760.0/@2017072611160035518', 'http://localhost/file/1501067760.0/@2017072611160035518', null, '2017-07-27 03:18:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611160047613', '1', '2017-07-26 11:16:00', null, '0', '2', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1501067760.0/@2017072611160047613', 'http://localhost/file/1501067760.0/@2017072611160047613', null, '2017-07-27 04:12:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611160056413', '1', '2017-07-26 11:16:00', '2017-07-26 11:18:37', '157', '1', '苏瑜', 'JX1055', '120', '北郊事故中队', '0000000', null, 'file/1501067760.0/@2017072611160056413', 'http://localhost/file/1501067760.0/@2017072611160056413', null, '2017-07-27 03:16:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611200149240', '1', '2017-07-26 11:20:01', null, '0', '3', '孙平', '001087', '119', '北郊四中队', '0000000', null, 'file/1501068001.0/@2017072611200149240', 'http://localhost/file/1501068001.0/@2017072611200149240', null, '2017-07-27 04:48:03', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611200159191', '1', '2017-07-26 11:20:01', null, '0', '2', '孙平', '001087', '119', '北郊四中队', '0000000', null, 'file/1501068001.0/@2017072611200159191', 'http://localhost/file/1501068001.0/@2017072611200159191', null, '2017-07-27 04:53:00', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611200163549', '1', '2017-07-26 11:20:01', null, '0', '2', '孙平', '001087', '119', '北郊四中队', '0000000', null, 'file/1501068001.0/@2017072611200163549', 'http://localhost/file/1501068001.0/@2017072611200163549', null, '2017-07-27 03:53:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611422539981', '1', '2017-07-26 11:42:25', null, '0', '0', '董薇', 'JX1086', '139', '岗勤中队', '0000000', null, 'file/1501069345.0/@2017072611422539981', 'http://localhost/file/1501069345.0/@2017072611422539981', null, '2017-07-27 05:04:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611422543656', '1', '2017-07-26 11:42:25', '2017-07-26 11:46:43', '258', '1', '董薇', 'JX1086', '139', '岗勤中队', '0000000', null, 'file/1501069345.0/@2017072611422543656', 'http://localhost/file/1501069345.0/@2017072611422543656', null, '2017-07-27 05:18:11', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072611422561547', '1', '2017-07-26 11:42:25', null, '0', '2', '董薇', 'JX1086', '139', '岗勤中队', '0000000', null, 'file/1501069345.0/@2017072611422561547', 'http://localhost/file/1501069345.0/@2017072611422561547', null, '2017-07-27 04:16:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612280230027', '1', '2017-07-26 12:28:02', null, '0', '0', '史晓蒙', 'JX0744', '140', '护校中队', '0000000', null, 'file/1501072082.0/@2017072612280230027', 'http://localhost/file/1501072082.0/@2017072612280230027', null, '2017-07-27 06:00:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612280230963', '1', '2017-07-26 12:28:02', null, '0', '0', '史晓蒙', 'JX0744', '140', '护校中队', '0000000', null, 'file/1501072082.0/@2017072612280230963', 'http://localhost/file/1501072082.0/@2017072612280230963', null, '2017-07-27 06:01:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612280249176', '1', '2017-07-26 12:28:02', '2017-07-26 12:32:52', '290', '1', '史晓蒙', 'JX0744', '140', '护校中队', '0000000', null, 'file/1501072082.0/@2017072612280249176', 'http://localhost/file/1501072082.0/@2017072612280249176', null, '2017-07-27 06:11:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612322314408', '1', '2017-07-26 12:32:23', null, '0', '0', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1501072343.0/@2017072612322314408', 'http://localhost/file/1501072343.0/@2017072612322314408', null, '2017-07-27 05:27:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612322333351', '1', '2017-07-26 12:32:23', '2017-07-26 12:34:42', '139', '1', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1501072343.0/@2017072612322333351', 'http://localhost/file/1501072343.0/@2017072612322333351', null, '2017-07-27 05:53:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612322339709', '1', '2017-07-26 12:32:23', '2017-07-26 12:35:41', '198', '1', '吕强', '021198', '112', '车管所外检科', '0000000', null, 'file/1501072343.0/@2017072612322339709', 'http://localhost/file/1501072343.0/@2017072612322339709', null, '2017-07-27 04:41:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612454022908', '1', '2017-07-26 12:45:40', '2017-07-26 12:48:52', '192', '1', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1501073140.0/@2017072612454022908', 'http://localhost/file/1501073140.0/@2017072612454022908', null, '2017-07-27 05:09:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612454051456', '1', '2017-07-26 12:45:40', null, '0', '0', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1501073140.0/@2017072612454051456', 'http://localhost/file/1501073140.0/@2017072612454051456', null, '2017-07-27 05:11:14', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072612454063160', '1', '2017-07-26 12:45:40', null, '0', '2', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1501073140.0/@2017072612454063160', 'http://localhost/file/1501073140.0/@2017072612454063160', null, '2017-07-27 06:00:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613051528226', '1', '2017-07-26 13:05:15', null, '0', '2', '杨睿', 'JX1049', '116', '北郊一中队', '0000000', null, 'file/1501074315.0/@2017072613051528226', 'http://localhost/file/1501074315.0/@2017072613051528226', null, '2017-07-27 06:31:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613051554454', '1', '2017-07-26 13:05:15', null, '0', '0', '杨睿', 'JX1049', '116', '北郊一中队', '0000000', null, 'file/1501074315.0/@2017072613051554454', 'http://localhost/file/1501074315.0/@2017072613051554454', null, '2017-07-27 05:39:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707261305157497', '1', '2017-07-26 13:05:15', null, '0', '0', '杨睿', 'JX1049', '116', '北郊一中队', '0000000', null, 'file/1501074315.0/@201707261305157497', 'http://localhost/file/1501074315.0/@201707261305157497', null, '2017-07-27 06:28:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613070611319', '1', '2017-07-26 13:07:06', '2017-07-26 13:09:33', '147', '1', '张岩', 'JX0568', '119', '北郊四中队', '0000000', null, 'file/1501074426.0/@2017072613070611319', 'http://localhost/file/1501074426.0/@2017072613070611319', null, '2017-07-27 05:19:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613070649561', '1', '2017-07-26 13:07:06', '2017-07-26 13:11:11', '245', '1', '张岩', 'JX0568', '119', '北郊四中队', '0000000', null, 'file/1501074426.0/@2017072613070649561', 'http://localhost/file/1501074426.0/@2017072613070649561', null, '2017-07-27 05:47:56', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613070651305', '1', '2017-07-26 13:07:06', null, '0', '2', '张岩', 'JX0568', '119', '北郊四中队', '0000000', null, 'file/1501074426.0/@2017072613070651305', 'http://localhost/file/1501074426.0/@2017072613070651305', null, '2017-07-27 05:21:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613093611430', '1', '2017-07-26 13:09:36', null, '0', '0', '燕永飞', '001009', '107', '河西检查站', '0000000', null, 'file/1501074576.0/@2017072613093611430', 'http://localhost/file/1501074576.0/@2017072613093611430', null, '2017-07-27 06:27:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613093612980', '1', '2017-07-26 13:09:36', null, '0', '2', '燕永飞', '001009', '107', '河西检查站', '0000000', null, 'file/1501074576.0/@2017072613093612980', 'http://localhost/file/1501074576.0/@2017072613093612980', null, '2017-07-27 05:19:33', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707261309368996', '1', '2017-07-26 13:09:36', null, '0', '2', '燕永飞', '001009', '107', '河西检查站', '0000000', null, 'file/1501074576.0/@201707261309368996', 'http://localhost/file/1501074576.0/@201707261309368996', null, '2017-07-27 06:25:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613224524984', '1', '2017-07-26 13:22:45', null, '0', '0', '裴少华', '024883', '117', '北郊二中队', '0000000', null, 'file/1501075365.0/@2017072613224524984', 'http://localhost/file/1501075365.0/@2017072613224524984', null, '2017-07-27 05:27:32', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613224527409', '1', '2017-07-26 13:22:45', '2017-07-26 13:27:07', '262', '1', '裴少华', '024883', '117', '北郊二中队', '0000000', null, 'file/1501075365.0/@2017072613224527409', 'http://localhost/file/1501075365.0/@2017072613224527409', null, '2017-07-27 06:43:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613224560040', '1', '2017-07-26 13:22:45', '2017-07-26 13:27:35', '290', '1', '裴少华', '024883', '117', '北郊二中队', '0000000', null, 'file/1501075365.0/@2017072613224560040', 'http://localhost/file/1501075365.0/@2017072613224560040', null, '2017-07-27 06:22:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613592514562', '1', '2017-07-26 13:59:25', null, '0', '3', '林彬', 'JX0794', '140', '护校中队', '0000000', null, 'file/1501077565.0/@2017072613592514562', 'http://localhost/file/1501077565.0/@2017072613592514562', null, '2017-07-27 06:14:10', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613592535074', '1', '2017-07-26 13:59:25', null, '0', '3', '林彬', 'JX0794', '140', '护校中队', '0000000', null, 'file/1501077565.0/@2017072613592535074', 'http://localhost/file/1501077565.0/@2017072613592535074', null, '2017-07-27 07:49:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072613592539626', '1', '2017-07-26 13:59:25', null, '0', '3', '林彬', 'JX0794', '140', '护校中队', '0000000', null, 'file/1501077565.0/@2017072613592539626', 'http://localhost/file/1501077565.0/@2017072613592539626', null, '2017-07-27 07:24:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072614352818353', '1', '2017-07-26 14:35:28', null, '0', '3', '孙蔼斯', 'JX0731', '140', '护校中队', '0000000', null, 'file/1501079728.0/@2017072614352818353', 'http://localhost/file/1501079728.0/@2017072614352818353', null, '2017-07-27 08:26:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072614352855055', '1', '2017-07-26 14:35:28', null, '0', '3', '孙蔼斯', 'JX0731', '140', '护校中队', '0000000', null, 'file/1501079728.0/@2017072614352855055', 'http://localhost/file/1501079728.0/@2017072614352855055', null, '2017-07-27 07:09:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072614352861204', '1', '2017-07-26 14:35:28', null, '0', '0', '孙蔼斯', 'JX0731', '140', '护校中队', '0000000', null, 'file/1501079728.0/@2017072614352861204', 'http://localhost/file/1501079728.0/@2017072614352861204', null, '2017-07-27 08:19:12', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072614441557526', '1', '2017-07-26 14:44:15', null, '0', '3', '张小平', '024224', '127', '东兴一中队', '0000000', null, 'file/1501080255.0/@2017072614441557526', 'http://localhost/file/1501080255.0/@2017072614441557526', null, '2017-07-27 08:27:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072614441562237', '1', '2017-07-26 14:44:15', '2017-07-26 14:47:50', '215', '1', '张小平', '024224', '127', '东兴一中队', '0000000', null, 'file/1501080255.0/@2017072614441562237', 'http://localhost/file/1501080255.0/@2017072614441562237', null, '2017-07-27 07:42:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072614441563739', '1', '2017-07-26 14:44:15', null, '0', '3', '张小平', '024224', '127', '东兴一中队', '0000000', null, 'file/1501080255.0/@2017072614441563739', 'http://localhost/file/1501080255.0/@2017072614441563739', null, '2017-07-27 08:26:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615040711258', '1', '2017-07-26 15:04:07', '2017-07-26 15:07:52', '225', '1', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1501081447.0/@2017072615040711258', 'http://localhost/file/1501081447.0/@2017072615040711258', null, '2017-07-27 07:29:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615040734862', '1', '2017-07-26 15:04:07', null, '0', '3', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1501081447.0/@2017072615040734862', 'http://localhost/file/1501081447.0/@2017072615040734862', null, '2017-07-27 07:28:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615040745445', '1', '2017-07-26 15:04:07', null, '0', '3', '朱胜龙', '023518', '80', '河西大队', '0000000', null, 'file/1501081447.0/@2017072615040745445', 'http://localhost/file/1501081447.0/@2017072615040745445', null, '2017-07-27 08:14:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615204445972', '1', '2017-07-26 15:20:44', null, '0', '2', '陈晨', 'JX0656', '139', '岗勤中队', '0000000', null, 'file/1501082444.0/@2017072615204445972', 'http://localhost/file/1501082444.0/@2017072615204445972', null, '2017-07-27 08:38:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615204449601', '1', '2017-07-26 15:20:44', '2017-07-26 15:25:21', '277', '1', '陈晨', 'JX0656', '139', '岗勤中队', '0000000', null, 'file/1501082444.0/@2017072615204449601', 'http://localhost/file/1501082444.0/@2017072615204449601', null, '2017-07-27 08:56:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615204460915', '1', '2017-07-26 15:20:44', null, '0', '2', '陈晨', 'JX0656', '139', '岗勤中队', '0000000', null, 'file/1501082444.0/@2017072615204460915', 'http://localhost/file/1501082444.0/@2017072615204460915', null, '2017-07-27 08:33:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615390910398', '1', '2017-07-26 15:39:09', null, '0', '0', '孙平', '001087', '119', '北郊四中队', '0000000', null, 'file/1501083549.0/@2017072615390910398', 'http://localhost/file/1501083549.0/@2017072615390910398', null, '2017-07-27 09:35:27', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615390910621', '1', '2017-07-26 15:39:09', null, '0', '0', '孙平', '001087', '119', '北郊四中队', '0000000', null, 'file/1501083549.0/@2017072615390910621', 'http://localhost/file/1501083549.0/@2017072615390910621', null, '2017-07-27 08:17:09', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615390918497', '1', '2017-07-26 15:39:09', null, '0', '0', '孙平', '001087', '119', '北郊四中队', '0000000', null, 'file/1501083549.0/@2017072615390918497', 'http://localhost/file/1501083549.0/@2017072615390918497', null, '2017-07-27 09:30:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615402911987', '1', '2017-07-26 15:40:29', null, '0', '3', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1501083629.0/@2017072615402911987', 'http://localhost/file/1501083629.0/@2017072615402911987', null, '2017-07-27 08:16:11', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615402954578', '1', '2017-07-26 15:40:29', null, '0', '0', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1501083629.0/@2017072615402954578', 'http://localhost/file/1501083629.0/@2017072615402954578', null, '2017-07-27 08:07:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072615402958953', '1', '2017-07-26 15:40:29', null, '0', '0', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1501083629.0/@2017072615402958953', 'http://localhost/file/1501083629.0/@2017072615402958953', null, '2017-07-27 08:03:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072617150828662', '1', '2017-07-26 17:15:08', null, '0', '2', '李庆林', '024999', '103', '河西一中队', '0000000', null, 'file/1501089308.0/@2017072617150828662', 'http://localhost/file/1501089308.0/@2017072617150828662', null, '2017-07-27 10:05:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072617150832043', '1', '2017-07-26 17:15:08', null, '0', '2', '李庆林', '024999', '103', '河西一中队', '0000000', null, 'file/1501089308.0/@2017072617150832043', 'http://localhost/file/1501089308.0/@2017072617150832043', null, '2017-07-27 10:46:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072617150844199', '1', '2017-07-26 17:15:08', null, '0', '0', '李庆林', '024999', '103', '河西一中队', '0000000', null, 'file/1501089308.0/@2017072617150844199', 'http://localhost/file/1501089308.0/@2017072617150844199', null, '2017-07-27 09:25:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072618150330930', '1', '2017-07-26 18:15:03', '2017-07-26 18:19:20', '257', '1', '程超柏', 'JX0857', '171', '青山六中队', '0000000', null, 'file/1501092903.0/@2017072618150330930', 'http://localhost/file/1501092903.0/@2017072618150330930', null, '2017-07-27 10:44:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072618150345100', '1', '2017-07-26 18:15:03', null, '0', '3', '程超柏', 'JX0857', '171', '青山六中队', '0000000', null, 'file/1501092903.0/@2017072618150345100', 'http://localhost/file/1501092903.0/@2017072618150345100', null, '2017-07-27 10:43:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072618150360420', '1', '2017-07-26 18:15:03', '2017-07-26 18:19:18', '255', '1', '程超柏', 'JX0857', '171', '青山六中队', '0000000', null, 'file/1501092903.0/@2017072618150360420', 'http://localhost/file/1501092903.0/@2017072618150360420', null, '2017-07-27 10:17:43', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072618175023815', '1', '2017-07-26 18:17:50', null, '0', '2', '史晓蒙', 'JX0744', '140', '护校中队', '0000000', null, 'file/1501093070.0/@2017072618175023815', 'http://localhost/file/1501093070.0/@2017072618175023815', null, '2017-07-27 12:17:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072618175044736', '1', '2017-07-26 18:17:50', null, '0', '3', '史晓蒙', 'JX0744', '140', '护校中队', '0000000', null, 'file/1501093070.0/@2017072618175044736', 'http://localhost/file/1501093070.0/@2017072618175044736', null, '2017-07-27 12:11:46', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072618175062055', '1', '2017-07-26 18:17:50', null, '0', '2', '史晓蒙', 'JX0744', '140', '护校中队', '0000000', null, 'file/1501093070.0/@2017072618175062055', 'http://localhost/file/1501093070.0/@2017072618175062055', null, '2017-07-27 10:46:42', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072619485013727', '1', '2017-07-26 19:48:50', '2017-07-26 19:50:51', '121', '1', '陆卫宏', '023708', '112', '车管所外检科', '0000000', null, 'file/1501098530.0/@2017072619485013727', 'http://localhost/file/1501098530.0/@2017072619485013727', null, '2017-07-27 11:56:39', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072619485033151', '1', '2017-07-26 19:48:50', null, '0', '3', '陆卫宏', '023708', '112', '车管所外检科', '0000000', null, 'file/1501098530.0/@2017072619485033151', 'http://localhost/file/1501098530.0/@2017072619485033151', null, '2017-07-27 11:51:03', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072619485035769', '1', '2017-07-26 19:48:50', '2017-07-26 19:52:44', '234', '1', '陆卫宏', '023708', '112', '车管所外检科', '0000000', null, 'file/1501098530.0/@2017072619485035769', 'http://localhost/file/1501098530.0/@2017072619485035769', null, '2017-07-27 12:04:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072619565311089', '1', '2017-07-26 19:56:53', null, '0', '2', '闫宏斌', '021039', '108', '督察大队一中队', '0000000', null, 'file/1501099013.0/@2017072619565311089', 'http://localhost/file/1501099013.0/@2017072619565311089', null, '2017-07-27 13:39:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072619565319200', '1', '2017-07-26 19:56:53', null, '0', '3', '闫宏斌', '021039', '108', '督察大队一中队', '0000000', null, 'file/1501099013.0/@2017072619565319200', 'http://localhost/file/1501099013.0/@2017072619565319200', null, '2017-07-27 12:23:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072619565336244', '1', '2017-07-26 19:56:53', null, '0', '3', '闫宏斌', '021039', '108', '督察大队一中队', '0000000', null, 'file/1501099013.0/@2017072619565336244', 'http://localhost/file/1501099013.0/@2017072619565336244', null, '2017-07-27 13:45:36', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072621354121798', '1', '2017-07-26 21:35:41', null, '0', '2', '许鑫', '024968', '120', '北郊事故中队', '0000000', null, 'file/1501104941.0/@2017072621354121798', 'http://localhost/file/1501104941.0/@2017072621354121798', null, '2017-07-27 14:58:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072621354129156', '1', '2017-07-26 21:35:41', null, '0', '0', '许鑫', '024968', '120', '北郊事故中队', '0000000', null, 'file/1501104941.0/@2017072621354129156', 'http://localhost/file/1501104941.0/@2017072621354129156', null, '2017-07-27 15:16:10', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262135418688', '1', '2017-07-26 21:35:41', null, '0', '3', '许鑫', '024968', '120', '北郊事故中队', '0000000', null, 'file/1501104941.0/@201707262135418688', 'http://localhost/file/1501104941.0/@201707262135418688', null, '2017-07-27 13:40:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072621571121348', '1', '2017-07-26 21:57:11', null, '0', '3', '王玉祥', '023463', '125', '高新事故中队', '0000000', null, 'file/1501106231.0/@2017072621571121348', 'http://localhost/file/1501106231.0/@2017072621571121348', null, '2017-07-27 15:37:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262157115908', '1', '2017-07-26 21:57:11', '2017-07-26 22:00:49', '218', '1', '王玉祥', '023463', '125', '高新事故中队', '0000000', null, 'file/1501106231.0/@201707262157115908', 'http://localhost/file/1501106231.0/@201707262157115908', null, '2017-07-27 14:38:23', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262157119435', '1', '2017-07-26 21:57:11', null, '0', '0', '王玉祥', '023463', '125', '高新事故中队', '0000000', null, 'file/1501106231.0/@201707262157119435', 'http://localhost/file/1501106231.0/@201707262157119435', null, '2017-07-27 14:00:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072621574327156', '1', '2017-07-26 21:57:43', null, '0', '2', '范琳', 'JX0774', '139', '岗勤中队', '0000000', null, 'file/1501106263.0/@2017072621574327156', 'http://localhost/file/1501106263.0/@2017072621574327156', null, '2017-07-27 15:18:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072621574337480', '1', '2017-07-26 21:57:43', null, '0', '0', '范琳', 'JX0774', '139', '岗勤中队', '0000000', null, 'file/1501106263.0/@2017072621574337480', 'http://localhost/file/1501106263.0/@2017072621574337480', null, '2017-07-27 14:26:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262157437895', '1', '2017-07-26 21:57:43', null, '0', '0', '范琳', 'JX0774', '139', '岗勤中队', '0000000', null, 'file/1501106263.0/@201707262157437895', 'http://localhost/file/1501106263.0/@201707262157437895', null, '2017-07-27 14:36:22', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072622331144056', '1', '2017-07-26 22:33:11', null, '0', '2', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1501108391.0/@2017072622331144056', 'http://localhost/file/1501108391.0/@2017072622331144056', null, '2017-07-27 16:23:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262233115241', '1', '2017-07-26 22:33:11', '2017-07-26 22:37:52', '281', '1', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1501108391.0/@201707262233115241', 'http://localhost/file/1501108391.0/@201707262233115241', null, '2017-07-27 16:05:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072622331156944', '1', '2017-07-26 22:33:11', null, '0', '3', '张敏', '024845', '118', '北郊三中队', '0000000', null, 'file/1501108391.0/@2017072622331156944', 'http://localhost/file/1501108391.0/@2017072622331156944', null, '2017-07-27 15:21:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072623491728621', '1', '2017-07-26 23:49:17', '2017-07-26 23:54:03', '286', '1', '李强', 'JX0592', '116', '北郊一中队', '0000000', null, 'file/1501112957.0/@2017072623491728621', 'http://localhost/file/1501112957.0/@2017072623491728621', null, '2017-07-27 16:29:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262349174334', '1', '2017-07-26 23:49:17', null, '0', '0', '李强', 'JX0592', '116', '北郊一中队', '0000000', null, 'file/1501112957.0/@201707262349174334', 'http://localhost/file/1501112957.0/@201707262349174334', null, '2017-07-27 16:10:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707262349176757', '1', '2017-07-26 23:49:17', null, '0', '3', '李强', 'JX0592', '116', '北郊一中队', '0000000', null, 'file/1501112957.0/@201707262349176757', 'http://localhost/file/1501112957.0/@201707262349176757', null, '2017-07-27 17:21:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072700040721062', '1', '2017-07-27 00:04:07', null, '0', '0', '徐宝基', '024019', '164', '青山四级巡控', '0000000', null, 'file/1501113847.0/@2017072700040721062', 'http://localhost/file/1501113847.0/@2017072700040721062', null, '2017-07-27 17:32:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072700040746484', '1', '2017-07-27 00:04:07', null, '0', '0', '徐宝基', '024019', '164', '青山四级巡控', '0000000', null, 'file/1501113847.0/@2017072700040746484', 'http://localhost/file/1501113847.0/@2017072700040746484', null, '2017-07-27 17:41:49', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707270004077429', '1', '2017-07-27 00:04:07', null, '0', '2', '徐宝基', '024019', '164', '青山四级巡控', '0000000', null, 'file/1501113847.0/@201707270004077429', 'http://localhost/file/1501113847.0/@201707270004077429', null, '2017-07-27 17:29:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072701325335213', '1', '2017-07-27 01:32:53', null, '0', '2', '常超', 'JX0992', '114', '北郊园区中队', '0000000', null, 'file/1501119173.0/@2017072701325335213', 'http://localhost/file/1501119173.0/@2017072701325335213', null, '2017-07-27 17:55:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072701325339760', '1', '2017-07-27 01:32:53', '2017-07-27 01:36:32', '219', '1', '常超', 'JX0992', '114', '北郊园区中队', '0000000', null, 'file/1501119173.0/@2017072701325339760', 'http://localhost/file/1501119173.0/@2017072701325339760', null, '2017-07-27 19:20:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072701325353961', '1', '2017-07-27 01:32:53', null, '0', '2', '常超', 'JX0992', '114', '北郊园区中队', '0000000', null, 'file/1501119173.0/@2017072701325353961', 'http://localhost/file/1501119173.0/@2017072701325353961', null, '2017-07-27 18:37:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072701365215628', '1', '2017-07-27 01:36:52', null, '0', '0', '王立军', 'JX1063', '140', '护校中队', '0000000', null, 'file/1501119412.0/@2017072701365215628', 'http://localhost/file/1501119412.0/@2017072701365215628', null, '2017-07-27 17:56:05', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072701365222394', '1', '2017-07-27 01:36:52', null, '0', '0', '王立军', 'JX1063', '140', '护校中队', '0000000', null, 'file/1501119412.0/@2017072701365222394', 'http://localhost/file/1501119412.0/@2017072701365222394', null, '2017-07-27 17:58:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072701365246760', '1', '2017-07-27 01:36:52', null, '0', '2', '王立军', 'JX1063', '140', '护校中队', '0000000', null, 'file/1501119412.0/@2017072701365246760', 'http://localhost/file/1501119412.0/@2017072701365246760', null, '2017-07-27 19:02:05', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072702210923819', '1', '2017-07-27 02:21:09', null, '0', '3', '张宏伟', 'JX1006', '129', '东兴三中队', '0000000', null, 'file/1501122069.0/@2017072702210923819', 'http://localhost/file/1501122069.0/@2017072702210923819', null, '2017-07-27 18:48:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072702210936898', '1', '2017-07-27 02:21:09', '2017-07-27 02:23:36', '147', '1', '张宏伟', 'JX1006', '129', '东兴三中队', '0000000', null, 'file/1501122069.0/@2017072702210936898', 'http://localhost/file/1501122069.0/@2017072702210936898', null, '2017-07-27 18:22:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072702210957913', '1', '2017-07-27 02:21:09', null, '0', '3', '张宏伟', 'JX1006', '129', '东兴三中队', '0000000', null, 'file/1501122069.0/@2017072702210957913', 'http://localhost/file/1501122069.0/@2017072702210957913', null, '2017-07-27 20:12:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072702214229915', '1', '2017-07-27 02:21:42', null, '0', '0', '胡晓宇', '021194', '120', '北郊事故中队', '0000000', null, 'file/1501122102.0/@2017072702214229915', 'http://localhost/file/1501122102.0/@2017072702214229915', null, '2017-07-27 18:45:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072702214238295', '1', '2017-07-27 02:21:42', null, '0', '3', '胡晓宇', '021194', '120', '北郊事故中队', '0000000', null, 'file/1501122102.0/@2017072702214238295', 'http://localhost/file/1501122102.0/@2017072702214238295', null, '2017-07-27 20:11:47', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072702214261912', '1', '2017-07-27 02:21:42', '2017-07-27 02:26:13', '271', '1', '胡晓宇', '021194', '120', '北郊事故中队', '0000000', null, 'file/1501122102.0/@2017072702214261912', 'http://localhost/file/1501122102.0/@2017072702214261912', null, '2017-07-27 18:48:32', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704241428662', '1', '2017-07-27 04:24:14', '2017-07-27 04:27:06', '172', '1', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1501129454.0/@2017072704241428662', 'http://localhost/file/1501129454.0/@2017072704241428662', null, '2017-07-27 21:28:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704241434802', '1', '2017-07-27 04:24:14', null, '0', '0', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1501129454.0/@2017072704241434802', 'http://localhost/file/1501129454.0/@2017072704241434802', null, '2017-07-27 21:10:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704241441238', '1', '2017-07-27 04:24:14', null, '0', '0', '樊鹏举', '021033', '164', '青山四级巡控', '0000000', null, 'file/1501129454.0/@2017072704241441238', 'http://localhost/file/1501129454.0/@2017072704241441238', null, '2017-07-27 20:39:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704283910069', '1', '2017-07-27 04:28:39', null, '0', '2', '闫杰', '020886', '119', '北郊四中队', '0000000', null, 'file/1501129719.0/@2017072704283910069', 'http://localhost/file/1501129719.0/@2017072704283910069', null, '2017-07-27 22:08:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704283923762', '1', '2017-07-27 04:28:39', '2017-07-27 04:30:47', '128', '1', '闫杰', '020886', '119', '北郊四中队', '0000000', null, 'file/1501129719.0/@2017072704283923762', 'http://localhost/file/1501129719.0/@2017072704283923762', null, '2017-07-27 21:50:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704283948637', '1', '2017-07-27 04:28:39', '2017-07-27 04:33:24', '285', '1', '闫杰', '020886', '119', '北郊四中队', '0000000', null, 'file/1501129719.0/@2017072704283948637', 'http://localhost/file/1501129719.0/@2017072704283948637', null, '2017-07-27 21:47:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072704520721548', '1', '2017-07-27 04:52:07', '2017-07-27 04:54:55', '168', '1', '李涛', 'JX1101', '118', '北郊三中队', '0000000', null, 'file/1501131127.0/@2017072704520721548', 'http://localhost/file/1501131127.0/@2017072704520721548', null, '2017-07-27 22:36:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707270452076788', '1', '2017-07-27 04:52:07', '2017-07-27 04:55:08', '181', '1', '李涛', 'JX1101', '118', '北郊三中队', '0000000', null, 'file/1501131127.0/@201707270452076788', 'http://localhost/file/1501131127.0/@201707270452076788', null, '2017-07-27 21:33:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707270452079615', '1', '2017-07-27 04:52:07', null, '0', '2', '李涛', 'JX1101', '118', '北郊三中队', '0000000', null, 'file/1501131127.0/@201707270452079615', 'http://localhost/file/1501131127.0/@201707270452079615', null, '2017-07-27 21:09:27', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072707581132516', '1', '2017-07-27 07:58:11', null, '0', '2', '王晓燕', '024947', '119', '北郊四中队', '0000000', null, 'file/1501142291.0/@2017072707581132516', 'http://localhost/file/1501142291.0/@2017072707581132516', null, '2017-07-28 01:29:12', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707270758114874', '1', '2017-07-27 07:58:11', '2017-07-27 08:01:50', '219', '1', '王晓燕', '024947', '119', '北郊四中队', '0000000', null, 'file/1501142291.0/@201707270758114874', 'http://localhost/file/1501142291.0/@201707270758114874', null, '2017-07-28 00:23:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072707581150644', '1', '2017-07-27 07:58:11', null, '0', '3', '王晓燕', '024947', '119', '北郊四中队', '0000000', null, 'file/1501142291.0/@2017072707581150644', 'http://localhost/file/1501142291.0/@2017072707581150644', null, '2017-07-28 01:45:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072710553427739', '1', '2017-07-27 10:55:34', null, '0', '3', '郄亮', '021009', '82', '车管所', '0000000', null, 'file/1501152934.0/@2017072710553427739', 'http://localhost/file/1501152934.0/@2017072710553427739', null, '2017-07-28 03:00:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072710553430225', '1', '2017-07-27 10:55:34', null, '0', '0', '郄亮', '021009', '82', '车管所', '0000000', null, 'file/1501152934.0/@2017072710553430225', 'http://localhost/file/1501152934.0/@2017072710553430225', null, '2017-07-28 04:30:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072710553445255', '1', '2017-07-27 10:55:34', null, '0', '0', '郄亮', '021009', '82', '车管所', '0000000', null, 'file/1501152934.0/@2017072710553445255', 'http://localhost/file/1501152934.0/@2017072710553445255', null, '2017-07-28 04:04:02', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072711065712034', '1', '2017-07-27 11:06:57', null, '0', '2', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1501153617.0/@2017072711065712034', 'http://localhost/file/1501153617.0/@2017072711065712034', null, '2017-07-28 03:48:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072711065720962', '1', '2017-07-27 11:06:57', null, '0', '3', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1501153617.0/@2017072711065720962', 'http://localhost/file/1501153617.0/@2017072711065720962', null, '2017-07-28 04:00:04', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072711065747578', '1', '2017-07-27 11:06:57', null, '0', '0', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1501153617.0/@2017072711065747578', 'http://localhost/file/1501153617.0/@2017072711065747578', null, '2017-07-28 04:02:36', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072711124847838', '1', '2017-07-27 11:12:48', null, '0', '0', '刘义', '021267', '84', '督察大队', '0000000', null, 'file/1501153968.0/@2017072711124847838', 'http://localhost/file/1501153968.0/@2017072711124847838', null, '2017-07-28 03:21:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072711124860366', '1', '2017-07-27 11:12:48', null, '0', '2', '刘义', '021267', '84', '督察大队', '0000000', null, 'file/1501153968.0/@2017072711124860366', 'http://localhost/file/1501153968.0/@2017072711124860366', null, '2017-07-28 03:51:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072711124863937', '1', '2017-07-27 11:12:48', '2017-07-27 11:16:47', '239', '1', '刘义', '021267', '84', '督察大队', '0000000', null, 'file/1501153968.0/@2017072711124863937', 'http://localhost/file/1501153968.0/@2017072711124863937', null, '2017-07-28 04:09:40', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072712371110217', '1', '2017-07-27 12:37:11', null, '0', '3', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1501159031.0/@2017072712371110217', 'http://localhost/file/1501159031.0/@2017072712371110217', null, '2017-07-28 06:32:11', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072712371126449', '1', '2017-07-27 12:37:11', null, '0', '0', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1501159031.0/@2017072712371126449', 'http://localhost/file/1501159031.0/@2017072712371126449', null, '2017-07-28 05:18:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072712371147020', '1', '2017-07-27 12:37:11', null, '0', '2', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1501159031.0/@2017072712371147020', 'http://localhost/file/1501159031.0/@2017072712371147020', null, '2017-07-28 05:44:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072713122611987', '1', '2017-07-27 13:12:26', '2017-07-27 13:14:57', '151', '1', '尹一琦', 'JX0649', '139', '岗勤中队', '0000000', null, 'file/1501161146.0/@2017072713122611987', 'http://localhost/file/1501161146.0/@2017072713122611987', null, '2017-07-28 06:35:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707271312264519', '1', '2017-07-27 13:12:26', null, '0', '2', '尹一琦', 'JX0649', '139', '岗勤中队', '0000000', null, 'file/1501161146.0/@201707271312264519', 'http://localhost/file/1501161146.0/@201707271312264519', null, '2017-07-28 05:37:42', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072713122653317', '1', '2017-07-27 13:12:26', null, '0', '0', '尹一琦', 'JX0649', '139', '岗勤中队', '0000000', null, 'file/1501161146.0/@2017072713122653317', 'http://localhost/file/1501161146.0/@2017072713122653317', null, '2017-07-28 06:24:20', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072714053716546', '1', '2017-07-27 14:05:37', null, '0', '0', '秦政', '024885', '122', '高新二中队', '0000000', null, 'file/1501164337.0/@2017072714053716546', 'http://localhost/file/1501164337.0/@2017072714053716546', null, '2017-07-28 06:22:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072714053722174', '1', '2017-07-27 14:05:37', '2017-07-27 14:08:07', '150', '1', '秦政', '024885', '122', '高新二中队', '0000000', null, 'file/1501164337.0/@2017072714053722174', 'http://localhost/file/1501164337.0/@2017072714053722174', null, '2017-07-28 08:01:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072714053759468', '1', '2017-07-27 14:05:37', null, '0', '2', '秦政', '024885', '122', '高新二中队', '0000000', null, 'file/1501164337.0/@2017072714053759468', 'http://localhost/file/1501164337.0/@2017072714053759468', null, '2017-07-28 08:05:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072715261930159', '1', '2017-07-27 15:26:19', null, '0', '0', '范琳', 'JX0774', '139', '岗勤中队', '0000000', null, 'file/1501169179.0/@2017072715261930159', 'http://localhost/file/1501169179.0/@2017072715261930159', null, '2017-07-28 08:02:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072715261947138', '1', '2017-07-27 15:26:19', '2017-07-27 15:31:14', '295', '1', '范琳', 'JX0774', '139', '岗勤中队', '0000000', null, 'file/1501169179.0/@2017072715261947138', 'http://localhost/file/1501169179.0/@2017072715261947138', null, '2017-07-28 07:41:07', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072715261950339', '1', '2017-07-27 15:26:19', null, '0', '0', '范琳', 'JX0774', '139', '岗勤中队', '0000000', null, 'file/1501169179.0/@2017072715261950339', 'http://localhost/file/1501169179.0/@2017072715261950339', null, '2017-07-28 08:13:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072716074547563', '1', '2017-07-27 16:07:45', '2017-07-27 16:11:40', '235', '1', '赵永斌', '020994', '81', '北郊大队', '0000000', null, 'file/1501171665.0/@2017072716074547563', 'http://localhost/file/1501171665.0/@2017072716074547563', null, '2017-07-28 08:59:20', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072716074553683', '1', '2017-07-27 16:07:45', '2017-07-27 16:11:47', '242', '1', '赵永斌', '020994', '81', '北郊大队', '0000000', null, 'file/1501171665.0/@2017072716074553683', 'http://localhost/file/1501171665.0/@2017072716074553683', null, '2017-07-28 08:53:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072716074554106', '1', '2017-07-27 16:07:45', null, '0', '2', '赵永斌', '020994', '81', '北郊大队', '0000000', null, 'file/1501171665.0/@2017072716074554106', 'http://localhost/file/1501171665.0/@2017072716074554106', null, '2017-07-28 09:33:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707271636434291', '1', '2017-07-27 16:36:43', null, '0', '3', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501173403.0/@201707271636434291', 'http://localhost/file/1501173403.0/@201707271636434291', null, '2017-07-28 10:30:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707271636434389', '1', '2017-07-27 16:36:43', null, '0', '0', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501173403.0/@201707271636434389', 'http://localhost/file/1501173403.0/@201707271636434389', null, '2017-07-28 09:34:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072716364360163', '1', '2017-07-27 16:36:43', null, '0', '3', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501173403.0/@2017072716364360163', 'http://localhost/file/1501173403.0/@2017072716364360163', null, '2017-07-28 10:02:49', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718242429832', '1', '2017-07-27 18:24:24', '2017-07-27 18:27:00', '156', '1', '汪洋', '024804', '130', '东兴事故中队', '0000000', null, 'file/1501179864.0/@2017072718242429832', 'http://localhost/file/1501179864.0/@2017072718242429832', null, '2017-07-28 10:38:59', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718242442401', '1', '2017-07-27 18:24:24', null, '0', '0', '汪洋', '024804', '130', '东兴事故中队', '0000000', null, 'file/1501179864.0/@2017072718242442401', 'http://localhost/file/1501179864.0/@2017072718242442401', null, '2017-07-28 11:33:47', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718242457125', '1', '2017-07-27 18:24:24', null, '0', '2', '汪洋', '024804', '130', '东兴事故中队', '0000000', null, 'file/1501179864.0/@2017072718242457125', 'http://localhost/file/1501179864.0/@2017072718242457125', null, '2017-07-28 11:22:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718403539415', '1', '2017-07-27 18:40:35', null, '0', '0', '李鹏', 'JX0922', '122', '高新二中队', '0000000', null, 'file/1501180835.0/@2017072718403539415', 'http://localhost/file/1501180835.0/@2017072718403539415', null, '2017-07-28 11:40:48', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718403560176', '1', '2017-07-27 18:40:35', null, '0', '3', '李鹏', 'JX0922', '122', '高新二中队', '0000000', null, 'file/1501180835.0/@2017072718403560176', 'http://localhost/file/1501180835.0/@2017072718403560176', null, '2017-07-28 11:59:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718403564570', '1', '2017-07-27 18:40:35', null, '0', '2', '李鹏', 'JX0922', '122', '高新二中队', '0000000', null, 'file/1501180835.0/@2017072718403564570', 'http://localhost/file/1501180835.0/@2017072718403564570', null, '2017-07-28 12:13:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718500512187', '1', '2017-07-27 18:50:05', null, '0', '0', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1501181405.0/@2017072718500512187', 'http://localhost/file/1501181405.0/@2017072718500512187', null, '2017-07-28 12:03:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718500515181', '1', '2017-07-27 18:50:05', null, '0', '2', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1501181405.0/@2017072718500515181', 'http://localhost/file/1501181405.0/@2017072718500515181', null, '2017-07-28 12:36:10', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072718500564118', '1', '2017-07-27 18:50:05', null, '0', '3', '王庆杰', '021344', '114', '北郊园区中队', '0000000', null, 'file/1501181405.0/@2017072718500564118', 'http://localhost/file/1501181405.0/@2017072718500564118', null, '2017-07-28 11:08:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720001113145', '1', '2017-07-27 20:00:11', '2017-07-27 20:04:14', '243', '1', '郭小雪', 'JX0737', '140', '护校中队', '0000000', null, 'file/1501185611.0/@2017072720001113145', 'http://localhost/file/1501185611.0/@2017072720001113145', null, '2017-07-28 12:42:27', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720001116422', '1', '2017-07-27 20:00:11', null, '0', '2', '郭小雪', 'JX0737', '140', '护校中队', '0000000', null, 'file/1501185611.0/@2017072720001116422', 'http://localhost/file/1501185611.0/@2017072720001116422', null, '2017-07-28 12:14:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720001129863', '1', '2017-07-27 20:00:11', null, '0', '2', '郭小雪', 'JX0737', '140', '护校中队', '0000000', null, 'file/1501185611.0/@2017072720001129863', 'http://localhost/file/1501185611.0/@2017072720001129863', null, '2017-07-28 13:34:26', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720103229189', '1', '2017-07-27 20:10:32', '2017-07-27 20:15:13', '281', '1', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1501186232.0/@2017072720103229189', 'http://localhost/file/1501186232.0/@2017072720103229189', null, '2017-07-28 14:07:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720103248357', '1', '2017-07-27 20:10:32', null, '0', '3', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1501186232.0/@2017072720103248357', 'http://localhost/file/1501186232.0/@2017072720103248357', null, '2017-07-28 13:27:38', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720103258185', '1', '2017-07-27 20:10:32', '2017-07-27 20:14:58', '266', '1', '张河刚', '023718', '102', '河西二中队', '0000000', null, 'file/1501186232.0/@2017072720103258185', 'http://localhost/file/1501186232.0/@2017072720103258185', null, '2017-07-28 12:31:00', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720155119451', '1', '2017-07-27 20:15:51', null, '0', '2', '李小平', '023724', '118', '北郊三中队', '0000000', null, 'file/1501186551.0/@2017072720155119451', 'http://localhost/file/1501186551.0/@2017072720155119451', null, '2017-07-28 14:14:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720155136330', '1', '2017-07-27 20:15:51', null, '0', '3', '李小平', '023724', '118', '北郊三中队', '0000000', null, 'file/1501186551.0/@2017072720155136330', 'http://localhost/file/1501186551.0/@2017072720155136330', null, '2017-07-28 13:33:42', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720155160565', '1', '2017-07-27 20:15:51', '2017-07-27 20:19:18', '207', '1', '李小平', '023724', '118', '北郊三中队', '0000000', null, 'file/1501186551.0/@2017072720155160565', 'http://localhost/file/1501186551.0/@2017072720155160565', null, '2017-07-28 12:18:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720482326899', '1', '2017-07-27 20:48:23', null, '0', '2', '刘勇', '024726', '113', '车管所考务科', '0000000', null, 'file/1501188503.0/@2017072720482326899', 'http://localhost/file/1501188503.0/@2017072720482326899', null, '2017-07-28 13:11:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072720482350446', '1', '2017-07-27 20:48:23', null, '0', '0', '刘勇', '024726', '113', '车管所考务科', '0000000', null, 'file/1501188503.0/@2017072720482350446', 'http://localhost/file/1501188503.0/@2017072720482350446', null, '2017-07-28 13:15:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707272048235826', '1', '2017-07-27 20:48:23', null, '0', '2', '刘勇', '024726', '113', '车管所考务科', '0000000', null, 'file/1501188503.0/@201707272048235826', 'http://localhost/file/1501188503.0/@201707272048235826', null, '2017-07-28 13:14:30', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072723364426142', '1', '2017-07-27 23:36:44', null, '0', '2', '于飞', 'JX0406', '124', '高新三中队', '0000000', null, 'file/1501198604.0/@2017072723364426142', 'http://localhost/file/1501198604.0/@2017072723364426142', null, '2017-07-28 16:32:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072723364441543', '1', '2017-07-27 23:36:44', '2017-07-27 23:40:05', '201', '1', '于飞', 'JX0406', '124', '高新三中队', '0000000', null, 'file/1501198604.0/@2017072723364441543', 'http://localhost/file/1501198604.0/@2017072723364441543', null, '2017-07-28 17:23:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072723364457272', '1', '2017-07-27 23:36:44', null, '0', '2', '于飞', 'JX0406', '124', '高新三中队', '0000000', null, 'file/1501198604.0/@2017072723364457272', 'http://localhost/file/1501198604.0/@2017072723364457272', null, '2017-07-28 17:10:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072723422840256', '1', '2017-07-27 23:42:28', null, '0', '0', '张方华', 'JX0672', '139', '岗勤中队', '0000000', null, 'file/1501198948.0/@2017072723422840256', 'http://localhost/file/1501198948.0/@2017072723422840256', null, '2017-07-28 16:13:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072723422845890', '1', '2017-07-27 23:42:28', null, '0', '2', '张方华', 'JX0672', '139', '岗勤中队', '0000000', null, 'file/1501198948.0/@2017072723422845890', 'http://localhost/file/1501198948.0/@2017072723422845890', null, '2017-07-28 16:18:19', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072723422850922', '1', '2017-07-27 23:42:28', null, '0', '2', '张方华', 'JX0672', '139', '岗勤中队', '0000000', null, 'file/1501198948.0/@2017072723422850922', 'http://localhost/file/1501198948.0/@2017072723422850922', null, '2017-07-28 16:30:19', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800160530012', '1', '2017-07-28 00:16:05', '2017-07-28 00:18:48', '163', '1', '张永平', '024646', '84', '督察大队', '0000000', null, 'file/1501200965.0/@2017072800160530012', 'http://localhost/file/1501200965.0/@2017072800160530012', null, '2017-07-28 17:11:12', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800160552080', '1', '2017-07-28 00:16:05', null, '0', '0', '张永平', '024646', '84', '督察大队', '0000000', null, 'file/1501200965.0/@2017072800160552080', 'http://localhost/file/1501200965.0/@2017072800160552080', null, '2017-07-28 16:32:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707280016055755', '1', '2017-07-28 00:16:05', '2017-07-28 00:19:17', '192', '1', '张永平', '024646', '84', '督察大队', '0000000', null, 'file/1501200965.0/@201707280016055755', 'http://localhost/file/1501200965.0/@201707280016055755', null, '2017-07-28 17:16:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800303316665', '1', '2017-07-28 00:30:33', '2017-07-28 00:34:18', '225', '1', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501201833.0/@2017072800303316665', 'http://localhost/file/1501201833.0/@2017072800303316665', null, '2017-07-28 17:38:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800303346790', '1', '2017-07-28 00:30:33', null, '0', '0', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501201833.0/@2017072800303346790', 'http://localhost/file/1501201833.0/@2017072800303346790', null, '2017-07-28 18:04:35', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800303349685', '1', '2017-07-28 00:30:33', null, '0', '2', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501201833.0/@2017072800303349685', 'http://localhost/file/1501201833.0/@2017072800303349685', null, '2017-07-28 16:44:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800391616083', '1', '2017-07-28 00:39:16', '2017-07-28 00:43:20', '244', '1', '谢博文', 'JX0554', '102', '河西二中队', '0000000', null, 'file/1501202356.0/@2017072800391616083', 'http://localhost/file/1501202356.0/@2017072800391616083', null, '2017-07-28 16:53:45', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800391624295', '1', '2017-07-28 00:39:16', '2017-07-28 00:42:19', '183', '1', '谢博文', 'JX0554', '102', '河西二中队', '0000000', null, 'file/1501202356.0/@2017072800391624295', 'http://localhost/file/1501202356.0/@2017072800391624295', null, '2017-07-28 17:39:00', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072800391632724', '1', '2017-07-28 00:39:16', null, '0', '2', '谢博文', 'JX0554', '102', '河西二中队', '0000000', null, 'file/1501202356.0/@2017072800391632724', 'http://localhost/file/1501202356.0/@2017072800391632724', null, '2017-07-28 18:00:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072802120951781', '1', '2017-07-28 02:12:09', '2017-07-28 02:14:59', '170', '1', '马凤贺', '021061', '172', '青山事故中队', '0000000', null, 'file/1501207929.0/@2017072802120951781', 'http://localhost/file/1501207929.0/@2017072802120951781', null, '2017-07-28 19:36:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072802120957071', '1', '2017-07-28 02:12:09', null, '0', '0', '马凤贺', '021061', '172', '青山事故中队', '0000000', null, 'file/1501207929.0/@2017072802120957071', 'http://localhost/file/1501207929.0/@2017072802120957071', null, '2017-07-28 18:52:53', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707280212096743', '1', '2017-07-28 02:12:09', null, '0', '0', '马凤贺', '021061', '172', '青山事故中队', '0000000', null, 'file/1501207929.0/@201707280212096743', 'http://localhost/file/1501207929.0/@201707280212096743', null, '2017-07-28 19:39:01', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072802525815277', '1', '2017-07-28 02:52:58', '2017-07-28 02:56:49', '231', '1', '蔚文', 'JX0795', '140', '护校中队', '0000000', null, 'file/1501210378.0/@2017072802525815277', 'http://localhost/file/1501210378.0/@2017072802525815277', null, '2017-07-28 20:01:06', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072802525818538', '1', '2017-07-28 02:52:58', '2017-07-28 02:56:52', '234', '1', '蔚文', 'JX0795', '140', '护校中队', '0000000', null, 'file/1501210378.0/@2017072802525818538', 'http://localhost/file/1501210378.0/@2017072802525818538', null, '2017-07-28 19:34:21', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072802525844705', '1', '2017-07-28 02:52:58', null, '0', '0', '蔚文', 'JX0795', '140', '护校中队', '0000000', null, 'file/1501210378.0/@2017072802525844705', 'http://localhost/file/1501210378.0/@2017072802525844705', null, '2017-07-28 20:37:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072806220311059', '1', '2017-07-28 06:22:03', null, '0', '3', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1501222923.0/@2017072806220311059', 'http://localhost/file/1501222923.0/@2017072806220311059', null, '2017-07-29 00:06:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072806220327917', '1', '2017-07-28 06:22:03', null, '0', '2', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1501222923.0/@2017072806220327917', 'http://localhost/file/1501222923.0/@2017072806220327917', null, '2017-07-29 00:03:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072806220354623', '1', '2017-07-28 06:22:03', null, '0', '0', '王志', 'JX0211', '118', '北郊三中队', '0000000', null, 'file/1501222923.0/@2017072806220354623', 'http://localhost/file/1501222923.0/@2017072806220354623', null, '2017-07-28 22:30:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072810323936651', '1', '2017-07-28 10:32:39', null, '0', '2', '布赫', '024813', '113', '车管所考务科', '0000000', null, 'file/1501237959.0/@2017072810323936651', 'http://localhost/file/1501237959.0/@2017072810323936651', null, '2017-07-29 02:46:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072810323942946', '1', '2017-07-28 10:32:39', null, '0', '3', '布赫', '024813', '113', '车管所考务科', '0000000', null, 'file/1501237959.0/@2017072810323942946', 'http://localhost/file/1501237959.0/@2017072810323942946', null, '2017-07-29 02:32:42', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072810323951167', '1', '2017-07-28 10:32:39', null, '0', '2', '布赫', '024813', '113', '车管所考务科', '0000000', null, 'file/1501237959.0/@2017072810323951167', 'http://localhost/file/1501237959.0/@2017072810323951167', null, '2017-07-29 03:23:53', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072812185840086', '1', '2017-07-28 12:18:58', null, '0', '3', '吴红艳', 'JX0604', '102', '河西二中队', '0000000', null, 'file/1501244338.0/@2017072812185840086', 'http://localhost/file/1501244338.0/@2017072812185840086', null, '2017-07-29 04:21:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072812185846782', '1', '2017-07-28 12:18:58', null, '0', '3', '吴红艳', 'JX0604', '102', '河西二中队', '0000000', null, 'file/1501244338.0/@2017072812185846782', 'http://localhost/file/1501244338.0/@2017072812185846782', null, '2017-07-29 05:16:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072812185860241', '1', '2017-07-28 12:18:58', '2017-07-28 12:23:40', '282', '1', '吴红艳', 'JX0604', '102', '河西二中队', '0000000', null, 'file/1501244338.0/@2017072812185860241', 'http://localhost/file/1501244338.0/@2017072812185860241', null, '2017-07-29 05:06:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072812231441041', '1', '2017-07-28 12:23:14', null, '0', '0', '刘宝胜', '024760', '113', '车管所考务科', '0000000', null, 'file/1501244594.0/@2017072812231441041', 'http://localhost/file/1501244594.0/@2017072812231441041', null, '2017-07-29 05:46:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072812231453246', '1', '2017-07-28 12:23:14', '2017-07-28 12:28:07', '293', '1', '刘宝胜', '024760', '113', '车管所考务科', '0000000', null, 'file/1501244594.0/@2017072812231453246', 'http://localhost/file/1501244594.0/@2017072812231453246', null, '2017-07-29 06:00:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707281223147208', '1', '2017-07-28 12:23:14', null, '0', '2', '刘宝胜', '024760', '113', '车管所考务科', '0000000', null, 'file/1501244594.0/@201707281223147208', 'http://localhost/file/1501244594.0/@201707281223147208', null, '2017-07-29 04:39:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813000844576', '1', '2017-07-28 13:00:08', null, '0', '3', '信佳', '024901', '150', '白云事故中队', '0000000', null, 'file/1501246808.0/@2017072813000844576', 'http://localhost/file/1501246808.0/@2017072813000844576', null, '2017-07-29 05:40:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813000851170', '1', '2017-07-28 13:00:08', '2017-07-28 13:03:19', '191', '1', '信佳', '024901', '150', '白云事故中队', '0000000', null, 'file/1501246808.0/@2017072813000851170', 'http://localhost/file/1501246808.0/@2017072813000851170', null, '2017-07-29 06:48:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813000854714', '1', '2017-07-28 13:00:08', null, '0', '2', '信佳', '024901', '150', '白云事故中队', '0000000', null, 'file/1501246808.0/@2017072813000854714', 'http://localhost/file/1501246808.0/@2017072813000854714', null, '2017-07-29 05:58:22', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813223737221', '1', '2017-07-28 13:22:37', null, '0', '0', '赵寒蕊', 'JX0779', '139', '岗勤中队', '0000000', null, 'file/1501248157.0/@2017072813223737221', 'http://localhost/file/1501248157.0/@2017072813223737221', null, '2017-07-29 06:31:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813223751303', '1', '2017-07-28 13:22:37', null, '0', '2', '赵寒蕊', 'JX0779', '139', '岗勤中队', '0000000', null, 'file/1501248157.0/@2017072813223751303', 'http://localhost/file/1501248157.0/@2017072813223751303', null, '2017-07-29 06:34:03', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813223762222', '1', '2017-07-28 13:22:37', null, '0', '3', '赵寒蕊', 'JX0779', '139', '岗勤中队', '0000000', null, 'file/1501248157.0/@2017072813223762222', 'http://localhost/file/1501248157.0/@2017072813223762222', null, '2017-07-29 07:22:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813334812893', '1', '2017-07-28 13:33:48', null, '0', '3', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1501248828.0/@2017072813334812893', 'http://localhost/file/1501248828.0/@2017072813334812893', null, '2017-07-29 06:28:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813334822314', '1', '2017-07-28 13:33:48', null, '0', '0', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1501248828.0/@2017072813334822314', 'http://localhost/file/1501248828.0/@2017072813334822314', null, '2017-07-29 06:16:19', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813334851524', '1', '2017-07-28 13:33:48', null, '0', '0', '任学枫', 'JX1185', '103', '河西一中队', '0000000', null, 'file/1501248828.0/@2017072813334851524', 'http://localhost/file/1501248828.0/@2017072813334851524', null, '2017-07-29 05:52:24', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813392731912', '1', '2017-07-28 13:39:27', null, '0', '2', '赵振铎', 'JX1038', '107', '河西检查站', '0000000', null, 'file/1501249167.0/@2017072813392731912', 'http://localhost/file/1501249167.0/@2017072813392731912', null, '2017-07-29 06:17:40', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813392731932', '1', '2017-07-28 13:39:27', null, '0', '3', '赵振铎', 'JX1038', '107', '河西检查站', '0000000', null, 'file/1501249167.0/@2017072813392731932', 'http://localhost/file/1501249167.0/@2017072813392731932', null, '2017-07-29 07:31:17', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813392744664', '1', '2017-07-28 13:39:27', null, '0', '3', '赵振铎', 'JX1038', '107', '河西检查站', '0000000', null, 'file/1501249167.0/@2017072813392744664', 'http://localhost/file/1501249167.0/@2017072813392744664', null, '2017-07-29 07:07:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813394916314', '1', '2017-07-28 13:39:49', null, '0', '2', '孙剑波', 'JX0510', '127', '东兴一中队', '0000000', null, 'file/1501249189.0/@2017072813394916314', 'http://localhost/file/1501249189.0/@2017072813394916314', null, '2017-07-29 07:01:42', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813394947509', '1', '2017-07-28 13:39:49', null, '0', '0', '孙剑波', 'JX0510', '127', '东兴一中队', '0000000', null, 'file/1501249189.0/@2017072813394947509', 'http://localhost/file/1501249189.0/@2017072813394947509', null, '2017-07-29 06:38:20', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072813394959081', '1', '2017-07-28 13:39:49', null, '0', '0', '孙剑波', 'JX0510', '127', '东兴一中队', '0000000', null, 'file/1501249189.0/@2017072813394959081', 'http://localhost/file/1501249189.0/@2017072813394959081', null, '2017-07-29 06:14:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072814100610750', '1', '2017-07-28 14:10:06', null, '0', '3', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1501251006.0/@2017072814100610750', 'http://localhost/file/1501251006.0/@2017072814100610750', null, '2017-07-29 07:14:08', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072814100628873', '1', '2017-07-28 14:10:06', null, '0', '2', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1501251006.0/@2017072814100628873', 'http://localhost/file/1501251006.0/@2017072814100628873', null, '2017-07-29 06:49:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072814100635759', '1', '2017-07-28 14:10:06', '2017-07-28 14:13:26', '200', '1', '高刚', '020902', '81', '北郊大队', '0000000', null, 'file/1501251006.0/@2017072814100635759', 'http://localhost/file/1501251006.0/@2017072814100635759', null, '2017-07-29 07:57:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072814173136044', '1', '2017-07-28 14:17:31', null, '0', '0', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501251451.0/@2017072814173136044', 'http://localhost/file/1501251451.0/@2017072814173136044', null, '2017-07-29 07:33:28', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072814173154119', '1', '2017-07-28 14:17:31', '2017-07-28 14:20:20', '169', '1', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501251451.0/@2017072814173154119', 'http://localhost/file/1501251451.0/@2017072814173154119', null, '2017-07-29 06:30:54', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707281417317977', '1', '2017-07-28 14:17:31', null, '0', '2', '赵永来', 'JX0577', '114', '北郊园区中队', '0000000', null, 'file/1501251451.0/@201707281417317977', 'http://localhost/file/1501251451.0/@201707281417317977', null, '2017-07-29 06:24:33', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072816380023902', '1', '2017-07-28 16:38:00', null, '0', '0', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1501259880.0/@2017072816380023902', 'http://localhost/file/1501259880.0/@2017072816380023902', null, '2017-07-29 09:41:03', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072816380052742', '1', '2017-07-28 16:38:00', null, '0', '3', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1501259880.0/@2017072816380052742', 'http://localhost/file/1501259880.0/@2017072816380052742', null, '2017-07-29 08:42:16', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707281638009822', '1', '2017-07-28 16:38:00', null, '0', '2', '鲍强', 'JX0360', '103', '河西一中队', '0000000', null, 'file/1501259880.0/@201707281638009822', 'http://localhost/file/1501259880.0/@201707281638009822', null, '2017-07-29 08:55:27', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072816382623170', '1', '2017-07-28 16:38:26', null, '0', '2', '郭永强', 'JX0261', '164', '青山四级巡控', '0000000', null, 'file/1501259906.0/@2017072816382623170', 'http://localhost/file/1501259906.0/@2017072816382623170', null, '2017-07-29 08:47:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072816382624731', '1', '2017-07-28 16:38:26', null, '0', '2', '郭永强', 'JX0261', '164', '青山四级巡控', '0000000', null, 'file/1501259906.0/@2017072816382624731', 'http://localhost/file/1501259906.0/@2017072816382624731', null, '2017-07-29 09:56:21', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072816382651798', '1', '2017-07-28 16:38:26', null, '0', '3', '郭永强', 'JX0261', '164', '青山四级巡控', '0000000', null, 'file/1501259906.0/@2017072816382651798', 'http://localhost/file/1501259906.0/@2017072816382651798', null, '2017-07-29 10:19:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072818072217708', '1', '2017-07-28 18:07:22', null, '0', '3', '李磊', 'JX0575', '117', '北郊二中队', '0000000', null, 'file/1501265242.0/@2017072818072217708', 'http://localhost/file/1501265242.0/@2017072818072217708', null, '2017-07-29 11:44:00', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072818072221596', '1', '2017-07-28 18:07:22', null, '0', '0', '李磊', 'JX0575', '117', '北郊二中队', '0000000', null, 'file/1501265242.0/@2017072818072221596', 'http://localhost/file/1501265242.0/@2017072818072221596', null, '2017-07-29 11:09:52', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072818072255412', '1', '2017-07-28 18:07:22', '2017-07-28 18:11:03', '221', '1', '李磊', 'JX0575', '117', '北郊二中队', '0000000', null, 'file/1501265242.0/@2017072818072255412', 'http://localhost/file/1501265242.0/@2017072818072255412', null, '2017-07-29 11:22:49', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072818325627375', '1', '2017-07-28 18:32:56', null, '0', '0', '樊利生', '021070', '164', '青山四级巡控', '0000000', null, 'file/1501266776.0/@2017072818325627375', 'http://localhost/file/1501266776.0/@2017072818325627375', null, '2017-07-29 10:51:48', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072818325644523', '1', '2017-07-28 18:32:56', null, '0', '2', '樊利生', '021070', '164', '青山四级巡控', '0000000', null, 'file/1501266776.0/@2017072818325644523', 'http://localhost/file/1501266776.0/@2017072818325644523', null, '2017-07-29 10:37:48', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707281832567556', '1', '2017-07-28 18:32:56', '2017-07-28 18:35:24', '148', '1', '樊利生', '021070', '164', '青山四级巡控', '0000000', null, 'file/1501266776.0/@201707281832567556', 'http://localhost/file/1501266776.0/@201707281832567556', null, '2017-07-29 11:31:13', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072819222043357', '1', '2017-07-28 19:22:20', null, '0', '2', '王玉祥', '023463', '125', '高新事故中队', '0000000', null, 'file/1501269740.0/@2017072819222043357', 'http://localhost/file/1501269740.0/@2017072819222043357', null, '2017-07-29 12:49:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707281922204407', '1', '2017-07-28 19:22:20', null, '0', '0', '王玉祥', '023463', '125', '高新事故中队', '0000000', null, 'file/1501269740.0/@201707281922204407', 'http://localhost/file/1501269740.0/@201707281922204407', null, '2017-07-29 12:32:47', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072819222058500', '1', '2017-07-28 19:22:20', null, '0', '2', '王玉祥', '023463', '125', '高新事故中队', '0000000', null, 'file/1501269740.0/@2017072819222058500', 'http://localhost/file/1501269740.0/@2017072819222058500', null, '2017-07-29 12:39:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072819551036045', '1', '2017-07-28 19:55:10', null, '0', '2', '刘睿', '024803', '111', '车管所监督科', '0000000', null, 'file/1501271710.0/@2017072819551036045', 'http://localhost/file/1501271710.0/@2017072819551036045', null, '2017-07-29 13:32:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072819551041878', '1', '2017-07-28 19:55:10', null, '0', '2', '刘睿', '024803', '111', '车管所监督科', '0000000', null, 'file/1501271710.0/@2017072819551041878', 'http://localhost/file/1501271710.0/@2017072819551041878', null, '2017-07-29 12:31:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707281955107144', '1', '2017-07-28 19:55:10', null, '0', '2', '刘睿', '024803', '111', '车管所监督科', '0000000', null, 'file/1501271710.0/@201707281955107144', 'http://localhost/file/1501271710.0/@201707281955107144', null, '2017-07-29 13:50:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072820094721038', '1', '2017-07-28 20:09:47', null, '0', '2', '许佳静', 'JX0651', '139', '岗勤中队', '0000000', null, 'file/1501272587.0/@2017072820094721038', 'http://localhost/file/1501272587.0/@2017072820094721038', null, '2017-07-29 13:41:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072820094723195', '1', '2017-07-28 20:09:47', null, '0', '3', '许佳静', 'JX0651', '139', '岗勤中队', '0000000', null, 'file/1501272587.0/@2017072820094723195', 'http://localhost/file/1501272587.0/@2017072820094723195', null, '2017-07-29 13:38:47', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072820094762923', '1', '2017-07-28 20:09:47', null, '0', '2', '许佳静', 'JX0651', '139', '岗勤中队', '0000000', null, 'file/1501272587.0/@2017072820094762923', 'http://localhost/file/1501272587.0/@2017072820094762923', null, '2017-07-29 12:22:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072821244541189', '1', '2017-07-28 21:24:45', null, '0', '3', '达布拉', '023504', '117', '北郊二中队', '0000000', null, 'file/1501277085.0/@2017072821244541189', 'http://localhost/file/1501277085.0/@2017072821244541189', null, '2017-07-29 14:26:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072821244542578', '1', '2017-07-28 21:24:45', '2017-07-28 21:27:00', '135', '1', '达布拉', '023504', '117', '北郊二中队', '0000000', null, 'file/1501277085.0/@2017072821244542578', 'http://localhost/file/1501277085.0/@2017072821244542578', null, '2017-07-29 15:02:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072821244555555', '1', '2017-07-28 21:24:45', null, '0', '0', '达布拉', '023504', '117', '北郊二中队', '0000000', null, 'file/1501277085.0/@2017072821244555555', 'http://localhost/file/1501277085.0/@2017072821244555555', null, '2017-07-29 13:50:57', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072821501022456', '1', '2017-07-28 21:50:10', '2017-07-28 21:53:36', '206', '1', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1501278610.0/@2017072821501022456', 'http://localhost/file/1501278610.0/@2017072821501022456', null, '2017-07-29 15:27:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072821501025308', '1', '2017-07-28 21:50:10', null, '0', '0', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1501278610.0/@2017072821501025308', 'http://localhost/file/1501278610.0/@2017072821501025308', null, '2017-07-29 15:11:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072821501063076', '1', '2017-07-28 21:50:10', null, '0', '0', '王超', 'JX0772', '139', '岗勤中队', '0000000', null, 'file/1501278610.0/@2017072821501063076', 'http://localhost/file/1501278610.0/@2017072821501063076', null, '2017-07-29 14:57:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072822460748720', '1', '2017-07-28 22:46:07', null, '0', '3', '湖泊清', '002025', '143', '达茂二中队', '0000000', null, 'file/1501281967.0/@2017072822460748720', 'http://localhost/file/1501281967.0/@2017072822460748720', null, '2017-07-29 16:12:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072822460760892', '1', '2017-07-28 22:46:07', null, '0', '3', '湖泊清', '002025', '143', '达茂二中队', '0000000', null, 'file/1501281967.0/@2017072822460760892', 'http://localhost/file/1501281967.0/@2017072822460760892', null, '2017-07-29 15:24:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707282246076637', '1', '2017-07-28 22:46:07', '2017-07-28 22:50:07', '240', '1', '湖泊清', '002025', '143', '达茂二中队', '0000000', null, 'file/1501281967.0/@201707282246076637', 'http://localhost/file/1501281967.0/@201707282246076637', null, '2017-07-29 15:55:50', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072900384419300', '1', '2017-07-29 00:38:44', null, '0', '2', '郭和义', '020751', '82', '车管所', '0000000', null, 'file/1501288724.0/@2017072900384419300', 'http://localhost/file/1501288724.0/@2017072900384419300', null, '2017-07-29 17:17:15', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707290038444368', '1', '2017-07-29 00:38:44', null, '0', '0', '郭和义', '020751', '82', '车管所', '0000000', null, 'file/1501288724.0/@201707290038444368', 'http://localhost/file/1501288724.0/@201707290038444368', null, '2017-07-29 17:57:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072900384464148', '1', '2017-07-29 00:38:44', null, '0', '2', '郭和义', '020751', '82', '车管所', '0000000', null, 'file/1501288724.0/@2017072900384464148', 'http://localhost/file/1501288724.0/@2017072900384464148', null, '2017-07-29 18:25:17', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072901140313679', '1', '2017-07-29 01:14:03', null, '0', '0', '朱琳', 'JX0768', '139', '岗勤中队', '0000000', null, 'file/1501290843.0/@2017072901140313679', 'http://localhost/file/1501290843.0/@2017072901140313679', null, '2017-07-29 18:59:34', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072901140320282', '1', '2017-07-29 01:14:03', null, '0', '3', '朱琳', 'JX0768', '139', '岗勤中队', '0000000', null, 'file/1501290843.0/@2017072901140320282', 'http://localhost/file/1501290843.0/@2017072901140320282', null, '2017-07-29 18:58:09', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072901140342980', '1', '2017-07-29 01:14:03', null, '0', '2', '朱琳', 'JX0768', '139', '岗勤中队', '0000000', null, 'file/1501290843.0/@2017072901140342980', 'http://localhost/file/1501290843.0/@2017072901140342980', null, '2017-07-29 17:49:25', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902033018840', '1', '2017-07-29 02:03:30', null, '0', '2', '张岩', 'JX0568', '119', '北郊四中队', '0000000', null, 'file/1501293810.0/@2017072902033018840', 'http://localhost/file/1501293810.0/@2017072902033018840', null, '2017-07-29 18:51:58', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902033028983', '1', '2017-07-29 02:03:30', '2017-07-29 02:05:39', '129', '1', '张岩', 'JX0568', '119', '北郊四中队', '0000000', null, 'file/1501293810.0/@2017072902033028983', 'http://localhost/file/1501293810.0/@2017072902033028983', null, '2017-07-29 19:04:43', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902033040587', '1', '2017-07-29 02:03:30', '2017-07-29 02:08:11', '281', '1', '张岩', 'JX0568', '119', '北郊四中队', '0000000', null, 'file/1501293810.0/@2017072902033040587', 'http://localhost/file/1501293810.0/@2017072902033040587', null, '2017-07-29 19:02:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902201426494', '1', '2017-07-29 02:20:14', '2017-07-29 02:23:00', '166', '1', '胡强国', '023598', '118', '北郊三中队', '0000000', null, 'file/1501294814.0/@2017072902201426494', 'http://localhost/file/1501294814.0/@2017072902201426494', null, '2017-07-29 20:16:08', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902201450899', '1', '2017-07-29 02:20:14', null, '0', '2', '胡强国', '023598', '118', '北郊三中队', '0000000', null, 'file/1501294814.0/@2017072902201450899', 'http://localhost/file/1501294814.0/@2017072902201450899', null, '2017-07-29 19:28:44', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902201451667', '1', '2017-07-29 02:20:14', null, '0', '0', '胡强国', '023598', '118', '北郊三中队', '0000000', null, 'file/1501294814.0/@2017072902201451667', 'http://localhost/file/1501294814.0/@2017072902201451667', null, '2017-07-29 19:56:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902204520085', '1', '2017-07-29 02:20:45', null, '0', '3', '杨来会', '021252', '84', '督察大队', '0000000', null, 'file/1501294845.0/@2017072902204520085', 'http://localhost/file/1501294845.0/@2017072902204520085', null, '2017-07-29 20:00:31', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902204551087', '1', '2017-07-29 02:20:45', null, '0', '0', '杨来会', '021252', '84', '督察大队', '0000000', null, 'file/1501294845.0/@2017072902204551087', 'http://localhost/file/1501294845.0/@2017072902204551087', null, '2017-07-29 18:24:51', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072902204559585', '1', '2017-07-29 02:20:45', null, '0', '0', '杨来会', '021252', '84', '督察大队', '0000000', null, 'file/1501294845.0/@2017072902204559585', 'http://localhost/file/1501294845.0/@2017072902204559585', null, '2017-07-29 18:46:01', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072905491120244', '1', '2017-07-29 05:49:11', null, '0', '0', '许志刚', '020695', '113', '车管所考务科', '0000000', null, 'file/1501307351.0/@2017072905491120244', 'http://localhost/file/1501307351.0/@2017072905491120244', null, '2017-07-29 22:35:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072905491136113', '1', '2017-07-29 05:49:11', '2017-07-29 05:52:16', '185', '1', '许志刚', '020695', '113', '车管所考务科', '0000000', null, 'file/1501307351.0/@2017072905491136113', 'http://localhost/file/1501307351.0/@2017072905491136113', null, '2017-07-29 23:46:48', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072905491151671', '1', '2017-07-29 05:49:11', null, '0', '0', '许志刚', '020695', '113', '车管所考务科', '0000000', null, 'file/1501307351.0/@2017072905491151671', 'http://localhost/file/1501307351.0/@2017072905491151671', null, '2017-07-29 22:28:14', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072906384723819', '1', '2017-07-29 06:38:47', '2017-07-29 06:41:07', '140', '1', '蒋保国', '020981', '80', '河西大队', '0000000', null, 'file/1501310327.0/@2017072906384723819', 'http://localhost/file/1501310327.0/@2017072906384723819', null, '2017-07-29 22:49:53', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072906384729364', '1', '2017-07-29 06:38:47', '2017-07-29 06:43:28', '281', '1', '蒋保国', '020981', '80', '河西大队', '0000000', null, 'file/1501310327.0/@2017072906384729364', 'http://localhost/file/1501310327.0/@2017072906384729364', null, '2017-07-29 22:52:57', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707290638475710', '1', '2017-07-29 06:38:47', null, '0', '2', '蒋保国', '020981', '80', '河西大队', '0000000', null, 'file/1501310327.0/@201707290638475710', 'http://localhost/file/1501310327.0/@201707290638475710', null, '2017-07-29 23:47:44', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072908144915000', '1', '2017-07-29 08:14:49', null, '0', '2', '史培文', '024732', '127', '东兴一中队', '0000000', null, 'file/1501316089.0/@2017072908144915000', 'http://localhost/file/1501316089.0/@2017072908144915000', null, '2017-07-30 01:48:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072908144955511', '1', '2017-07-29 08:14:49', null, '0', '0', '史培文', '024732', '127', '东兴一中队', '0000000', null, 'file/1501316089.0/@2017072908144955511', 'http://localhost/file/1501316089.0/@2017072908144955511', null, '2017-07-30 01:25:30', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072908144957584', '1', '2017-07-29 08:14:49', null, '0', '0', '史培文', '024732', '127', '东兴一中队', '0000000', null, 'file/1501316089.0/@2017072908144957584', 'http://localhost/file/1501316089.0/@2017072908144957584', null, '2017-07-30 02:04:24', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072909205138149', '1', '2017-07-29 09:20:51', null, '0', '3', '世龙', '000836', '130', '东兴事故中队', '0000000', null, 'file/1501320051.0/@2017072909205138149', 'http://localhost/file/1501320051.0/@2017072909205138149', null, '2017-07-30 02:49:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072909205141514', '1', '2017-07-29 09:20:51', null, '0', '3', '世龙', '000836', '130', '东兴事故中队', '0000000', null, 'file/1501320051.0/@2017072909205141514', 'http://localhost/file/1501320051.0/@2017072909205141514', null, '2017-07-30 02:01:19', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072909205153794', '1', '2017-07-29 09:20:51', null, '0', '0', '世龙', '000836', '130', '东兴事故中队', '0000000', null, 'file/1501320051.0/@2017072909205153794', 'http://localhost/file/1501320051.0/@2017072909205153794', null, '2017-07-30 02:27:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072909413922597', '1', '2017-07-29 09:41:39', '2017-07-29 09:45:24', '225', '1', '汪洋', '024804', '130', '东兴事故中队', '0000000', null, 'file/1501321299.0/@2017072909413922597', 'http://localhost/file/1501321299.0/@2017072909413922597', null, '2017-07-30 03:19:34', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072909413929513', '1', '2017-07-29 09:41:39', null, '0', '2', '汪洋', '024804', '130', '东兴事故中队', '0000000', null, 'file/1501321299.0/@2017072909413929513', 'http://localhost/file/1501321299.0/@2017072909413929513', null, '2017-07-30 03:36:04', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072909413934767', '1', '2017-07-29 09:41:39', null, '0', '2', '汪洋', '024804', '130', '东兴事故中队', '0000000', null, 'file/1501321299.0/@2017072909413934767', 'http://localhost/file/1501321299.0/@2017072909413934767', null, '2017-07-30 02:03:23', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072911192815040', '1', '2017-07-29 11:19:28', null, '0', '2', '赵蕾', 'JX0775', '139', '岗勤中队', '0000000', null, 'file/1501327168.0/@2017072911192815040', 'http://localhost/file/1501327168.0/@2017072911192815040', null, '2017-07-30 03:38:00', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072911192834391', '1', '2017-07-29 11:19:28', null, '0', '3', '赵蕾', 'JX0775', '139', '岗勤中队', '0000000', null, 'file/1501327168.0/@2017072911192834391', 'http://localhost/file/1501327168.0/@2017072911192834391', null, '2017-07-30 03:56:37', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707291119288931', '1', '2017-07-29 11:19:28', null, '0', '2', '赵蕾', 'JX0775', '139', '岗勤中队', '0000000', null, 'file/1501327168.0/@201707291119288931', 'http://localhost/file/1501327168.0/@201707291119288931', null, '2017-07-30 03:22:41', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072911383356776', '1', '2017-07-29 11:38:33', '2017-07-29 11:41:18', '165', '1', '张永祥', 'JX0570', '117', '北郊二中队', '0000000', null, 'file/1501328313.0/@2017072911383356776', 'http://localhost/file/1501328313.0/@2017072911383356776', null, '2017-07-30 03:52:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707291138337668', '1', '2017-07-29 11:38:33', null, '0', '0', '张永祥', 'JX0570', '117', '北郊二中队', '0000000', null, 'file/1501328313.0/@201707291138337668', 'http://localhost/file/1501328313.0/@201707291138337668', null, '2017-07-30 03:41:41', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707291138338639', '1', '2017-07-29 11:38:33', null, '0', '2', '张永祥', 'JX0570', '117', '北郊二中队', '0000000', null, 'file/1501328313.0/@201707291138338639', 'http://localhost/file/1501328313.0/@201707291138338639', null, '2017-07-30 04:02:55', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072911384128438', '1', '2017-07-29 11:38:41', null, '0', '2', '张剑锋', '023481', '117', '北郊二中队', '0000000', null, 'file/1501328321.0/@2017072911384128438', 'http://localhost/file/1501328321.0/@2017072911384128438', null, '2017-07-30 05:36:20', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072911384157826', '1', '2017-07-29 11:38:41', null, '0', '2', '张剑锋', '023481', '117', '北郊二中队', '0000000', null, 'file/1501328321.0/@2017072911384157826', 'http://localhost/file/1501328321.0/@2017072911384157826', null, '2017-07-30 04:36:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707291138419560', '1', '2017-07-29 11:38:41', null, '0', '2', '张剑锋', '023481', '117', '北郊二中队', '0000000', null, 'file/1501328321.0/@201707291138419560', 'http://localhost/file/1501328321.0/@201707291138419560', null, '2017-07-30 04:53:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912365910688', '1', '2017-07-29 12:36:59', '2017-07-29 12:39:08', '129', '1', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1501331819.0/@2017072912365910688', 'http://localhost/file/1501331819.0/@2017072912365910688', null, '2017-07-30 05:07:31', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912365914836', '1', '2017-07-29 12:36:59', null, '0', '0', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1501331819.0/@2017072912365914836', 'http://localhost/file/1501331819.0/@2017072912365914836', null, '2017-07-30 05:31:03', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912365922688', '1', '2017-07-29 12:36:59', null, '0', '0', '田景云', '021136', '129', '东兴三中队', '0000000', null, 'file/1501331819.0/@2017072912365922688', 'http://localhost/file/1501331819.0/@2017072912365922688', null, '2017-07-30 05:04:33', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912400230558', '1', '2017-07-29 12:40:02', null, '0', '3', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1501332002.0/@2017072912400230558', 'http://localhost/file/1501332002.0/@2017072912400230558', null, '2017-07-30 05:28:12', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912400239567', '1', '2017-07-29 12:40:02', null, '0', '0', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1501332002.0/@2017072912400239567', 'http://localhost/file/1501332002.0/@2017072912400239567', null, '2017-07-30 05:58:06', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912400254311', '1', '2017-07-29 12:40:02', null, '0', '3', '张守荣', 'JX1053', '118', '北郊三中队', '0000000', null, 'file/1501332002.0/@2017072912400254311', 'http://localhost/file/1501332002.0/@2017072912400254311', null, '2017-07-30 04:50:29', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912402842438', '1', '2017-07-29 12:40:28', '2017-07-29 12:43:04', '156', '1', '莫晨雨', 'JX1114', '119', '北郊四中队', '0000000', null, 'file/1501332028.0/@2017072912402842438', 'http://localhost/file/1501332028.0/@2017072912402842438', null, '2017-07-30 05:11:55', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912402846087', '1', '2017-07-29 12:40:28', null, '0', '0', '莫晨雨', 'JX1114', '119', '北郊四中队', '0000000', null, 'file/1501332028.0/@2017072912402846087', 'http://localhost/file/1501332028.0/@2017072912402846087', null, '2017-07-30 05:10:51', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072912402850304', '1', '2017-07-29 12:40:28', '2017-07-29 12:42:33', '125', '1', '莫晨雨', 'JX1114', '119', '北郊四中队', '0000000', null, 'file/1501332028.0/@2017072912402850304', 'http://localhost/file/1501332028.0/@2017072912402850304', null, '2017-07-30 05:07:49', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072913221423578', '1', '2017-07-29 13:22:14', null, '0', '2', '焦文翔', 'JX1247', '114', '北郊园区中队', '0000000', null, 'file/1501334534.0/@2017072913221423578', 'http://localhost/file/1501334534.0/@2017072913221423578', null, '2017-07-30 05:30:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072913221425977', '1', '2017-07-29 13:22:14', '2017-07-29 13:25:57', '223', '1', '焦文翔', 'JX1247', '114', '北郊园区中队', '0000000', null, 'file/1501334534.0/@2017072913221425977', 'http://localhost/file/1501334534.0/@2017072913221425977', null, '2017-07-30 07:08:02', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072913221439197', '1', '2017-07-29 13:22:14', null, '0', '2', '焦文翔', 'JX1247', '114', '北郊园区中队', '0000000', null, 'file/1501334534.0/@2017072913221439197', 'http://localhost/file/1501334534.0/@2017072913221439197', null, '2017-07-30 07:21:29', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072914123243746', '1', '2017-07-29 14:12:32', null, '0', '0', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1501337552.0/@2017072914123243746', 'http://localhost/file/1501337552.0/@2017072914123243746', null, '2017-07-30 08:08:52', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072914123243845', '1', '2017-07-29 14:12:32', null, '0', '3', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1501337552.0/@2017072914123243845', 'http://localhost/file/1501337552.0/@2017072914123243845', null, '2017-07-30 07:24:07', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707291412326294', '1', '2017-07-29 14:12:32', null, '0', '0', '张荣', 'JX0435', '102', '河西二中队', '0000000', null, 'file/1501337552.0/@201707291412326294', 'http://localhost/file/1501337552.0/@201707291412326294', null, '2017-07-30 07:48:21', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072914300440612', '1', '2017-07-29 14:30:04', null, '0', '0', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1501338604.0/@2017072914300440612', 'http://localhost/file/1501338604.0/@2017072914300440612', null, '2017-07-30 07:31:13', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072914300442259', '1', '2017-07-29 14:30:04', '2017-07-29 14:34:56', '292', '1', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1501338604.0/@2017072914300442259', 'http://localhost/file/1501338604.0/@2017072914300442259', null, '2017-07-30 08:18:35', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072914300442733', '1', '2017-07-29 14:30:04', null, '0', '2', '葛伟', 'JX0646', '139', '岗勤中队', '0000000', null, 'file/1501338604.0/@2017072914300442733', 'http://localhost/file/1501338604.0/@2017072914300442733', null, '2017-07-30 06:32:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072916011645883', '1', '2017-07-29 16:01:16', '2017-07-29 16:03:46', '150', '1', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1501344076.0/@2017072916011645883', 'http://localhost/file/1501344076.0/@2017072916011645883', null, '2017-07-30 09:02:58', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072916011654736', '1', '2017-07-29 16:01:16', null, '0', '2', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1501344076.0/@2017072916011654736', 'http://localhost/file/1501344076.0/@2017072916011654736', null, '2017-07-30 09:19:15', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@201707291601166877', '1', '2017-07-29 16:01:16', null, '0', '3', '焦志辉', '023949', '113', '车管所考务科', '0000000', null, 'file/1501344076.0/@201707291601166877', 'http://localhost/file/1501344076.0/@201707291601166877', null, '2017-07-30 09:10:45', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072918552110537', '1', '2017-07-29 18:55:21', null, '0', '2', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501354521.0/@2017072918552110537', 'http://localhost/file/1501354521.0/@2017072918552110537', null, '2017-07-30 11:26:10', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072918552129554', '1', '2017-07-29 18:55:21', null, '0', '3', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501354521.0/@2017072918552129554', 'http://localhost/file/1501354521.0/@2017072918552129554', null, '2017-07-30 11:08:11', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072918552136187', '1', '2017-07-29 18:55:21', '2017-07-29 18:59:09', '228', '1', '黄建萍', 'JX0761', '139', '岗勤中队', '0000000', null, 'file/1501354521.0/@2017072918552136187', 'http://localhost/file/1501354521.0/@2017072918552136187', null, '2017-07-30 12:03:28', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072919071913811', '1', '2017-07-29 19:07:19', null, '0', '3', '黄海生', '021067', '119', '北郊四中队', '0000000', null, 'file/1501355239.0/@2017072919071913811', 'http://localhost/file/1501355239.0/@2017072919071913811', null, '2017-07-30 12:51:25', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072919071928484', '1', '2017-07-29 19:07:19', null, '0', '0', '黄海生', '021067', '119', '北郊四中队', '0000000', null, 'file/1501355239.0/@2017072919071928484', 'http://localhost/file/1501355239.0/@2017072919071928484', null, '2017-07-30 11:37:46', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072919071941191', '1', '2017-07-29 19:07:19', null, '0', '2', '黄海生', '021067', '119', '北郊四中队', '0000000', null, 'file/1501355239.0/@2017072919071941191', 'http://localhost/file/1501355239.0/@2017072919071941191', null, '2017-07-30 11:27:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072920325249258', '1', '2017-07-29 20:32:52', null, '0', '3', '郝冀昆', 'JX1186', '103', '河西一中队', '0000000', null, 'file/1501360372.0/@2017072920325249258', 'http://localhost/file/1501360372.0/@2017072920325249258', null, '2017-07-30 13:51:54', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072920325252059', '1', '2017-07-29 20:32:52', '2017-07-29 20:37:30', '278', '1', '郝冀昆', 'JX1186', '103', '河西一中队', '0000000', null, 'file/1501360372.0/@2017072920325252059', 'http://localhost/file/1501360372.0/@2017072920325252059', null, '2017-07-30 14:29:36', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072920325253989', '1', '2017-07-29 20:32:52', null, '0', '2', '郝冀昆', 'JX1186', '103', '河西一中队', '0000000', null, 'file/1501360372.0/@2017072920325253989', 'http://localhost/file/1501360372.0/@2017072920325253989', null, '2017-07-30 13:11:50', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072921201933090', '1', '2017-07-29 21:20:19', null, '0', '0', '王敏', 'JX0585', '117', '北郊二中队', '0000000', null, 'file/1501363219.0/@2017072921201933090', 'http://localhost/file/1501363219.0/@2017072921201933090', null, '2017-07-30 14:44:18', '0', '', '1', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072921201943194', '1', '2017-07-29 21:20:19', '2017-07-29 21:23:12', '173', '1', '王敏', 'JX0585', '117', '北郊二中队', '0000000', null, 'file/1501363219.0/@2017072921201943194', 'http://localhost/file/1501363219.0/@2017072921201943194', null, '2017-07-30 14:50:26', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072921201951130', '1', '2017-07-29 21:20:19', null, '0', '3', '王敏', 'JX0585', '117', '北郊二中队', '0000000', null, 'file/1501363219.0/@2017072921201951130', 'http://localhost/file/1501363219.0/@2017072921201951130', null, '2017-07-30 13:38:18', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072921520915683', '1', '2017-07-29 21:52:09', null, '0', '2', '樊嘉琪', '024922', '116', '北郊一中队', '0000000', null, 'file/1501365129.0/@2017072921520915683', 'http://localhost/file/1501365129.0/@2017072921520915683', null, '2017-07-30 14:54:59', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072921520934680', '192', '2017-07-29 21:52:09', '2017-07-29 21:55:13', '184', '1', '樊嘉琪', '024922', '116', '北郊一中队', '0000000', null, 'file/1501365129.0/@2017072921520934680', 'http://localhost/file/1501365129.0/@2017072921520934680', null, '2017-07-30 15:12:12', '0', '', '0', '9', '1', null, '');
-INSERT INTO `pe_video_list` VALUES ('@2017072921520963545', '192', '2017-07-29 21:52:09', null, '0', '3', '樊嘉琪', '024922', '116', '北郊一中队', '0000000', null, 'file/1501365129.0/@2017072921520963545', 'http://localhost/file/1501365129.0/@2017072921520963545', null, '2017-07-30 15:49:59', '0', '', '0', '9', '1', null, '');
 
 -- ----------------------------
 -- Table structure for `role`
@@ -2389,7 +1068,7 @@ INSERT INTO `role` VALUES ('23', '基层管理员', '没有角色管理，有其它权限', '500,
 DROP TABLE IF EXISTS `server_machine`;
 CREATE TABLE `server_machine` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `areaid` int(11) NOT NULL,
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '单位,同area_dep.areacode',
   `areaname` varchar(128) DEFAULT NULL COMMENT '单位,同area_dep.areaname',
   `server_ip` varchar(20) NOT NULL COMMENT '服务器IP',
   `server_port` int(11) DEFAULT NULL,
@@ -2412,6 +1091,53 @@ CREATE TABLE `server_machine` (
 -- ----------------------------
 
 -- ----------------------------
+-- Table structure for `sync_case`
+-- ----------------------------
+DROP TABLE IF EXISTS `sync_case`;
+CREATE TABLE `sync_case` (
+  `tab_name` varchar(32) NOT NULL COMMENT '相关表',
+  `case_key` varchar(64) NOT NULL COMMENT '案件标识',
+  `status` int(1) NOT NULL COMMENT '1:增加;2:删除;3:修改',
+  `update_time` bigint(15) NOT NULL COMMENT '当前操作时间'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of sync_case
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sync_case_video`
+-- ----------------------------
+DROP TABLE IF EXISTS `sync_case_video`;
+CREATE TABLE `sync_case_video` (
+  `tab_name` varchar(32) NOT NULL COMMENT '相关表',
+  `wjbh` varchar(100) NOT NULL COMMENT '文件编号',
+  `status` int(1) NOT NULL COMMENT '1:增加;2:删除;3:修改',
+  `update_time` bigint(15) NOT NULL COMMENT '当前操作时间'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of sync_case_video
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for `sync_employee`
+-- ----------------------------
+DROP TABLE IF EXISTS `sync_employee`;
+CREATE TABLE `sync_employee` (
+  `areacode` varchar(32) NOT NULL DEFAULT '' COMMENT '部门代码',
+  `name` varchar(32) NOT NULL DEFAULT '无' COMMENT '警员名',
+  `old_code` varchar(32) DEFAULT NULL,
+  `code` varchar(32) NOT NULL COMMENT '警员编号',
+  `status` int(1) NOT NULL COMMENT '1:增加;2:删除;3:修改',
+  `update_time` bigint(15) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of sync_employee
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for `sys_log`
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_log`;
@@ -2423,184 +1149,11 @@ CREATE TABLE `sys_log` (
   `module` varchar(32) DEFAULT NULL,
   `ip` varchar(16) NOT NULL DEFAULT '0.0.0.0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=832 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=659 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of sys_log
 -- ----------------------------
-INSERT INTO `sys_log` VALUES ('659', '系统管理员', '登录', '2017-07-27 14:42:22', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('660', '系统管理员', '登录', '2017-07-27 16:13:49', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('661', '系统管理员', '登录', '2017-07-28 10:56:00', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('662', '系统管理员', '登出', '2017-07-28 10:56:52', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('663', '系统管理员', '登录', '2017-07-28 10:56:57', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('664', '系统管理员', '登出', '2017-07-28 11:13:55', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('665', '系统管理员', '登录', '2017-07-28 11:14:01', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('666', '系统管理员', '添加192.168.0.16:', '2017-07-28 17:21:19', '设备管理/工作站管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('667', '', '登录', '2017-07-31 09:06:36', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('668', '系统管理员', '登录', '2017-07-31 09:06:40', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('669', '系统管理员', '登录', '2017-07-31 13:34:02', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('670', '系统管理员', '登录', '2017-07-31 13:52:43', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('671', '系统管理员', '修改案件', '2017-07-31 14:28:43', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('672', '系统管理员', '登出', '2017-07-31 15:28:02', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('673', '', '登录', '2017-07-31 15:28:25', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('674', '韩永乐', '登录', '2017-07-31 15:28:36', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('675', '韩永乐', '提交申请成功', '2017-07-31 15:40:49', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('676', '韩永乐', '提交申请成功', '2017-07-31 15:41:03', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('677', '韩永乐', '提交申请成功', '2017-07-31 15:41:44', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('678', '韩永乐', '提交申请成功', '2017-07-31 15:44:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('679', '韩永乐', '提交申请成功', '2017-07-31 15:46:01', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('680', '韩永乐', '提交申请成功', '2017-07-31 15:46:37', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('681', '韩永乐', '提交申请成功', '2017-07-31 15:52:13', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('682', '韩永乐', '提交申请成功', '2017-07-31 15:53:45', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('683', '韩永乐', '提交申请成功', '2017-07-31 15:55:00', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('684', '韩永乐', '登出', '2017-07-31 15:56:43', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('685', '系统管理员', '登录', '2017-07-31 15:56:49', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('686', '系统管理员', '登出', '2017-07-31 16:14:22', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('687', '熊文涛', '登录', '2017-07-31 16:14:26', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('688', '熊文涛', '登出', '2017-07-31 16:29:13', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('689', '系统管理员', '登录', '2017-07-31 16:29:19', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('690', '系统管理员', '登录', '2017-07-31 16:57:51', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('691', '系统管理员', '修改案件', '2017-07-31 16:58:16', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('692', '系统管理员', '撤销成功', '2017-07-31 17:17:13', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('693', '系统管理员', '撤销失败', '2017-07-31 17:17:20', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('694', '系统管理员', '登录', '2017-08-01 09:22:46', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('695', '系统管理员', '撤销失败', '2017-08-01 09:26:55', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('696', '系统管理员', '撤销成功', '2017-08-01 09:27:00', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('697', '系统管理员', '撤销失败', '2017-08-01 09:27:14', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('698', '系统管理员', '登录', '2017-08-01 09:40:41', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('699', '系统管理员', '登出', '2017-08-01 09:41:36', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('700', '张建斌', '登录', '2017-08-01 09:41:40', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('701', '张建斌', '登出', '2017-08-01 09:42:41', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('702', '吴斌', '登录', '2017-08-01 09:42:46', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('703', '吴斌', '撤销失败', '2017-08-01 09:48:11', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('704', '吴斌', '撤销失败', '2017-08-01 09:48:24', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('705', '吴斌', '提交申请成功', '2017-08-01 09:48:44', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('706', '吴斌', '撤销成功', '2017-08-01 09:55:31', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('707', '吴斌', '登出', '2017-08-01 10:11:35', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('708', '系统管理员', '登录', '2017-08-01 10:11:42', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('709', '系统管理员', '播放,编辑信息', '2017-08-01 10:24:40', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('710', '系统管理员', '播放,编辑信息', '2017-08-01 10:25:19', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('711', '系统管理员', '播放,编辑信息', '2017-08-01 13:14:24', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('712', '系统管理员', '登出', '2017-08-01 13:25:08', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('713', '系统管理员', '登录', '2017-08-01 13:25:13', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('714', '系统管理员', '播放,编辑信息', '2017-08-01 13:44:44', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('715', '系统管理员', '播放,编辑信息', '2017-08-01 13:44:47', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('716', '系统管理员', '播放,编辑信息', '2017-08-01 13:44:52', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('717', '系统管理员', '播放,编辑信息', '2017-08-01 13:44:57', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('718', '系统管理员', '播放,编辑信息', '2017-08-01 13:45:03', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('719', '系统管理员', '播放,编辑信息', '2017-08-01 13:45:10', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('720', '系统管理员', '播放,编辑信息', '2017-08-01 13:45:18', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('721', '系统管理员', '播放,编辑信息', '2017-08-01 13:45:29', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('722', '系统管理员', '播放,编辑信息', '2017-08-01 13:46:53', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('723', '系统管理员', '播放,编辑信息', '2017-08-01 13:48:45', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('724', '系统管理员', '修改案件', '2017-08-01 13:58:09', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('725', '系统管理员', '播放,编辑信息', '2017-08-01 14:19:11', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('726', '系统管理员', '播放,编辑信息', '2017-08-01 14:19:35', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('727', '系统管理员', '播放,编辑信息', '2017-08-01 14:23:33', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('728', '系统管理员', '播放,编辑信息', '2017-08-01 14:23:52', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('729', '系统管理员', '播放,编辑信息', '2017-08-01 14:24:25', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('730', '系统管理员', '播放,编辑信息', '2017-08-01 14:25:12', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('731', '系统管理员', '播放,编辑信息', '2017-08-01 14:26:12', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('732', '系统管理员', '播放,编辑信息', '2017-08-01 14:28:02', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('733', '系统管理员', '登录', '2017-08-01 15:35:28', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('734', '系统管理员', '播放,编辑信息', '2017-08-01 15:36:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('735', '系统管理员', '登录', '2017-08-01 15:37:16', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('736', '系统管理员', '播放,编辑信息', '2017-08-01 15:39:09', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('737', '系统管理员', '播放,编辑信息', '2017-08-01 15:40:51', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('738', '系统管理员', '播放,编辑信息', '2017-08-01 15:43:39', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('739', '系统管理员', '播放,编辑信息', '2017-08-01 15:45:02', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('740', '系统管理员', '播放,编辑信息', '2017-08-01 15:45:58', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('741', '系统管理员', '播放,编辑信息', '2017-08-01 15:46:50', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('742', '系统管理员', '播放,编辑信息', '2017-08-01 15:48:00', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('743', '', '播放,编辑信息', '2017-08-01 16:10:37', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('744', '', '播放,编辑信息', '2017-08-01 16:11:39', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('745', '', '播放,编辑信息', '2017-08-01 16:11:45', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('746', '', '播放,编辑信息', '2017-08-01 16:11:53', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('747', '', '播放,编辑信息', '2017-08-01 16:12:20', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('748', '', '播放,编辑信息', '2017-08-01 16:12:38', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('749', '', '播放,编辑信息', '2017-08-01 16:13:49', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('750', '', '播放,编辑信息', '2017-08-01 16:16:08', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('751', '', '播放,编辑信息', '2017-08-01 16:16:40', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('752', '', '播放,编辑信息', '2017-08-01 16:19:10', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('753', '', '播放,编辑信息', '2017-08-01 16:19:29', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('754', '', '播放,编辑信息', '2017-08-01 16:20:41', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('755', '', '播放,编辑信息', '2017-08-01 16:21:23', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('756', '', '播放,编辑信息', '2017-08-01 16:22:39', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('757', '', '播放,编辑信息', '2017-08-01 16:22:46', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('758', '', '播放,编辑信息', '2017-08-01 16:25:26', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('759', '', '播放,编辑信息', '2017-08-01 16:25:27', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('760', '', '播放,编辑信息', '2017-08-01 16:25:42', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('761', '', '播放,编辑信息', '2017-08-01 16:26:57', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('762', '', '播放,编辑信息', '2017-08-01 16:26:58', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('763', '', '播放,编辑信息', '2017-08-01 16:27:06', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('764', '', '播放,编辑信息', '2017-08-01 16:27:06', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('765', '', '播放,编辑信息', '2017-08-01 16:27:37', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('766', '', '播放,编辑信息', '2017-08-01 16:27:38', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('767', '', '播放,编辑信息', '2017-08-01 16:29:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('768', '', '播放,编辑信息', '2017-08-01 16:29:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('769', '', '播放,编辑信息', '2017-08-01 16:29:31', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('770', '', '播放,编辑信息', '2017-08-01 16:29:31', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('771', '', '播放,编辑信息', '2017-08-01 16:29:56', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('772', '', '播放,编辑信息', '2017-08-01 16:32:46', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('773', '', '播放,编辑信息', '2017-08-01 16:57:50', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('774', '', '播放,编辑信息', '2017-08-01 16:59:13', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('775', '', '播放,编辑信息', '2017-08-01 17:00:07', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('776', '', '播放,编辑信息', '2017-08-01 17:04:01', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('777', '', '播放,编辑信息', '2017-08-01 17:04:33', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('778', '', '播放,编辑信息', '2017-08-01 17:06:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('779', '', '播放,编辑信息', '2017-08-01 17:06:21', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('780', '', '播放,编辑信息', '2017-08-01 17:06:37', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('781', '', '播放,编辑信息', '2017-08-01 17:07:19', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('782', '', '播放,编辑信息', '2017-08-01 17:13:03', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('783', '', '播放,编辑信息', '2017-08-01 17:15:07', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('784', '', '播放,编辑信息', '2017-08-01 17:15:14', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('785', '', '播放,编辑信息', '2017-08-01 17:15:50', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('786', '', '播放,编辑信息', '2017-08-01 17:16:18', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('787', '', '播放,编辑信息', '2017-08-01 17:16:31', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('788', '', '播放,编辑信息', '2017-08-01 17:16:59', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('789', '', '播放,编辑信息', '2017-08-01 17:17:15', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('790', '', '播放,编辑信息', '2017-08-01 17:17:54', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('791', '', '播放,编辑信息', '2017-08-01 17:18:16', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('792', '', '播放,编辑信息', '2017-08-01 17:18:23', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('793', '', '播放,编辑信息', '2017-08-01 17:18:50', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('794', '', '播放,编辑信息', '2017-08-01 17:19:34', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('795', '', '播放,编辑信息', '2017-08-01 17:20:28', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('796', '', '播放,编辑信息', '2017-08-01 17:20:48', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('797', '', '播放,编辑信息', '2017-08-01 17:21:33', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('798', '', '播放,编辑信息', '2017-08-01 17:21:39', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('799', '', '播放,编辑信息', '2017-08-01 17:24:46', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('800', '', '播放,编辑信息', '2017-08-01 17:25:27', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('801', '', '播放,编辑信息', '2017-08-02 09:27:42', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('802', '', '播放,编辑信息', '2017-08-02 09:27:55', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('803', '', '播放,编辑信息', '2017-08-02 09:28:07', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('804', '系统管理员', '登录', '2017-08-02 09:28:51', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('805', '系统管理员', '播放,编辑信息', '2017-08-02 09:28:55', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('806', '系统管理员', '播放,编辑信息', '2017-08-02 09:29:04', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('807', '', '播放,编辑信息', '2017-08-02 09:39:55', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('808', '', '播放,编辑信息', '2017-08-02 09:39:56', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('809', '', '播放,编辑信息', '2017-08-02 09:40:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('810', '', '播放,编辑信息', '2017-08-02 09:40:34', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('811', '', '播放,编辑信息', '2017-08-02 09:40:47', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('812', '', '播放,编辑信息', '2017-08-02 09:41:05', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('813', '', '播放,编辑信息', '2017-08-02 09:41:17', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('814', '', '播放,编辑信息', '2017-08-02 09:41:29', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('815', '', '播放,编辑信息', '2017-08-02 09:42:51', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('816', '', '播放,编辑信息', '2017-08-02 09:43:26', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('817', '', '播放,编辑信息', '2017-08-02 09:43:37', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('818', '', '播放,编辑信息', '2017-08-02 09:44:20', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('819', '系统管理员', '登录', '2017-08-02 09:57:00', '平台系统', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('820', '系统管理员', '播放,编辑信息', '2017-08-02 09:58:13', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('821', '系统管理员', '播放,编辑信息', '2017-08-02 09:58:26', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('822', '系统管理员', '播放,编辑信息', '2017-08-02 09:58:29', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('823', '系统管理员', '播放,编辑信息', '2017-08-02 09:58:34', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('824', '系统管理员', '播放,编辑信息', '2017-08-02 10:11:01', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('825', '系统管理员', '播放,编辑信息', '2017-08-02 10:11:02', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('826', '系统管理员', '播放,编辑信息', '2017-08-02 10:11:11', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('827', '系统管理员', '播放,编辑信息', '2017-08-02 10:11:19', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('828', '系统管理员', '播放,编辑信息', '2017-08-02 10:37:47', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('829', '系统管理员', '播放,编辑信息', '2017-08-02 10:38:03', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('830', '系统管理员', '播放,编辑信息', '2017-08-02 10:38:31', '案件管理', '0.0.0.0');
-INSERT INTO `sys_log` VALUES ('831', '系统管理员', '播放,编辑信息', '2017-08-02 10:38:40', '案件管理', '0.0.0.0');
 
 -- ----------------------------
 -- Table structure for `sys_notice`
@@ -2610,8 +1163,8 @@ CREATE TABLE `sys_notice` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(128) DEFAULT NULL COMMENT '公告标题',
   `content` varchar(512) DEFAULT NULL COMMENT '公告描述',
-  `dept_code` int(11) DEFAULT NULL COMMENT '部门ID,同area_dep.areaid',
-  `dept_name` varchar(128) DEFAULT NULL COMMENT '部门名称',
+  `areacode` varchar(32) DEFAULT NULL COMMENT '单位,同area_dep.areacode',
+  `areaname` varchar(128) DEFAULT NULL COMMENT '部门名称',
   `creater_id` varchar(32) DEFAULT NULL COMMENT '创建人，登陆用户id',
   `creater_name` varchar(32) DEFAULT NULL COMMENT '创建人，登陆用户',
   `create_time` datetime DEFAULT NULL COMMENT '创建时间',
@@ -2631,7 +1184,7 @@ DROP TABLE IF EXISTS `ws_base`;
 CREATE TABLE `ws_base` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `gzz_ip` varchar(64) NOT NULL COMMENT '工作站IP',
-  `areaid` int(11) NOT NULL,
+  `areacode` varchar(32) DEFAULT '' COMMENT '单位,同area_dep.areacode',
   `areaname` varchar(128) DEFAULT NULL COMMENT '单位,同area_dep.areaname',
   `fzr` varchar(64) DEFAULT NULL COMMENT '负责人',
   `dh` varchar(32) DEFAULT NULL COMMENT '负责人电话',
@@ -2640,14 +1193,15 @@ CREATE TABLE `ws_base` (
   `qyzt` int(2) NOT NULL DEFAULT '1' COMMENT '启用状态 0:未启用，1：启用',
   `auth_key` varchar(32) DEFAULT NULL COMMENT '认证密钥 MD5',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of ws_base
 -- ----------------------------
-INSERT INTO `ws_base` VALUES ('1', '10.102.131.121', '120', '北郊事故中队', '', '', '1', '2017-06-25 14:26:39', '1', null);
-INSERT INTO `ws_base` VALUES ('2', '192.168.43.45', '81', '北郊大队', '', '', '0', '2017-06-25 14:26:39', '1', null);
-INSERT INTO `ws_base` VALUES ('3', '192.168.0.16', '120', '北郊事故中队', null, '', '1', '0000-00-00 00:00:00', '0', null);
+INSERT INTO `ws_base` VALUES ('1', '10.102.131.121', '0', '青山区一中队', '', '', '0', '2017-08-01 13:16:17', '1', null);
+INSERT INTO `ws_base` VALUES ('2', '192.168.43.45', '0', '工作站', '', '', '0', '2017-08-01 13:16:18', '1', null);
+INSERT INTO `ws_base` VALUES ('3', '192.168.0.26', null, null, null, null, '1', '2017-08-01 15:32:31', '1', null);
+INSERT INTO `ws_base` VALUES ('4', '192.168.1.102', null, null, null, null, '1', '2017-08-01 20:38:39', '1', null);
 
 -- ----------------------------
 -- Table structure for `ws_log`

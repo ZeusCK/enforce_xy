@@ -251,36 +251,18 @@ class AreaController extends CommonController
     }
     /**
      * 根据选择目标部门筛选出需要查询的部门和需要显示的部门
-     * @param  int $mooDarea 部门ID
+     * @param  string $areacode 部门代码
      * @return array
      */
-    public function show_sat_area($moodArea)
+    public function show_sat_area($areacode)
     {
-        //显示的树
-        $currentUserAreas = $this->all_user_area();
-        $userAreas = array();
-        foreach ($currentUserAreas as $currentUserArea) {
-            $userAreas[] = $currentUserArea['areaid'];
-        }
-        $areaids = array();
-        if(session('userarea') != ''){
-            $areaids = explode(',',session('userarea'));
-        }
-        $areadb = D($this->models['area']);
-        $parent = array(0);             //父级部门ID
-        if($moodArea != ''){
-            $where['areaid'] = $moodArea;
-            $parent = (array)$areadb->where($where)->getField('fatherareaid');
-            $show = $this->carea($moodArea);
-            //需要查询的数据
-            $areaids = array_intersect($show,$areaids);
-            //页面需要显示的数据
-            $userAreas = array_intersect($show,$userAreas);
-        }
-        $areas = array();
-        $areas['areaids'] = $areaids;
-        $areas['userAreas'] = $userAreas;
-        return $areas;
+        $db = D($this->models['area']);
+        $areaInfo = $db->where('areacode="'.$areacode.'"')->find();
+        $show = $db->where('fatherareaid="'.$areaInfo['areaid'].'"')->select();
+        $result = array();
+        if(!empty($show)) $result = $show;
+        $result[] = $areaInfo;
+        return $result;
     }
     //获取能添加的部门代码
     public function get_add_code($request)
