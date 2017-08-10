@@ -85,7 +85,7 @@ class AreaController extends CommonController
         $result = $db->getTableDel($where);
         if($result['status']){
             foreach ($this->link_tabs as $tab) {
-                if($tab == 'enforce.employee'){
+                if($tab == 'employee'){
                     $syncData = $db_rm->where($where)->select();
                     $this->sync('employee',$syncData,'del');
                 }
