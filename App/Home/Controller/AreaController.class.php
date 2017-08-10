@@ -85,6 +85,10 @@ class AreaController extends CommonController
         $result = $db->getTableDel($where);
         if($result['status']){
             foreach ($this->link_tabs as $tab) {
+                if($tab == 'enforce.employee'){
+                    $syncData = $db_rm->where($where)->select();
+                    $this->sync('employee',$syncData,'del');
+                }
                 $db_rm = D()->table($tab);
                 $db_rm->where($where)->delete();
             }
@@ -105,21 +109,27 @@ class AreaController extends CommonController
         if($areaInfo['areacode'] != $request['areacode']){      //更新关联表及下级部门
             $linkTabs = $this->link_tabs;
             $linkTabs[] = 'area_dep';   //部门区域
-            foreach ($linkTabs as $tab) {
+            // error_log('更新表'.implode(',', $linkTabs."\r\n"),3,'error.log');
+            foreach ($linkTabs as &$tab) {
+                $tab = C('DB_NAME').'.'.$tab;
                 $strLen = strlen($request['areacode']);
                 //更新所有符合条件的部门代码
-                $sql = 'UPDATE '.$tab.' SET
-                       `areacode`=CONCAT("'.$request['areacode'].'",
-                       RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.'))
-                       WHERE `areacode` like "'.$areaInfo['areacode'].'%"';
-                if($tab == 'enforce.employee'){
-                    M()->query('UPDATE '.$tab.' SET
-                       `userarea`=CONCAT("'.$request['areacode'].'",
-                       RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.'))
-                       WHERE `userarea` like "'.$areaInfo['areacode'].'%"');
+                $sql = 'UPDATE '.$tab.' SET `areacode`=CONCAT("'.$request['areacode'].'",RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.')) WHERE `areacode` like "'.$areaInfo['areacode'].'%"';
+                if($tab == C('DB_NAME').'.employee'){
+                    //同步数据
+                    $syncData = D($this->models['employee'])->where('`userarea` like "'.$areaInfo['areacode'].'%"')->select();
+                    foreach ($syncData as $key => &$value) {
+                        $value['areacode'] = substr_replace($value['areacode'],$request['areacode'],0,$strLen);
+                    }
+                    $this->sync('employee',$syncData,'edit');
+                    // error_log('同步employee'."\r\n",3,'error.log');
+                    M()->execute('UPDATE '.$tab.' SET `userarea`=CONCAT("'.$request['areacode'].'",RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.')) WHERE `userarea` like "'.$areaInfo['areacode'].'%"');
                 }
+                M()->execute($sql);
+                // error_log('更新表sql'.$sql."\r\n",3,'error.log');
             }
         }
+        $this->write_log('更新部门:'.g2u($areaInfo['areaname']));
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
     }

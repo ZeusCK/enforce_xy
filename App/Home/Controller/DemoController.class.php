@@ -160,9 +160,7 @@ class DemoController extends CommonController
     }
     public function ooo()
     {
-        list($msec, $sec) = explode(' ', microtime());
-        return (int)$sec.str_pad((int)($msec*1000),3,"0",STR_PAD_LEFT);
-
-
+        // echo str_replace('1', '2', '1111',1);
+        echo substr_replace('1111','2',0,strlen('2'));
     }
 }

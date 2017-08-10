@@ -144,7 +144,12 @@ class EmployeeController extends CommonController
             $result['message'] = '该警员已经录入！';
             exit(json_encode($result));
         }
-        $result = $db->getTableAdd(u2gs($request));
+        $request = u2gs($request);
+        $result = $db->getTableAdd($request);
+        //做数据同步
+        $syncData[] = $request;
+        $this->sync('employee',$syncData,'add');
+
         if($result['status']) $this->add_emp_area($result['add_id']);
         if($info)  $result['message'] .= $info;
         $this->write_log('添加'.$request['name'].'('.$request['code'].')');
@@ -164,9 +169,13 @@ class EmployeeController extends CommonController
         foreach ($photos as  $photo) {
             unlink('..'.$photo);
         }
+        //做数据同步
+        $syncData = $db->where($where)->select();
+        $this->sync('employee',$syncData,'del');
         //删除初始表数据
         $result = $db->getTableDel($where);
-        $this->write_log('删除警员');
+        $info = implode(',',g2us(array_column($syncData,'name')));
+        $this->write_log('删除警员-'.$info);
         $this->ajaxReturn($result);
     }
     //编辑事件
@@ -188,11 +197,19 @@ class EmployeeController extends CommonController
         }
         $request = u2gs($request);
         $where[$this->tab_id] = $request[$this->tab_id];
-        $roleid = $db->where('empid = '.$request['empid'])->getField('roleid');
-        error_log($roleid.'-'.$request['roleid'],3,'error.log');
+        $empInfo = $db->where('empid = '.$request['empid'])->find();
+        if($empInfo['name'] != $request['name'] || $empInfo['code'] != $request['code']){
+            $other = $request;
+            if($empInfo['code'] != $request['code']){
+                $other['old_code'] = $empInfo['code'];
+            }
+            $syncData[] = $other;
+            $this->sync('employee',$syncData,'edit');
+        }
+        // error_log($roleid.'-'.$request['roleid'],3,'error.log');
         $result = $db->getTableEdit($where,$request);
-        if($roleid != $request['roleid']) $this->add_emp_area($request['empid']); //如果角色ID改变那么重新计算
-
+        if($empInfo['roleid'] != $request['roleid']) $this->add_emp_area($request['empid']); //如果角色ID改变那么重新计算
+        $this->write_log('编辑警员-'.g2u($empInfo['name']));
         exit(json_encode($result));
     }
     //准备前端页面数据

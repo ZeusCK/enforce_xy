@@ -553,4 +553,43 @@ class CommonController extends Controller {
         }
         return array_merge($checkAreacode,$searchArr);
     }
+    /**
+     * 同步表
+     * @param  string $table 同步表
+     * @param  array $data  同步数据
+     * @param  string $op    操作类型
+     * @return void        
+     */
+    public function sync($table,$data,$op)
+    {
+        /*try {*/
+            $database = C('DB_NAME');
+            $syncTables = array('employee'=>$database.'.sync_employee',
+                                'case'=>$database.'.sync_case',
+                                'case_video'=>$database.'.sync_case_video');
+            $syncFields = array(
+                'employee'=>array('areacode'=>'','name'=>'','code'=>'','old_code'=>''),
+                'case'=>array('tab_name'=>'','case_key'=>''),
+                'case_vide'=>array('tab_name'=>'','wjbh'=>''),
+                );
+            $ops = array('add'=>1,'del'=>2,'edit'=>3);
+            foreach ($data as &$value) {
+                $value = array_intersect_key($value,$syncFields[$table]);
+                $value['status'] = $ops[$op];
+                $value['update_time'] = $this->msectime();
+            }
+            D($syncTables[$table])->addAll($data);
+        /*} catch (Exception $e) {
+            
+        }*/
+        
+    }
+    /**获取Unix毫秒时间戳
+     * @return float Unix毫秒时间戳
+     */
+    function msectime()
+    {
+        list($msec, $sec) = explode(' ', microtime());
+        return (int)$sec.str_pad((int)($msec*1000),3,"0",STR_PAD_LEFT);
+    }
 }

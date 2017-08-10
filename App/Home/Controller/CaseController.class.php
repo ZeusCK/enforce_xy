@@ -382,10 +382,6 @@ class CaseController extends CommonController
         $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
         $total = array();
         $tables = $this->get_dbTables();
-        //---------------
-        //准备部门
-        //---------------
-        $area_code_id = D($this->models['area'])->getField('areacode,areaid');
         //统计时间段
         $where['start_time'][] = array('EGT',$btime);      //开始时间
         $where['start_time'][] = array('ELT',$etime); //结束时间

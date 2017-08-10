@@ -97,7 +97,7 @@ module.edit = function(target){
         },
         success:function(data){
             //修改部门
-            $('#datagrid').datagrid('load',{areaid:module.areaid});
+            $('#datagrid').datagrid('load',{areacode:params.areacode});
             var node = $(tree.dom).tree('find',params.areaid);
             if (node){
                 $(tree.dom).tree('update', {
