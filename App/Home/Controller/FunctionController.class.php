@@ -128,10 +128,7 @@ class FunctionController extends CommonController {
             $oneRowData = array();
             for ($k = 'A'; $k <= $hcolumn; $k++) {
                 $cell = $objWorksheet->getCell($k.$j)->getValue();
-                if ($cell instanceof \PHPExcel_RichText) //富文本转换字符串
-                {
-                    $cell = $cell->__toString();
-                }
+                if ($cell instanceof \PHPExcel_RichText) $cell = $cell->__toString(); //富文本转换字符串
                 $oneRowData[] = $cell;
             }
             $allData[] = $oneRowData;
@@ -167,4 +164,5 @@ class FunctionController extends CommonController {
         $result = $upload->uploadOne($file);
         return $result ? '/upload/'.$result['savepath'].$result['savename'] : false;  //$upload->getError();
     }
+
 }

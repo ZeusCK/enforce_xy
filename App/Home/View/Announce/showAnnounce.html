@@ -1,6 +1,10 @@
 <extend name="layouts:master" />
 <block name="link">
     <style>
+        .panel {
+            position: relative;
+        }
+        
         .eachAnnounce {
             width: 100%;
             height: 120px;
@@ -15,8 +19,10 @@
         }
         
         .fooList {
+            position: absolute;
             width: 100%;
-            height: 199px;
+            top: 120px;
+            bottom: 0;
         }
     </style>
 </block>
@@ -24,11 +30,14 @@
     <script type="text/javascript" src="__PUBLIC__/js/Announce/showAnnounce.js"></script>
 </block>
 <block name="main">
-    <div class="eachAnnounce">
-        <h3 id="title"></h3>
-        <p id="content"></p>
+    <div class="easyui-panel panel" fit='true' title="公告">
+        <div class="eachAnnounce">
+            <h3 id="title"></h3>
+            <p id="content"></p>
+        </div>
+        <div class="fooList">
+            <table id="listAnnounce"></table>
+        </div>
     </div>
-    <div class="fooList">
-        <table id="listAnnounce"></table>
-    </div>
+
 </block>

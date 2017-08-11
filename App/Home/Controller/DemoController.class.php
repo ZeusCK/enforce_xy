@@ -160,7 +160,9 @@ class DemoController extends CommonController
     }
     public function ooo()
     {
+        if(!is_dir('E:\php\WWW\/pe_fileG/cpxhpe')) mkdir('E:\php\WWW\/pe_fileG/cpxhpe');
         // echo str_replace('1', '2', '1111',1);
         echo substr_replace('1111','2',0,strlen('2'));
+        echo $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0];
     }
 }

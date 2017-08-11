@@ -2,7 +2,7 @@
 var things = {};
 things.datagridUrl = 'WorkStation/ws_base_list';
 $(function() {
-    //最新信息
+    /*//最新信息
     app.datagrid('#myDatagrid', {
         url:things.datagridUrl,
         title: '工作站',
@@ -62,20 +62,20 @@ $(function() {
         }
     })
     pe_sat_chart();
-    law_sat();
-    unusal_sat();
+    law_sat();*/
+    case_sat();
 });
 
-function unusal_sat() {
+function case_sat() {
     var myChart = echarts.init(document.getElementById('myChart'));
     myChart.showLoading();
     var option2 = {
         title: {
-            text: '异常数据周统计'
+            text: '7天内警情对接情况'
         },
         tooltip: {},
         legend: {
-            data: ['未编辑数', '上传超时']
+            data: ['警情总数', '对接警情数','未对接警情数']
         },
         xAxis: {
             data: [],
@@ -91,18 +91,22 @@ function unusal_sat() {
             }
         }],
         series: [{
-            name: '未编辑数',
+            name: '警情总数',
             type: 'line',
             data: []
-        }, {
-            name: '上传超时',
+        },{
+            name: '对接警情数',
+            type: 'line',
+            data: []
+        },{
+            name: '未对接警情数',
             type: 'line',
             data: []
         }]
     };
     myChart.setOption(option2);
     $.ajax({
-        url: app.tp.ajax + '?tpUrl=Media/unusual_sat',
+        url: app.tp.ajax + '?tpUrl=Case/show_home_sat',
         type: 'POST',
         dataType: 'json',
         success: function(info) {
@@ -110,14 +114,17 @@ function unusal_sat() {
             var xAxis = [];
             var ndata = [];
             var udata = [];
+            var alldata = [];
             for (var x in info) {
                 xAxis.push(x);
-                ndata.push(info[x].nomark);
-                udata.push(info[x].uploadmark);
+                alldata.push(info[x].num);
+                ndata.push(info[x].alarms);
+                udata.push(info[x].unalarms);
             }
             option2.xAxis.data = xAxis;
-            option2.series[0].data = ndata;
-            option2.series[1].data = udata;
+            option2.series[0].data = alldata;
+            option2.series[1].data = ndata;
+            option2.series[2].data = udata;
             myChart.setOption(option2);
         }
     });

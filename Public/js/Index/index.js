@@ -105,26 +105,9 @@ function show_apply() {
     })
 }
 
-function showMsgDialog() {
-    $('#msgDialog').dialog({
-        title: '消息',
-        width: 500,
-        height: 400,
-        shadow: false
-    }).dialog('open');
-    $('#msgTabs').tabs({
-        fit: true,
-        width: '100%',
-        height: '100%',
-        border: false
-    });
 
-}
 $(function() {
-    showMsgDialog();
-    $('#showMsgDialog').click(function() {
-        showMsgDialog();
-    });
+
     $('#tabs').tabs({
         tools: [{
                 iconCls: 'icon-reload',
@@ -181,26 +164,7 @@ $(function() {
         '工作站': app.url('WorkStation/showWork'),
         '未编辑': app.url('Announce/showAnnounce')
     }
-    $('#msgTabs').tabs('add', {
-        title: '公告',
-        content: createFrame(app.url('Announce/showAnnounce'), 'dialog')
-    }).tabs('add', {
-        title: '服务器'
-    }).tabs('add', {
-        title: '工作站'
-    }).tabs('add', {
-        title: '未编辑'
-    });
-    $('#msgTabs').tabs({
-        onSelect: function(title, index) {
-            $(this).tabs('update', {
-                tab: $('#msgTabs').tabs('getSelected'),
-                options: {
-                    content: createFrame(tabs[title], 'dialog')
-                }
-            });
-        }
-    });
+
     /*var date = new Date();
     var year = date.getFullYear();
     $("#year").html(year);*/

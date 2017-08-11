@@ -12,6 +12,10 @@ module.broadcast = function() {
         onLoadSuccess: function(r) {
             if (r.total == 0) {
                 $('#listAnnounce').parent('.datagrid-view').children('.datagrid-view2').find('div.datagrid-body').html('暂无公告').css({ 'color': '#F00', 'text-align': 'center', 'font-size': '14px' });
+            } else {
+                var rows = $('#listAnnounce').datagrid('getRows');
+                $('#title').html(rows[0].title);
+                $('#content').html(rows[0].content);
             }
         },
         onSelect: function(index, data) {

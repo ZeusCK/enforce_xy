@@ -115,7 +115,7 @@ class CaseController extends CommonController
         $res['total'] = array_sum($total);
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
-            error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
+            // error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
             $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
@@ -137,7 +137,14 @@ class CaseController extends CommonController
         $table = date('Ym',strtotime($start_time));
         unset($request['case_key']);
         $db = D($this->models['case']);
-        $result = M()->table('case_'.$table)->where($where)->save(u2gs($request));
+        $request = u2gs($request);
+        $result = M()->table('case_'.$table)->where($where)->save($request);
+        //同步
+        $other = $request;
+        $other['tab_name'] = 'case_'.$table;
+        $syncData[] = $other;
+        $this->sync('case',$syncData,'edit');
+
         if($result){
             $res['status'] = true;
             $res['message'] = '修改案件成功';
@@ -213,31 +220,45 @@ class CaseController extends CommonController
     public function apply_case($request)
     {
         //case_key  案件关键字 申请案件
+        $start_time = $request['start_time'];
+        $table = 'case_'.date('Ym',strtotime($start_time));
         $data['apply_jybh'] = session('code');
         $data['apply_jyxm'] = u2g(session('user'));
         $data['apply_areaid'] = session('areaid');
         $data['apply_areaname'] = u2g(session('areaname'));
         $data['update_time'] = date('Y-m-d H:i:s');
         $data['hand_status'] = 1;   //待审核状态
-        $db = D($this->models['case']);
-        $result = $db->getTableEdit($request,$data);
+        //$db = D($this->models['case']);
+        $result = M()->table($table)->where($request)->save($data);
+        //同步
+        $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
+        $this->sync('case',$syncData,'edit');
+
         if($result['status']){
             $result['message'] = '提交申请成功';
         }else{
             $result['message'] = '提交申请失败';
         }
         $info = $db->where($request)->find();
-        $this->write_log(g2u($info['video_title']).$result['message']);
+        $this->write_log('申请移交：'.g2u($info['title']).$result['message']);
         return $result;
     }
     //审批通过
     public function allow_apply($request)
     {
         //case_key 案件关键字
+        //start_time  视频开始时间
+        $start_time = $request['start_time'];
+        $table = 'case_'.date('Ym',strtotime($start_time));
         $data['hand_status'] = 2;   //初始状态
         $db = D($this->models['case']);
-        $result = $db->getTableEdit($request,$data);
-        $result['message'] = $result['status'] ? '审核通过' : '审核通过失败,可能原因该案件已被其他管理员审核通过';
+        $result = M()->table($table)->where($request)->save($data);
+        //同步
+        $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
+        $this->sync('case',$syncData,'edit');
+
+        $result['message'] = $result ? '审核通过' : '审核通过失败,可能原因该案件已被其他管理员审核通过';
+        $this->write_log('审核申请-'.$request['case_key']);
         return  $result;
     }
     //初始化案件
@@ -245,40 +266,66 @@ class CaseController extends CommonController
     {
         //case_key  案件关键字
         //start_time  案件开始时间
+        $start_time = $request['start_time'];
+        $table = 'case_'.date('Ym',strtotime($start_time));
         $keys = array('alarm_no','alarm_name','alarm_addr','case_name','case_no','remark','case_qualify','case_empl','case_dept');
         $initData = array_fill_keys($keys,'');
         $initData['alarm_type'] = 0;
         $initData['case_type'] = 0;
-        $db = D($this->models['case']);
-        $result = $db->getTableEdit($request,$initData);
-        $result['message'] = $result['status'] ? '初始化案件成功' : '初始化案件失败';
+        $result = M()->table($table)->where($request)->save($data);
+        //同步
+        $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
+        $this->sync('case',$syncData,'edit');
+
+        $result['message'] = $result ? '初始化案件成功' : '初始化案件失败';
+        $this->write_log('初始化案件-'.$request['case_key']);
         return $result;
     }
     //案件合并
     public function case_merage($request)
     {
+        //$caseInfo=>array('case_key'=>'start_time');
         $caseInfo = $request['caseInfo'];
         foreach ($caseInfo as $case_key => $start_time) {
             $case_time[$case_key] = $start_time;
             $time_table[$start_time] = 'case_'.date('Ym',strtotime($start_time));
         }
-        sort($case_time);
+        ksort($case_time);
         $endCase = M()->table($time_table[end($case_time)])->where('case_key="'.key($case_time).'"')->find();
         //将第一个案件的结束时间调整至最后一个案件的结束时间
         $data['end_time'] = $endCase['end_time'];
-        $where['case_key'] = key(reset($case_time));
+        reset($case_time);
+        $where['case_key'] = key($case_time);
         $result = M()->table($time_table[current($case_time)])->where($where)->save($data);
+        //同步案件
+        $syncData[] = array('tab_name'=>$time_table[current($case_time)],'case_key'=>$where['case_key']);
+        $this->sync('case',$syncData,'edit');
 
         $video_data['case_key'] = $where['case_key'];
+        $syncVideoData = array();
         foreach ($caseInfo as $case_key => $start_time) {
             if($case_key == $where['case_key']) continue;
             $video_where['case_key'] = $case_key;
-            $result = M()->table('case_video_'.date('Ym',strtotime($start_time)))->where($video_where)->save($video_data);
+            $video_table = 'case_video_'.date('Ym',strtotime($start_time));
+            $case_table = 'case_'.date('Ym',strtotime($start_time));
+            //修改case_video
+            $result = M()->table($video_table)->where($video_where)->save($video_data);
+            //同步数据
+            $videoData = M()->field('wjbh,"'.$video_table.'" as tab_name')->table($video_table)->where($video_where)->select();
+            $syncVideoData = array_merge($syncVideoData,$videoData);
+            //删除案件
+            $result = M()->table($case_table)->where($video_where)->delete();
+            //同步数据
+            $syncCaseData[] = array('tab_name'=>$case_table,'case_key'=>$case_key);
         }
+        $this->sync('case',$syncCaseData,'del');
+        $this->sync('case_video',$syncVideoData,'edit');
+
         //将相关视频合并
         if($result){
             $res['status'] = true;
             $res['message'] = '合并案件成功';
+            $this->write_log('合并案件-'.implode(',',array_keys($caseInfo)));
         }else{
             $res['status'] = false;
             $res['message'] = '合并案件失败';
@@ -288,12 +335,13 @@ class CaseController extends CommonController
     //案件拆包
     public function case_slice($request)
     {
+        $case_key = $request['case_key'];
         $wjbhInfo = $request['wjbhInfo'];
         foreach ($wjbhInfo as $wjbh => $start_time) {
             $video_time[$wjbh] = $start_time;
             $time_table[$start_time] = 'case_video_'.date('Ym',strtotime($start_time));
         }
-        sort($video_time);
+        ksort($video_time);
         $firstTime = reset($video_time);
         $wjInfo = M()->table($time_table[$firstTime])->where('wjbh="'.key($video_time).'"')->find();
         $wjeInfo = M()->table($time_table[end($video_time)])->where('wjbh="'.key($video_time).'"')->find();
@@ -307,18 +355,27 @@ class CaseController extends CommonController
         $data['jyxm'] = $wjInfo['jyxm'];
         $data['areaname'] = $wjInfo['areaname'];
         $result = M()->table('case_'.date('Ym',strtotime($firstTime)))->add($data);
-        $video_data['case_key'] = $data['case_key'];
-        foreach ($wjbhInfo as $wjbh => $start_time) {
-            $video_where['wjbh'] = $wjbh;
-            M()->table('case_video_'.date('Ym',strtotime($start_time)))->where($video_where)->save($video_data);
-        }
         if($result){
+            //同步
+            $syncData[] = array('tab_name'=>'case_'.date('Ym',strtotime($firstTime)),'case_key'=>$data['case_key']);
+            $this->sync('case',$syncData,'add');
+
+            $video_data['case_key'] = $data['case_key'];
+            foreach ($wjbhInfo as $wjbh => $start_time) {
+                $video_where['wjbh'] = $wjbh;
+                $video_table = 'case_video_'.date('Ym',strtotime($start_time));
+                M()->table($video_table)->where($video_where)->save($video_data);
+                $syncVideoData[] = array('tab_name'=>$video_table,'wjbh'=>$wjbh);
+            }
+            $this->sync('case_vide',$syncVideoData,'edit');
             $res['status'] = true;
             $res['message'] = '拆分案件成功';
+            $this->write_log('拆分案件'.$case_key.',新增案件.'.$data['case_key']);
         }else{
             $res['status'] = false;
             $res['message'] = '拆分案件失败';
         }
+
         return $res;
     }
     //撤销，拒绝申请
@@ -327,18 +384,21 @@ class CaseController extends CommonController
         //case_key 案件关键字
         //action  0 撤销 1 拒绝
         $data['hand_status'] = 0;   //初始状态
-        $db = D($this->models['case']);
+        //$db = D($this->models['case']);
         $start_time = $request['start_time'];
-        $table = date('Ym',strtotime($start_time));
-        $result = $db->table('case_'.$table)->getTableEdit($request,$data);
-        if($result['status']){
+        $table = 'case_'.date('Ym',strtotime($start_time));
+        $result = M()->table($table)->where($request)->save($data);
+        if($result){
             if($request['action'] == 0) $result['message'] = '撤销成功';
             if($request['action'] == 1) $result['message'] = '申请已拒绝';
         }else{
             if($request['action'] == 0) $result['message'] = '撤销失败';
             if($request['action'] == 1) $result['message'] = '申请拒绝失败';
         }
-        $this->write_log(g2u($info['video_title']).$result['message']);
+        //同步
+        $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
+        $this->sync('case',$syncData,'edit');
+        $this->write_log(g2u($request['case_key']).$result['message']);
         return $result;
     }
     //播放,编辑信息
@@ -503,7 +563,7 @@ class CaseController extends CommonController
         //-------------
         //是否进行数据累加
         //-------------
-        if(isset($request['link'])){
+        if($request['link']){
             $fields = $keys;
             $pidFiled = '_parentId';
             $data = $this->ksort_sat_data($data,$pidFiled,$fields);
@@ -528,7 +588,9 @@ class CaseController extends CommonController
             $value['wsbase_per'] = round(($value['wsbase_online'] / $value['wsbase_num'])*100,2);   //工作站在线率
             $value['case_num'] = $value['administration'] + $value['criminal'];     //案件数
         }
-        $this->ajaxReturn(g2us($data));
+        $rows = array_values(g2us($data));
+        $total = count($rows);
+        $this->ajaxReturn(compact('total','rows'));
     }
     /**
      * 分析数据
@@ -595,5 +657,44 @@ class CaseController extends CommonController
             }
         }
         return $data;
+    }
+    /*********************
+     * 首页统计
+     *********************/
+    public function show_home_sat($request)
+    {
+        $btime = date('Y-m-d H:i:s',time()-6*24*60*60);
+        $etime = date('Y-m-d H:i:s');
+
+        $dates = $this->get_twoDates($btime,$etime,'Y-m-d','+1 day');
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $tables = $this->get_dbTables();
+        $where[] = $this->get_manger_sql();
+        $where['start_time'][] = array('EGT',$btime);
+        $where['start_time'][] = array('ELT',$etime);
+        $unWhere = $where;
+        $unWhere['alarm_type'] = 0;
+        $alarm_total = array();
+        $unalarm_total = array();
+        foreach ($months as $month) {
+            if(!in_array('case_'.$month,$tables)) continue;
+            $alarms = M()->table('case_'.$month)->field("count(1) as num,DATE_FORMAT(start_time,'%Y-%m-%d') as day")->where($where)->group('day')->select();
+            $unalarms = M()->table('case_'.$month)->field("count(1) as num,DATE_FORMAT(start_time,'%Y-%m-%d') as day")->where($unWhere)->group('day')->select();
+            $alarm_total = array_merge((array)$alarms,$alarm_total);
+            $unalarm_total = array_merge((array)$unalarms,$unalarm_total);
+        }
+        $keys = array('num','unalarms','alarms');
+        $countInfo = array_fill_keys($keys,0);
+        $initInfo = array_fill_keys($dates,$countInfo);
+        foreach ($alarm_total as  $value) {
+            $initInfo[$value['day']]['num'] = (int)$value['num'];
+        }
+        foreach ($unalarm_total as  $value) {
+            $initInfo[$value['day']]['unalarms'] = (int)$value['num'];
+        }
+        foreach ($initInfo as &$value) {
+            $value['alarms'] = $value['num']-$value['unalarms'];
+        }
+        return $initInfo;
     }
 }

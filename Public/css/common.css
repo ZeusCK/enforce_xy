@@ -37,13 +37,13 @@
 	height: 150px;
 }
 .search-box{
-	margin: 2px 0 2px 20px;
+	margin: 2px 0 2px 0;
 }
 .search-big{
-	min-width: 900px;
+	min-width: 1440px;
 }
 .search-text{
-	width: 82px;
+	width: 77px;
 	text-align: right;
 	line-height: 22px;
 	font-size: 14px;

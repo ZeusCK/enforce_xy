@@ -73,9 +73,10 @@ $(function(){
     swf: '__PUBLIC__/plugins/webuploader/Uploader.swf',
 
     // 文件接收服务端。
-    server: '/enforce/upload.php',
+    server: '{:U("Media/break_point_upload")}',
     // 开起分片上传。
     chunked: true,
+    formData:{'case_key':'asdaaaaaa',start_time:'2017-08-11 14:12:01',source:'1'},
     // 选择文件的按钮。可选。
     // 内部根据当前运行是创建，可能是input元素，也可能是flash.
     pick: '#picker',

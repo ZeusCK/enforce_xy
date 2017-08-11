@@ -79,12 +79,11 @@ class AnnounceController extends CommonController
     public function announce_broadcast($request)
     {
         $db = D($this->models['sys_notice']);
-        $action = A($this->actions['area']);
         $where['start_time'] = array('ELT',date('Y-m-d H:i:s'));    //开始时间小于当前时间
         $where['end_time'] = array('EGT',date('Y-m-d H:i:s'));      //结束时间大于当前时间
         $data = $db->where($where)->order('create_time desc')->select();
         foreach ($data as $key => $value) {
-            if(!in_array(session('areaid'),$action->carea($value['dept_code']))) unset($data[$key]);
+            if(strpos($value['areacode'],session('areacode')) !== 0) unset($data[$key]);
         }
         $data = array_values($data);
         $total = count($data);

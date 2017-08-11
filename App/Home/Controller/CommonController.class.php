@@ -558,7 +558,7 @@ class CommonController extends Controller {
      * @param  string $table 同步表
      * @param  array $data  同步数据
      * @param  string $op    操作类型
-     * @return void        
+     * @return void
      */
     public function sync($table,$data,$op)
     {
@@ -570,7 +570,7 @@ class CommonController extends Controller {
             $syncFields = array(
                 'employee'=>array('areacode'=>'','name'=>'','code'=>'','old_code'=>''),
                 'case'=>array('tab_name'=>'','case_key'=>''),
-                'case_vide'=>array('tab_name'=>'','wjbh'=>''),
+                'case_video'=>array('tab_name'=>'','wjbh'=>''),
                 );
             $ops = array('add'=>1,'del'=>2,'edit'=>3);
             foreach ($data as &$value) {
@@ -580,9 +580,9 @@ class CommonController extends Controller {
             }
             D($syncTables[$table])->addAll($data);
         /*} catch (Exception $e) {
-            
+
         }*/
-        
+
     }
     /**获取Unix毫秒时间戳
      * @return float Unix毫秒时间戳

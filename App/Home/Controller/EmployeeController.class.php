@@ -31,13 +31,6 @@ class EmployeeController extends CommonController
    	public function showEmpPhoto()
     {
    		$action = A($this->actions['area']);
-        //如果没有
-        $areaTree = $action->tree_list();
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : 0;
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
-        $this->assignInfo();
         $this->display($this->views['showEmpPhoto']);
    	}
     /**

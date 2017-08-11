@@ -1,48 +1,50 @@
 <extend name="layouts:master" />
 <block name="link">
     <style>
-        *{
+        * {
             margin: 0;
             padding: 0;
         }
-        html,body{
+
+        html,
+        body {
             width: 100%;
             height: 100%;
             overflow: hidden;
         }
-        div{
-            box-sizing:border-box;
-            -moz-box-sizing:border-box; /* Firefox */
-            -webkit-box-sizing:border-box; /* Safari */
+
+        div {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            /* Firefox */
+            -webkit-box-sizing: border-box;
+            /* Safari */
         }
-        .topBox{
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: 150px;
-        }
-        .centerBox{
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 150px;
-            height: 150px;
-        }
-        .bottomBox{
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            top: 300px;
-        }
-        .box{
+
+        .box {
             width: 50%;
-            height: 100%;
+            height: 50%;
+            min-height: 300px;
             float: left;
-            padding: 4px;
         }
-        .pie{
+
+        .boxL {
+            border-right: 5px solid transparent;
+        }
+
+        .boxR {
+            border-left: 5px solid transparent;
+        }
+
+        .boxT {
+            border-bottom: 5px solid transparent;
+        }
+
+        .boxB {
+            border-top: 5px solid transparent;
+        }
+
+        .pie {
             width: 100%;
             height: 100%;
             background: #4ad2ff;
@@ -55,24 +57,18 @@
     <script type="text/javascript" src="__PUBLIC__/js/Index/home.js"></script>
 </block>
 <block name="main">
-    <div class="topBox">
-        <div id="myDatagrid"></div>
+    <div id="announce" class=" box boxL boxT">
+        <iframe src="__MODULE__/Announce/showAnnounce" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
     </div>
-    <div class="centerBox">
-        <div class="box">
-            <div id="myChart3" style="width: 100%; height: 100%;"></div>
-        </div>
-        <div class="box">
-            <div id="myChart4" style="width: 100%; height: 100%;"></div>
-        </div>
-    </div>
+    <div id="serverIp" class="box boxR  boxT">
+        <iframe src="__MODULE__/Server/showServer" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
 
-    <div class="bottomBox">
-        <div class="box">
-            <div id="myChart" style="width: 100%; height: 100%;"></div>
-        </div>
-        <div class="box">
-            <div id="myChart2" style="width: 100%; height: 100%;"></div>
-        </div>
+    </div>
+    <div id="workStation" class="box boxL boxB">
+        <iframe src="__MODULE__/WorkStation/showWork" width="100%" height="100%" frameborder="0" scrolling="no"></iframe>
+
+    </div>
+    <div id="myChart" class="box boxR boxB">
+
     </div>
 </block>

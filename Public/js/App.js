@@ -519,7 +519,7 @@ App.prototype.datagrid = function(target,params){
 }
 //树表格
 App.prototype.treegrid = function(target,params){
-    var options = $.extend({},App.prototype.datagrid.defaults,params);
+    var options = $.extend({},App.prototype.treegrid.defaults,params);
     if(options.url != null){
         options.url = this.tp.ajax+'?tpUrl='+options.url;
     }
@@ -571,4 +571,49 @@ App.prototype.datagrid.defaults = {
         $.messager.alert('提示','网络发生错误！','info');
     }
 };
-
+//设置表格默认属性
+App.prototype.treegrid.defaults = {
+    url:null,
+    fitColumns: true,
+    rownumbers: true,
+    fit: true,
+    pageSize:'20',
+    pagination: true,
+    queryParams:{},
+    showDatagrid:true,  //是否显示datagrid表格 自定义属性
+    otherView:function(data){}, //自定义属性,显示的信息 当showDatagrid 为false时生效
+    loadFilter:function(data){
+        var options = $(this).treegrid('options');
+        if(!options.showDatagrid){
+            var string = options.otherView(data);
+            $(this).parent('.datagrid-view').children('.datagrid-view1').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').find('.datagrid-header').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('.datagrid-body').html(string);
+        }
+        if(options.showDatagrid && data.total > 0){
+            $(this).parent('.datagrid-view').children('.datagrid-view1').show();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left','').find('.datagrid-header').show();
+        }
+        if(data.error){
+            var info = {};
+            info.total = 0;
+            info.rows = [];
+            info.error = data.error;
+            return info;
+        }
+        return data;
+    },
+    onLoadSuccess: function(data) {
+        if(data.total == 0 && $(this).treegrid('options').showDatagrid){
+            $(this).parent('.datagrid-view').find('div.datagrid-view1').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2');
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({'color':'#F00','text-align':'center','font-size':'20px'});
+        }
+        if(data.error){
+            $.messager.alert('操作提示',data.error,'info');
+        }
+    },
+    onLoadError:function(){
+        $.messager.alert('提示','网络发生错误！','info');
+    }
+};
