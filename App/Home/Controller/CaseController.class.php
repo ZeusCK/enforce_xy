@@ -584,11 +584,11 @@ class CaseController extends CommonController
             }
             if($value['areacode'] == $areacode) unset($value['_parentId']);
             $value['unuploadnum'] = $value['empnum'] - $value['uploadnum'];                         //未上传民警数
-            $value['uploadper'] = round(($value['uploadnum'] / $value['empnum'])*100,2);            //上传率
-            $value['wsbase_per'] = round(($value['wsbase_online'] / $value['wsbase_num'])*100,2);   //工作站在线率
+            $value['uploadper'] = $value['empnum'] == 0 ? 0 : round(($value['uploadnum'] / $value['empnum'])*100,2);            //上传率
+            $value['wsbase_per'] = $value['wsbase_num'] == 0 ? 0 :round(($value['wsbase_online'] / $value['wsbase_num'])*100,2);   //工作站在线率
             $value['case_num'] = $value['administration'] + $value['criminal'];     //案件数
         }
-        $rows = array_values(g2us($data));
+        $rows = g2us(array_values($data));
         $total = count($rows);
         $this->ajaxReturn(compact('total','rows'));
     }

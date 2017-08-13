@@ -1,5 +1,5 @@
 var things = {};
-things.areaid = app.tp.areaid;
+things.areacode = app.tp.areaid;
 things.areaname = app.tp.areaname;
 things.datagridUrl = 'Case/case_list';
 things.editUrl = 'Case/allow_apply';
@@ -46,14 +46,14 @@ things.search = function(){
     });
 }
 things.clickTree = function(node){
-    things.areaid = node.id;
+    things.areacode = node.areacode;
     things.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(things.areaname);
     app.extra('search',{
         datagrid:'#datagrid',
         parsedata:function(data){
-            data.areaid = things.areaid;
+            data.areacode = things.areacode;
             data.type=1;
             data.hand_status=1;
         }

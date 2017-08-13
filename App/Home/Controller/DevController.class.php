@@ -51,18 +51,14 @@ class DevController extends CommonController
                 $where[$key] = array('like','%'.$value.'%');
             }
         }
-        if($request['count']){
-            $data = $db->field('count(cpxh) as num,status')->group('status');
-            $res = array('disuse'=>0,'use'=>0,'active'=>0);
-            foreach($data as $value){
-                if($value['status'] == 0) $res['disuse'] = $value['num'];
-                if($value['status'] == 1) $res['use'] = $value['num'];
-                if($value['status'] == 2) $res['active'] = $value['num'];
-            }
-            $this->ajaxReturn($res);
-        }
         if($request['status'] != '') $where['status'] = $request['status'];
         $data = $db->getTableList(u2gs($where),$page,$rows);
+        $show_sat = $db->where($where)->field('count(1) as num,status')->group('status');
+        foreach($show_sat as $value){
+            if($value['status'] == 0) $data['disuse'] = $value['num'] ? $value['num'] : 0;
+            if($value['status'] == 1) $data['use'] = $value['num'] ? $value['num'] : 0;
+            if($value['status'] == 2) $data['active'] = $value['num'] ? $value['num'] : 0;
+        }
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }

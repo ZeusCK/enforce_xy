@@ -35,8 +35,8 @@
 <block name="src">
     <script type="text/javascript">
         //根部门  用于数据的初始化
-        app.tp.areaid = "{:$areaid}";
-        app.tp.areaname = "{:$areaname}";
+        app.tp.areacode = "{:session('areacode')}";
+        app.tp.areaname = "{:session(areaname)}";
     </script>
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
@@ -45,14 +45,6 @@
 <block name="main">
     <div class="easyui-layout" fit="true">
         <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
-            <div style="margin: 5px;min-width: 250px">
-                <select id="treeType" class="easyui-combobox" data-options="height:22,editable:false,panelHeight:46"
-                        name="jybm" style="width:55px">
-                    <option value="2">警员</option>
-                    <option value="1">部门</option>
-                </select>
-                <input id="keyWord" data-options="height:22"  style="width:168px" placeholder="按回车键搜索"/>
-            </div>
             <div id="checkedMsg"></div>
             <ul id="area_list"></ul>
         </div>

@@ -11,10 +11,9 @@ class PeData:
         self.cursor = self.db.cursor()
     def get_one_emp_area(self):
         sql = """
-        SELECT e.code,name,e.areaid,areaname
+        SELECT e.code,name,e.areacode,areaname
         FROM employee as e ,area_dep as a
-        WHERE empid >= (SELECT MAX(empid) FROM employee) * RAND()
-        AND a.areaid=e.areaid
+        WHERE a.areacode=e.areacode
         """
          # 执行sql语句
         try:
@@ -42,18 +41,19 @@ class PeData:
            print('获取工作站信息发生错误')
            return False
     def creatPeVideoInfo(self):
-        code,name,areaid,areaname = self.get_one_emp_area()
+        code,name,areacode,areaname = self.get_one_emp_area()
         tempeTime = time.time()-24*60*60
         tempbTime = time.time()-7*24*60*60
         start_time = random.randrange(int(tempbTime),int(tempeTime))
         insertList = {}
         end_time = start_time+random.randrange(15*69,30*60)
+        insertList['case_key'] = time.strftime('%Y%m%d%H%M%S',time.gmtime(start_time))+'_'+code+'_'+areacode
         insertList['start_time'] = time.strftime('%Y-%m-%d %H:%M:%S',time.gmtime(start_time))
         insertList['title'] = insertList['start_time']+ ' '+name+' data';
         insertList['end_time'] = time.strftime('%Y-%m-%d %H:%M:%S',time.gmtime(end_time))
         insertList['jybh'] = code
         insertList['jyxm'] = name
-        insertList['areaid'] = areaid
+        insertList['areacode'] = areacode
         insertList['areaname'] = areaname
         return insertList
     def insertInfo(self,table,data):
@@ -84,12 +84,15 @@ class PeData:
 
     def start(self):
         pe_video_info = self.creatPeVideoInfo()
-        self.insertInfo('pe_video',pe_video_info)
-        video_id = self.getLastInsertId()
+        table_time = time.mktime(time.strptime(pe_video_info['start_time'], "%Y-%m-%d %H:%M:%S"))
+        case_table = 'case_'+time.strftime('%Y%m',time.gmtime(table_time))
+        self.insertInfo(case_table,pe_video_info)
         for x in range(3,6):
-            pe_video_lsit_info = self.creatPeVideoListInfo(pe_video_info,video_id)
-            self.insertInfo('pe_video_list',pe_video_lsit_info)
-    def creatPeVideoListInfo(self,pe_video_info,video_id):
+            pe_video_lsit_info = self.creatPeVideoListInfo(pe_video_info)
+            video_time = time.mktime(time.strptime(pe_video_lsit_info['start_time'], "%Y-%m-%d %H:%M:%S"))
+            case_video_table = 'case_video_'+time.strftime('%Y%m',time.gmtime(video_time))
+            self.insertInfo(case_video_table,pe_video_lsit_info)
+    def creatPeVideoListInfo(self,pe_video_info):
         start_time = time.mktime(time.strptime(pe_video_info['start_time'], "%Y-%m-%d %H:%M:%S"))
         wjlx = random.randrange(0,4)
         insertList = {}
@@ -109,10 +112,10 @@ class PeData:
         bfwz = 'http://'+self.host+'/'+ccwz
         start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(start_time))
         upload = random.randrange(0,2)
-        insertList['video_id'] = video_id
+        insertList['case_key'] = pe_video_info['case_key']
         insertList['jybh'] = pe_video_info['jybh']   #警员编号
         insertList['jyxm'] = pe_video_info['jyxm']   #警员姓名
-        insertList['areaid'] = pe_video_info['areaid']   #部门ID
+        insertList['areacode'] = pe_video_info['areacode']   #部门ID
         insertList['areaname'] = pe_video_info['areaname']   #部门名称
         #insertList['gzzbh'] = gzzbh    #工作站编号
         #insertList['gzz_ip'] = gzz_ip #工作站IP
@@ -123,7 +126,6 @@ class PeData:
         insertList['bfwz'] = bfwz   #播放位置
         insertList['scsj'] = scsj   #上传时间
         insertList['upload'] = upload  #上传级别
-        insertList['video_id'] = video_id
         #print(insertList)
         return insertList
     def insert_pe_video_list(self):
@@ -151,7 +153,7 @@ class PeData:
     def db_close(self):
         self.db.close()
 if __name__ == '__main__':
-    pe_data = PeData('localhost','root','123456','enforce_xy','latin1')
+    pe_data = PeData('localhost','root','123456','enforce_xz','latin1')
     start = time.time()
     i = 0
     while time.time() - start < 3*60 :

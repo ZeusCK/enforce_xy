@@ -13,18 +13,7 @@ class WorkStationController extends CommonController
     protected $logContent = '设备管理/工作站管理';
     public function ws_base_show()
     {
-        $this->assignInfo();
         $this->display($this->views['ws_base']);
-    }
-    public function assignInfo()
-    {
-        $action = A($this->actions['area']);
-         //如果没有
-        $areaTree = $action->tree_list();
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : '';
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
     }
     //工作站
     public function ws_base_list()
@@ -46,10 +35,16 @@ class WorkStationController extends CommonController
         if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
 
         $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
-        $data = $db->getTableList(u2gs($where),$page,$rows,'areacode asc');
+        $where = u2gs($where);
+        $data = $db->where($where)->order('areacode asc')->getList($page,$rows);
+        $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();
         foreach ($data['rows'] as &$value) {
             $value['zxztname'] = $value['zxzt'] == 0 ? u2g('离线') : u2g('在线');
             $value['qyztname'] = $value['qyzt'] == 0 ? u2g('停用') : u2g('启用');
+        }
+        foreach ($show_sat as $val) {
+            if($value['zxzt'] == 0) $data['offline'] = $val['num'] ? $val['num'] : 0;
+            if($value['zxzt'] == 1) $data['online'] = $val['num'] ? $val['num'] : 0;
         }
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));

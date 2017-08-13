@@ -27,10 +27,15 @@ class ServerController extends CommonController
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');
 
         $db =  D($this->models['server']);
+        $show_sat = $db->where($where)->field('count(1) as num,status')->group('zxzt')->select();
         $data = $db->getTableList($where,$page,$rows,'areacode asc');
         $statusType = $this->get_val_item('dictionary', 'status');
         foreach ($data['rows'] as &$value) {
             $value['status_name'] = $statusType[$value['status']];
+        }
+        foreach ($show_sat as $value) {
+            if($value['status'] == 0) $data['offline'] = $value['num'] ? $value['num'] : 0;
+            if($value['status'] == 1) $data['online'] = $value['num'] ? $value['num'] : 0;
         }
         $this->saveExcel($data);
         return g2us($data);

@@ -519,7 +519,7 @@ App.prototype.datagrid = function(target,params){
 }
 //树表格
 App.prototype.treegrid = function(target,params){
-    var options = $.extend({},App.prototype.treegrid.defaults,params);
+    var options = $.extend({},App.prototype.datagrid.defaults,App.prototype.treegrid.defaults,params);
     if(options.url != null){
         options.url = this.tp.ajax+'?tpUrl='+options.url;
     }
@@ -573,15 +573,6 @@ App.prototype.datagrid.defaults = {
 };
 //设置表格默认属性
 App.prototype.treegrid.defaults = {
-    url:null,
-    fitColumns: true,
-    rownumbers: true,
-    fit: true,
-    pageSize:'20',
-    pagination: true,
-    queryParams:{},
-    showDatagrid:true,  //是否显示datagrid表格 自定义属性
-    otherView:function(data){}, //自定义属性,显示的信息 当showDatagrid 为false时生效
     loadFilter:function(data){
         var options = $(this).treegrid('options');
         if(!options.showDatagrid){
@@ -603,7 +594,7 @@ App.prototype.treegrid.defaults = {
         }
         return data;
     },
-    onLoadSuccess: function(data) {
+    onLoadSuccess: function(rows,data) {
         if(data.total == 0 && $(this).treegrid('options').showDatagrid){
             $(this).parent('.datagrid-view').find('div.datagrid-view1').hide();
             $(this).parent('.datagrid-view').children('.datagrid-view2');

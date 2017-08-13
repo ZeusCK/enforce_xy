@@ -5,6 +5,54 @@ use Think\Model;
 
 class BaseModel extends Model
 {
+    public function getList($page=1,$rows=20)
+    {
+        $rows = $this->page($page,$rows)->select();
+        $total = $this->count();
+        $total = $total ? $total : 0;
+        $rows = empty($rows) ? array() : $rows;
+        return compact('total','rows');
+    }
+    public function getAdd($add,$success='添加成功',$fail='添加失败')
+    {
+        if($id = $this->add($add)){
+            $return['message'] = $success;
+            $return['status']  = true;
+            $return['add_id'] = $id;
+        }else{
+            $return['message'] = $fail;
+            $return['status']  = false;
+        }
+        return $return;
+    }
+    public function getEdit($data,$success='更新成功',$fail='更新失败')
+    {
+        //判断更新失败
+        if($this->save($data)){
+            $return['message'] = $success;
+            $return['status']  = true;
+        }else{
+            
+            $return['message'] = $fail;
+            $return['status']  = false;
+       }
+       return $return;
+    }
+    public function getDel($success='删除成功',$fail='删除失败')
+    {
+
+        if($this->delete())
+        {
+            $return['message'] = $success;
+            $return['status']  = true;
+        }
+        else
+        {
+            $return['message'] = $fail;
+            $return['status']  = false;
+        }
+       return $return;
+    }
     public function getTableList($where=null,$page,$rows,$order=null,$field=null,$join=null)
     {
         //判断条件为空
