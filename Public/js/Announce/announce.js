@@ -100,6 +100,7 @@ module.search = function() {
         form: '#searchForm',
         datagrid: '#datagrid',
         parsedata: function(data) {
+            data.areacode = module.areacode;
             var begin = new Date(data['create_time[btime]']).getTime();
             var end = new Date(data['create_time[etime]']).getTime();
             if (end - begin < 0) {
@@ -115,12 +116,7 @@ module.clickTree = function(node) {
     module.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(module.areaname);
-    app.extra('search', {
-        datagrid: '#datagrid',
-        parsedata: function(data) {
-            data.areacode = module.areacode;
-        }
-    })
+    module.search();
 }
 $(function() {
     var t = new Date();

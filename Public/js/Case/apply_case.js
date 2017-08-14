@@ -11,24 +11,32 @@ things.show = function(){
         rand:Math.random()
     });
 }
-things.edit = function(target,id){
-
-    app.extra('add_edit',{
-        url:things.editUrl,
-        datagrid:'#datagrid',
-        linkbutton:target,
-        parsedata:function(data){
-          data.video_id = id;
+things.apply = function(target,case_key,start_time){
+    $.messager.confirm('操作提示','你确定提交申请么？',function(r){
+        if(r){
+            app.extra('add_edit',{
+                url:things.editUrl,
+                datagrid:'#datagrid',
+                linkbutton:target,
+                parsedata:function(data){
+                    data.start_time = start_time;
+                    data.case_key = case_key;
+                }
+            });
         }
     });
 }
-things.editCancel=function(){
+things.applyCancel=function(){
     $('#editDialog').dialog('close');
 }
 things.search = function(){
     app.extra('search',{
         form:'#searchForm',
-        datagrid:'#datagrid'
+        datagrid:'#datagrid',
+        parsedata:function(data){
+            data.areacode = things.areacode;
+            data.action = 0;
+        }
     });
 }
 things.clickTree = function(node){
@@ -36,23 +44,23 @@ things.clickTree = function(node){
     things.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(things.areaname);
-    app.extra('search',{
-        datagrid:'#datagrid',
-        parsedata:function(data){
-            data.areacode = things.areacode;
-        }
-    })
+    things.search();
 }
 things.empty=function(){
   $('#searchForm').form('reset');
 }
-things.cancel = function(target,id){
-    app.extra('add_edit',{
-        url:things.cancelUrl,
-        datagrid:'#datagrid',
-        linkbutton:target,
-        parsedata:function(data){
-          data.video_id = id;
+things.applyCancel = function(target,case_key,start_time){
+    $.messager.confirm('操作提示','你确定撤销申请么？',function(r){
+        if(r){
+            app.extra('add_edit',{
+                url:things.cancelUrl,
+                datagrid:'#datagrid',
+                linkbutton:target,
+                parsedata:function(data){
+                    data.case_key = case_key;
+                    data.start_time = start_time;
+                }
+            });
         }
     });
 }
@@ -68,9 +76,15 @@ $(function(){
           {field:'alarm_no',title:'警情编号', width: 200, align:'center'},
           {field:'areaname', title: '出警地址', width: 200, align: 'center' },
           {field:'jyxm', title: '出警人', width: 200, align: 'center' },
-          {field:'start_time', title: '采集日期', width: 200, align: 'center' },    
+          {field:'start_time', title: '采集日期', width: 200, align: 'center' },
           {field:'aa',title:'操作',width:100,align:'center',formatter:function(value,row,index){
-                return '<a href="javascript:void(0)" onclick="things.edit(this,'+row.video_id+')" name="edit" ><a href="javascript:void(0)" onclick="things.cancel(this,'+row.video_id+')" name="play" ></a>';
+                if(row.hand_status == 1){
+                    var htmlString = '<a href="javascript:void(0)" onclick="things.applyCancel(this,\''+row.case_key+'\',\''+row.start_time+'\')" name="play" title="撤销申请"></a>';
+                }
+                if(row.hand_status == 0){
+                    var htmlString = '<a href="javascript:void(0)" onclick="things.apply(this,\''+row.case_key+'\',\''+row.start_time+'\')" name="edit" title="提交申请">';
+                }
+                return htmlString;
           }}
         ]],
         onLoadSuccess:function(data){
@@ -91,11 +105,11 @@ $(function(){
             }
         }
     });
-    tree.loadData();
+    tree.load_all_tree();
     $(tree.dom).tree({
         onClick:things.clickTree
     });
-    
+
     // $('#mu_ser').text(things.areaname);
     // $('#tip_area').text(things.areaname);
 });

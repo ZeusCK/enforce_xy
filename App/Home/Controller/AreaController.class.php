@@ -290,4 +290,18 @@ class AreaController extends CommonController
         sort($useCodes);
         return array('areacode'=>sprintf('%02d',reset($useCodes)));
     }
+    public function show_all_area($request)
+    {
+        $db = D($this->models['area']);
+        $data = $db->select();
+        $ids = array(0);
+        //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
+        $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+        //$L_attributes 额外需要保存的信息
+        $L_attributes = ['areacode','rperson','rphone','type','code','is_read'];
+        $icons = ['icon-application_xp_terminal','icon-application'];
+        $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
+        $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
+        return g2us($data_tree);
+    }
 }

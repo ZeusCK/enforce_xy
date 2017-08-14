@@ -45,14 +45,6 @@
 <block name="main">
     <div class="easyui-layout" fit="true">
         <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
-            <div style="margin: 5px;min-width: 250px">
-                <select id="treeType" class="easyui-combobox" data-options="height:22,editable:false,panelHeight:46"
-                        name="jybm" style="width:55px">
-                    <option value="2">警员</option>
-                    <option value="1">部门</option>
-                </select>
-                <input id="keyWord" data-options="height:22"  style="width:168px" placeholder="按回车键搜索"/>
-            </div>
             <div id="checkedMsg"></div>
             <ul id="area_list"></ul>
         </div>
@@ -63,12 +55,14 @@
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
             <div class="search-box search-big">
-                <div class="search-text">接收部门:</div>
+                <!-- <div class="search-text">接收部门:</div>
                 <input  name="apply_areaname" class="easyui-textbox">
                 <div class="search-text">移交部门:</div>
-                <input class="easyui-textbox" name="areaname">
+                <input class="easyui-textbox" name="areaname"> -->
                 <div class="search-text">标题:</div>
                 <input  name="title" class="easyui-textbox">
+                <div class="search-text">出警人:</div>
+                <input class="easyui-textbox" name="jyxm">
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="things.search()">查询</a>
             </div>
             <div class="search-box search-big">
@@ -76,13 +70,12 @@
                 <input  name="jqbh" class="easyui-textbox">
                 <div class="search-text">案事件名称:</div>
                 <input  name="case_name" class="easyui-textbox">
-                <div class="search-text">出警地址:</div>
-                <input class="easyui-textbox" name="areaname">
+
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="things.empty()">清空</a>
             </div>
             <div class="search-box search-big">
-            <div class="search-text">出警人:</div>
-                <input class="easyui-textbox" name="jyxm">
+                <div class="search-text">出警地址:</div>
+                <input class="easyui-textbox" name="areaname">
                 <div class="search-text">采集日期:</div>
                 <input class="easyui-datetimebox" name="start[btime]" id="shotS" data-options="editable:false">
                 <div class="search-text">至:</div>

@@ -83,6 +83,9 @@ module.search = function() {
     app.extra('search', {
         form: '#searchForm',
         datagrid: '#datagrid',
+        parsedata:function(data){
+            data.areacode = module.areacode;
+        }
     });
 }
 module.clickTree = function(node) {
@@ -90,12 +93,7 @@ module.clickTree = function(node) {
     module.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(module.areaname);
-    app.extra('search', {
-        datagrid: '#datagrid',
-        parsedata: function(data) {
-            data.areacode = module.areacode;
-        }
-    })
+    module.search();
 }
 module.bind = function(id, choose) {
     var dz = choose ? module.areaname : '';

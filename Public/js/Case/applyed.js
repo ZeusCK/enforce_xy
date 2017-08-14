@@ -67,7 +67,7 @@ things.play = function(data,time){
         dataType:'json',
         data:params,
         success:function(data){
-            
+
         }
     });
     window.open(url);
@@ -78,7 +78,8 @@ $(function(){
         title:'警情移交编辑',
         fit:true,
         queryParams:{
-          type:1
+          type:1,
+          hand_status:2
         },
         columns:[[
           {field:'vedio_id', title: 'id', checkbox: true },
@@ -87,7 +88,7 @@ $(function(){
           {field:'case_name', title: '案事件名称', width: 200, align: 'center' },
           {field:'areaname', title: '出警地址', width: 200, align: 'center' },
           {field:'jyxm', title: '出警人',  align: 'center' },
-          {field:'start_time', title: '采集日期', width: 200, align: 'center' },    
+          {field:'start_time', title: '采集日期', width: 200, align: 'center' },
           {field:'areaname',title:'移交部门',align:'center'},
           {field:'jyxm',title:'移交人',align:'center'},
           {field:'end_time',title:'移交日期',width:200,align:'center'},
@@ -126,7 +127,7 @@ $(function(){
     $(tree.dom).tree({
         onClick:things.clickTree
     });
-    
+
     // $('#mu_ser').text(things.areaname);
     // $('#tip_area').text(things.areaname);
 });

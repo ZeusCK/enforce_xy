@@ -196,6 +196,24 @@ module.allowOther = function(){
             }
         });
 }
+module.import = function(target){
+    $('#importForm').form('submit',{
+        url:app.url('Employee/import_employee_excel'),
+        success:function(data){
+            data = eval('('+data+')');
+            $.messager.alert('结果提示',data.message,'info');
+            $('#dialog').dialog('close');
+            $('#datagrid').datagrid('reload',{
+                areacode:module.areacode,
+                rand:Math.random()
+            });
+        },
+        error:function(data){
+            $('#dialog').dialog('close');
+            $.messager.alert('操作提示','网络故障','info');
+        }
+    })
+}
 $(function(){
     //树的初始化
     tree.loadData();

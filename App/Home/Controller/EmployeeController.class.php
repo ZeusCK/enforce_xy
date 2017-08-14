@@ -453,4 +453,35 @@ class EmployeeController extends CommonController
         S(session('user').'apply_tree',g2us($empAreaTree),5*60);
         $this->ajaxReturn(S(session('user').'apply_tree'));
     }
+    //导入警员的excel
+    public function import_employee_excel()
+    {
+        $func = A('Function');
+        $where[] = $this->get_manger_sql();
+        $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
+        $code_arr = array_keys($area_code_name);
+        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+        $key_code = array();
+        $name_code = array('警员编号'=>'code',
+                           '部门编号'=>'areacode',
+                           '所属部门'=>'areaname',
+                           '警员姓名'=>'name',
+                           '所属角色'=>'roleid',
+                           '备注'=>'remark',
+                           '性别'=>'sex',
+                           '电话'=>'phone');
+        if($res){
+            $data = $func->read_excel($res);
+            $header = reset($data);
+            foreach ($header as $key => $value) {
+                if(in_array($value,$name_code)){
+                    $key_code[$key] = $name_code[$value];
+                }
+            }
+            $saveData= array();
+            foreach ($data as $value) {}
+        }else{
+            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+        }
+    }
 }

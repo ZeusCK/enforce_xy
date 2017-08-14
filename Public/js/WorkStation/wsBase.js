@@ -71,12 +71,7 @@ things.clickTree = function(node){
     things.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(things.areaname);
-    app.extra('search',{
-        datagrid:'#datagrid',
-        parsedata:function(data){
-            data.areacode = things.areacode;
-        }
-    })
+    things.search();
 }
 things.bind = function(id,choose){
     var areaname = choose ? things.areaname : '';

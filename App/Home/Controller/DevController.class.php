@@ -17,16 +17,16 @@ class DevController extends CommonController
     //执法仪配置
     public function pe_base_show()
     {
-        $action = A($this->actions['area']);
-        $areaTree = $action->tree_list();
         $this->display('peBase');
     }
     //执法仪状态
     public function pe_show_status()
     {
-        $action = A($this->actions['area']);
-        $areaTree = $action->tree_list();
         $this->display('peShowStatus');
+    }
+    public function showPeBase($value='')
+    {
+         $this->display();
     }
     //执法记录仪
     public function pe_base_list()
@@ -98,6 +98,7 @@ class DevController extends CommonController
         $result = $db->getTableEdit($where,u2gs($request));
         $this->ajaxReturn($result);
     }
+
     //执法记录仪
     public function pe_base_remove()
     {

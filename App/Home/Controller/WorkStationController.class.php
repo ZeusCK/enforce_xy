@@ -36,7 +36,7 @@ class WorkStationController extends CommonController
 
         $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
         $where = u2gs($where);
-        $data = $db->where($where)->order('areacode asc')->getList($page,$rows);
+        $data = $db->getTableList($where,$page,$rows,'areacode asc');
         $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();
         foreach ($data['rows'] as &$value) {
             $value['zxztname'] = $value['zxzt'] == 0 ? u2g('离线') : u2g('在线');

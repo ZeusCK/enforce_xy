@@ -88,7 +88,7 @@ class CaseController extends CommonController
         $page = $request['page'] ? $request['page'] : 1;
         $rows = $request['rows'] ? $request['rows'] : 20;
         $areacode = $request['areacode'];       //查询部门
-        $manger_sql = $this->get_manger_sql($areacode,$idField);
+        $manger_sql = $this->get_manger_sql($areacode,$idField,$jybhField);
         $where[] = $manger_sql;
 
         if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
@@ -96,6 +96,8 @@ class CaseController extends CommonController
         if($request['case_type']) $where['case_type'] = $request['case_type'];      //案件类型
         if($request['alarm_no']) $where['alarm_no'] = array('like','%'.$request['alarm_no'].'%');    //警情编号
         if($request['alarm_name']) $where['alarm_name'] = array('like','%'.$request['alarm_name'].'%');    //警情名称
+        if($request['alarm_addr']) $where['alarm_addr'] = array('like','%'.$request['alarm_addr'].'%');    //警情名称
+        if($request['title']) $where['title'] = array('like','%'.$request['title'].'%');    //警情名称
         if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
         if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
         if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
@@ -136,7 +138,6 @@ class CaseController extends CommonController
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
         unset($request['case_key']);
-        $db = D($this->models['case']);
         $request = u2gs($request);
         $result = M()->table('case_'.$table)->where($where)->save($request);
         //同步
@@ -153,7 +154,7 @@ class CaseController extends CommonController
             $res['message'] = '修改案件失败';
         }
         $this->write_log('修改案件'.$request['case_key']);
-        return $result;
+        return $res;
     }
     //查看可以申请的数据
     public function show_apply_list($request)
@@ -170,22 +171,21 @@ class CaseController extends CommonController
         //hand_status 案件移交状态
         //type 显示类型 0 正常产看  1 申请查看
         //areacode 部门代码
-        $type = $request['type'] ? $request['type'] : 0;
-        $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
-        $idField = $type == 0 ? 'areacode' : 'apply_areacode';
-        $page = $request['page'] ? $request['page'] : 1;
-        $rows = $request['rows'] ? $request['rows'] : 20;
+        $page = $request['page'];
+        $rows = $request['rows'];
         $areacode = $request['areacode'];
-        $manger_sql = $this->get_manger_sql($areacode,$idField);
-        $where[] = str_replace('OR','AND',str_replace('LIKE', 'NO LIKE', $manger_sql));
-        if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
-        if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
-        if($request['case_type']) $where['case_type'] = $request['case_type'];      //案件类型
+        $manger_sql = $this->get_manger_sql();
+        $manger_sql = str_replace('OR','AND',str_replace('LIKE', 'NOT LIKE', $manger_sql));
+        $where[] = str_replace('=','!=',str_replace('or','and',str_replace('like', 'not like', $manger_sql)));
+        if($areacode){
+            $where['areacode'] = array('like',$areacode.'%');
+        }
+        $where['hand_status'] = array('NEQ',2);
+        $where['alarm_type'] = array('NEQ',0);
         if($request['alarm_no']) $where['alarm_no'] = array('like','%'.$request['alarm_no'].'%');    //警情编号
         if($request['alarm_name']) $where['alarm_name'] = array('like','%'.$request['alarm_name'].'%');    //警情名称
-        if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
-        if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
-        if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
+        if($request['alarm_addr']) $where['alarm_addr'] = array('like','%'.$request['alarm_addr'].'%');    //警情名称
+        if($request['jyxm']) $where[$jybhField] = $request['jyxm'];                 //警员编号
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
         $etime = $request['start_time']['etime'] ? $request['start_time']['etime'] : date('Y-m-d H:i:s');
         $where['start_time'][] = array('EGT',$btime);      //开始时间
@@ -198,11 +198,12 @@ class CaseController extends CommonController
             $total[$month] = M()->table('case_'.$month)->where($where)->count();
         }
         $tables = $this->get_query_table($total,$page,$rows);
+        error_log(json_encode($tables)."\r\n",3,'error.log');
         $res = array();
         $res['total'] = array_sum($total);
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
-            // error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
+            error_log('查询数据表:'.'case_'.$table.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
             $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
@@ -224,7 +225,7 @@ class CaseController extends CommonController
         $table = 'case_'.date('Ym',strtotime($start_time));
         $data['apply_jybh'] = session('code');
         $data['apply_jyxm'] = u2g(session('user'));
-        $data['apply_areaid'] = session('areaid');
+        $data['apply_areacode'] = session('areacode');
         $data['apply_areaname'] = u2g(session('areaname'));
         $data['update_time'] = date('Y-m-d H:i:s');
         $data['hand_status'] = 1;   //待审核状态
@@ -234,14 +235,14 @@ class CaseController extends CommonController
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
 
-        if($result['status']){
-            $result['message'] = '提交申请成功';
+        if($result){
+            $res['message'] = '提交申请成功';
         }else{
-            $result['message'] = '提交申请失败';
+            $res['message'] = '提交申请失败';
         }
-        $info = $db->where($request)->find();
-        $this->write_log('申请移交：'.g2u($info['title']).$result['message']);
-        return $result;
+        $info = M()->table($table)->where($request)->find();
+        $this->write_log('申请移交：'.g2u($info['title']).$res['message']);
+        return $res;
     }
     //审批通过
     public function allow_apply($request)
@@ -251,15 +252,14 @@ class CaseController extends CommonController
         $start_time = $request['start_time'];
         $table = 'case_'.date('Ym',strtotime($start_time));
         $data['hand_status'] = 2;   //初始状态
-        $db = D($this->models['case']);
         $result = M()->table($table)->where($request)->save($data);
         //同步
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
 
-        $result['message'] = $result ? '审核通过' : '审核通过失败,可能原因该案件已被其他管理员审核通过';
-        $this->write_log('审核申请-'.$request['case_key']);
-        return  $result;
+        $res['message'] = $result ? '审核通过' : '审核通过失败,可能原因该案件已被其他管理员审核通过';
+        $this->write_log('审核申请-'.$request['case_key'].$res);
+        return  $res;
     }
     //初始化案件
     public function init_case($request)
@@ -367,7 +367,7 @@ class CaseController extends CommonController
                 M()->table($video_table)->where($video_where)->save($video_data);
                 $syncVideoData[] = array('tab_name'=>$video_table,'wjbh'=>$wjbh);
             }
-            $this->sync('case_vide',$syncVideoData,'edit');
+            $this->sync('case_video',$syncVideoData,'edit');
             $res['status'] = true;
             $res['message'] = '拆分案件成功';
             $this->write_log('拆分案件'.$case_key.',新增案件.'.$data['case_key']);
@@ -389,17 +389,17 @@ class CaseController extends CommonController
         $table = 'case_'.date('Ym',strtotime($start_time));
         $result = M()->table($table)->where($request)->save($data);
         if($result){
-            if($request['action'] == 0) $result['message'] = '撤销成功';
-            if($request['action'] == 1) $result['message'] = '申请已拒绝';
+            if($request['action'] == 0) $res['message'] = '撤销成功';
+            if($request['action'] == 1) $res['message'] = '申请已拒绝';
         }else{
-            if($request['action'] == 0) $result['message'] = '撤销失败';
-            if($request['action'] == 1) $result['message'] = '申请拒绝失败';
+            if($request['action'] == 0) $res['message'] = '撤销失败';
+            if($request['action'] == 1) $res['message'] = '申请拒绝失败';
         }
         //同步
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
         $this->write_log(g2u($request['case_key']).$result['message']);
-        return $result;
+        return $res;
     }
     //播放,编辑信息
     public function play_case_info($request)

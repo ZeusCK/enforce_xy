@@ -21,6 +21,20 @@ Tree.prototype.loadData = function (noS){
         }
     });
 }
+Tree.prototype.load_all_tree = function(){
+    this.init();
+    var dom = this.dom;
+    var self = this;
+    $.ajax({
+        url:app.tp.ajax+'?rand='+Math.random()+'&tpUrl=Area/show_all_area',
+        type:'get',
+        dataType:'json',
+        success:function(data){
+            self.data = data;
+            $(dom).tree('loadData',data);
+        }
+    });
+}
 //加载带有警员的树
 Tree.prototype.load_emp_tree = function(){
     this.init();

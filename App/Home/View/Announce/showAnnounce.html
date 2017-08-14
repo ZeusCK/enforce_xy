@@ -1,28 +1,18 @@
 <extend name="layouts:master" />
 <block name="link">
     <style>
-        .panel {
-            position: relative;
-        }
-        
-        .eachAnnounce {
-            width: 100%;
-            height: 120px;
-        }
-        
         #title {
-            margin: 0;
-            padding-left: 10px;
-            line-height: 30px;
-            color: #1e1e85;
-            background-color: #68d0fe;
+           margin: 0;
+           padding-left: 10px;
+           /* line-height: 30px; */
+           color: #1e1e85;
+           background-color: #68d0fe;
+           font-size: 16px;
+           text-align: center;
         }
-        
-        .fooList {
-            position: absolute;
-            width: 100%;
-            top: 120px;
-            bottom: 0;
+        #content{
+            text-align: center;
+            font-size: 14px;
         }
     </style>
 </block>
@@ -30,14 +20,13 @@
     <script type="text/javascript" src="__PUBLIC__/js/Announce/showAnnounce.js"></script>
 </block>
 <block name="main">
-    <div class="easyui-panel panel" fit='true' title="公告">
-        <div class="eachAnnounce">
-            <h3 id="title"></h3>
-            <p id="content"></p>
+    <div class="easyui-layout" fit="true">
+        <div data-options="region:'east'" style="width:50%;">
+            <h3 id="title">公告标题</h3>
+            <p id="content">公告内容</p>
         </div>
-        <div class="fooList">
+        <div data-options="region:'center',title:'公告'">
             <table id="listAnnounce"></table>
         </div>
     </div>
-
 </block>

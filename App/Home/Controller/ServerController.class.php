@@ -27,7 +27,7 @@ class ServerController extends CommonController
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');
 
         $db =  D($this->models['server']);
-        $show_sat = $db->where($where)->field('count(1) as num,status')->group('zxzt')->select();
+        $show_sat = $db->where($where)->field('count(1) as num,status')->group('status')->select();
         $data = $db->getTableList($where,$page,$rows,'areacode asc');
         $statusType = $this->get_val_item('dictionary', 'status');
         foreach ($data['rows'] as &$value) {

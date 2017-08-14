@@ -1,5 +1,5 @@
 var things = {};
-things.areacode = app.tp.areaid;
+things.areacode = app.tp.areacode;
 things.areaname = app.tp.areaname;
 things.datagridUrl = 'Case/case_list';
 things.editUrl = 'Case/allow_apply';
@@ -12,23 +12,34 @@ things.show = function(){
     });
 }
 
-things.edit = function(target,id){
-    app.extra('add_edit',{
-        url:things.editUrl,
-        datagrid:'#datagrid',
-        linkbutton:target,
-        parsedata:function(data){
-          data.video_id = id;
+things.allow = function(target,case_key,start_time){
+  $.messager.confirm('操作提示','你确定审核通过么？',function(r){
+        if(r){
+            app.extra('add_edit',{
+                url:things.editUrl,
+                datagrid:'#datagrid',
+                linkbutton:target,
+                parsedata:function(data){
+                    data.start_time = start_time;
+                    data.case_key = case_key;
+                }
+            });
         }
     });
 }
-things.cancel = function(target,id){
-    app.extra('add_edit',{
-        url:things.cancelUrl,
-        datagrid:'#datagrid',
-        linkbutton:target,
-        parsedata:function(data){
-          data.video_id = id;
+things.deny = function(target,case_key,start_time){
+  $.messager.confirm('操作提示','你确定审核拒绝么？',function(r){
+        if(r){
+            app.extra('add_edit',{
+                url:things.cancelUrl,
+                datagrid:'#datagrid',
+                linkbutton:target,
+                parsedata:function(data){
+                    data.start_time = start_time;
+                    data.case_key = case_key;
+                    data.action = 1;
+                }
+            });
         }
     });
 }
@@ -40,7 +51,8 @@ things.search = function(){
         form:'#searchForm',
         datagrid:'#datagrid',
         parsedata:function(data){
-            data.type=1;
+            data.areacode = things.areacode;
+            data.type=0;
             data.hand_status=1;
         }
     });
@@ -50,14 +62,7 @@ things.clickTree = function(node){
     things.areaname = node.text;
     $('#tip_area').text(node.text);
     $('#mu_ser').text(things.areaname);
-    app.extra('search',{
-        datagrid:'#datagrid',
-        parsedata:function(data){
-            data.areacode = things.areacode;
-            data.type=1;
-            data.hand_status=1;
-        }
-    })
+    things.search();
 }
 things.empty=function(){
   $('#searchForm').form('reset');
@@ -68,17 +73,17 @@ $(function(){
         title:'审核视频',
         fit:true,
         queryParams:{
-          type:1,
+          type:0,
           hand_status:1
         },
         columns:[[
-          {field:'video_id', title: 'id', checkbox: true },
+          {field:'case_key', title: 'id', checkbox: true },
           {field:'title',title:'标题',width:200,align:'center'},
           {field:'alarm_no',title:'警情编号', align:'center'},
           {field:'case_name', title: '案事件名称', width: 200, align: 'center' },
           {field:'areaname', title: '出警地址', width: 200, align: 'center' },
           {field:'jyxm', title: '出警人',  align: 'center' },
-          {field:'start_time', title: '采集日期', width: 200, align: 'center' },    
+          {field:'start_time', title: '采集日期', width: 200, align: 'center' },
           {field:'areaname',title:'移交部门',width:200,align:'center'},
           {field:'jyxm',title:'移交人',align:'center'},
           {field:'end_time',title:'移交日期',width:200,align:'center'},
@@ -92,12 +97,12 @@ $(function(){
             }
           }},
           {field:'aa',title:'操作',width:200,align:'center',formatter:function(value,row,index){
-                return '<a href="javascript:void(0)" onclick="things.edit(this,'+row.video_id+')" name="edit" ></a><a href="javascript:void(0)" onclick="things.cancel(this,'+row.video_id+')" name="play" ></a>';
+                return '<a href="javascript:void(0)" onclick="things.allow(this,\''+row.case_key+'\',\''+row.start_time+'\')" name="edit" title="审核通过"></a><a href="javascript:void(0)" onclick="things.deny(this,\''+row.case_key+'\',\''+row.start_time+'\')" name="play" title="审核拒绝"></a>';
           }}
         ]],
         onLoadSuccess:function(data){
-            $('a[name="play"]').linkbutton({plain:true,iconCls:'icon icon-arrow_undo'});
-            $('a[name="edit"]').linkbutton({plain:true,iconCls:'icon icon-tick'});
+            $('a[name="play"]').linkbutton({plain:true,iconCls:'icon icon-cancel'});
+            $('a[name="edit"]').linkbutton({plain:true,iconCls:'icon icon-accept'});
             var a = $('.datagrid-cell-rownumber');
             $.each(a,function(i,m){
                 m.style.width='21px';
@@ -117,7 +122,7 @@ $(function(){
     $(tree.dom).tree({
         onClick:things.clickTree
     });
-    
+
     // $('#mu_ser').text(things.areaname);
     // $('#tip_area').text(things.areaname);
 });

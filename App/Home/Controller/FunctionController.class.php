@@ -137,32 +137,26 @@ class FunctionController extends CommonController {
     }
     /**
      * 保存上传文件
-     * @param  array  $file     文件数组 $_FILE
-     * @param  string $filePath 文件保存目录
+     * @param  array  $file     文件数组 $_FILES
      * @param  array  $exts     文件保存类型
      * @param  boolean $is_remove_overtime_file 是否删除超时文件
      * @return string/boolean           文件保存位置/false
      */
-    public function save_upload($file,$filePath,$exts,$is_remove_overtime_file=true)
+    public function save_upload($file,$exts,$is_remove_overtime_file=true)
     {
-        //2w张分目录
+        $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0].'temp/';
         $upload = new \Think\Upload(); //实例化上传类
         $upload->maxSize = 3145728; //设置附件上传大小
         $upload->exts = $exts; //设置附件上传类型
-        $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0].'upload/';
-        $upload->autoSub = false;
-        $upload->subName = $filePath.'/'.date('Ymd'); //设置上传子目录
+        $upload->subName = array('date','Ymd');
         $upload->replace = true; //设置是否覆盖上传文件
-        //$upload->saveName = $imagename; //设置上传文件名
         $upload->rootPath = $rootPath; //设置上传文件位置
-        //$upload->savePath = $filePath; // 设置附件上传目录
-        if($is_remove_overtime_file)  $this->del_dir($rootPath.$filePath);    //删除上传超时文件
+        if($is_remove_overtime_file)  $this->del_dir($rootPath);    //删除上传超时文件
         // 上传文件
         if(!is_dir($rootPath)) mkdir($rootPath);
-        if(!is_dir($rootPath.$filePath)) mkdir($rootPath.$filePath);
-        if(!is_dir($rootPath.$filePath.'/'.date('Ymd'))) mkdir($rootPath.$filePath.'/'.date('Ymd'));
+        //if(!is_dir($rootPath.date('Ymd'))) mkdir($rootPath.date('Ymd'));
         $result = $upload->uploadOne($file);
-        return $result ? '/upload/'.$result['savepath'].$result['savename'] : false;  //$upload->getError();
+        return $result ? $rootPath.$result['savepath'].$result['savename'] : false;  //$upload->getError();
     }
 
 }

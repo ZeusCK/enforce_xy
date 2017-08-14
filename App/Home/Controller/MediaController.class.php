@@ -27,7 +27,7 @@ class MediaController extends CommonController
             $video_where['wjbh'] = $wjbh;
             $table = 'case_video_'.date('Ym',strtotime($start_time));
             $result = M()->table($table)->where($video_where)->save($video_data);
-            $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
+            $syncData[] = array('tab_name'=>$table,'wjbh'=>$wjbh);
         }
         //同步
         $this->sync('case_video',$syncData,'edit');
@@ -52,7 +52,7 @@ class MediaController extends CommonController
             $video_where['wjbh'] = $wjbh;
             $table = 'case_video_'.date('Ym',strtotime($start_time));
             $result = M()->table($table)->where($video_where)->save($video_data);
-            $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
+            $syncData[] = array('tab_name'=>$table,'wjbh'=>$wjbh);
         }
         //同步
         $this->sync('case_video',$syncData,'edit');
@@ -72,6 +72,8 @@ class MediaController extends CommonController
         //areaid  部门ID
         //page   页数
         //rows   条数
+        $page = $request['page'];
+        $rows = $request['rows'];
         $where[] = $this->get_manger_sql();
         $where['case_key'] = '';
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
@@ -90,7 +92,7 @@ class MediaController extends CommonController
         $res['total'] = array_sum($total);
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
-            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            $data = M()->table('case_video_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $this->saveExcel($res); //监测是否为导出
@@ -124,7 +126,7 @@ class MediaController extends CommonController
         $type = trim(strrchr($request['name'], '.'),'.');
 
         $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0];   //保存路径
-        $tempPath = $rootPath.'pe_file/';
+        $tempPath = $rootPath.'temp/';
         if(!is_dir($tempPath)) mkdir($tempPath);
 
         //$this->del_dir($tempPath);      //删除超时文件
