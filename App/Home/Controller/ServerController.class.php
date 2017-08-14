@@ -33,9 +33,10 @@ class ServerController extends CommonController
         foreach ($data['rows'] as &$value) {
             $value['status_name'] = $statusType[$value['status']];
         }
-        foreach ($show_sat as $value) {
-            if($value['status'] == 0) $data['offline'] = $value['num'] ? $value['num'] : 0;
-            if($value['status'] == 1) $data['online'] = $value['num'] ? $value['num'] : 0;
+        $data['offline'] = $data['online'] = 0;
+        foreach ($show_sat as $val) {
+            if($val['status'] == 0) $data['offline'] = $val['num'];
+            if($val['status'] == 1) $data['online'] = $val['num'];
         }
         $this->saveExcel($data);
         return g2us($data);

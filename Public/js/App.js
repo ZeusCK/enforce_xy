@@ -558,13 +558,20 @@ App.prototype.datagrid.defaults = {
         return data;
     },
     onLoadSuccess: function(data) {
-        if(data.total == 0 && $(this).datagrid('options').showDatagrid){
+        var options = $(this).datagrid('options');
+        if(data.total == 0 && options.showDatagrid){
             $(this).parent('.datagrid-view').find('div.datagrid-view1').hide();
             $(this).parent('.datagrid-view').children('.datagrid-view2');
             $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('div.datagrid-body').html('没有相关记录，请重新搜索！').css({'color':'#F00','text-align':'center','font-size':'20px'});
         }
         if(data.error){
             $.messager.alert('操作提示',data.error,'info');
+        }
+        if(!options.showDatagrid){
+            var string = options.otherView(data);
+            $(this).parent('.datagrid-view').children('.datagrid-view1').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').find('.datagrid-header').hide();
+            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('.datagrid-body').html(string);
         }
     },
     onLoadError:function(){

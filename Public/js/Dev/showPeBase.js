@@ -1,11 +1,42 @@
 var module = {};
+var option = {
+    title: {
+        text: '执法仪使用情况',
+        subtext: '',
+        x: 'center'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'left',
+        data: ['活跃', '停用', '低下']
+    },
+    series: [{
+        name: '执法仪使用情况',
+        type: 'pie',
+        radius: '55%',
+        center: ['50%', '60%'],
+        data: [],
+        itemStyle: {
+            emphasis: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)'
+            }
+        }
+    }]
+};
 module.broadcast = function() {
     app.datagrid('#datagrid', {
         url: 'Dev/pe_base_list',
+        showDatagrid:false,
         columns: [
             [
                 { field: 'areaname', title: '所属部门', width: 200, align: 'center' },
-                 { field: 'jyxm', title: '警员姓名', width: 200, align: 'center' },
+                { field: 'jyxm', title: '警员姓名', width: 200, align: 'center' },
                 { field: 'jybh', title: '警员编号', width: 200, align: 'center' },
                 { field: 'cpxh', title: '产品型号', width: 200, align: 'center' },
                 {
@@ -25,17 +56,48 @@ module.broadcast = function() {
                 }
             ]
         ],
-        queryParams: {
-            status: 0
-        },
-        onLoadSuccess: function(r) {
-            if (r.total == 0) {
-                $(this).parent('.datagrid-view').children('.datagrid-view2').css('left', 0).find('div.datagrid-body').html('暂无执法仪数据').css({ 'color': '#F00', 'text-align': 'center', 'font-size': '14px' });
-            }
-        }
+        otherView:module.otherView
     });
-
+}
+module.show = 'chart';
+module.otherView = function(info){
+    var disdata = { name: '停用' };
+    disdata.value = info.disuse;
+    var activedata = { name: '活跃' };
+    activedata.value = info.active;
+    var usedata = { name: '低下' };
+    usedata.value = info.use;
+    var data = [];
+    data.push(disdata);
+    data.push(activedata);
+    data.push(usedata);
+    option.series[0].data = data;
+    return '<div id="chart" style="width:100%;height:100%"></div>';
+}
+module.switch = function(){
+    if(module.show == 'table'){
+        var showDatagrid = false;
+        module.show = 'chart';
+    }else{
+        var showDatagrid = true;
+        module.show = 'table';
+    }
+    app.extra('search',{
+        datagrid:'#datagrid',
+        showDatagrid:showDatagrid,
+        otherView:module.otherView
+    });
+    setTimeout(function(){
+        if(!showDatagrid){
+            var chart = echarts.init(document.getElementById('chart'));
+            chart.setOption(option);
+        }
+    },2000);
 }
 $(function() {
     module.broadcast();
+    setTimeout(function(){
+        var chart = echarts.init(document.getElementById('chart'));
+        chart.setOption(option);
+    },2000);
 });

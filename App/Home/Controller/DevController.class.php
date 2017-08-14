@@ -53,11 +53,14 @@ class DevController extends CommonController
         }
         if($request['status'] != '') $where['status'] = $request['status'];
         $data = $db->getTableList(u2gs($where),$page,$rows);
-        $show_sat = $db->where($where)->field('count(1) as num,status')->group('status');
+        $data['disuse'] = 0;
+        $data['use'] = 0;
+        $data['active'] = 0;
+        $show_sat = $db->where($where)->field('count(1) as num,status')->group('status')->select();
         foreach($show_sat as $value){
-            if($value['status'] == 0) $data['disuse'] = $value['num'] ? $value['num'] : 0;
-            if($value['status'] == 1) $data['use'] = $value['num'] ? $value['num'] : 0;
-            if($value['status'] == 2) $data['active'] = $value['num'] ? $value['num'] : 0;
+            if($value['status'] == 0) $data['disuse'] = $value['num'];
+            if($value['status'] == 1) $data['use'] = $value['num'];
+            if($value['status'] == 2) $data['active'] = $value['num'];
         }
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));

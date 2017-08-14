@@ -33,7 +33,6 @@ class WorkStationController extends CommonController
         }
         if($request['zxzt'] != '') $where['zxzt'] = I('zxzt');
         if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
-
         $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
         $where = u2gs($where);
         $data = $db->getTableList($where,$page,$rows,'areacode asc');
@@ -42,9 +41,11 @@ class WorkStationController extends CommonController
             $value['zxztname'] = $value['zxzt'] == 0 ? u2g('离线') : u2g('在线');
             $value['qyztname'] = $value['qyzt'] == 0 ? u2g('停用') : u2g('启用');
         }
+        $data['offline'] = 0;
+        $data['online'] = 0;
         foreach ($show_sat as $val) {
-            if($value['zxzt'] == 0) $data['offline'] = $val['num'] ? $val['num'] : 0;
-            if($value['zxzt'] == 1) $data['online'] = $val['num'] ? $val['num'] : 0;
+            if($val['zxzt'] == 0) $data['offline'] = $val['num'];
+            if($val['zxzt'] == 1) $data['online'] = $val['num'];
         }
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));

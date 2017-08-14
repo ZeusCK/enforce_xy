@@ -2,10 +2,14 @@
 <block name="link">
 </block>
 <block name="src">
+    <script src="__PUBLIC__/plugins/charts/echarts.common.min.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Dev/showPeBase.js"></script>
 </block>
 <block name="main">
-    <div class="easyui-panel panel" fit='true' title="执法记录仪">
+    <div id="panel" class="easyui-panel panel" fit='true' title="执法记录仪" data-options="tools:'#tool'">
         <table id="datagrid"></table>
+    </div>
+    <div id="tool">
+        <a href="#" class="icon-reload" onclick="module.switch(this)" title="切换"></a>
     </div>
 </block>
