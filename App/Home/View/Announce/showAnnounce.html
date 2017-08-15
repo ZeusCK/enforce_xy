@@ -21,12 +21,12 @@
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true">
-        <div data-options="region:'east'" style="width:50%;">
+        <div data-options="region:'center',title:'公告列表',border:false" style="border: 0;">
+            <table id="listAnnounce"></table>
+        </div>
+        <div data-options="region:'east',title:'公告详情',collapsible:false,border:false" style="width:50%;">
             <h3 id="title">公告标题</h3>
             <p id="content">公告内容</p>
-        </div>
-        <div data-options="region:'center',title:'公告'">
-            <table id="listAnnounce"></table>
         </div>
     </div>
 </block>
