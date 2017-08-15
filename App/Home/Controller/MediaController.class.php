@@ -104,7 +104,7 @@ class MediaController extends CommonController
         //wjbh  文件编号
         //start_time 文件开始时间
         $start_time = $request['start_time'];
-        $table = 'case_video'.date('Ym',strtotime($start_time));
+        $table = 'case_video_'.date('Ym',strtotime($start_time));
         $result = M()->table($table)->where($request)->delete();
         $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
         //同步

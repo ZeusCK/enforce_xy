@@ -479,7 +479,7 @@ class CaseController extends CommonController
         //统计工作站
         //-----------------
         $wsDb = D($this->models['wsbase']);
-        $wsData = $wsDb->field('areacode,count(1) as num')->where($wsWhere)->group('areacode,zxzt')->select();
+        $wsData = $wsDb->field('areacode,count(1) as num,zxzt')->where($wsWhere)->group('areacode,zxzt')->select();
         //------------
         //执法记录仪
         //------------
@@ -540,11 +540,11 @@ class CaseController extends CommonController
             'zxzt'=>array(
                 'field'=>'num',
                 'info'=>array(
-                    'wsbase_online'=>0,    //在线数
+                    'wsbase_online'=>1,    //在线数
                     )
                 )
             );
-        $data = $this->pares_data($data,$wsData,$fields,$mark, $paress);
+        $data = $this->pares_data($data,$wsData,$fields,$mark,$paress);
         //--------------
         //解析执法记录仪
         //--------------
@@ -563,11 +563,17 @@ class CaseController extends CommonController
         //-------------
         //是否进行数据累加
         //-------------
-        if($request['link']){
+        if($request['link'] == 'link'){
             $fields = $keys;
             $pidFiled = '_parentId';
-            $data = $this->ksort_sat_data($data,$pidFiled,$fields);
+            $area_code_id = $areadb->getField('areacode,areaid');
+            $change = array();
+            foreach ($data as $key => $value) {
+                $change[$area_code_id[$key]] = $value;
+            }
+            $data = $this->ksort_sat_data($change,$pidFiled,$fields);
         }
+        krsort($data);
         //---------------
         //最后数据处理
         //---------------

@@ -50,15 +50,8 @@ module.switch = function(){
     }
     app.extra('search',{
         datagrid:'#listWorker',
-        showDatagrid:showDatagrid,
-        otherView:module.otherView
+        showDatagrid:showDatagrid
     });
-    setTimeout(function(){
-        if(!showDatagrid){
-            var chart = echarts.init(document.getElementById('chart'));
-            chart.setOption(option);
-        }
-    },2000);
 }
 module.broadcast = function() {
     app.datagrid('#listWorker', {
@@ -86,13 +79,13 @@ module.broadcast = function() {
             ]
         ],
         showDatagrid:false,
-        otherView:module.otherView
+        otherView:module.otherView,
+        otherViewSuccess:function(data){
+            var chart = echarts.init(document.getElementById('chart'));
+            chart.setOption(option);
+        }
     });
 }
 $(function() {
     module.broadcast();
-    setTimeout(function(){
-        var chart = echarts.init(document.getElementById('chart'));
-        chart.setOption(option);
-    },2000);
 });

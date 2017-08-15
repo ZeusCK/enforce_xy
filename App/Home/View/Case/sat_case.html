@@ -4,21 +4,21 @@
         div.btns {
             padding: 5px 35px;
         }
-        
+
         div.btns>a {
             margin-right: 20px;
         }
-        
+
         a.activeLK>span.l-btn-left {
             background-color: #e2e2e2;
         }
-        
+
         fieldset {
             border: 1px solid #61B5CF;
             margin: 10px auto;
             padding: 5px;
         }
-        
+
         legend {
             font-size: 16px;
             font-weight: bold;
@@ -26,22 +26,22 @@
             color: #00008B;
             background-color: #fafafa;
         }
-        
+
         .count {
             margin-top: 10px;
             border-bottom: 1px solid #98ccea;
         }
-        
+
         .lastchild {
             border: none;
         }
-        
+
         .count>div {
             display: inline-block;
             width: 144px;
             height: 20px;
         }
-        
+
         .count>div>label {
             display: inline-block;
             margin-left: -10px;
@@ -52,17 +52,17 @@
             user-select: none;
             vertical-align: baseline;
         }
-        
+
         .count>div>input {
             outline: none;
             line-height: 20px;
             vertical-align: bottom;
         }
-        
+
         div.datagrid-header {
             height: 100px;
         }
-        
+
         tr.datagrid-header-row div.datagrid-cell>span {
             display: inline-block;
             width: 100%;
@@ -109,62 +109,64 @@
             <legend>统计项:</legend>
             <div class="count">
                 <div>
-                    <input id="upload" type="checkbox" name="upload" value="upload" checked="checked">
+                    <input class="check" id="upload" type="checkbox" name="upload" value="upload" checked="checked">
                     <label for="upload">民警上传情况</label>
                 </div>
-                <div> <input id="collect" type="checkbox" name="collect" value="collect" checked="checked">
+                <div> <input class="check" id="collect" type="checkbox" name="collect" value="collect" checked="checked">
                     <label for="collect">采集站</label>
                 </div>
             </div>
+            <div>
+                <input class="check" type="checkbox" name="warning" value="warning" checked="checked">
+                <label for="warning">警情</label>
+            </div>
             <div class="count">
+
                 <div>
-                    <input id="warning" type="checkbox" name="warning" value="warning" checked="checked">
-                    <label for="warning">警情</label>
-                </div>
-                <div>
-                    <input id="common" type="checkbox" name="common" value="common" checked="checked">
+                    <input class="check" id="common" type="checkbox" name="common" value="common" checked="checked">
                     <label for="common">一般警情</label>
                 </div>
                 <div>
-                    <input id="major" type="checkbox" name="major" value="major" checked="checked">
+                    <input class="check" id="major" type="checkbox" name="major" value="major" checked="checked">
                     <label for="major">重大警情</label>
                 </div>
                 <div>
-                    <input id="spot" type="checkbox" name="spot" value="spot" checked="checked">
+                    <input class="check" id="spot" type="checkbox" name="spot" value="spot" checked="checked">
                     <label for="spot">当场盘问检查</label>
                 </div>
                 <div>
-                    <input id="force" type="checkbox" name="force" value="force" checked="checked">
+                    <input class="check" id="force" type="checkbox" name="force" value="force" checked="checked">
                     <label for="force">行政强制执行</label>
                 </div>
                 <div>
-                    <input id="impede" type="checkbox" name="impede" value="impede" checked="checked">
+                    <input class="check" id="impede" type="checkbox" name="impede" value="impede" checked="checked">
                     <label for="impede">阻碍民警执法妨害公务</label>
                 </div>
                 <div>
-                    <input id="otherdata" type="checkbox" name="otherdata" value="otherdata" checked="checked">
+                    <input class="check" id="otherdata" type="checkbox" name="otherdata" value="otherdata" checked="checked">
                     <label for="otherdata">其他数据</label>
                 </div>
                 <div>
-                    <input id="unmark" type="checkbox" name="unmark" value="unmark" checked="checked">
+                    <input class="check" id="unmark" type="checkbox" name="unmark" value="unmark" checked="checked">
                     <label for="unmark">待分类数据</label>
                 </div>
                 <div>
-                    <input id="disuse" type="checkbox" name="disuse" value="disuse" checked="checked">
+                    <input class="check" id="disuse" type="checkbox" name="disuse" value="disuse" checked="checked">
                     <label for="disuse">无效数据</label>
                 </div>
             </div>
+            <div>
+                <input class="check" type="checkbox" name="case" value="case" checked="checked">
+                <label for="case">案件</label>
+            </div>
             <div class="count lastchild">
+
                 <div>
-                    <input id="case" type="checkbox" name="case" value="case" checked="checked">
-                    <label for="case">案件</label>
-                </div>
-                <div>
-                    <input id="administration" type="checkbox" name="administration" value="administration" checked="checked">
+                    <input class="check" id="administration" type="checkbox" name="administration" value="administration" checked="checked">
                     <label for="administration">行政案件</label>
                 </div>
                 <div>
-                    <input id="criminal" type="checkbox" name="criminal" value="criminal" checked="checked">
+                    <input class="check" id="criminal" type="checkbox" name="criminal" value="criminal" checked="checked">
                     <label for="criminal">刑事案件</label>
                 </div>
             </div>

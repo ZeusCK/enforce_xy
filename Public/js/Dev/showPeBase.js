@@ -56,7 +56,11 @@ module.broadcast = function() {
                 }
             ]
         ],
-        otherView:module.otherView
+        otherView:module.otherView,
+        otherViewSuccess:function(data){
+            var chart = echarts.init(document.getElementById('chart'));
+            chart.setOption(option);
+        }
     });
 }
 module.show = 'chart';
@@ -84,20 +88,20 @@ module.switch = function(){
     }
     app.extra('search',{
         datagrid:'#datagrid',
-        showDatagrid:showDatagrid,
-        otherView:module.otherView
+        showDatagrid:showDatagrid/*,
+        otherView:module.otherView*/
     });
-    setTimeout(function(){
+   /* setTimeout(function(){
         if(!showDatagrid){
             var chart = echarts.init(document.getElementById('chart'));
             chart.setOption(option);
         }
-    },2000);
+    },2000);*/
 }
 $(function() {
     module.broadcast();
-    setTimeout(function(){
+    /*setTimeout(function(){
         var chart = echarts.init(document.getElementById('chart'));
         chart.setOption(option);
-    },2000);
+    },2000);*/
 });

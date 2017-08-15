@@ -484,13 +484,11 @@ App.prototype.search = function(param){
         if(options.datagrid){
             var option = $(options.datagrid).datagrid('options');
             option.showDatagrid = options.showDatagrid;
-            option.otherView = options.otherView;
             $(options.datagrid).datagrid('load',data);
         }
         if(options.treegrid){
             var option = $(options.treegrid).treegrid('options');
             option.showDatagrid = options.showDatagrid;
-            option.otherView = options.otherView;
             $(options.treegrid).treegrid('load',data);
         }
         App.prototype.linkbutton(options.linkbutton,'enable');
@@ -505,7 +503,6 @@ App.prototype.search.defaults = {
     form:null,          //查询表单
     linkbutton:null,    //相关按钮
     parsedata:function(data){}, //解析参数
-    otherView:function(data){}, //显示的信息 当showDatagrid 为false时生效,
     success:function(data){},   //为ajax时生效
     error:function(data){}      //为ajax时生效
 };
@@ -536,14 +533,9 @@ App.prototype.datagrid.defaults = {
     queryParams:{},
     showDatagrid:true,  //是否显示datagrid表格 自定义属性
     otherView:function(data){}, //自定义属性,显示的信息 当showDatagrid 为false时生效
+    otherViewSuccess:function(data){},
     loadFilter:function(data){
         var options = $(this).datagrid('options');
-        if(!options.showDatagrid){
-            var string = options.otherView(data);
-            $(this).parent('.datagrid-view').children('.datagrid-view1').hide();
-            $(this).parent('.datagrid-view').children('.datagrid-view2').find('.datagrid-header').hide();
-            $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('.datagrid-body').html(string);
-        }
         if(options.showDatagrid && data.total > 0){
             $(this).parent('.datagrid-view').children('.datagrid-view1').show();
             $(this).parent('.datagrid-view').children('.datagrid-view2').css('left','').find('.datagrid-header').show();
@@ -572,6 +564,7 @@ App.prototype.datagrid.defaults = {
             $(this).parent('.datagrid-view').children('.datagrid-view1').hide();
             $(this).parent('.datagrid-view').children('.datagrid-view2').find('.datagrid-header').hide();
             $(this).parent('.datagrid-view').children('.datagrid-view2').css('left',0).find('.datagrid-body').html(string);
+            options.otherViewSuccess(data);
         }
     },
     onLoadError:function(){
