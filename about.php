@@ -155,7 +155,7 @@
 		<div class="install"  >
 			<div class="install_c">
 				<p style="font-weight: bold;">提示信息：</p>
-				<p>1）安装火狐后更好的体验视音频；</p>
+				<p>1）安装vlc后更好的体验视音频；</p>
                 <p>2）平台将会有更好的体验；</p>
 			</div>
 		</div>

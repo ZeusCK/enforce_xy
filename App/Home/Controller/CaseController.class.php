@@ -89,7 +89,7 @@ class CaseController extends CommonController
         $idField = $type == 0 ? 'areacode' : 'apply_areacode';
         $page = $request['page'] ? $request['page'] : 1;
         $rows = $request['rows'] ? $request['rows'] : 20;
-        $areacode = $request['areacode'];       //查询部门
+        $areacode = $request['areacode'] ? $request['areacode'] : '';       //查询部门
         $manger_sql = $this->get_manger_sql($areacode,$idField,$jybhField);
         $where[] = $manger_sql;
 

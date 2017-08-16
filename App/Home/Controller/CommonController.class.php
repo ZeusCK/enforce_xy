@@ -336,6 +336,7 @@ class CommonController extends Controller {
             $col = $fields;
             $cols = array_values($col);
             $colks = array_keys($col);
+            $cola = array();
             //设置投行标题
             foreach ($abcArr as $key => $abc) {
                 $objActSheet->setCellValue($abc.'1',$cols[$key]);
@@ -499,11 +500,12 @@ class CommonController extends Controller {
         if($areacode != ''){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
-        }
-        if($baseSql == '') $baseSql = '1';
-        if($jybhField){
-            $jybhSql = $jybhField.' = "'.session('code').'"';
-            $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR '.$jybhSql;
+        }else{
+            if($baseSql == '') $baseSql = '1';
+            if($jybhField){
+                $jybhSql = $jybhField.' = "'.session('code').'"';
+                $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR '.$jybhSql;
+            }
         }
         // error_log($baseSql."\r\n",3,'./error.log');
         return $baseSql;

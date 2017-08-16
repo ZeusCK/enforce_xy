@@ -252,12 +252,14 @@ App.prototype.exportExcel = function(exportInfo){
         options.params.page = option.pageNumber;
         options.params.rows = option.pageSize;
         url = option.url != null ? option.url : '';
-        for (var i = 0; i < option.columns[0].length; i++) {
-            //无需添加的数据
-            if(options.delFields != false){
-                if(this.inArray(option.columns[0][i].field,options.delFields)) continue;
+        for (var j = 0; j < option.columns.length; j++) {
+                for (var i = 0; i < option.columns[j].length; i++) {
+                //无需添加的数据
+                if(options.delFields != false){
+                    if(this.inArray(option.columns[j][i].field,options.delFields)) continue;
+                }
+                fields[option.columns[j][i].field] = option.columns[j][i].title;
             }
-            fields[option.columns[0][i].field] = option.columns[0][i].title;
         }
     }
     //如果拥有fields重置fields属性
@@ -292,7 +294,7 @@ App.prototype.exportExcel = function(exportInfo){
         showType:'slide'
     });
     this.exportExcel.options = options;
-    url = this.tp.ajax+'?tpUrl='+options.url;
+    console.log(options.params);
     $.ajax({
         url:url,
         type:'POST',
