@@ -76,6 +76,7 @@ $(function(){
     server: '{:U("Media/break_point_upload")}',
     // 开起分片上传。
     chunked: true,
+    chunkSize:10240000,
     formData:{'case_key':'asdaaaaaa',start_time:'2017-08-11 14:12:01',source:'1'},
     // 选择文件的按钮。可选。
     // 内部根据当前运行是创建，可能是input元素，也可能是flash.

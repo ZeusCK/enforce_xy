@@ -196,7 +196,7 @@ module.allowOther = function(){
             }
         });
 }
-module.import = function(target){
+module.importExcel = function(target){
     $('#importForm').form('submit',{
         url:app.url('Employee/import_employee_excel'),
         success:function(data){
@@ -263,12 +263,12 @@ $(function(){
         {field:'rolename',title:'所属角色',width:200,align:'center'},
         {field:'remark',title:'备注',width:200,align:'center'},
         {field:'areaname',title:'所属部门',width:200,align:'center'},
-        {field:'phone',title:'电话',width:200,align:'center'},
-        {field:'otherInfo',title:'权限信息',width:200,align:'center',formatter:function(v,r,i){
+        {field:'phone',title:'电话',width:200,align:'center'}
+        /*{field:'otherInfo',title:'权限信息',width:200,align:'center',formatter:function(v,r,i){
             return '点击查看';
         },styler:function(v,r,i){
             return 'color:#0E2D5F;cursor:pointer;';
-        }}
+        }}*/
         ]],
         pagination:true,
         onLoadSuccess:function(r){

@@ -221,4 +221,15 @@ class MediaController extends CommonController
             );
         return array_key_exists($type, $types) ? $types[$type] : 0;
     }
+    //视频操作日志
+    public function video_action($request)
+    {
+        $action = $request['action'];      //1下载 //2播放
+        $wjbh = $request['wjbh'];
+        if($action == 1) $action = '下载';
+        if($action == 2) $action = '播放';
+        if($action == 3) $action = '打印';
+        $this->write_log($action.$wjbh);
+        exit;
+    }
 }

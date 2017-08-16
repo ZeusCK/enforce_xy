@@ -80,7 +80,7 @@ function change_password() {
     });
 }
 
-function show_apply() {
+/*function show_apply() {
     $.ajax({
         url: app.url('Apply/index_show'),
         dataType: 'json',
@@ -103,7 +103,7 @@ function show_apply() {
             }
         }
     })
-}
+}*/
 
 
 $(function() {
@@ -156,7 +156,7 @@ $(function() {
     $('#changePassword').click(function() {
         $('#dialog').dialog('open');
     });
-    show_apply();
+    // show_apply();
 
     var tabs = {
         '公告': app.url('Announce/showAnnounce'),

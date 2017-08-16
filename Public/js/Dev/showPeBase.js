@@ -62,7 +62,7 @@ module.broadcast = function() {
             chart.setOption(option);
         }
     });
-}
+};
 module.show = 'chart';
 module.otherView = function(info){
     var disdata = { name: '停用' };
@@ -76,9 +76,9 @@ module.otherView = function(info){
     data.push(activedata);
     data.push(usedata);
     option.series[0].data = data;
-    return '<div id="chart" style="width:100%;height:100%"></div>';
-}
-module.switch = function(){
+    return '<div id="chart" style="width:100%;height:100%;overflow-y:hidden;"></div>';
+};
+module.switchs = function(){
     if(module.show == 'table'){
         var showDatagrid = false;
         module.show = 'chart';
@@ -88,20 +88,9 @@ module.switch = function(){
     }
     app.extra('search',{
         datagrid:'#datagrid',
-        showDatagrid:showDatagrid/*,
-        otherView:module.otherView*/
+        showDatagrid:showDatagrid
     });
-   /* setTimeout(function(){
-        if(!showDatagrid){
-            var chart = echarts.init(document.getElementById('chart'));
-            chart.setOption(option);
-        }
-    },2000);*/
 }
 $(function() {
     module.broadcast();
-    /*setTimeout(function(){
-        var chart = echarts.init(document.getElementById('chart'));
-        chart.setOption(option);
-    },2000);*/
 });

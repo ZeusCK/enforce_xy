@@ -25,48 +25,50 @@ class CaseController extends CommonController
     {
         $request = I('');
         $data = $this->play_case_info($request);
-        $this->assign('data',$data);
+        $this->assign('data',json_encode($data));
         $this->display();
     }
-    //案件列表
+    //案件编辑
     public function show_case()
     {
-        $this->assignInfo();
         $this->display();
     }
     //案件统计
     public function sat_case()
     {
-        $this->assignInfo();
         $this->display();
     }
     //申请列表
     public function show_apply_case()
     {
-        $this->assignInfo();
         $this->display('apply_case');
     }
     //移交视频
     public function show_applyed()
     {
-        $this->assignInfo();
         $this->display('applyed');
     }
     //申请审核
     public function allow_case()
     {
-        $this->assignInfo();
         $this->display('allow_case');
     }
-    public function assignInfo()
+    //案件采集
+    public function show_case_collect()
     {
-        $action = A($this->actions['area']);
-         //如果没有
-        $areaTree = $action->tree_list();
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : '';
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
+        $this->display();
+    }
+    //案件查询
+    public function show_case_search()
+    {
+        $this->display();
+    }
+    public function case_upload()
+    {
+        $request = I('');
+        $data = $this->play_case_info($request);
+        $this->assign('data',json_encode($data));
+        $this->display('upload');
     }
     //案件查询
     public function case_list($request)
@@ -118,7 +120,7 @@ class CaseController extends CommonController
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
             // error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
-            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->order('start_time desc')->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
@@ -203,8 +205,8 @@ class CaseController extends CommonController
         $res['total'] = array_sum($total);
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
-            error_log('查询数据表:'.'case_'.$table.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
-            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            // error_log('查询数据表:'.'case_'.$table.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->order('start_time desc')->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
@@ -272,12 +274,12 @@ class CaseController extends CommonController
         $initData = array_fill_keys($keys,'');
         $initData['alarm_type'] = 0;
         $initData['case_type'] = 0;
-        $result = M()->table($table)->where($request)->save($data);
+        $res = M()->table($table)->where($request)->save($initData);
         //同步
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
 
-        $result['message'] = $result ? '初始化案件成功' : '初始化案件失败';
+        $result['message'] = $res ? '初始化案件成功' : '初始化案件失败';
         $this->write_log('初始化案件-'.$request['case_key']);
         return $result;
     }
@@ -420,7 +422,7 @@ class CaseController extends CommonController
         $res['total'] = count($data);
         $res['rows'] = $data;
         $res['info'] = $caseInfo;
-        $this->write_log(g2u($info['video_title']).'播放,编辑信息');
+        $this->write_log(g2u($info['title']).'播放,编辑信息');
         return g2us($res);
     }
     //案件统计

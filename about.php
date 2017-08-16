@@ -5,14 +5,9 @@
     $data    =
     [
         [
-            'title' => '火狐浏览器32位',
-            'url'   => $url.'Firefox32.exe',
-            'nme'   => 'Firefox32.exe'
-        ],
-        [
-            'title' => '火狐浏览器64位',
-            'url'   => $url.'Firefox64.exe',
-            'nme'   => 'Firefox64.exe'
+            'title' => 'VLC视频播放器',
+            'url'   => $url.'vlc.exe',
+            'nme'   => 'vlc.exe'
         ]
     ];
 

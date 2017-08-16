@@ -25,10 +25,10 @@ app.tp.area_is_read = "{:session('area_is_read')}";
                 姓名: <input id="name"  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
         </form>
-        <form id="importForm" method="post" enctype="multipart/form-data">
-            <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'">
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="module.import(this)">导入</a>
-        </form>
+       <!--  <form id="importForm" method="post" enctype="multipart/form-data">
+           <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'">
+           <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="module.import(this)">导入</a>
+       </form> -->
         <a href="javascript:void(0)" class="easyui-linkbutton"
             data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_ser">无</span></a>
@@ -36,7 +36,7 @@ app.tp.area_is_read = "{:session('area_is_read')}";
         <a href="javascript:void(0)" onclick="module.infoBar(2)" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
         <a href="javascript:void(0)" onclick="module.remove()" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
         删除</a>
-        <a href="javascript:void(0)" onclick="module.allowAreaBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:true">权限分配</a>
+        <!-- <a href="javascript:void(0)" onclick="module.allowAreaBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:true">权限分配</a> -->
     </div>
 <!-- 增加 -->
     <div id="dialog" class="easyui-dialog" title="添加" buttons="#addButtons"

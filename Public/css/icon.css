@@ -119,8 +119,7 @@
 }
 
 .icon-application_tile_horizontal {
-  background: url('icons/application_tile_horizontal.png') no-repeat center
-    center;
+  background: url('icons/application_tile_horizontal.png') no-repeat center center;
 }
 
 .icon-application_tile_vertical {
@@ -212,8 +211,7 @@
 }
 
 .icon-arrow_rotate_anticlockwise {
-  background: url('icons/arrow_rotate_anticlockwise.png') no-repeat center
-    center;
+  background: url('icons/arrow_rotate_anticlockwise.png') no-repeat center center;
 }
 
 .icon-arrow_rotate_clockwise {
@@ -3325,8 +3323,7 @@
 }
 
 .icon-shape_rotate_anticlockwise {
-  background: url('icons/shape_rotate_anticlockwise.png') no-repeat center
-    center;
+  background: url('icons/shape_rotate_anticlockwise.png') no-repeat center center;
 }
 
 .icon-shape_rotate_clockwise {
@@ -4123,4 +4120,8 @@
 
 .icon-sc {
   background: url('icons/sc.png') no-repeat center center;
+}
+
+.icon-upload {
+  background: url('icons/upload.png') no-repeat center center;
 }

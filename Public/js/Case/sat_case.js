@@ -58,7 +58,7 @@ module.clickTree = function(node) {
 var column_link = {
     upload:['uploadnum','unuploadnum','uploadper'],
     collect:['wsbase_num','wsbase_online','wsbase_per'],
-    case:['administration','criminal','case_num'],
+    'case':['administration','criminal','case_num'],
     warning:['common','major','spot','force','impede','otherdata','unmark','disuse','num']
 };
 $(function() {

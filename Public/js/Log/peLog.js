@@ -32,9 +32,10 @@ $(function() {
                 { field: 'id', title: '', checkbox: true },
                 { field: 'cpxh', title: '产品序号', width: 100, align: 'center' },
                 { field: 'gzz_ip', title: '工作站IP', width: 100, align: 'center' },
-                { field: 'name', title: '警员编号', width: 100, align: 'center' },
+                { field: 'jyxm', title: '警员姓名', width: 100, align: 'center' },
                 { field: 'action', title: '日志类型', width: 100, align: 'center' },
-                { field: 'rzsj', title: '日志时间', width: 100, align: 'center' }
+                { field: 'rzsj', title: '日志时间', width: 100, align: 'center' },
+                { field: 'gzz_ip', title: '工作站IP', width: 100, align: 'center' }
             ]
         ],
         loadFilter: function(data) {

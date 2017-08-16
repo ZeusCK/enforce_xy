@@ -57,7 +57,7 @@ form:after{
     width: 13px;
     height: 13px;
     display: block;
-     background: url("__PUBLIC__/image/icon_h3_03.jpg") no-repeat;
+    background: url("../../image/icon_h3_03.jpg") no-repeat;
 }
 .item{
     margin: 10px 10px 10px 10px;
@@ -115,6 +115,6 @@ form:after{
 }
 .play_vedio{
     float: left;
-    background: #383838  url("__PUBLIC__/image/bg_ico.png") repeat;
+    background: #383838  url("../../image/bg_ico.png") repeat;
     width: 100%;
 }

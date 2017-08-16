@@ -38,9 +38,9 @@ module.otherView = function(info){
     data.push(offline);
     data.push(online);
     option.series[0].data = data;
-    return '<div id="chart" style="width:100%;height:100%"></div>';
+    return '<div id="chart" style="width:100%;height:100%;overflow-y:hidden;"></div>';
 }
-module.switch = function(){
+module.switchs = function(){
     if(module.show == 'table'){
         var showDatagrid = false;
         module.show = 'chart';

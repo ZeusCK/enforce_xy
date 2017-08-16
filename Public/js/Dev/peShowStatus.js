@@ -29,10 +29,13 @@ $(function() {
             if(obj.total > 0){
                 for(var i=0;i<obj.total;i++){
                     data.rows[i].statusCN=data.rows[i].status==0?'停用':data.rows[i].status== 1 ? '维修':'活跃';
-                    str += '<span class="d2" style="margin:auto 0;">' +
+                    str += '<span class="d2" style="margin:5px 10px;">' +
                         '<span class="p">执法产品序号：'+data.rows[i].cpxh+'</span><br>' +
                         '<span class="d3">' +
-                            '<span class="d41"><img src="'+app.public+'image/status_'+data.rows[i].status+'.png"/><span>'+data.rows[i].statusCN+'</span></span>'+
+                            '<span class="d41">'+
+                                '<img src="'+app.public+'image/status_'+data.rows[i].status+'.png"/>'+
+                            '<span>'+data.rows[i].statusCN+'</span>'+
+                        '</span>'+
                             '<span class="d42">' +
                                 '<span>姓名：'+data.rows[i].jyxm+'</span><br>' +
                                 '<span>警号：'+data.rows[i].jybh+'</span><br>' +

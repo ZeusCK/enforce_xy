@@ -23,7 +23,7 @@
         #editBtns,
         #editBtns2 {
             text-align: center;
-            padding: 10px 0;
+            padding: 5px 0;
         }
 
         #ok,
@@ -44,17 +44,15 @@
         .l-btn-plain:hover {
             border: none;
         }
-
-        #video .pagination,
+        /* #video .pagination,
         #video2 .pagination {
             position: absolute;
             bottom: 30px;
             z-index: 999;
             height: 30px;
             width: 100%;
-        }
-
-        #video {
+        } */
+        /*  #video {
             height: 34.5% !important;
         }
 
@@ -74,12 +72,55 @@
         #video2 .panel-body {
             height: 100% !important;
         }
+ */
 
-        #cf {
+        .cf {
             position: absolute;
             z-index: 9;
             left: 80px;
             padding: 2px 0;
+        }
+
+        .cf:hover {
+            padding: 2px 0;
+        }
+
+        #editDialog,
+        #editDialog2 {
+            position: relative;
+        }
+
+        #editForm,
+        #editForm2,
+        #editBtns,
+        #editBtns2,
+        #video,
+        #video2 {
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+
+        #editForm,
+        #editForm2 {
+            top: 0;
+            height: 370px;
+        }
+
+        #editBtns,
+        #editBtns2 {
+            top: 370px;
+            height: 50px;
+        }
+
+        #video,
+        #video2 {
+            top: 415px;
+            bottom: 0;
+        }
+
+        .messager-button .l-btn {
+            width: 100px;
         }
     </style>
 </block>
@@ -105,14 +146,14 @@
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
             <div class="search-box search-big">
-                <div class="search-text">单位:</div>
-                <input name="areaname" class="easyui-textbox">
                 <div class="search-text">出警人:</div>
                 <input name="jyxm" class="easyui-textbox">
                 <div class="search-text">设备号:</div>
                 <input name="cpxh" class="easyui-textbox">
-                <div class="search-text">案事件名称:</div>
-                <input name="alarm_name" class="easyui-textbox">
+                <div class="search-text">警情编号:</div>
+                <input name="alarm_no" class="easyui-textbox">
+                <div class="search-text">警情类型:</div>
+                <input id="alarm_type" class="easyui-combobox" name="alarm_type" editable=false />
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">开始查询</a>
             </div>
             <div class="search-box search-big">
@@ -121,9 +162,9 @@
                 <div class="search-text">案件编号:</div>
                 <input name="case_no" class="easyui-textbox">
                 <div class="search-text">案件类型:</div>
-                <input id="case_type" style="width: 160px;" class="easyui-combobox" name="case_type" editable=false />
-                <div class="search-text">警情编号:</div>
-                <input name="alarm_no" class="easyui-textbox">
+                <input id="case_type" class="easyui-combobox" name="case_type" editable=false />
+                <div class="search-text">案事件名称:</div>
+                <input name="alarm_name" class="easyui-textbox">
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">条件重置</a>
             </div>
             <div class="search-box search-big">
@@ -131,15 +172,13 @@
                 <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false" />
                 <div class="search-text">至:</div>
                 <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false" />
-                <div class="search-text">警情类型:</div>
-                <input id="alarm_type" style="width: 160px;" class="easyui-combobox" name="alarm_type" editable=false />
-                <a style="margin-left: 145px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-hb" plain="true"
-                    onclick="module.merge(this)">合并警情</a>
+                <a id="hb" style="margin-left: 374px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-hb"
+                    plain="true" onclick="module.merge(this)">合并警情</a>
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
             </div>
         </form>
     </div>
-    <div id="editDialog" title="数据编辑" class="easyui-dialog" style="width: 90%;height:90%" data-options="modal:true,closed: true">
+    <div id="editDialog" title="接处警数据编辑" class="easyui-dialog" style="width: 90%;height:90%" data-options="modal:true,closed: true">
         <form id="editForm">
             <input name="case_key" type="hidden">
             <div class="easyui-panel" data-options="title:'接处警信息'" style="padding-left: 4%;">
@@ -158,8 +197,8 @@
                     <label class="fitem">警号</label>：<input class="easyui-textbox" style="" name="jybh" />
                     <label class="fitem" style="margin-left:0">出警人</label>：<input class="easyui-textbox" style="" name="jyxm"
                     />
-                    <label class="fitem" style="margin-left:0">设备号</label>：<input class="easyui-textbox" style="" name="cpxh"
-                    />
+                    <label class="fitem" style="margin-left:0">设备号</label>：<input class="easyui-textbox" id="sbh" style=""
+                        name="cpxh" />
                 </div>
                 <div class="one-row">
                     <label class="fitem">出警开始时间</label>：<input class="easyui-datetimebox" data-options="height:22,editable:false"
@@ -186,28 +225,33 @@
             </div>
         </form>
         <div id="editBtns">
-            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.edit(this,1)">确定</a>
+            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.edit(this)">确定</a>
             <a id="hb" class="easyui-linkbutton" data-options="iconCls:'icon-hb',plain:true" onclick="module.addvideo()">追加视频</a>
             <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
         </div>
-        <div id="video" class="easyui-layout" fit="true">
-            <div data-options="region:'center',border:false,fit:true" style="width:100%;background:#eee;">
-                <a id="cf" class="easyui-linkbutton" data-options="iconCls:'icon-cf',plain:true" onclick="">拆分为警情包</a>
-                <table id="video_datagrid"></table>
+        <div id="video">
+            <div class="easyui-layout" fit="true">
+                <div data-options="region:'center',border:false,fit:true" style="width:100%;background:#eee;">
+                    <a class="easyui-linkbutton cf" data-options="iconCls:'icon-cf',plain:true" onclick="module.slice(this)">拆分为警情包</a>
+                    <table id="video_datagrid"></table>
+                </div>
             </div>
         </div>
     </div>
-    <div id="editDialog2" title="数据编辑" class="easyui-dialog" style="width: 90%;height:90%" data-options="modal:true,closed: true">
+    <div id="editDialog2" title="案件数据编辑" class="easyui-dialog" style="width: 90%;height:90%" data-options="modal:true,closed: true">
         <form id="editForm2">
             <input name="case_key" type="hidden">
             <div class="easyui-panel" data-options="title:'案件信息'" style="padding-left: 4%;">
                 <div class="one-row">
-                    <label class="fitem">案件名称</label>：<input class="easyui-textbox" name="case_name" />
-                    <label class="fitem">案件编号</label>：<input class="easyui-textbox" name="case_no" />
+                    <label class="fitem">案件名称<span class="mark">*</span></label>：<input class="easyui-textbox" name="case_name"
+                        required="true" />
+                    <label class="fitem">案件编号<span class="mark">*</span></label>：<input class="easyui-textbox" name="case_no"
+                        required="true" />
                 </div>
                 <div class="one-row">
-                    <label class="fitem">案件类型</label>:
-                    <input id="edit_case_type" style="width: 160px;" class="easyui-combobox" name="case_type" editable=false />
+                    <label class="fitem">案件类型<span class="mark">*</span></label>:
+                    <input id="edit_case_type" style="width: 160px;" class="easyui-combobox" name="case_type" required="true" editable=false
+                    />
                     <label class="fitem">办案单位</label>：<input class="easyui-textbox" name="areaname" />
                     <label class="fitem">办案人</label>：<input class="easyui-textbox" name="jyxm" />
                 </div>
@@ -222,7 +266,8 @@
                         name="start_time" />
                     <label class="fitem">上传日期</label>：<input class="easyui-datetimebox" data-options="height:22,editable:false"
                         name="scsj" />
-                    <label class="fitem">编辑人</label>：<input class="easyui-textbox" name="{:session('user')}" />
+                    <label class="fitem">编辑人</label>：<input class="easyui-textbox" name="edit_name" value="{:session('user')}"
+                    />
                 </div>
                 <div class="one-row">
                     <label class="fitem">备注</label>：<textarea style="width:63%;height:60px;" name="remark"></textarea>
@@ -230,20 +275,33 @@
             </div>
         </form>
         <div id="editBtns2">
-            <a id="ok2" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.edit(this,1)">确定</a>
+            <a id="ok2" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.edit2(this)">确定</a>
             <a id="hb2" class="easyui-linkbutton" data-options="iconCls:'icon-hb',plain:true" onclick="module.addvideo()">追加视频</a>
             <a id="cancel2" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
         </div>
-        <div id="video2" class="easyui-layout" fit="true">
-            <div data-options="region:'center',border:false,iconCls:'icon-film'" style="background:#eee;">
-                <table id="video_datagrid2"></table>
+        <div id="video2">
+            <div class="easyui-layout" fit="true">
+                <div data-options="region:'center',border:false,iconCls:'icon-film'" style="background:#eee;">
+                    <a class="easyui-linkbutton cf" data-options="iconCls:'icon-cf',plain:true" onclick="module.slice2(this)">拆分为警情包</a>
+                    <table id="video_datagrid2"></table>
+                </div>
             </div>
         </div>
     </div>
     <div id="addVideo" title="追加视频" class="easyui-dialog" style="width: 80%;height:80%" data-options="modal:true,closed: true">
+        <div id="toolbar2">
+            <form id="searchForm2" method="post" novalidate>
+                <div class="search-box search-big">
+                    <div class="search-text">采集日期:</div>
+                    <input class="easyui-datetimebox" name="start_time[btime]" id="shotS2" data-options="editable:false" />                    -
+                    <input class="easyui-datetimebox" name="start_time[etime]" id="shotE2" data-options="editable:false" />
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search2()">查询</a>
+                </div>
+            </form>
+        </div>
         <div id="addVideo_layout" class="easyui-layout" fit="true">
             <div data-options="region:'center',border:false,iconCls:'icon-film'" style="background:#eee;">
-                <table id="addVideo_datagrid"></table>
+                <table id="addVideo_datagrid" toolbar="#toolbar2"></table>
             </div>
         </div>
     </div>

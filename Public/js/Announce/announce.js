@@ -120,7 +120,7 @@ module.clickTree = function(node) {
 }
 $(function() {
     var t = new Date();
-    $('#bTime').datebox('setValue', new Time(t, 7).init());
+    $('#bTime').datebox('setValue', new Time(t, 6).init());
     $('#eTime').datebox('setValue', new Time(t, 0).init());
     app.datagrid('#datagrid', {
         url: module.datagridUrl,
@@ -128,10 +128,10 @@ $(function() {
         columns: [
             [
                 { field: 'id', title: 'id', width: 200, checkbox: true },
-                { field: 'title', title: '公告标题', width: 200, align: 'center' },
-                { field: 'content', title: '公告内容', width: 400, align: 'center' },
-                { field: 'areaname', title: '单位', width: 200, align: 'center' },
-                { field: 'start_time', title: '开始日期', width: 200, align: 'center' },
+                { field: 'title', title: '公告标题', width: 200, align: 'center'},
+                { field: 'content', title: '公告内容', width: 400, align: 'center'},
+                { field: 'areaname', title: '单位', width: 200, align: 'center'},
+                { field: 'start_time', title: '开始日期', width: 200, align: 'center'},
                 { field: 'end_time', title: '结束日期', width: 200, align: 'center' }
             ]
         ]

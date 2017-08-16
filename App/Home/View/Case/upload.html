@@ -1,213 +1,137 @@
 <extend name="layouts:master" />
 <block name="link">
     <style>
-        #keyWord{
-            display: inline-block;
-            line-height: 14px;
-            vertical-align: middle;
-        }
-        #files{
-            margin-left: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            color: #333;
-        }
-        #checkedMsg{
-            margin-left: 5px;
-            margin-bottom: 10px;
-            color: #00438a;
-            font-weight: bold;
-        }
-        .mark{
-            color: red;
-        }
-        .one-row{
-            margin:2% 0;
-        }
-        .fitem{
-            width:6%;
-            text-align: right;
-            display: inline-block;
-        }
-        #picker{
-            padding:0 2px!important;
-        }
-        .easyui-panel{
-            border-bottom:0;
-        }
+    #keyWord {
+        display: inline-block;
+        line-height: 14px;
+        vertical-align: middle;
+    }
+
+    #files {
+        margin-left: 10px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    #checkedMsg {
+        margin-left: 5px;
+        margin-bottom: 10px;
+        color: #00438a;
+        font-weight: bold;
+    }
+
+    .mark {
+        color: red;
+    }
+
+    .one-row {
+        margin: 20px 0;
+    }
+
+    .fitem {
+        width: 6%;
+        text-align: right;
+        display: inline-block;
+    }
+
+    #picker {
+        padding: 0 2px!important;
+    }
+
+    .easyui-panel {
+        border-bottom: 0;
+    }
     </style>
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/webuploader/webuploader.css">
 </block>
 <block name="src">
+    <script type="text/javascript">
+    app.tp.data = {$data};
+    </script>
     <script type="text/javascript" src="__PUBLIC__/plugins/webuploader/webuploader.min.js"></script>
-<script type="text/javascript">
-// $(function(){
-
-    // 鏂囦欢涓婁紶
-jQuery(function() {
-    var $ = jQuery,
-        $list = $('#thelist'),
-        $btn = $('#ctlBtn'),
-        state = 'pending',
-        uploader;
-
-        uploader = WebUploader.create({
-
-        // swf文件路径
-        swf: '__PUBLIC__/plugins/webuploader/Uploader.swf',
-
-        // 文件接收服务端。
-        server: '/enforce/upload.php',
-        // 开起分片上传。
-        chunked: true,
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
-        pick: '#picker',
-        // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
-        resize: false
-    });
-
-
-    // 当有文件被添加进队列的时候
-    uploader.on( 'fileQueued', function( file ) {
-        $list.append( '<div id="' + file.id + '" class="item">' +
-            '<h4 class="info">' + file.name + '</h4>' +
-            '<p class="state">等待上传...</p>' +
-        '</div>' );
-    });
-
-    // 文件上传过程中创建进度条实时显示。
-    uploader.on( 'uploadProgress', function( file, percentage ) {
-        var $li = $( '#'+file.id ),
-            $percent = $li.find('.progress .progress-bar');
-        // 避免重复创建
-        if ( !$percent.length ) {
-            $percent = $('<div class="progress progress-striped active" style="width: 100%;height:15px;border:1px solid #000;">' +
-              '<div class="progress-bar" role="progressbar" style="width: 0%;height:15px;background:#ccc;"><span class="percent"></span>' +
-              '</div>' +
-            '</div>').appendTo( $li ).find('.progress-bar');
-        }
-
-        $li.find('p.state').text('上传中');
-        $percent.css( 'width', percentage * 100 + '%' );
-        $('.percent').html(Math.round(percentage * 100) + '%');
-        // $('.progress-bar').
-        // console.log($percent.css('width'))
-    });
-
-    uploader.on( 'uploadSuccess', function( file ) {
-        $( '#'+file.id ).find('p.state').text('已上传');
-    });
-
-    uploader.on( 'uploadError', function( file ) {
-        $( '#'+file.id ).find('p.state').text('上传出错');
-    });
-
-    uploader.on( 'uploadComplete', function( file ) {
-        $( '#'+file.id ).find('.progress').fadeOut();
-    });
-
-    uploader.on( 'all', function( type ) {
-        if ( type === 'startUpload' ) {
-            state = 'uploading';
-        } else if ( type === 'stopUpload' ) {
-            state = 'paused';
-        } else if ( type === 'uploadFinished' ) {
-            state = 'done';
-        }
-
-        if ( state === 'uploading' ) {
-            $btn.text('上传中');
-        } else {
-            $btn.text('开始上传');
-        }
-    });
-
-    $btn.on( 'click', function() {
-        if ( state === 'uploading' ) {
-            uploader.stop();
-        } else {
-            uploader.upload();
-        }
-    });
-});
-
-</script>
-
+    <script type="text/javascript" src="__PUBLIC__/js/Case/upload.js"></script>
 </block>
 <block name="main">
-    <form id="form">
+    <div>
+        <form id="caseInfo">
             <div class="easyui-panel" id=aa data-options="title:'接处警信息'" style="padding-left: 4%;">
                 <div class="one-row">
-                    <label class="fitem">案事件名称<span class="mark">*</span></label>：<input class="easyui-textbox" style="width: 40%" name="pe_name" />
-                    <label class="fitem">警情编号<span class="mark">*</span></label>：<input class="easyui-textbox" style="width: 40%" name="pe_code" />
+                    <label class="fitem">案事件名称<span class="mark">*</span></label>：
+                    <input class="easyui-textbox" style="width: 40%" name="alarm_name" />
+                    <label class="fitem">警情编号<span class="mark">*</span></label>：
+                    <input class="easyui-textbox" style="width: 40%" name="alarm_no" />
                 </div>
                 <div class="one-row">
-                    <label class="fitem">出警单位</label>：<input class="easyui-textbox" style="width: 17%" name="areaid" />
-                    <label class="fitem">警情类型<span class="mark">*</span></label>：<select class="easyui-combobox" style="width: 16%" editable=false name="pe_type">
-                        <option value="">全部</option>
-                        <option value="1">一般警情(6个月)</option>
-                        <option value="2">重大警情(永久)</option>
-                        <option value="3">阻碍民警执法妨碍公务(永久)</option>
-                        <option value="4">行政强制执行(永久)</option>
-                        <option value="5">当场盘问检查(6个月)</option>
-                        <option value="6">无效数据(7天)</option>
-                        <option value="7">其他(6个月)</option>
-                    </select>
-                    <label class="fitem">出警地址</label>：<input class="easyui-textbox" style="width: 40%" name="pe_address" />
+                    <label class="fitem">出警单位</label>：
+                    <input class="easyui-textbox" style="width: 17%" name="areaname" />
+                    <label class="fitem">警情类型<span class="mark">*</span></label>：
+                    <input id="alarm_type" style="width: 16%" editable=false name="alarm_type">
+                    <label class="fitem">出警地址</label>：
+                    <input class="easyui-textbox" style="width: 40%" name="alarm_addr" />
                 </div>
                 <div class="one-row">
-                    <label class="fitem">警号</label>：<input class="easyui-textbox" style="width: 17%" name="jybh" />
-                    <label class="fitem">出警人</label>：<input class="easyui-textbox" style="width: 16%" name="jyxm" />
-                    <label class="fitem">设备号</label>：<input class="easyui-textbox" style="width: 17%" name="cpbh" />
+                    <label class="fitem">警号</label>：
+                    <input class="easyui-textbox" style="width: 17%" name="jybh" />
+                    <label class="fitem">出警人</label>：
+                    <input class="easyui-textbox" style="width: 16%" name="jyxm" />
+                    <!-- <label class="fitem">设备号</label>：<input class="easyui-textbox" style="width: 17%" name="cpbh" /> -->
                 </div>
                 <div class="one-row">
-                    <label class="fitem">出警开始时间</label>：<input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="pe_btime"/>
-                    <label class="fitem" style="margin-left:23%;">警情结束时间</label>：<input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="pe_etime" />
+                    <label class="fitem">出警开始时间</label>：
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="start_time" />
+                    <label class="fitem" style="margin-left:23%;">警情结束时间</label>：
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="end_time" />
                 </div>
             </div>
             <div class="easyui-panel" data-options="title:'案件信息'" style="padding-left: 4%;">
                 <div class="one-row">
-                    <label class="fitem">案件名称</label>：<input class="easyui-textbox" style="width: 40%" name="case_name" />
-                    <label class="fitem">案件编号</label>：<input class="easyui-textbox" style="width: 40%" name="case_code" />
+                    <label class="fitem">案件名称</label>：
+                    <input class="easyui-textbox" style="width: 40%" name="case_name" />
+                    <label class="fitem">案件编号</label>：
+                    <input class="easyui-textbox" style="width: 40%" name="case_no" />
                 </div>
-                <div class="one-row">·
-                    <label class="fitem">案件类型</label>：<select class="easyui-combobox" style="width: 17%" editable=false name="case_type">
-                        <option value="">全部</option>
-                        <option value="1">行政案件</option>
-                        <option value="2">刑侦案件</option>
-                    </select>
-                    <label class="fitem" >办案单位</label>：<input class="easyui-textbox" style="width: 16%" name="areaname" />
-                    <label class="fitem">办案人</label>：<input class="easyui-textbox" style="width: 17%" name="jyxm" />
+                <div class="one-row">
+                    <label class="fitem">案件类型</label>：
+                    <input id="case_type" style="width: 17%" editable=false name="case_type">
+                    <label class="fitem">办案单位</label>：
+                    <input class="easyui-textbox" style="width: 16%" name="case_dept" />
+                    <label class="fitem">办案人</label>：
+                    <input class="easyui-textbox" style="width: 17%" name="case_empl" />
                 </div>
             </div>
             <div class="easyui-panel" data-options="title:'视频信息'" style="padding-left: 4%;">
-                <div class="one-row">    
-                    <label class="fitem">视频标题</label>：<input class="easyui-textbox" style="width: 40%" name="video_title" />
+                <div class="one-row">
+                    <label class="fitem">视频标题</label>：
+                    <input class="easyui-textbox" style="width: 40%" name="title" />
                 </div>
                 <div class="one-row">
-                    <label class="fitem">采集日期</label>：<input class="easyui-datebox" data-options="height:22,editable:false"  style="width: 17%" name="cjsj" />
-                    <label class="fitem" >上传日期</label>：<input class="easyui-datebox" data-options="height:22,editable:false" style="width: 16%" name="scsj" />
-                    <label class="fitem">编辑人</label>：<input class="easyui-textbox" style="width: 17%" name="edit_code" />
+                    <label class="fitem">采集日期</label>：
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="cjsj" id="cjsj" />
+                    <label class="fitem">上传日期</label>：
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 16%" name="scsj" />
+                    <label class="fitem">编辑人</label>：
+                    <input class="easyui-textbox" style="width: 17%" name="edit_name" />
                 </div>
                 <div class="one-row">
-                    <input  name="wjbh" type="hidden">
-                    <input  name="uniqid" type="hidden">
-                    <label class="fitem">备注</label>：<textarea style="width:63%;height:60px;" name="mark"></textarea>
-                </div>
-                <div class="one-row" style="margin-left:30%">
-                    <label class="fitem">上传</label>：
-                    <div id="uploader" class="wu-example" style="display: inline-block;">
-                        <!--用来存放文件信息-->
-                        <div class="btns">
-                            <button id="picker" class="btn">选择文件</button>
-                            <button id="ctlBtn" class="btn btn-default">开始上传</button>
-                            <label><input name="Fruit" type="radio" value="" />公安类上传 </label> 
-                            <label><input name="Fruit" type="radio" value="" />非公安类上传 </label> 
-                        </div>
-                    </div>
-                    <div id="thelist" class="uploader-list" style="margin-left:8%;width:200px;"></div>
+                    <!-- <input  name="start_time" type="hidden">
+                    <input  name="case_key" type="hidden"> -->
+                    <label class="fitem">备注</label>：
+                    <textarea style="width:63%;height:60px;" name="remark"></textarea>
                 </div>
             </div>
         </form>
+        <div class="one-row" style="margin-left:30%">
+            <label class="fitem">视频上传</label>：
+            <div id="uploader" class="wu-example" style="display: inline-block;">
+                <!--用来存放文件信息-->
+                <div class="btns">
+                    <div id="picker" class="btn">选择文件</div>
+                    <button id="plice_upload">公安类上传</button>
+                    <button id="no_plice_upload">非公安类上传</button>
+                </div>
+            </div>
+            <div id="thelist" class="uploader-list" style="margin-left:8%;width:200px;"></div>
+        </div>
+    </div>
 </block>
