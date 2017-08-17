@@ -6,6 +6,8 @@ module.exports = function(){
     exportInfo.datagrid = '#datagrid';
     exportInfo.params = module.params;
     exportInfo.delFields = ['id'];
+    exportInfo.rows = $('#datagrid').datagrid('getData').total;
+    exportInfo.page = 1;
     app.exportExcel(exportInfo);
 };
 $(function(){

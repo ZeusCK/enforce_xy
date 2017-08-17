@@ -37,6 +37,7 @@ var tree = new Tree('#area_list');
 // 创建时间对象
 var judgeTime = new Time(new Date(), 0);
 var module = {};
+var searchData = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.link = 'link';
@@ -47,6 +48,7 @@ module.search = function(data){
     }
     data.areacode = module.areacode;
     data.link = module.link;
+    searchData = data;
     $('#treegrid').treegrid('load', data);
 }
 module.clickTree = function(node) {
@@ -54,6 +56,19 @@ module.clickTree = function(node) {
     module.areaname = node.text;
     $('#mu_ser').html(module.areaname);
     module.search();
+}
+module.exports = function(target) {
+    app.extra('export',{
+        treegrid:'#treegrid',
+        params:searchData,
+        linkbutton:target,
+        parseFileds:function(field){
+            delete field.upload;
+            delete field.collect;
+            delete field['case'];
+            delete field['warning'];
+        }
+    });
 }
 var column_link = {
     upload:['uploadnum','unuploadnum','uploadper'],

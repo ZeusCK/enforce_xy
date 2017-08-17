@@ -1,26 +1,25 @@
 <extend name="layouts:master" />
 <block name="link">
-
     <style>
-        #searchForm {
-            padding-left: 8px;
-        }
+    #searchForm {
+        padding-left: 8px;
+    }
 
-        #searchForm label {
-            line-height: 24px;
-        }
+    #searchForm label {
+        line-height: 24px;
+    }
 
-        .marginL {
-            margin-left: 20px;
-        }
+    .marginL {
+        margin-left: 20px;
+    }
     </style>
 </block>
 <block name="src">
     <script type="text/javascript">
-        //根部门  用于数据的初始化
-app.tp.areaid = "{:session('areaid')}";
-app.tp.areacode = "{:session('areacode')}";
-app.tp.areaname = "{:session('areaname')}";
+    //根部门  用于数据的初始化
+    app.tp.areaid = "{:session('areaid')}";
+    app.tp.areacode = "{:session('areacode')}";
+    app.tp.areaname = "{:session('areaname')}";
     </script>
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Server/server.js"></script>
@@ -40,9 +39,9 @@ app.tp.areaname = "{:session('areaname')}";
             <input name="areaid" class="easyui-textbox">
             <label class="marginL">在线状态：</label>
             <select name="status" class="easyui-combobox" data-options="width:60,panelHeight:46">
-             <option value="1">在线</option>
-             <option value="0">离线</option>
-           </select>
+                <option value="1">在线</option>
+                <option value="0">离线</option>
+            </select>
             <label class="marginL">服务器IP：</label>
             <input name="server_ip" id="server_ip" class="easyui-textbox">
             <a class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="module.search()">搜索</a>
@@ -51,6 +50,7 @@ app.tp.areaname = "{:session('areaname')}";
         <a onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
         <a onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
     删除</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_ser">无</span></a>
     </div>
@@ -73,8 +73,8 @@ app.tp.areaname = "{:session('areaname')}";
             <div class="form_m">
                 <div for="config" class="form_label">配置:</div>
                 <select class="easyui-combobox form_in" name="config" style="width: 181px;" data-options="editable:false">
-                  <option value="0">未启用</option>
-                  <option value="1">启用</option>
+                    <option value="0">未启用</option>
+                    <option value="1">启用</option>
                 </select>
             </div>
             <div class="form_m">

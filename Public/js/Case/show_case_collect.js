@@ -15,7 +15,7 @@ function Time(n) {
   var y = myDate.getFullYear();
   var m = (m = myDate.getMonth() + 1) < 10 ? "0" + m : m;
   var d = (d = myDate.getDate()) < 10 ? "0" + d : d;
-  var d2 = (d2 = myDate.getDate() - 7) < 10 ? "0" + d2 : d2;
+  var d2 = (d2 = myDate.getDate() - 6) < 10 ? "0" + d2 : d2;
   var hh = (hh = myDate.getHours()) < 10 ? "0" + hh : hh;
   var mm = (mm = myDate.getMinutes()) < 10 ? "0" + mm : mm;
   var ss = (ss = myDate.getSeconds()) < 10 ? "0" + ss : ss;
@@ -100,23 +100,9 @@ $(function() {
   });
 
   //案件类型下拉框
-  var caseTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=case_type";
-  $("#case_type,#edit_case_type").combobox({
-    method: "GET",
-    url: caseTypeUrl,
-    valueField: "value",
-    textField: "item"
-  });
-
+  app.combobox('#case_type,#edit_case_type',{type:'case_type'});
   //警情类型下拉框
-  var alarmTypeUrl =
-    app.tp.ajax + "?tpUrl=Function/dic_val_item&type=alarm_type";
-  $("#alarm_type,#edit_alarm_type").combobox({
-    method: "GET",
-    url: alarmTypeUrl,
-    valueField: "value",
-    textField: "item"
-  });
+  app.combobox('#alarm_type,#edit_alarm_type',{type:'alarm_type'});
 
   //设置默认时间
   $("#shotS,#shotS2").datetimebox("setValue", Time());

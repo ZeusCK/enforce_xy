@@ -5,6 +5,7 @@ module.datagridUrl = 'Server/server_list';
 module.addUrl = 'Server/server_add';
 module.editUrl = 'Server/server_edit';
 module.removeUrl = 'Server/server_remove';
+var searchData = {};
 var tree = new Tree('#area_list');
 module.show = function() {
     $('#searchForm').form('reset');
@@ -85,6 +86,7 @@ module.search = function() {
         datagrid: '#datagrid',
         parsedata:function(data){
             data.areacode = module.areacode;
+            searchData = data;
         }
     });
 }
@@ -105,6 +107,20 @@ module.bind = function(id, choose) {
             data.id = id;
             data.areaname = dz;
             data.areacode = areacode;
+        }
+    });
+}
+module.exports = function(target){
+    var total = $('#datagrid').datagrid('getData').total;
+    app.extra('export',{
+        datagrid:'#datagrid',
+        params:searchData,
+        linkbutton:target,
+        rows: total,
+        page: 1,
+        parseFileds:function(field){
+            delete field.id;
+            delete field.handle;
         }
     });
 }

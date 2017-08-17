@@ -83,7 +83,7 @@ class AnnounceController extends CommonController
         $where['end_time'] = array('EGT',date('Y-m-d H:i:s'));      //结束时间大于当前时间
         $data = $db->where($where)->order('create_time desc')->select();
         foreach ($data as $key => $value) {
-            if(strpos($value['areacode'],session('areacode')) !== 0) unset($data[$key]);
+            if(strpos(session('areacode'),$value['areacode']) !== 0) unset($data[$key]);
         }
         $data = array_values($data);
         $total = count($data);

@@ -446,10 +446,11 @@ class CommonController extends Controller {
         $time2 = strtotime($bigDate);
         $datearr = array();
         $datearr[] = date($format,$time1);
+        $datearr[] = date($format,$time2);
         while( ($time1 = strtotime($interval, $time1)) <= $time2){
               $datearr[] = date($format,$time1); // 取得递增月;
         }
-        return $datearr;
+        return array_unique($datearr);
     }
     /**
      * 获取需要查询的数据表
@@ -532,7 +533,7 @@ class CommonController extends Controller {
         $areacodes = $areadb->where($where)->getField('areacode',true);
         //排除自己已经监管的部门
         foreach ($areacodes as $key => $value) {
-            if(strpos($value, $areacode) === 0) unset($areacodes[$key]);
+            if(strpos($areacode,$value) === 0) unset($areacodes[$key]);
         }
         if(empty($areacodes)) return array($areacode);
 
@@ -550,7 +551,7 @@ class CommonController extends Controller {
         $checkAreacode = array_diff($areacodes,$searchArr);
         foreach ($checkAreacode as $key => $value) {
             foreach ($searchArr as $val) {
-                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
+                if(strpos($val,$value) === 0) unset($checkAreacode[$key]);
             }
         }
         return array_merge($checkAreacode,$searchArr);

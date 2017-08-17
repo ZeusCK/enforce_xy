@@ -2,7 +2,21 @@ var info={};
 var module = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
+var searchData = {};
 var tree=new Tree('#tree');
+module.exports = function(target){
+    var total = $('#datagrid').datagrid('getData').total;
+    app.extra('export',{
+        datagrid:'#datagrid',
+        params:searchData,
+        linkbutton:target,
+        rows: total,
+        page: 1,
+        parseFileds:function(field){
+            delete field.id;
+        }
+    });
+}
 $(function(){
     //左侧tree的加载
     tree.load_emp_tree();
@@ -44,7 +58,7 @@ $(function(){
     $('#tree').tree({
         onSelect:function(node){
             $('#pos').html(node.text);
-            info={};
+            info = app.serializeJson('#form');
             if(node.iconCls=='icon-user'){
                 info.jybh=node.code;
                 info.jyxm=node.text;
@@ -54,13 +68,14 @@ $(function(){
                 info.areacode=node.areacode;
                 $('#datagrid').datagrid('load',info);
             }
+            searchData = info;
         }
     });
     //搜索按钮
     $('#searching').click(function(){
-       $('#datagrid').datagrid({
-           queryParams:app.serializeJson('#form')
-       });
+        var searchData = app.serializeJson('#form');
+        searchData.areacode = module.areacode;
+       $('#datagrid').datagrid('load',searchData);
     });
     //添加按钮
     $('#add').click(function(){

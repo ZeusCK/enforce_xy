@@ -5,6 +5,7 @@ things.datagridUrl = 'WorkStation/ws_base_list';
 things.addUrl = 'WorkStation/ws_base_add';
 things.editUrl = 'WorkStation/ws_base_edit';
 things.removeUrl = 'WorkStation/ws_base_remove';
+var searchData = {};
 var tree = new Tree('#area_list');
 things.show = function(){
     $('#searchForm').form('reset');
@@ -62,7 +63,8 @@ things.search = function(){
         form:'#searchForm',
         datagrid:'#datagrid',
         parsedata:function(data){
-            data.areacode = things.areacode
+            data.areacode = things.areacode;
+            searchData = data;
         }
     });
 }
@@ -86,6 +88,20 @@ things.bind = function(id,choose){
         }
     });
 }
+things.exports = function(target){
+    var total = $('#datagrid').datagrid('getData').total;
+    app.extra('export',{
+        datagrid:'#datagrid',
+        params:searchData,
+        linkbutton:target,
+        rows: total,
+        page: 1,
+        parseFileds:function(field){
+            delete field.id;
+            delete field.handle;
+        }
+    });
+}
 $(function(){
     app.datagrid('#datagrid',{
         url:things.datagridUrl,
@@ -93,7 +109,7 @@ $(function(){
         columns:[[
           {field:'id', title: 'id', checkbox: true },
           {field:'gzz_ip',title:'工作站IP',align:'center'},
-          {field:'areaname',title:'地址', width: 200, align:'center'},
+          {field:'areaname',title:'所属部门', width: 200, align:'center'},
           {field:'ztsj', title: '最后在线时间', width: 200, align: 'center' },
           {field:'hzr', title: '负责人', width: 200, align: 'center' },
           {field:'dh', title: '负责人电话', width: 200, align: 'center' },

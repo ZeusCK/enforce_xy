@@ -454,18 +454,18 @@ class EmployeeController extends CommonController
         $this->ajaxReturn(S(session('user').'apply_tree'));
     }
     //导入警员的excel
-    public function import_employee_excel()
+    public function import_excel()
     {
         $func = A('Function');
-        $where[] = $this->get_manger_sql();
+        $where[] = $this->get_manger_sql('','areacode',false);
         $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
+        $role_id_name = array_flip(D($this->models['role'])->getField('roleid,rolename'));
         $code_arr = array_keys($area_code_name);
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
-        $name_code = array('警员编号'=>'code',
-                           '部门编号'=>'areacode',
+        $name_code = array('警员警号'=>'code',
                            '所属部门'=>'areaname',
-                           '警员姓名'=>'name',
+                           '姓名'=>'name',
                            '所属角色'=>'roleid',
                            '备注'=>'remark',
                            '性别'=>'sex',
@@ -474,12 +474,35 @@ class EmployeeController extends CommonController
             $data = $func->read_excel($res);
             $header = reset($data);
             foreach ($header as $key => $value) {
-                if(in_array($value,$name_code)){
+                if(array_key_exists($value,$name_code)){
                     $key_code[$key] = $name_code[$value];
                 }
             }
-            $saveData= array();
-            foreach ($data as $value) {}
+            $allData = array();
+            foreach ($data as $value) {
+                $saveData= array();
+                foreach ($value as $k => $val) {
+                    $val = $val === null ? '' : $val = u2g($val);
+                    if(!array_key_exists($k,$key_code)) continue;
+                    if($key_code[$k] == 'areaname'){
+                        if(in_array($val,$area_code_name)){
+                            $saveData[$key_code[$k]] = $val;
+                            $saveData['areacode'] = array_search($val);
+                        }
+                        continue;
+                    }
+                    if($key_code[$k] == 'code'){
+                        $saveData['password'] = $val;
+                        continue;
+                    }
+                    if($key_code[$k] == 'roleid'){             //
+                        $saveData[$key_code[$k]] = $role_id_name[$val];
+                    }else{
+                        $saveData[$key_code[$k]] = $val;
+                    }
+                }
+
+            }
         }else{
             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
         }

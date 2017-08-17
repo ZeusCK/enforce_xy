@@ -29,7 +29,7 @@ app.tp.area_type = "{:session('area_type')}";
     </div>
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
+             <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp; -->
                 部门名称: <input id="areaname" name="areaname" class="easyui-textbox" data-options="height:22"  style="width:168px"/>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
         </form>
@@ -38,6 +38,9 @@ app.tp.area_type = "{:session('area_type')}";
         当前部门：<span id="mu_area">无</span></a>
         <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="javascript:
+                    $('#importForm').dialog('open')">导入</a>
     </div>
 <!-- 增加 -->
     <div id="addDialog" class="easyui-dialog" title="添加部门" buttons="#addButtons"
@@ -60,20 +63,22 @@ app.tp.area_type = "{:session('area_type')}";
             </div>
             <div class="form_m">
                 <div for="rphone" class="form_label">部门类型 : </div>
-                <select class="easyui-combobox form_in" id="add_areatype" data-options="height:22,editable:false,panelHeight:68"
-                    name="areatype" style="width: 180px;">
+                <input class="easyui-combobox form_in" id="add_areatype" type="" name="areatype" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;">
+                <!-- <select class="easyui-combobox form_in" id="add_areatype"
+                    name="areatype" >
                     <option value="1">其他</option>
                     <option value="0">交警</option>
                     <option value="3">法制</option>
-                </select>
+                </select> -->
             </div>
             <div class="form_m">
                 <div for="rphone" class="form_label">部门属性 : </div>
-                <select class="easyui-combobox form_in" id="add_area_is_read" data-options="height:22,editable:false,panelHeight:68"
-                    name="is_read" style="width: 180px;">
-                    <option value="1">读写</option>
-                    <option value="0">只读</option>
-                </select>
+                <input class="easyui-combobox form_in" id="add_area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;">
+               <!--  <select class="easyui-combobox form_in" id="add_area_is_read" data-options="height:22,editable:false,panelHeight:68"
+                   name="is_read" style="width: 180px;">
+                   <option value="1">读写</option>
+                   <option value="0">只读</option>
+               </select> -->
             </div>
             <div class="form_m"><div for="code" class="form_label">标识 : </div>
                 <div class="easyui-tooltip" title='用于公安与交警进行关联' position="bottom" style="width:179px;display:inline-block;">
@@ -105,20 +110,22 @@ app.tp.area_type = "{:session('area_type')}";
                 <input class=" form_in easyui-textbox" type="text" name="rphone"/></div>
             <div class="form_m">
                 <div for="type" class="form_label">部门类型 : </div>
-                <select class="easyui-combobox form_in" data-options="height:22,editable:false,panelHeight:68,readonly:true"
+                <input class="easyui-combobox form_in" id="edit_areatype" type="" name="areatype" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;">
+                <!-- <select class="easyui-combobox form_in" data-options="height:22,editable:false,panelHeight:68,readonly:true"
                     name="areatype" style="width: 180px;">
                     <option value="1">其他</option>
                     <option value="0">交警</option>
-                    <option value="3">法制</option>
-                </select>
+                    <option value="2">法制</option>
+                </select> -->
             </div>
             <div class="form_m">
                 <div for="rphone" class="form_label">部门属性 : </div>
-                <select class="easyui-combobox form_in" id="edit_area_is_read" data-options="height:22,editable:false,panelHeight:68"
+                <input class="easyui-combobox form_in" id="edit_area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;">
+                <!-- <select class="easyui-combobox form_in" id="edit_area_is_read" data-options="height:22,editable:false,panelHeight:68"
                     name="is_read" style="width: 180px;">
                     <option value="1">读写</option>
                     <option value="0">只读</option>
-                </select>
+                </select> -->
             </div>
             <div class="form_m"><div for="code" class="form_label">标识 : </div>
                 <div class="easyui-tooltip" title='用于公安与交警进行关联' position="bottom" style="width:179px;display:inline-block;">
@@ -133,5 +140,16 @@ app.tp.area_type = "{:session('area_type')}";
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">确认</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
                     $('#editDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
+        <div class="form_m"><div for="rphone" class="form_label">部门属性: </div><input class="easyui-combobox form_in" id="area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;"></div>
+        <div class="form_m">
+            <div for="rphone" class="form_label">Excel: </div> <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">
+        </div>
+    </form>
+    <div id="importButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.importExcel(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+                    $('#importForm').dialog('close')" style="width:90px">取消</a>
     </div>
 </block>

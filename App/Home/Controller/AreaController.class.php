@@ -46,13 +46,12 @@ class AreaController extends CommonController
         $order = 'areacode asc';
         $data = $db->getTableList($check,$page,$rows,$order);
         $areas = $db->getField('areaid,areaname');
-        $areaType = array('交警','其他','法制');
-        $read_type = array('只读','读写');
+        $areaType = $this->get_val_item('dictionary','areatype');
+        $read_type = $this->get_val_item('dictionary','is_read');
         foreach ($data['rows'] as &$value) {
             $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
             $value['areatype'] = $value['type'];
             $value['typename'] = $areaType[$value['type']];
-            $value['typename'] = u2g($value['typename']);
             $value['is_read_name'] = u2g($read_type[$value['is_read']]);
         }
         S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
@@ -303,5 +302,69 @@ class AreaController extends CommonController
         $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
         $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
         return g2us($data_tree);
+    }
+    //导入部门的excel
+    public function import_excel()
+    {
+        set_time_limit(0);
+        $func = A('Function');
+        $is_read = I('is_read');
+        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+        $db = D($this->models['area']);
+        $areaType = array_flip($this->get_val_item('dictionary','areatype'));
+        $key_code = array();
+        $name_code = array('部门名称'=>'areaname',
+                           '部门编号'=>'areacode',
+                           '部门类型'=>'type',
+                           '部门标识'=>'code',
+                           '联系人'=>'rperson',
+                           '联系方式'=>'rphone');
+        if($res){
+            $data = $func->read_excel($res);
+            $header = array_shift($data);
+            foreach ($header as $key => $value) {
+                if(array_key_exists($value,$name_code)){
+                    $key_code[$key] = $name_code[$value];
+                }
+            }
+            $allData = array();
+            $sortItem = array();
+            foreach ($data as $value) {
+                $saveData= array();
+                foreach ($value as $k => $val) {
+                    if($val === null){
+                        $val = '';
+                    }else{
+                        $val = u2g($val);
+                    }
+                    if(!array_key_exists($k,$key_code)) continue;
+                    if($key_code[$k] == 'type'){             //
+                        $saveData[$key_code[$k]] = $areaType[$val];
+                    }else{
+                        $saveData[$key_code[$k]] = $val;
+                    }
+                    if($key_code[$k] == 'areacode') $sortItem[] = $val;
+
+                }
+                $allData[] = $saveData;
+            }
+            array_multisort($sortItem,SORT_ASC,$allData);           //排序后确保上级部门在前
+            foreach ($allData as $value) {
+                $parentAreacode = substr(trim($value['areacode']), 0,-2);   //上级部门代码
+                $parentAreaInfo = $db->where('areacode="'.$parentAreacode.'"')->find();
+                $value['fatherareaid'] = $parentAreaInfo ?  $parentAreaInfo['fatherareaid'] : 0;
+                $value['is_read'] = $is_read;
+                $areaInfo = $db->where('areacode="'.trim($value['areacode']).'"')->find();
+                if($areaInfo){
+                    $res = $db->where('areacode="'.trim($value['areacode']).'"')->save($value);
+                }else{
+                    $res = $db->add($value);
+                }
+            }
+            $result['message'] = '导入成功';
+        }else{
+            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+        }
+        exit(json_encode($result));
     }
 }

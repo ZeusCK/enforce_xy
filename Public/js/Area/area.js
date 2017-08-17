@@ -10,6 +10,7 @@ module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.area_is_read = app.tp.area_is_read;
 module.area_type = app.tp.area_type;
+var searchData = {};
 //基本的搜索
 module.show = function(){
     $('#searchForm').form('reset');
@@ -154,6 +155,32 @@ module.search = function(){
         datagrid:'#datagrid',
         parsedata:function(data){
             data.areacode = module.areacode;
+            searchData = data;
+        }
+    });
+}
+module.exports = function(target){
+    var total = $('#datagrid').datagrid('getData').total;
+    app.extra('export',{
+        datagrid:'#datagrid',
+        params:searchData,
+        linkbutton:target,
+        rows: total,
+        page: 1,
+        parseFileds:function(field){
+            delete field.areaid;
+        }
+    });
+}
+module.importExcel = function(target){
+    app.importExcel({
+        url:app.url('Area/import_excel'),
+        form:'#importForm',
+        dialog:'#importForm',
+        datagrid:'#datagrid',
+        linkbutton:target,
+        success:function(data){
+            tree.loadData(true);
         }
     });
 }
@@ -192,7 +219,13 @@ $(function(){
             module.area_is_read = node.is_read;
             module.area_type = node.type;
             $('#mu_area').html(node.text);
-            module.show();
+            module.search();
         }
+    });
+    app.combobox('#edit_areatype,#add_areatype',{
+        type:'areatype'
+    });
+    app.combobox('#edit_area_is_read,#add_area_is_read,#area_is_read',{
+        type:'is_read'
     });
 });

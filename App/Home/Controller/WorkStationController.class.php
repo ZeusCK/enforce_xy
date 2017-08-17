@@ -111,4 +111,60 @@ class WorkStationController extends CommonController
         }
         $this->ajaxReturn(array_values($initData));
     }
+    //导入部门的excel
+    /*public function import_wsbase_excel()
+    {
+        set_time_limit(0);
+        $func = A('Function');
+        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+
+        $where[] = $this->get_manger_sql();
+        $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
+        $db = D($this->models['wsbase']);
+        $areaType = array_flip($this->get_val_item('dictionary','areatype'));
+        $key_code = array();
+        $name_code = array('部门名称'=>'areaname',
+                           '部门编号'=>'areacode',
+                           '部门类型'=>'type',
+                           '部门标识'=>'code',
+                           '联系人'=>'rperson',
+                           '联系方式'=>'rphone');
+        if($res){
+            $data = $func->read_excel($res);
+            $header = array_shift($data);
+            foreach ($header as $key => $value) {
+                if(in_array($value,$name_code)){
+                    $key_code[$key] = $name_code[$value];
+                }
+            }
+            $allData = array();
+            $sortItem = array();
+            foreach ($data as $value) {
+                $saveData= array();
+                foreach ($value as $k => $val) {
+                    if(!array_key_exists($k,$key_code)) continue;
+                    if($key_code[$k] == 'type'){             //
+                        $saveData[$key_code[$k]] = $areaType[$val];
+                    }else{
+                        $saveData[$key_code[$k]] = $val;
+                    }
+                    if($key_code[$k] == 'areacode') $sortItem[] = $val;
+
+                }
+                $allData[] = $saveData;
+            }
+            array_multisort($sortItem,SORT_ASC,$allData);           //排序后确保上级部门在前
+            foreach ($allData as $value) {
+                $parentAreacode = substr(trim($value['areacode']), 0,-2);   //上级部门代码
+                $parentAreaInfo = $db->where('areacode="'.$parentAreacode.'"')->find();
+                $value['fatherareaid'] = $parentAreaInfo ?  $parentAreaInfo['fatherareaid'] : 0;
+                $value['is_read'] = $is_read;
+                $res = $db->add($value);
+            }
+            $result['message'] = '导入成功';
+        }else{
+            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+        }
+        $this->ajaxReturn($result);
+    }*/
 }

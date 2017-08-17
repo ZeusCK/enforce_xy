@@ -25,7 +25,7 @@ function Time(n) {
   var y = myDate.getFullYear();
   var m = (m = myDate.getMonth() + 1) < 10 ? "0" + m : m;
   var d = (d = myDate.getDate()) < 10 ? "0" + d : d;
-  var d2 = (d2 = myDate.getDate() - 7) < 10 ? "0" + d2 : d2;
+  var d2 = (d2 = myDate.getDate() - 6) < 10 ? "0" + d2 : d2;
   var hh = (hh = myDate.getHours()) < 10 ? "0" + hh : hh;
   var mm = (mm = myDate.getMinutes()) < 10 ? "0" + mm : mm;
   var ss = (ss = myDate.getSeconds()) < 10 ? "0" + ss : ss;
@@ -39,12 +39,12 @@ function Time(n) {
 }
 
 //开始查询
-module.search = function() {
+module.search = function () {
   app.extra("search", {
     url: Url,
     form: "#searchForm",
     datagrid: "#datagrid",
-    parsedata: function(data) {
+    parsedata: function (data) {
       data.areacode = module.areacode;
       DATA = data;
     } //解析参数
@@ -52,7 +52,7 @@ module.search = function() {
 };
 
 //条件重置
-module.init_search_form = function() {
+module.init_search_form = function () {
   $("#searchForm").form("reset");
   //设置默认时间
   $("#shotS").datetimebox("setValue", Time());
@@ -60,11 +60,7 @@ module.init_search_form = function() {
 };
 
 //导出全部
-module.exports = function(target) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.exports = function (target) {
   var total = $("#datagrid").datagrid("getData").total;
   app.extra("export", {
     datagrid: "#datagrid",
@@ -72,14 +68,14 @@ module.exports = function(target) {
     rows: total,
     page: 1,
     linkbutton: target,
-    parseFileds: function(fields) {
+    parseFileds: function (fields) {
       delete fields["cz"];
     }
   });
 };
 
 //编辑按钮
-module.editBar = function(case_key, start_time) {
+module.editBar = function (case_key, start_time) {
   startTime = start_time;
   // console.log(case_key)
   $.extend($.messager.defaults, {
@@ -91,7 +87,7 @@ module.editBar = function(case_key, start_time) {
     height: 160,
     title: "选择",
     msg: "选择编辑类型？",
-    fn: function(r) {
+    fn: function (r) {
       if (r) {
         if (case_key) {
           $("#editDialog").dialog("open");
@@ -102,8 +98,7 @@ module.editBar = function(case_key, start_time) {
           singleSelect: true,
           fit: true,
           columns: [
-            [
-              {
+            [{
                 field: "id",
                 checkbox: true
               },
@@ -165,7 +160,7 @@ module.editBar = function(case_key, start_time) {
                 title: "操作",
                 width: 200,
                 align: "center",
-                formatter: function(value, row, index) {
+                formatter: function (value, row, index) {
                   // console.log(startTime, row.start_time);
                   if (row.start_time == startTime) {
                     return '<span style="color:red">不可操作</span>';
@@ -203,7 +198,7 @@ module.editBar = function(case_key, start_time) {
             case_key: case_key,
             start_time: start_time
           },
-          onLoadSuccess: function(data) {
+          onLoadSuccess: function (data) {
             $("#sbh").textbox("setValue", data.rows[0].cpxh);
             $("#editForm").form("load", data.info);
             if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
@@ -236,7 +231,7 @@ module.editBar = function(case_key, start_time) {
               iconCls: "icon icon-cf"
             });
           },
-          onSelect: function(index, data) {
+          onSelect: function (index, data) {
             if (data.start_time == startTime) {
               $(".cf").linkbutton("disable");
             } else {
@@ -258,8 +253,7 @@ module.editBar = function(case_key, start_time) {
           pagination: true,
           rownumbers: true,
           columns: [
-            [
-              {
+            [{
                 field: "id",
                 checkbox: true
               },
@@ -321,7 +315,7 @@ module.editBar = function(case_key, start_time) {
                 title: "操作",
                 width: 200,
                 align: "center",
-                formatter: function(value, row, index) {
+                formatter: function (value, row, index) {
                   if (row.start_time == startTime) {
                     return '<span style="color:red">不可操作</span>';
                   }
@@ -358,7 +352,7 @@ module.editBar = function(case_key, start_time) {
             case_key: case_key,
             start_time: start_time
           },
-          onLoadSuccess: function(data) {
+          onLoadSuccess: function (data) {
             $("#editForm2").form("load", data.info);
             if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
               $(this)
@@ -390,7 +384,7 @@ module.editBar = function(case_key, start_time) {
               iconCls: "icon icon-cf"
             });
           },
-          onSelect: function(index, data) {
+          onSelect: function (index, data) {
             if (data.start_time == startTime) {
               $(".cf").linkbutton("disable");
             } else {
@@ -401,21 +395,22 @@ module.editBar = function(case_key, start_time) {
       }
     }
   });
-};
-
-//警情编辑保存
-module.edit = function(target) {
   $.extend($.messager.defaults, {
     ok: "确定",
     cancel: "取消"
   });
+};
+
+//警情编辑保存
+module.edit = function (target) {
+
   var n = {
     url: editSaveUrl,
     form: "#editForm",
     dialog: "#editDialog",
     datagrid: "#datagrid"
   };
-  n.parsedata = function(params) {
+  n.parsedata = function (params) {
     delete params["cpxh"];
     if (params.alarm_type == "0" || params.alarm_type == "") {
       $.messager.alert("提示", "编辑时警情类型不可以是未编辑或请选择状态", "error");
@@ -426,18 +421,14 @@ module.edit = function(target) {
 };
 
 //案件编辑保存
-module.edit2 = function(target) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.edit2 = function (target) {
   var n = {
     url: editSaveUrl,
     form: "#editForm2",
     dialog: "#editDialog2",
     datagrid: "#datagrid"
   };
-  n.parsedata = function(params) {
+  n.parsedata = function (params) {
     delete params["cpxh"];
     if (params.case_type == "0" || params.case_type == "") {
       $.messager.alert("提示", "编辑案件类型不可以是未知或请选择状态", "error");
@@ -448,12 +439,12 @@ module.edit2 = function(target) {
 };
 
 //编辑取消
-module.editCancel = function() {
+module.editCancel = function () {
   $("#editDialog,#editDialog2").dialog("close");
 };
 
 //播放视频
-module.play = function(case_key, start_time) {
+module.play = function (case_key, start_time) {
   var url =
     app.url("Case/play_case") +
     "?case_key=" +
@@ -476,7 +467,7 @@ function DateDiff(sDate1, sDate2) {
 }
 
 //追加视频查询
-module.search2 = function() {
+module.search2 = function () {
   app.extra("search", {
     url: addVideoUrl,
     form: "#searchForm2",
@@ -485,14 +476,13 @@ module.search2 = function() {
 };
 
 //追加视频
-module.addvideo = function() {
+module.addvideo = function () {
   $("#addVideo").dialog("open");
   app.datagrid("#addVideo_datagrid", {
     url: addVideoUrl,
     fit: true,
     columns: [
-      [
-        {
+      [{
           field: "id",
           checkbox: true
         },
@@ -522,7 +512,7 @@ module.addvideo = function() {
           title: "操作",
           width: 200,
           align: "center",
-          formatter: function(value, row, index) {
+          formatter: function (value, row, index) {
             return (
               '<a href="javascript:void(0)" title="合并警情" onclick="module.pack_merage(this,\'' +
               row.wjbh +
@@ -535,7 +525,7 @@ module.addvideo = function() {
       ]
     ],
     queryParams: app.serializeJson("#searchForm2"),
-    onLoadSuccess: function(data) {
+    onLoadSuccess: function (data) {
       $("#video_datagrid").datagrid("reload");
       $("#video_datagrid2").datagrid("reload");
       if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
@@ -553,10 +543,6 @@ module.addvideo = function() {
             "font-size": "20px"
           });
       }
-      $.extend($.messager.defaults, {
-        ok: "确定",
-        cancel: "取消"
-      });
       if (data.error) {
         $.messager.alert("操作提示", data.error, "info");
       }
@@ -577,17 +563,13 @@ module.addvideo = function() {
 };
 
 //合并警情
-module.merge = function(target) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.merge = function (target) {
   var rows = $("#datagrid").datagrid("getSelections");
   if (rows.length < 2) {
     $.messager.alert("提示", "请最少选中2条数据进行合并！", "info");
   } else {
     var caseInfo = {};
-    $.each(rows, function(i, m) {
+    $.each(rows, function (i, m) {
       var info = {};
       caseInfo[m.case_key] = m.start_time;
     });
@@ -596,7 +578,7 @@ module.merge = function(target) {
       url: caseMerageUrl,
       singleSelect: true,
       linkbutton: target,
-      parsedata: function(data) {
+      parsedata: function (data) {
         data.caseInfo = caseInfo;
       }
     });
@@ -604,14 +586,10 @@ module.merge = function(target) {
 };
 
 //拆分警情
-module.slice = function(target) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.slice = function (target) {
   var rows = $("#video_datagrid").datagrid("getSelections");
   var wjbhInfo = {};
-  $.each(rows, function(i, m) {
+  $.each(rows, function (i, m) {
     var info = {};
     wjbhInfo[m.wjbh] = m.start_time;
   });
@@ -619,7 +597,7 @@ module.slice = function(target) {
     datagrid: "#video_datagrid",
     url: caseSliceUrl,
     linkbutton: target,
-    parsedata: function(data) {
+    parsedata: function (data) {
       data.wjbhInfo = wjbhInfo;
       data.case_key = rows[0].case_key;
     }
@@ -627,14 +605,10 @@ module.slice = function(target) {
 };
 
 //拆分案件
-module.slice2 = function(target) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.slice2 = function (target) {
   var rows = $("#video_datagrid2").datagrid("getSelections");
   var wjbhInfo = {};
-  $.each(rows, function(i, m) {
+  $.each(rows, function (i, m) {
     var info = {};
     wjbhInfo[m.wjbh] = m.start_time;
   });
@@ -642,7 +616,7 @@ module.slice2 = function(target) {
     datagrid: "#video_datagrid2",
     url: caseSliceUrl,
     linkbutton: target,
-    parsedata: function(data) {
+    parsedata: function (data) {
       data.wjbhInfo = wjbhInfo;
       data.case_key = rows[0].case_key;
     }
@@ -650,18 +624,14 @@ module.slice2 = function(target) {
 };
 
 //视频拆分
-module.pack_pop = function(target, start_time, wjbh, n) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.pack_pop = function (target, start_time, wjbh, n) {
   if ((n = 1)) {
     var rows = $("#video_datagrid").datagrid("getSelections");
     n = {
       datagrid: "#video_datagrid",
       url: mediaPackPopUrl,
       linkbutton: target,
-      parsedata: function(data) {
+      parsedata: function (data) {
         data.wjbhInfo = wjbhInfo;
       }
     };
@@ -671,7 +641,7 @@ module.pack_pop = function(target, start_time, wjbh, n) {
       datagrid: "#video_datagrid2",
       url: mediaPackPopUrl,
       linkbutton: target,
-      parsedata: function(data) {
+      parsedata: function (data) {
         data.wjbhInfo = wjbhInfo;
       }
     };
@@ -682,11 +652,7 @@ module.pack_pop = function(target, start_time, wjbh, n) {
 };
 
 //视频合并
-module.pack_merage = function(target, wjbh, start_time) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.pack_merage = function (target, wjbh, start_time) {
   var caseKey = $("#datagrid").datagrid("getSelections");
   var rows = $("#addVideo_datagrid").datagrid("getSelections");
   var wjbhInfo = {};
@@ -695,7 +661,7 @@ module.pack_merage = function(target, wjbh, start_time) {
     datagrid: "#addVideo_datagrid",
     url: mediaPackMerageUrl,
     linkbutton: target,
-    parsedata: function(data) {
+    parsedata: function (data) {
       data.wjbhInfo = wjbhInfo;
       data.case_key = caseKey[0].case_key;
     }
@@ -703,15 +669,11 @@ module.pack_merage = function(target, wjbh, start_time) {
 };
 
 //数据初始化
-module.init_case = function(case_key, start_time) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.init_case = function (case_key, start_time) {
   app.extra("add_edit", {
     datagrid: "#datagrid",
     url: caseInitCaseUrl,
-    parsedata: function(data) {
+    parsedata: function (data) {
       data.case_key = case_key;
       data.start_time = start_time;
     }
@@ -719,29 +681,25 @@ module.init_case = function(case_key, start_time) {
 };
 
 //视频删除
-module.media_remove = function(start_time, wjbh) {
-  $.extend($.messager.defaults, {
-    ok: "确定",
-    cancel: "取消"
-  });
+module.media_remove = function (start_time, wjbh) {
   app.extra("add_edit", {
     datagrid: "#addVideo_datagrid",
     url: mediaRemoveUrl,
-    parsedata: function(data) {
+    parsedata: function (data) {
       data.wjbh = wjbh;
       data.start_time = start_time;
     },
-    success: function(params) {
+    success: function (params) {
       $("#addVideo_datagrid").datagrid("reload");
     }
   });
 };
 
-$(function() {
+$(function () {
   //树的初始化
   tree.loadData(); //管理部门的树
   $("#area_list").tree({
-    onClick: function(node) {
+    onClick: function (node) {
       module.areaname = node.text;
       module.areacode = node.areacode;
       $("#mu_area").html(node.text);
@@ -750,24 +708,9 @@ $(function() {
   });
 
   //案件类型下拉框
-  var caseTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=case_type";
-  $("#case_type,#edit_case_type").combobox({
-    method: "GET",
-    url: caseTypeUrl,
-    valueField: "value",
-    textField: "item"
-  });
-
+  app.combobox('#case_type,#edit_case_type',{type:'case_type'});
   //警情类型下拉框
-  var alarmTypeUrl =
-    app.tp.ajax + "?tpUrl=Function/dic_val_item&type=alarm_type";
-  $("#alarm_type,#edit_alarm_type").combobox({
-    method: "GET",
-    url: alarmTypeUrl,
-    valueField: "value",
-    textField: "item"
-  });
-
+  app.combobox('#alarm_type,#edit_alarm_type',{type:'alarm_type'});
   //设置默认时间
   $("#shotS,#shotS2").datetimebox("setValue", Time());
   $("#shotE,#shotE2").datetimebox("setValue", Time("shotS"));
@@ -777,8 +720,7 @@ $(function() {
     url: Url,
     title: "数据编辑",
     columns: [
-      [
-        {
+      [{
           field: "id",
           checkbox: true
         },
@@ -853,7 +795,7 @@ $(function() {
           title: "操作",
           width: 220,
           align: "center",
-          formatter: function(value, row, index) {
+          formatter: function (value, row, index) {
             if (row.hand_status == 2) {
               return '<a style="red">已移交</a>';
             } else {
@@ -877,16 +819,16 @@ $(function() {
         }
       ]
     ],
-    rowStyler: function(index, row) {
+    rowStyler: function (index, row) {
       var dd1 = String(row.start_time);
       var dd2 = dd1;
       var dd = Time("shotS");
       var days = DateDiff(dd, dd2);
-      return row.alarm_no == ""
-        ? days >= 3 ? (days > 5 ? "color:red" : "color:orange") : ""
-        : "";
+      return row.alarm_no == "" ?
+        days >= 3 ? (days > 5 ? "color:red" : "color:orange") : "" :
+        "";
     },
-    onLoadSuccess: function(data) {
+    onLoadSuccess: function (data) {
       if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
         $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
         $(this).parent(".datagrid-view").children(".datagrid-view2");
@@ -902,10 +844,6 @@ $(function() {
             "font-size": "20px"
           });
       }
-      $.extend($.messager.defaults, {
-        ok: "确定",
-        cancel: "取消"
-      });
       if (data.error) {
         $.messager.alert("操作提示", data.error, "info");
       }
@@ -926,23 +864,23 @@ $(function() {
         iconCls: "icon icon-cx"
       });
     },
-    onSelect: function(index, data) {
+    onSelect: function (index, data) {
       module.judge();
     },
-    onUnselect: function(index, data) {
+    onUnselect: function (index, data) {
       module.judge();
     }
   });
 });
 
 //判断hand_status是否为2
-module.judge = function() {
+module.judge = function () {
   var rows = $("#datagrid").datagrid("getSelections");
   if (rows.length == 0) {
     $("#hb").linkbutton("enable");
   }
   var handStatus = [];
-  $.each(rows, function(i, m) {
+  $.each(rows, function (i, m) {
     handStatus.push(m.hand_status);
   });
   if (jQuery.inArray("2", handStatus) > -1) {

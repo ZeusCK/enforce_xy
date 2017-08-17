@@ -80,31 +80,29 @@ function change_password() {
     });
 }
 
-/*function show_apply() {
+function show_apply() {
     $.ajax({
-        url: app.url('Apply/index_show'),
+        url: app.tp.ajax+'?tpUrl=Case/case_list',
         dataType: 'json',
+        data:{
+            hand_status:1,
+            show_messager:true
+        },
         success: function(data) {
-            if (data.request > 0) {
-                $.messager.show({
-                    title: '申请提示',
-                    msg: '你有新的申请单已经<span style="color:red;">被审批</span>,可在 <span style="color:red;">调阅管理</span> 中查看',
-                    timeout: 10000,
-                    showType: 'slide'
-                });
-            }
-            if (data.allow > 0) {
+            if (data.total > 0) {
                 $.messager.show({
                     title: '审批提示',
-                    msg: '有新的申请单需要<span style="color:red;">审批</span>,可在 <span style="color:red;">调阅管理</span> 中查看',
+                    msg: '有新的申请单需要<span style="color:red;">审批</span>,可在 <span style="color:red;">警情移交/申请审核</span> 中查看',
                     timeout: 10000,
-                    showType: 'slide'
+                    showType: 'slide',
+                    style:{
+                        top:document.body.scrollTop+document.documentElement.scrollTop,
+                    }
                 });
             }
         }
     })
-}*/
-
+}
 
 $(function() {
 
@@ -156,7 +154,7 @@ $(function() {
     $('#changePassword').click(function() {
         $('#dialog').dialog('open');
     });
-    // show_apply();
+    show_apply();
 
     var tabs = {
         '公告': app.url('Announce/showAnnounce'),

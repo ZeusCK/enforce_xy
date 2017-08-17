@@ -1,7 +1,6 @@
 var caseInfo = app.tp.data;
 var source = 2;
 $(function() {
-    // console.log(caseInfo);
     //案件类型下拉框
     var caseTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=case_type";
     $("#case_type").combobox({
@@ -72,8 +71,6 @@ $(function() {
         $li.find('p.state').text('上传中');
         $percent.css('width', percentage * 100 + '%');
         $('.percent').html(Math.round(percentage * 100) + '%');
-        // $('.progress-bar').
-        // console.log($percent.css('width'))
     });
 
     uploader.on('uploadSuccess', function(file) {
@@ -81,7 +78,6 @@ $(function() {
     });
 
     uploader.on('uploadError', function(file,reason) {
-        console.log(reason);
         $('#' + file.id).find('p.state').text('上传出错');
     });
 

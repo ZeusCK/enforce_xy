@@ -7,6 +7,8 @@ module.areaname = app.tp.areaname;
 module.area_is_read = app.tp.area_is_read;
 module.code = app.tp.code;
 module.actionType = 1;
+module.empid = app.tp.empid;
+var searchData = {};
 module.clickTree = function(node){
     module.areacode = node.areacode;
     module.areaname = node.text;
@@ -28,10 +30,8 @@ module.show = function(){
 module.search = function(){
     var name = $('#name').val();
     name = $.trim(name);
-    $('#datagrid').datagrid('load',{
-        areacode:module.areacode,
-        name:name
-    });
+    searchData = {areacode:module.areacode,name:name}
+    $('#datagrid').datagrid('load',searchData);
 }
 module.link = function(){
     var options = $(managerTree.dom).tree('options');
@@ -49,12 +49,13 @@ module.infoBar = function(type){
         $.messager.alert('操作提示','你无法向系统根部门添加/修改警员,请先创建部门，重新登录后添加警员！','info');
         return false;
     }
+    if(module.area_is_read == 0){
+        $.messager.alert('操作提示','你无法向'+module.areaname+'(只读)添加警员','info');
+        return false;
+    }
     //添加
     if(type == 1){
-        if(module.area_is_read == 0){
-            $.messager.alert('操作提示','你无法向'+module.areaname+'(只读)添加警员','info');
-            return false;
-        }
+
         var info = {areacode:module.areacode,name:'',code:'',phone:'',remark:'',email:'',empid:''};
         //$('#form').form('clear');
         $('#form').form('load',info);
@@ -68,6 +69,10 @@ module.infoBar = function(type){
             $.messager.alert('操作提示','请选择一个警员进行编辑','info');
             return false;
         }
+        if(info[0].empid == module.empid){
+            $.messager.alert('操作提示','你无法修改自身。','info');
+            return false;
+        }
         //加载数据
         infos[0].photo = infos[0].photo_path;
         $('#form').form('load',infos[0]);
@@ -76,6 +81,19 @@ module.infoBar = function(type){
     }
 
     $('#dialog').dialog('open');
+}
+module.exports = function(target){
+    var total = $('#datagrid').datagrid('getData').total;
+    app.extra('export',{
+        datagrid:'#datagrid',
+        params:searchData,
+        linkbutton:target,
+        rows: total,
+        page: 1,
+        parseFileds:function(field){
+            delete field.id;
+        }
+    });
 }
 module.changeinfo = function(){
     var requestUrl = module.actionType == 1 ? app.url('Employee/dataAdd') : app.url('Employee/dataEdit');
@@ -113,17 +131,25 @@ module.changeinfo = function(){
     });
 }
 module.remove = function(){
+    if(module.area_is_read == 0){
+        $.messager.alert('操作提示','你无法删除'+module.areaname+'(只读)警员','info');
+        return false;
+    }
     var infos = $('#datagrid').datagrid('getSelections');
     if(infos.length == 0) return false;
     var ids = [];
-    $.each(infos,function(n,m){
-        var id= m.empid;
+    for (var i = 0; i < infos.length; i++) {
+        if(infos[i].code == 'admin'){
+            $.messager.alert('删除提示','超级管理员无法删除','info');
+            return false;
+        }
+        var id= infos[i].empid;
         if(id == module.empid){
             $.messager.alert('删除提示','你无法删除自身,该操作只有上级用户可执行','info');
             return false;
         }
         ids.push(id);
-    });
+    }
     ids = ids.join(',');
     $.ajax({
         url:app.url('Employee/dataRemove'),
@@ -197,22 +223,16 @@ module.allowOther = function(){
         });
 }
 module.importExcel = function(target){
-    $('#importForm').form('submit',{
-        url:app.url('Employee/import_employee_excel'),
+    app.importExcel({
+        url:app.url('Employee/import_excel'),
+        form:'#importForm',
+        dialog:'#importForm',
+        datagrid:'#datagrid',
+        linkbutton:target,
         success:function(data){
-            data = eval('('+data+')');
-            $.messager.alert('结果提示',data.message,'info');
-            $('#dialog').dialog('close');
-            $('#datagrid').datagrid('reload',{
-                areacode:module.areacode,
-                rand:Math.random()
-            });
-        },
-        error:function(data){
-            $('#dialog').dialog('close');
-            $.messager.alert('操作提示','网络故障','info');
+            tree.loadData(true);
         }
-    })
+    });
 }
 $(function(){
     //树的初始化

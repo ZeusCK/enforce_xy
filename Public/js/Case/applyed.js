@@ -12,12 +12,13 @@ things.show = function() {
     });
 };
 things.editBar = function(index) {
-    var rows = $('#datagrid').datagrid('getData');
-    $("#editForm").form("load", rows[index]);
-    $.messager.defaults = {
+    var rows = $('#datagrid').datagrid('getData').rows;
+    var info = rows[index];
+    delete info.edit_name;
+    $.extend($.messager.defaults, {
         ok: "编辑接处警信息",
         cancel: "编辑案件信息"
-    };
+    });
     $.messager.confirm({
         width: 320,
         height: 160,
@@ -25,11 +26,17 @@ things.editBar = function(index) {
         msg: "选择编辑类型？",
         fn: function(r) {
             if (r) {
+                $("#editForm").form("load", info);
                 $("#editDialog").dialog("open");
             } else {
+                $("#editForm2").form("load", info);
                 $("#editDialog2").dialog("open");
             }
         }
+    });
+    $.extend($.messager.defaults, {
+        ok: "确定",
+        cancel: "取消"
     });
 };
 things.edit = function(target) {
@@ -87,24 +94,25 @@ things.play = function(case_key, start_time) {
     var url = app.url('Case/play_case') + '?case_key=' + case_key + '&start_time=' + start_time;
     window.open(url);
 };
+things.init = function(case_key, start_time) {
+    $.messager.confirm('操作提示', '退回申请警情么？', function(r) {
+        if (r) {
+            app.extra('add_edit', {
+                url: 'Case/init_apply',
+                datagrid: '#datagrid',
+                parsedata: function(data) {
+                    data.case_key = case_key;
+                    data.start_time = start_time;
+                }
+            });
+        }
+    });
+}
 $(function() {
-    //案件类型下拉框
-    var caseTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=case_type";
-    $("#case_type,#edit_case_type").combobox({
-        method: "GET",
-        url: caseTypeUrl,
-        valueField: "value",
-        textField: "item"
-    });
-
-    //警情类型下拉框
-    var alarmTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=alarm_type";
-    $("#alarm_type,#edit_alarm_type").combobox({
-        method: "GET",
-        url: alarmTypeUrl,
-        valueField: "value",
-        textField: "item"
-    });
+//案件类型下拉框
+  app.combobox('#case_type,#edit_case_type',{type:'case_type'});
+  //警情类型下拉框
+  app.combobox('#alarm_type,#edit_alarm_type',{type:'alarm_type'});
     var t = new Date();
     $('#shotS').datetimebox('setValue', new Time(t, 6).init());
     $('#shotE').datetimebox('setValue', new Time(t, 0).init());
@@ -149,22 +157,18 @@ $(function() {
                     width: 100,
                     formatter: function(value, row, index) {
                         return (
-                            '<a href="javascript:void(0)" onclick="things.editBar(' + index + ')" name="edit"></a>' +
-                            '<a href="javascript:void(0)" onclick="things.play(\'' + row.case_key + '\',\'' + row.start_time + '\')" name="play" ></a>'
+                            '<a href="javascript:void(0)" onclick="things.editBar(' + index + ')" name="edit" title="编辑信息"></a>' +
+                            '<a href="javascript:void(0)" onclick="things.play(\'' + row.case_key + '\',\'' + row.start_time + '\')" title="播放" name="play" ></a>'+
+                            '<a href="javascript:void(0)" onclick="things.init(\'' + row.case_key + '\',\'' + row.start_time + '\')" title="退回警情" name="init"></a>'
                         );
                     }
                 }
             ]
         ],
         onLoadSuccess: function(data) {
-            $('a[name="play"]').linkbutton({
-                plain: true,
-                iconCls: "icon icon-control_play"
-            });
-            $('a[name="edit"]').linkbutton({
-                plain: true,
-                iconCls: "icon icon-pencil"
-            });
+            $('a[name="play"]').linkbutton({plain: true,iconCls: "icon icon-bofang"});
+            $('a[name="edit"]').linkbutton({plain: true,iconCls: "icon icon-pencil"});
+            $('a[name="init"]').linkbutton({plain: true,iconCls: "icon icon-cancel"});
             var a = $(".datagrid-cell-rownumber");
             $.each(a, function(i, m) {
                 m.style.width = "21px";

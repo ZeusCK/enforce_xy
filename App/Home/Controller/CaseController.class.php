@@ -104,6 +104,7 @@ class CaseController extends CommonController
         if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
         if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
+        if($request['show_messager']) $btime = date('Y-m-d H:i:s',time()-60*24*60*60);
         $etime = $request['start_time']['etime'] ? $request['start_time']['etime'] : date('Y-m-d H:i:s');
         $where['start_time'][] = array('EGT',$btime);      //开始时间
         $where['start_time'][] = array('ELT',$etime); //结束时间
@@ -140,6 +141,7 @@ class CaseController extends CommonController
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
         unset($request['case_key']);
+        $request['edit_name'] = session('user');
         $request = u2gs($request);
         $result = M()->table('case_'.$table)->where($where)->save($request);
         //同步
@@ -200,7 +202,7 @@ class CaseController extends CommonController
             $total[$month] = M()->table('case_'.$month)->where($where)->count();
         }
         $tables = $this->get_query_table($total,$page,$rows);
-        error_log(json_encode($tables)."\r\n",3,'error.log');
+        //error_log(json_encode($tables)."\r\n",3,'error.log');
         $res = array();
         $res['total'] = array_sum($total);
         $res['rows'] = array();
@@ -415,7 +417,7 @@ class CaseController extends CommonController
         $fileType = $this->get_val_item('dictionary','filetype');
         $video_source = $this->get_val_item('dictionary','video_source');
         foreach ($data as &$value) {
-            $value['file_type_name'] = $fileType[$value['file_type']];
+            $value['file_type_name'] = $fileType[$value['wjlx']];
             $value['source_name'] = $video_source[$value['source']];
         }
         $res = array();
@@ -532,7 +534,6 @@ class CaseController extends CommonController
                 )
 
             );
-
         $data = $this->pares_data($data,$caseNUm,$fields,$mark, $paress);
         //-----------
         //解析工作站
@@ -596,8 +597,10 @@ class CaseController extends CommonController
             $value['wsbase_per'] = $value['wsbase_num'] == 0 ? 0 :round(($value['wsbase_online'] / $value['wsbase_num'])*100,2);   //工作站在线率
             $value['case_num'] = $value['administration'] + $value['criminal'];     //案件数
         }
-        $rows = g2us(array_values($data));
+        $rows = array_values($data);
         $total = count($rows);
+        $this->saveExcel(compact('total','rows'));
+        $rows = g2us($rows);
         $this->ajaxReturn(compact('total','rows'));
     }
     /**

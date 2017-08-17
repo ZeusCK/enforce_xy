@@ -223,7 +223,8 @@ App.prototype.extra.methods = {
     'export':'exportExcel',
     'add_edit':'add_edit',
     'remove':'remove',
-    'search':'search'
+    'search':'search',
+    'importExcel':'importExcel'
 };
 /**
  * 导出excel  需要后端支持
@@ -294,7 +295,7 @@ App.prototype.exportExcel = function(exportInfo){
         showType:'slide'
     });
     this.exportExcel.options = options;
-    console.log(options.params);
+    //console.log(options.params);
     $.ajax({
         url:url,
         type:'POST',
@@ -610,3 +611,61 @@ App.prototype.treegrid.defaults = {
         $.messager.alert('提示','网络发生错误！','info');
     }
 };
+//设置combobox
+App.prototype.combobox = function(tartget,params){
+    var options = $.extend({},App.prototype.combobox.defaults,params);
+    options.url = this.tp.ajax + "?tpUrl="+options.url+"&type="+options.type;
+    delete(options.type);
+
+    delete(options.method);
+    $.ajax({
+        url:options.url,
+        type:'GET',
+        success:function(data){
+            options.data = data;
+            delete(options.url);
+            $(tartget).combobox(options);
+            if(data.length > 0){
+                $(tartget).combobox('setValue',data[0].value);
+            }
+
+        }
+    })
+};
+App.prototype.combobox.defaults = {
+    method: "GET",
+    url: 'Function/dic_val_item',
+    valueField: "value",
+    textField: "item",
+    type:''
+}
+//导入公共方法
+App.prototype.importExcel = function(params){
+    var options = $.extend({},App.prototype.importExcel.defaults,params);
+    App.prototype.linkbutton(options.linkbutton,'disable');
+    $(options.form).form('submit',{
+        url:options.url,
+        success:function(data){
+            var data = eval('('+data+')');
+            $.messager.alert('操作提示',data.message,'info');
+            if(options.dialog) $(options.dialog).dialog('close');
+            if(options.datagrid) $(options.datagrid).datagrid('reload');
+            App.prototype.linkbutton(options.linkbutton,'enable');
+            options.success(data);
+        },
+        onLoadError:function(){
+            $.messager.alert('操作提示','网络错误！','info');
+            options.error();
+            App.prototype.linkbutton(options.linkbutton,'enable');
+        }
+    })
+}
+App.prototype.importExcel.defaults = {
+    url:null,   //导入的url地址
+    form:null,  //相关form表单
+    dialog:null,    //相关弹窗
+    linkbutton:null,    //相关按钮
+    datagrid:null,  //相关datagrid
+    success:function(data){},
+    error:function(){}
+}

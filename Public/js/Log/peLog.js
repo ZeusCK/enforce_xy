@@ -3,11 +3,13 @@ var judgeTime = new Time(new Date(), 0);
 var module = {};
 module.params = {};
 //导出
-module.exports = function() {
+module.exports = function(){
     var exportInfo = {};
     exportInfo.datagrid = '#datagrid';
     exportInfo.params = module.params;
     exportInfo.delFields = ['id'];
+    exportInfo.rows = $('#datagrid').datagrid('getData').total;
+    exportInfo.page = 1;
     app.exportExcel(exportInfo);
 };
 $(function() {
