@@ -7,6 +7,7 @@ app.tp.areacode = "{:session('areacode')}";
 app.tp.areaname = "{:session('areaname')}";
 app.tp.area_is_read = "{:session('area_is_read')}";
 app.tp.empid = "{:session('empid')}";
+app.tp.code = "{:session('code')}";
 </script>
 <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
 <script type="text/javascript" src="__PUBLIC__/js/Employee/employee.js"></script>
@@ -41,7 +42,7 @@ app.tp.empid = "{:session('empid')}";
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="javascript:
                     $('#importForm').dialog('open')">导入</a>
-        <!-- <a href="javascript:void(0)" onclick="module.allowAreaBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:true">权限分配</a> -->
+        <a href="javascript:void(0)" onclick="module.allowAreaBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:true">权限分配</a>
     </div>
 <!-- 增加 -->
     <div id="dialog" class="easyui-dialog" title="添加" buttons="#addButtons"
@@ -87,8 +88,8 @@ app.tp.empid = "{:session('empid')}";
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
     $('#dialog').dialog('close')" style="width:90px">取消</a>
     </div>
-    <div id="otherdialog" class="easyui-dialog" id="otherInfo" title="权限查看"
-        style="width:400px;height:400px;" data-options="closed:true" buttons="#buttons">
+    <div id="otherdialog" class="easyui-dialog" title="权限查看"
+        style="width:350px;height:200px;" data-options="closed:true" buttons="#buttons">
         <div style="padding-top: : 10px;padding-left: 50px;">
             <p style="color: #0E2D5F;" id="areaInfo">这里能查看权限无法进行修改</p>
         </div>
@@ -97,6 +98,7 @@ app.tp.empid = "{:session('empid')}";
             <div class="form_m" style="display: none;">
                 <div for="empid" class="form_label">ID : </div>
                 <input class=" form_in easyui-textbox" type="text" name="empid" required="true"/>
+                <input class=" form_in easyui-textbox" type="text" name="code" required="true"/>
             </div>
             <div class="form_m"><div for="bindingip" class="form_label">绑定IP : </div>
                 <select class=" easyui-combobox form_in" name="bindingip" id="bindingip"
@@ -119,7 +121,7 @@ app.tp.empid = "{:session('empid')}";
             </div>
         </form>
 
-        <div style="padding-top: : 10px;padding-left: 50px;">
+        <!-- <div style="padding-top: : 10px;padding-left: 50px;">
             <p style="color: #0E2D5F">额外管理部门，只能为自身所属部门下的部门</p>
             <p style="color: #0E2D5F">后端会自动排除多余的部门</p>
             <div id="manInfo">
@@ -131,15 +133,15 @@ app.tp.empid = "{:session('empid')}";
             </div>
 
             <ul id="areaList"></ul>
-        </div>
+        </div> -->
     </div>
     <div id="buttons">
+         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-key" onclick="module.initPwd(this)" style="width:90px">密码初始化</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" id="menu_sure" iconCls="icon-ok" onclick="module.allowOther()" style="width:90px">确定</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
             $('#otherdialog').dialog('close')" style="width:90px">取消</a>
     </div>
     <form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
-        <div class="form_m"><div for="rphone" class="form_label">部门属性: </div><input class="easyui-combobox form_in" id="area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;"></div>
         <div class="form_m">
             <div for="rphone" class="form_label">Excel: </div> <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">
         </div>

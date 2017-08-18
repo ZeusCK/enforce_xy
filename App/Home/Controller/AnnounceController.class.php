@@ -55,8 +55,14 @@ class AnnounceController extends CommonController
         $request['creater_name'] = session('user');
         $request['creater_id'] = session('code');
         $db = D($this->models['sys_notice']);
-        $this->write_log('新增公告:'.$request['title']);
-        return $db->getTableAdd(u2gs($request));
+        $request = u2gs($request);
+        $result = $db->getTableAdd($request);
+        if($result['status']){
+            $this->write_log('新增公告:'.g2u($request['title']));
+            $syncData[] = $request;
+            $this->sync('notice', $syncData, 'add');
+        }
+        return $result;
     }
     //编辑
     public function announce_edit($request)
@@ -66,14 +72,30 @@ class AnnounceController extends CommonController
         //start_time 开始日期   不能为空
         //end_time  结束日期  默认一周 不能为空
         $where['id'] = $request['id'];
-        return D($this->models['sys_notice'])->getTableEdit($where,u2gs($request));
+        $info = D($this->models['sys_notice'])->where($where)->find();
+        $request = u2gs($request);
+        $result = D($this->models['sys_notice'])->getTableEdit($where,$request);
+        if($result['status']){
+            $this->write_log('修改公告:'.g2u($info['title']));
+            $request['areacode'] = $info['areacode'];
+            $syncData[] = $request;
+            $this->sync('notice', $syncData, 'edit');
+        }
+        return $result;
     }
     //删除
     public function announce_remove($request)
     {
         $where['id'] = array('in',$request['id']);
-        $this->write_log('删除公告');
-        return D($this->models['sys_notice'])->getTableDel($where);
+        $info = D($this->models['sys_notice'])->where($where)->select();
+        $result = D($this->models['sys_notice'])->getTableDel($where);
+        if($result['status']){
+            $this->write_log('删除公告:'.g2u(implode(',',array_column($info,'title'))));
+            $syncData = $info;
+            $this->sync('notice', $syncData, 'del');
+        }
+        return $result;
+
     }
     //公告广播  符合条件的公告
     public function announce_broadcast($request)

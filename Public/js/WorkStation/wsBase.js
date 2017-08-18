@@ -102,6 +102,16 @@ things.exports = function(target){
         }
     });
 }
+things.importExcel = function(target){
+    app.importExcel({
+        url:app.url('WorkStation/import_excel'),
+        form:'#importForm',
+        dialog:'#importForm',
+        datagrid:'#datagrid',
+        linkbutton:target
+    });
+}
+
 $(function(){
     app.datagrid('#datagrid',{
         url:things.datagridUrl,

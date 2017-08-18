@@ -205,6 +205,20 @@ class EmployeeController extends CommonController
         $this->write_log('编辑警员-'.g2u($empInfo['name']));
         exit(json_encode($result));
     }
+    public function initPwd($request)
+    {
+        $db = D($this->models['employee']);
+        $where['empid'] = $request['empid'];
+        $request['password'] = $request['code'];
+        $result = $db->getTableEdit($where,$request);
+        if($result['status']){
+            $this->write_log('初始化密码-'.$request['code']);
+            $result['message'] = '初始化密码成功';
+        }else{
+            $result['message'] = '初始化密码失败';
+        }
+        return $result;
+    }
     //准备前端页面数据
     public function assignInfo()
     {
@@ -457,9 +471,13 @@ class EmployeeController extends CommonController
     public function import_excel()
     {
         $func = A('Function');
+        $db = D($this->models['employee']);
         $where[] = $this->get_manger_sql('','areacode',false);
         $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
-        $role_id_name = array_flip(D($this->models['role'])->getField('roleid,rolename'));
+        $area_code_read = D($this->models['area'])->where($where)->getField('areacode,is_read');
+        $area_name_code = array_flip($area_code_name);
+        $role_id_name = D($this->models['role'])->getField('rolename,roleid');
+        $role_id_level = D($this->models['role'])->getField('roleid,level');
         $code_arr = array_keys($area_code_name);
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
@@ -470,9 +488,13 @@ class EmployeeController extends CommonController
                            '备注'=>'remark',
                            '性别'=>'sex',
                            '电话'=>'phone');
+        $allow = 0; //允许导入
+        $deny = 0;  //禁止导入
+        $success = 0;   //成功导入
+        $fail = 0;      //失败导入
         if($res){
             $data = $func->read_excel($res);
-            $header = reset($data);
+            $header = array_shift($data);
             foreach ($header as $key => $value) {
                 if(array_key_exists($value,$name_code)){
                     $key_code[$key] = $name_code[$value];
@@ -482,29 +504,40 @@ class EmployeeController extends CommonController
             foreach ($data as $value) {
                 $saveData= array();
                 foreach ($value as $k => $val) {
-                    $val = $val === null ? '' : $val = u2g($val);
+                    $val = $val === null ? '' : $val = trim(u2g($val));
                     if(!array_key_exists($k,$key_code)) continue;
                     if($key_code[$k] == 'areaname'){
-                        if(in_array($val,$area_code_name)){
-                            $saveData[$key_code[$k]] = $val;
-                            $saveData['areacode'] = array_search($val);
+                        if(!in_array($val,$area_code_name)){
+                            $deny++;
+                            continue;
+                        }else{
+                            $saveData['areacode'] = $area_name_code[$val];
+                            $allow++;
                         }
-                        continue;
                     }
-                    if($key_code[$k] == 'code'){
-                        $saveData['password'] = $val;
-                        continue;
-                    }
-                    if($key_code[$k] == 'roleid'){             //
+                    if($key_code[$k] == 'code') $saveData['password'] = $val;
+                    if($key_code[$k] == 'roleid'){             //设置警员属性
                         $saveData[$key_code[$k]] = $role_id_name[$val];
-                    }else{
-                        $saveData[$key_code[$k]] = $val;
+                        continue;
                     }
+                    $saveData[$key_code[$k]] = $val;
                 }
-
+                $level = $role_id_level[$saveData['roleid']];
+                if($level == 1 || $level == 2 || $level == 3) $saveData['userarea'] = $saveData['areacode'];
+                if($area_code_read[$saveData['areacode']] == 0) $saveData['login'] = 0;
+                $empInfo = $db->where('code="'.$saveData['code'].'"')->find();
+                if($empInfo){
+                    $res = $db->where('code="'.$saveData['code'].'"')->save($saveData);
+                }else{
+                    $res = $db->add($saveData);
+                }
+                $res ? $success++ : $fail++;
+                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+                $this->write_log($result['message']);
             }
         }else{
             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
         }
+        exit(json_encode($result));
     }
 }

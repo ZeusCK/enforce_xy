@@ -7,7 +7,8 @@ namespace Home\Controller;
 class WorkStationController extends CommonController
 {
     //表的表名-自增主键
-    protected $models = ['wsbase'=>'Enforce\WsBase'];           //工作站
+    protected $models = ['wsbase'=>'Enforce\WsBase',    //工作站
+                        'area'=>'Enforce\AreaDep'];
     protected $actions = ['employee'=>'Employee','area'=>'Area'];
     protected $views = ['ws_base'=>'wsBase'];
     protected $logContent = '设备管理/工作站管理';
@@ -111,60 +112,64 @@ class WorkStationController extends CommonController
         }
         $this->ajaxReturn(array_values($initData));
     }
-    //导入部门的excel
-    /*public function import_wsbase_excel()
+    //导入警员的excel
+    public function import_excel()
     {
-        set_time_limit(0);
         $func = A('Function');
-        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
-
-        $where[] = $this->get_manger_sql();
-        $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
         $db = D($this->models['wsbase']);
-        $areaType = array_flip($this->get_val_item('dictionary','areatype'));
+        $where[] = $this->get_manger_sql('','areacode',false);
+        $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
+        $area_name_code = array_flip($area_code_name);
+        $code_arr = array_keys($area_code_name);
+        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
-        $name_code = array('部门名称'=>'areaname',
-                           '部门编号'=>'areacode',
-                           '部门类型'=>'type',
-                           '部门标识'=>'code',
-                           '联系人'=>'rperson',
-                           '联系方式'=>'rphone');
+        $name_code = array('工作站IP'=>'gzz_ip',
+                           '所属部门'=>'areaname',
+                           '负责人'=>'fzr',
+                           '负责人电话'=>'dh',
+                           '启用状态'=>'qyzt');
+        $allow = 0; //允许导入
+        $deny = 0;  //禁止导入
+        $success = 0;   //成功导入
+        $fail = 0;      //失败导入
         if($res){
             $data = $func->read_excel($res);
             $header = array_shift($data);
             foreach ($header as $key => $value) {
-                if(in_array($value,$name_code)){
+                if(array_key_exists($value,$name_code)){
                     $key_code[$key] = $name_code[$value];
                 }
             }
             $allData = array();
-            $sortItem = array();
             foreach ($data as $value) {
                 $saveData= array();
                 foreach ($value as $k => $val) {
+                    $val = $val === null ? '' : $val = trim(u2g($val));
                     if(!array_key_exists($k,$key_code)) continue;
-                    if($key_code[$k] == 'type'){             //
-                        $saveData[$key_code[$k]] = $areaType[$val];
-                    }else{
-                        $saveData[$key_code[$k]] = $val;
+                    if($key_code[$k] == 'areaname'){
+                        if(!in_array($val,$area_code_name)){
+                            $deny++;
+                            continue;
+                        }else{
+                            $saveData['areacode'] = $area_name_code[$val];
+                            $allow++;
+                        }
                     }
-                    if($key_code[$k] == 'areacode') $sortItem[] = $val;
-
+                    $saveData[$key_code[$k]] = $val;
                 }
-                $allData[] = $saveData;
+                $empInfo = $db->where('gzz_ip="'.$saveData['gzz_ip'].'"')->find();
+                if($empInfo){
+                    $res = $db->where('gzz_ip="'.$saveData['gzz_ip'].'"')->save($saveData);
+                }else{
+                    $res = $db->add($saveData);
+                }
+                $res ? $success++ : $fail++;
+                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+                $this->write_log($result['message']);
             }
-            array_multisort($sortItem,SORT_ASC,$allData);           //排序后确保上级部门在前
-            foreach ($allData as $value) {
-                $parentAreacode = substr(trim($value['areacode']), 0,-2);   //上级部门代码
-                $parentAreaInfo = $db->where('areacode="'.$parentAreacode.'"')->find();
-                $value['fatherareaid'] = $parentAreaInfo ?  $parentAreaInfo['fatherareaid'] : 0;
-                $value['is_read'] = $is_read;
-                $res = $db->add($value);
-            }
-            $result['message'] = '导入成功';
         }else{
             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
         }
-        $this->ajaxReturn($result);
-    }*/
+        exit(json_encode($result));
+    }
 }

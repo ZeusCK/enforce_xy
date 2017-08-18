@@ -124,6 +124,15 @@ module.exports = function(target){
         }
     });
 }
+module.importExcel = function(target){
+    app.importExcel({
+        url:app.url('Server/import_excel'),
+        form:'#importForm',
+        dialog:'#importForm',
+        datagrid:'#datagrid',
+        linkbutton:target
+    });
+}
 $(function() {
     app.datagrid('#datagrid', {
         url: module.datagridUrl,
@@ -141,6 +150,7 @@ $(function() {
                 { field: 'db_user', title: '数据库账号', width: 200, align: 'center' },
                 { field: 'db_pwd', title: '数据库密码', width: 200, align: 'center' },
                 { field: 'phone', title: '联系电话', width: 200, align: 'center' },
+                { field: 'remark', title: '备注', width: 200, align: 'center' },
                 {
                     field: 'status_name',
                     title: '状态',

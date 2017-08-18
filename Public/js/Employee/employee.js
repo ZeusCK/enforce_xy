@@ -91,7 +91,7 @@ module.exports = function(target){
         rows: total,
         page: 1,
         parseFileds:function(field){
-            delete field.id;
+            delete field.empid;
         }
     });
 }
@@ -132,7 +132,7 @@ module.changeinfo = function(){
 }
 module.remove = function(){
     if(module.area_is_read == 0){
-        $.messager.alert('操作提示','你无法删除'+module.areaname+'(只读)警员','info');
+        $.messager.alert('操作提示','你无法删除'+module.areaname+'(只读)的警员','info');
         return false;
     }
     var infos = $('#datagrid').datagrid('getSelections');
@@ -182,10 +182,10 @@ module.allowAreaBar = function(){
         return false;
     }
     var empid = rowData.empid;
-    managerTree.show_emp_manger_area(empid);
+    /*managerTree.show_emp_manger_area(empid);
     $(managerTree.dom).tree({
         checkbox:true
-    });
+    });*/
     $('#areaInfo').hide();
     $('#manInfo').show();
     $('#otherInfoForm').form('load',rowData);
@@ -193,6 +193,22 @@ module.allowAreaBar = function(){
     $("#bindingip").textbox('readonly',false);
     $('#menu_sure').show();
     $('#otherdialog').dialog('open');
+}
+module.initPwd = function(target){
+    if(module.area_is_read == 0){
+        $.messager.alert('操作提示','你无法初始化'+module.areaname+'(只读)的警员密码','info');
+        return false;
+    }
+    app.extra('add_edit',{
+        form:'#otherInfoForm',
+        url:'Employee/initPwd',
+        dialog:otherdialog,
+        linkbutton:target,
+        parsedata:function(data){
+            delete data.bindingip;
+            delete data.clientipDiv;
+        }
+    })
 }
 module.allowOther = function(){
     var params = app.serializeJson('#otherInfoForm');
@@ -228,10 +244,7 @@ module.importExcel = function(target){
         form:'#importForm',
         dialog:'#importForm',
         datagrid:'#datagrid',
-        linkbutton:target,
-        success:function(data){
-            tree.loadData(true);
-        }
+        linkbutton:target
     });
 }
 $(function(){

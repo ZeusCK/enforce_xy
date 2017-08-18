@@ -319,6 +319,10 @@ class AreaController extends CommonController
                            '部门标识'=>'code',
                            '联系人'=>'rperson',
                            '联系方式'=>'rphone');
+        $allow = 0;
+        $deny = 0;
+        $success = 0;
+        $fail = 0;
         if($res){
             $data = $func->read_excel($res);
             $header = array_shift($data);
@@ -350,6 +354,7 @@ class AreaController extends CommonController
             }
             array_multisort($sortItem,SORT_ASC,$allData);           //排序后确保上级部门在前
             foreach ($allData as $value) {
+                $allow++;
                 $parentAreacode = substr(trim($value['areacode']), 0,-2);   //上级部门代码
                 $parentAreaInfo = $db->where('areacode="'.$parentAreacode.'"')->find();
                 $value['fatherareaid'] = $parentAreaInfo ?  $parentAreaInfo['fatherareaid'] : 0;
@@ -360,8 +365,10 @@ class AreaController extends CommonController
                 }else{
                     $res = $db->add($value);
                 }
+                $res ? $success++ : $fail++;
             }
-            $result['message'] = '导入成功';
+            $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+            $this->write_log($result['message']);
         }else{
             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
         }

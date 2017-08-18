@@ -34,9 +34,14 @@ $jybhField 表中警员编号的的字段 为false时不管
 tpUrl 请求 控制/方法  如 Case/case_list
 
 reType 返回的格式 JSON,JSONP,XML,EVAL 默认JSON
-    
+
 后端方法统一问题，解决session锁问题
 
 一律使用数组接受前端传值
 
 使用return 返回结果
+
+## 未显示菜单
+
+> _____/index.php/Home/Menu    菜单管理
+> _____/index.php/Home/Dictionary  字典管理

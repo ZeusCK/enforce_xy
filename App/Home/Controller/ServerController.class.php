@@ -7,7 +7,8 @@ namespace Home\Controller;
 class ServerController extends CommonController
 {
     //表的表名-自增主键
-    protected $models = ['server'=>'Enforce\ServerMachine'];           //服务器
+    protected $models = ['server'=>'Enforce\ServerMachine', //服务器
+                        'area'=>'Enforce\AreaDep'];
     protected $actions = ['employee'=>'Employee','area'=>'Area'];
     protected $logContent = '设备管理/服务器管理';
     public function server_show()
@@ -104,5 +105,77 @@ class ServerController extends CommonController
             $initData[$value['name']]['value']  = $value['value'];
         }
         $this->ajaxReturn(array_values($initData));
+    }
+    //导入警员的excel
+    public function import_excel()
+    {
+        $func = A('Function');
+        $db = D($this->models['server']);
+        $where[] = $this->get_manger_sql('','areacode',false);
+        $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
+        $enableType = array_flip($this->get_val_item('dictionary','enable'));
+        $area_name_code = array_flip($area_code_name);
+        $code_arr = array_keys($area_code_name);
+        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+        $key_code = array();
+        $name_code = array('服务器IP'=>'server_ip',
+                           '所属部门'=>'areaname',
+                           '端口号'=>'server_port',
+                           '品牌'=>'trademark',
+                           '配置'=>'config',
+                           '帐号'=>'account',
+                           '密码'=>'password',
+                           '数据库账号'=>'db_user',
+                           '数据库密码'=>'db_pwd',
+                           '联系电话'=>'phone',
+                           '备注'=>'remark',
+                           );
+        $allow = 0; //允许导入
+        $deny = 0;  //禁止导入
+        $success = 0;   //成功导入
+        $fail = 0;      //失败导入
+        if($res){
+            $data = $func->read_excel($res);
+            $header = array_shift($data);
+            foreach ($header as $key => $value) {
+                if(array_key_exists($value,$name_code)){
+                    $key_code[$key] = $name_code[$value];
+                }
+            }
+            $allData = array();
+            foreach ($data as $value) {
+                $saveData= array();
+                foreach ($value as $k => $val) {
+                    $val = $val === null ? '' : $val = trim(u2g($val));
+                    if(!array_key_exists($k,$key_code)) continue;
+                    if($key_code[$k] == 'areaname'){
+                        if(!in_array($val,$area_code_name)){
+                            $deny++;
+                            continue;
+                        }else{
+                            $saveData['areacode'] = $area_name_code[$val];
+                            $allow++;
+                        }
+                    }
+                    if($key_code[$k] == 'qyzt'){
+                        $saveData[$key_code[$k]] = $enableType[$val];
+                        continue;
+                    }
+                    $saveData[$key_code[$k]] = $val;
+                }
+                $empInfo = $db->where('server_ip="'.$saveData['server_ip'].'"')->find();
+                if($empInfo){
+                    $res = $db->where('server_ip="'.$saveData['server_ip'].'"')->save($saveData);
+                }else{
+                    $res = $db->add($saveData);
+                }
+                $res ? $success++ : $fail++;
+                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+                $this->write_log($result['message']);
+            }
+        }else{
+            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+        }
+        exit(json_encode($result));
     }
 }

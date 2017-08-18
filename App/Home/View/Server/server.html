@@ -51,6 +51,8 @@
         <a onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
     删除</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="javascript:
+                    $('#importForm').dialog('open')">导入</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_ser">无</span></a>
     </div>
@@ -107,5 +109,15 @@
         <a class="easyui-linkbutton" id="ok" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
         <a class="easyui-linkbutton" id="update" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">更新</a>
         <a class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:$('#dialog').dialog('close')" style="width:90px">取消</a>
+    </div>
+    <form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
+        <div class="form_m">
+            <div for="rphone" class="form_label">Excel: </div> <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">
+        </div>
+    </form>
+    <div id="importButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.importExcel(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+                    $('#importForm').dialog('close')" style="width:90px">取消</a>
     </div>
 </block>

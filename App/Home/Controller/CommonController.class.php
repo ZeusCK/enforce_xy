@@ -533,7 +533,7 @@ class CommonController extends Controller {
         $areacodes = $areadb->where($where)->getField('areacode',true);
         //排除自己已经监管的部门
         foreach ($areacodes as $key => $value) {
-            if(strpos($areacode,$value) === 0) unset($areacodes[$key]);
+            if(strpos($value,$areacode) === 0) unset($areacodes[$key]);
         }
         if(empty($areacodes)) return array($areacode);
 
@@ -541,7 +541,10 @@ class CommonController extends Controller {
         foreach ($areacodes as $key => $value) {
             if(isset($minLength)){
                 if($minLength < strlen($value)) continue;
-                if($minLength > strlen($value)) $searchArr = array();
+                if($minLength > strlen($value)){
+                    $searchArr = array();
+                    $searchArr[] = $value;
+                }
                 if($minLength == strlen($value)) $searchArr[] = $value;
             }else{
                 $minLength = strlen($value);
@@ -554,7 +557,7 @@ class CommonController extends Controller {
                 if(strpos($val,$value) === 0) unset($checkAreacode[$key]);
             }
         }
-        return array_merge($checkAreacode,$searchArr);
+        return array_merge(array($areacode),$checkAreacode,$searchArr);
     }
     /**
      * 同步表
@@ -569,11 +572,13 @@ class CommonController extends Controller {
             $database = C('DB_NAME');
             $syncTables = array('employee'=>$database.'.sync_employee',
                                 'case'=>$database.'.sync_case',
-                                'case_video'=>$database.'.sync_case_video');
+                                'case_video'=>$database.'.sync_case_video',
+                                'notice'=>$database.'.sync_notice',);
             $syncFields = array(
                 'employee'=>array('areacode'=>'','name'=>'','code'=>'','old_code'=>''),
                 'case'=>array('tab_name'=>'','case_key'=>''),
                 'case_video'=>array('tab_name'=>'','wjbh'=>''),
+                'notice'=>array('title'=>'','areacode'=>''),
                 );
             $ops = array('add'=>1,'del'=>2,'edit'=>3);
             foreach ($data as &$value) {

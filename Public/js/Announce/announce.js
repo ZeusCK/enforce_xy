@@ -13,6 +13,7 @@ module.show = function() {
     });
 }
 module.addBar = function() {
+    $('#changeTitle').textbox('readonly',false);
     $('#dialog').dialog({
         title: '增加',
         iconCls: 'icon-add',
@@ -24,8 +25,8 @@ module.addBar = function() {
     }).dialog('open');
     $('#form').form('reset');
     var t = new Date();
-    $('#start_time').datebox('setValue', new Time(t, 7).init());
-    $('#end_time').datebox('setValue', new Time(t, 0).init());
+    $('#start_time').datebox('setValue', new Time(t, 0).init());
+    $('#end_time').datebox('setValue', new Time(t, -6).init());
 }
 module.editBar = function() {
     var infos = $('#datagrid').datagrid('getSelections');
@@ -33,6 +34,7 @@ module.editBar = function() {
         $.messager.alert('操作提示', '请选择单个进行操作', 'info');
         return false;
     } else if (infos.length == 1) {
+        $('#changeTitle').textbox('readonly',true);
         module.id = infos[0].id;
         $('#dialog').form('load', infos[0]);
         $('#dialog').dialog({
