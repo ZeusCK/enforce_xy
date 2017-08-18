@@ -44,4 +44,5 @@ reType 返回的格式 JSON,JSONP,XML,EVAL 默认JSON
 ## 未显示菜单
 
 > _____/index.php/Home/Menu    菜单管理
+
 > _____/index.php/Home/Dictionary  字典管理
