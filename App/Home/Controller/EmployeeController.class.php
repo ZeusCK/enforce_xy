@@ -478,6 +478,7 @@ class EmployeeController extends CommonController
         $area_name_code = array_flip($area_code_name);
         $role_id_name = D($this->models['role'])->getField('rolename,roleid');
         $role_id_level = D($this->models['role'])->getField('roleid,level');
+        $role_level_id = array_flip($role_id_level);
         $code_arr = array_keys($area_code_name);
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
@@ -522,7 +523,9 @@ class EmployeeController extends CommonController
                     }
                     $saveData[$key_code[$k]] = $val;
                 }
-                $level = $role_id_level[$saveData['roleid']];
+
+                $level = array_key_exists($saveData['roleid'],$role_id_level) ? $role_id_level[$saveData['roleid']] : 4;
+                if($saveData['roleid'] == '') $saveData['roleid'] = $role_level_id[$level];           //如果没有角色
                 if($level == 1 || $level == 2 || $level == 3) $saveData['userarea'] = $saveData['areacode'];
                 if($area_code_read[$saveData['areacode']] == 0) $saveData['login'] = 0;
                 $empInfo = $db->where('code="'.$saveData['code'].'"')->find();

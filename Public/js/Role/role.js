@@ -63,30 +63,20 @@ things.add = function(){
 things.edit = function(){
     things.change_info('#editForm',things.editUrl,'#editDialog');
 }
-things.remove = function(){
+things.remove = function(target){
     var infos = $('#datagrid').datagrid('getSelections');
-    var ids = [];
-    if(infos.length == 0)
-        return false;
-
-    $.each(infos,function(n,m){
-        var id= m.roleid;
+    if(infos.length == 0) return false;
+    for (var i = 0; i < infos.length; i++) {
         if(id == things.roleid){
             $.messager.alert('删除提示','你无法删除自身,该操作只有上级用户可执行','info');
             return false;
         }
-        ids.push(id);
-    });
-    ids = ids.join(',');
-    $.ajax({
-        url:things.removeUrl,
-        type:'post',
-        data:{
-            roleid:ids
-        },
-        success:function(data){
-            things.callback(data);
-        }
+    }
+    app.extra('remove',{
+        url:'Employee/dataRemove',
+        datagrid:'#datagrid',
+        linkbutton:target,
+        idField:'roleid'
     });
 }
 things.search = function(){

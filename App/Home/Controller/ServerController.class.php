@@ -22,6 +22,7 @@ class ServerController extends CommonController
         //status 在线状态
         //server_ip 服务器ip
         //areacode 部门编号
+        $request = u2gs($request);
         $areaSql = $this->get_manger_sql($request['areacode'],'areacode',false).' OR areacode=""';
         $where[] = $areaSql;
         if($request['status'] != '') $where['status'] = $request['status'];

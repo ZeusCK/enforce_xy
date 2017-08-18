@@ -55,7 +55,6 @@ module.infoBar = function(type){
     }
     //添加
     if(type == 1){
-
         var info = {areacode:module.areacode,name:'',code:'',phone:'',remark:'',email:'',empid:''};
         //$('#form').form('clear');
         $('#form').form('load',info);
@@ -69,8 +68,12 @@ module.infoBar = function(type){
             $.messager.alert('操作提示','请选择一个警员进行编辑','info');
             return false;
         }
-        if(info[0].empid == module.empid){
+        if(infos[0].empid == module.empid){
             $.messager.alert('操作提示','你无法修改自身。','info');
+            return false;
+        }
+        if(infos[0].login == 0){
+            $.messager.alert('操作提示','你无法修改只读部门的警员。','info');
             return false;
         }
         //加载数据
@@ -130,14 +133,13 @@ module.changeinfo = function(){
         }
     });
 }
-module.remove = function(){
+module.remove = function(target){
     if(module.area_is_read == 0){
         $.messager.alert('操作提示','你无法删除'+module.areaname+'(只读)的警员','info');
         return false;
     }
     var infos = $('#datagrid').datagrid('getSelections');
     if(infos.length == 0) return false;
-    var ids = [];
     for (var i = 0; i < infos.length; i++) {
         if(infos[i].code == 'admin'){
             $.messager.alert('删除提示','超级管理员无法删除','info');
@@ -148,26 +150,16 @@ module.remove = function(){
             $.messager.alert('删除提示','你无法删除自身,该操作只有上级用户可执行','info');
             return false;
         }
-        ids.push(id);
-    }
-    ids = ids.join(',');
-    $.ajax({
-        url:app.url('Employee/dataRemove'),
-        type:'post',
-        data:{
-            empid:ids
-        },
-        success:function(data){
-            $.messager.alert('结果提示',data.message,'info');
-            $('#datagrid').datagrid('reload',{
-                areacode:module.areacode,
-                rand:Math.random()
-            });
-        },
-        error:function(data){
-            $('#dialog').dialog('close');
-            $.messager.alert('操作提示','网络故障','info');
+        if(infos[0].login == 0){
+            $.messager.alert('操作提示','你无法删除只读部门的警员。','info');
+            return false;
         }
+    }
+    app.extra('remove',{
+        url:'Employee/dataRemove',
+        datagrid:'#datagrid',
+        linkbutton:target,
+        idField:'empid'
     });
 }
 module.allowAreaBar = function(){
@@ -181,11 +173,17 @@ module.allowAreaBar = function(){
         $.messager.alert('操作提示','你无法为自己分配权限，如有需求请联系上级!','info');
         return false;
     }
+    if(rowData.login == 0){
+        $.messager.alert('操作提示','你无法为只读部门的警员进行权限分配。','info');
+        return false;
+    }
     var empid = rowData.empid;
     /*managerTree.show_emp_manger_area(empid);
     $(managerTree.dom).tree({
         checkbox:true
     });*/
+    if(module.code == 'admin') $('#initPwd').show();
+
     $('#areaInfo').hide();
     $('#manInfo').show();
     $('#otherInfoForm').form('load',rowData);
@@ -199,20 +197,24 @@ module.initPwd = function(target){
         $.messager.alert('操作提示','你无法初始化'+module.areaname+'(只读)的警员密码','info');
         return false;
     }
-    app.extra('add_edit',{
-        form:'#otherInfoForm',
-        url:'Employee/initPwd',
-        dialog:otherdialog,
-        linkbutton:target,
-        parsedata:function(data){
-            delete data.bindingip;
-            delete data.clientipDiv;
+    $.messager.confirm('操作提示','你确定初始化该警员的登陆密码么？',function(r){
+        if(r){
+            app.extra('add_edit',{
+                form:'#otherInfoForm',
+                url:'Employee/initPwd',
+                dialog:otherdialog,
+                linkbutton:target,
+                parsedata:function(data){
+                    delete data.bindingip;
+                    delete data.clientipDiv;
+                }
+            });
         }
-    })
+    });
 }
 module.allowOther = function(){
     var params = app.serializeJson('#otherInfoForm');
-    var areas = $(managerTree.dom).tree('getChecked');
+    /*var areas = $(managerTree.dom).tree('getChecked');
     if(areas.length>0){
         var ids=[];
         for(var i=0;i<areas.length;i++){
@@ -222,7 +224,7 @@ module.allowOther = function(){
         params.userarea = userarea;
     }else{
         params.userarea = '';
-    }
+    }*/
     $.ajax({
             type:'post',
             url:app.url('Employee/save_other_info'),

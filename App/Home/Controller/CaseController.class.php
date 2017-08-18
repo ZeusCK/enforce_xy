@@ -84,6 +84,7 @@ class CaseController extends CommonController
         //start_time.etime 结束时间
         //hand_status 案件移交状态
         //type 显示类型 0 正常产看  1 申请查看
+        $request = u2gs($request);
         $type = $request['type'] ? $request['type'] : 0;
         $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
         $idField = $type == 0 ? 'areacode' : 'apply_areacode';
@@ -101,6 +102,7 @@ class CaseController extends CommonController
         if($request['alarm_addr']) $where['alarm_addr'] = array('like','%'.$request['alarm_addr'].'%');    //警情名称
         if($request['title']) $where['title'] = array('like','%'.$request['title'].'%');    //警情名称
         if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
+        if($request['jyxm']) $where['jyxm'] = $request['jyxm'];      //警情类型
         if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
         if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
@@ -175,6 +177,7 @@ class CaseController extends CommonController
         //hand_status 案件移交状态
         //type 显示类型 0 正常产看  1 申请查看
         //areacode 部门代码
+        $request = u2gs($request);
         $page = $request['page'];
         $rows = $request['rows'];
         $areacode = $request['areacode'];
@@ -424,7 +427,7 @@ class CaseController extends CommonController
         $res['total'] = count($data);
         $res['rows'] = $data;
         $res['info'] = $caseInfo;
-        $this->write_log(g2u($info['title']).'播放,编辑信息');
+        $this->write_log(g2u($caseInfo['title']).'播放,编辑信息');
         return g2us($res);
     }
     //案件统计

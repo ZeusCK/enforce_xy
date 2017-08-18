@@ -394,52 +394,61 @@ App.prototype.add_edit.defaults = {
 //删除
 App.prototype.remove = function(params){
     var options = $.extend({},App.prototype.remove.defaults,params);
-    this.linkbutton(options.linkbutton,'disable');
-    if(options.url == ''){
-        $.messager.alert('操作提示','url地址不能为空','info');
-        this.linkbutton(options.linkbutton,'enable');
-        return false;
-    }
-    var data = {};
-    if(options.datagrid){               //如果有datagrid
-        var infos = $(options.datagrid).datagrid('getSelections');
-        if(infos.length == 0) return false;
-        var ids = [];
-        $.each(infos,function(n,m){
-            ids.push(m[options.idField]);
-        });
-        ids = ids.join(',');
-        data[options.idField] = ids;
-    }
-    if(options.parsedata(data) === false){
-        this.linkbutton(options.linkbutton,'enable');
-        return false;
-    }
-    options.url = this.tp.ajax+'?tpUrl='+options.url;
-    $.ajax({
-        url:options.url,
-        type:'post',
-        data:data,
-        dataType:'json',
-        success:function(data){
-            options.success(data);
-            if(data.message) $.messager.alert('结果提示',data.message,'info');
-            if(options.datagrid) {
-                if(options.queryParam){
-                    $(options.datagrid).datagrid('reload',options.queryParam);
-                }else{
-                    $(options.datagrid).datagrid('reload');
-                }
+    var self = this;
+    App.prototype.linkbutton(options.linkbutton,'disable');
+    $.messager.confirm('删除提示','确定删除这些记录么？',function(r){
+        if(r){
+            if(options.url == ''){
+                $.messager.alert('操作提示','url地址不能为空','info');
+                App.prototype.linkbutton(options.linkbutton,'enable');
+                return false;
             }
-        },
-        error:function(data){
-            options.error(data);
-            $.messager.alert('操作提示','网络故障','info');
-        },
-        complete:function(r,s){
+            var data = {};
+            if(options.datagrid){               //如果有datagrid
+                var infos = $(options.datagrid).datagrid('getSelections');
+                if(infos.length == 0) return false;
+                var ids = [];
+                $.each(infos,function(n,m){
+                    ids.push(m[options.idField]);
+                });
+                ids = ids.join(',');
+                data[options.idField] = ids;
+            }
+
+            if(options.parsedata(data) === false){
+                App.prototype.linkbutton(options.linkbutton,'enable');
+                return false;
+            }
+            options.url = self.tp.ajax+'?tpUrl='+options.url;
+            $.ajax({
+                url:options.url,
+                type:'post',
+                data:data,
+                dataType:'json',
+                success:function(data){
+                    options.success(data);
+                    if(data.message) $.messager.alert('结果提示',data.message,'info');
+                    if(options.datagrid) {
+                        if(options.queryParam){
+                            $(options.datagrid).datagrid('reload',options.queryParam);
+                        }else{
+                            $(options.datagrid).datagrid('reload');
+                        }
+                    }
+                },
+                error:function(data){
+                    options.error(data);
+                    $.messager.alert('操作提示','网络故障','info');
+                },
+                complete:function(r,s){
+                    App.prototype.linkbutton(options.linkbutton,'enable');
+                }
+            });
+        }else{
             App.prototype.linkbutton(options.linkbutton,'enable');
         }
     });
+
 }
 //删除方法默认值
 App.prototype.remove.defaults = {

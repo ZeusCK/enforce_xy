@@ -37,7 +37,7 @@ app.tp.code = "{:session('code')}";
         当前部门：<span id="mu_ser">无</span></a>
         <a href="javascript:void(0)" onclick="module.infoBar(1)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="module.infoBar(2)" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <a href="javascript:void(0)" onclick="module.remove()" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
         删除</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="javascript:
@@ -136,7 +136,7 @@ app.tp.code = "{:session('code')}";
         </div> -->
     </div>
     <div id="buttons">
-         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-key" onclick="module.initPwd(this)" style="width:90px">密码初始化</a>
+         <a href="javascript:void(0)" id="initPwd" class="easyui-linkbutton" iconCls="icon-key" onclick="module.initPwd(this)" style="width:90px;display: none;">密码初始化</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" id="menu_sure" iconCls="icon-ok" onclick="module.allowOther()" style="width:90px">确定</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
             $('#otherdialog').dialog('close')" style="width:90px">取消</a>

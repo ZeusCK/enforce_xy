@@ -19,7 +19,7 @@ class WorkStationController extends CommonController
     //工作站
     public function ws_base_list()
     {
-        $request['hzr'] = I('hzr');        //负责人
+        $request['hzr'] = u2g(I('hzr'));        //负责人
         $request['zxzt'] = I('zxzt');        //在线状态,0:不在线，1：在线
         $request['qyzt'] = I('qyzt');
         $request['areacode'] = I('areacode');

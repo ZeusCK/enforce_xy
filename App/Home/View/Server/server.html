@@ -35,10 +35,11 @@
     </div>
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-            <label>部门：</label>
-            <input name="areaid" class="easyui-textbox">
+           <!--  <label>部门：</label>
+           <input name="areaname" class="easyui-textbox"> -->
             <label class="marginL">在线状态：</label>
-            <select name="status" class="easyui-combobox" data-options="width:60,panelHeight:46">
+            <select name="status" class="easyui-combobox" data-options="width:60,panelHeight:90,editable:false">
+                <option value="">全部</option>
                 <option value="1">在线</option>
                 <option value="0">离线</option>
             </select>

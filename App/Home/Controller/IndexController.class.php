@@ -45,13 +45,13 @@ class IndexController extends CommonController {
             $res = $empDb->where($where)->find();
             if($res){
                 if($res['login'] == 0){
-                    $res['message'] = '你无法在该平台进行登录！';
+                    $result['message'] = '你无法在该平台进行登录！';
                     $this->ajaxReturn($result);
                 }
                 if($res['bindingip'] == 1){
                     $ip = get_client_ip();
                     if($ip != $res['clientip']){
-                       $res['message'] = '请在指定IP登录';
+                       $result['message'] = '请在指定IP登录';
                        $this->ajaxReturn($result);
                     }
                 }
