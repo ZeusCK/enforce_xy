@@ -498,14 +498,15 @@ class CommonController extends Controller {
                 $baseSql .= $codeField. '= ""';
             }
         }
-        if($areacode != ''){
+        //如果没有查询部门,或者查询部门是自身所属部门的上级,那么加上警员
+        if($areacode != '' || strpos($areacode,session('areacode') === 0)){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
         }else{
             if($baseSql == '') $baseSql = '1';
             if($jybhField){
-                $jybhSql = $jybhField.' = "'.session('code').'"';
-                $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR '.$jybhSql;
+                $jybhSql = $jybhField.' = "'.session('code').'" AND '.$codeField.' = "'.session('areacode').'"';
+                $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR ('.$jybhSql.')';
             }
         }
         // error_log($baseSql."\r\n",3,'./error.log');
