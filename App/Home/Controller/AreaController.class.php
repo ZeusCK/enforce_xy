@@ -21,10 +21,6 @@ class AreaController extends CommonController
     public function index()
     {
         $areaTree = $this->tree_list();
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : 0;
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
         $this->display('area');
     }
 
@@ -53,7 +49,7 @@ class AreaController extends CommonController
             $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
             $value['areatype'] = $value['type'];
             // $value['typename'] = $areaType[$value['type']];
-            $value['is_read_name'] = u2g($read_type[$value['is_read']]);
+            $value['is_read_name'] = $read_type[$value['is_read']];
         }
         S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
         $this->saveExcel($data); //监测是否为导出
@@ -165,7 +161,7 @@ class AreaController extends CommonController
     public function all_user_area($type)
     {
         $db = D($this->models['area']);
-        $where = $this->get_manger_sql(session('areacode'),'areacode',false). 'OR areacode="'.session('areacode').'"';
+        $where = $this->get_manger_sql('','areacode',false). 'OR areacode="'.session('areacode').'"';
         $data_f = $db->where($where)->select();
         if(!empty($data_f)){
             $lc=['areaid','fatherareaid'];
@@ -203,7 +199,7 @@ class AreaController extends CommonController
      */
     public function tree_list($new=false)
     {
-        if(!S(session('user').'area') || $new){
+        if(!S(session('code').'area') || $new){
             $db = D($this->models['area']);
             $data = $this->all_user_area();
             $ids = array(0);
@@ -214,9 +210,9 @@ class AreaController extends CommonController
             $icons = ['icon-application_xp_terminal','icon-application'];
             $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
-            S(session('user').'area',$data_tree,5*60);
+            S(session('code').'area',$data_tree,5*60);
         }else{
-            $data_tree = S(session('user').'area');
+            $data_tree = S(session('code').'area');
         }
         return $data_tree;
     }

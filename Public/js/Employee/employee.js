@@ -52,7 +52,7 @@ module.infoBar = function(type){
         return false;
     }
     if(module.area_is_read == 0){
-        $.messager.alert('操作提示','你无法向'+module.areaname+'(只读)添加警员','info');
+        $.messager.alert('操作提示','你无法向'+module.areaname+'(只读)添加/修改警员','info');
         return false;
     }
     //添加

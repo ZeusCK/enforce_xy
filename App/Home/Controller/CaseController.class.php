@@ -159,6 +159,7 @@ class CaseController extends CommonController
         $request['case_key'] = date('YmdHis',strtotime($start_time)).'_'.$cpxh.'_'.session('areacode');
         $table = date('Ym',strtotime($start_time));
         $result = M()->table('case_'.$table)->add(u2gs($request));
+        $request['tab_name'] = 'case_'.$table;
         $syncData[] = $request;
         $this->sync('case',$syncData,'add');
         $res = array();
@@ -166,6 +167,7 @@ class CaseController extends CommonController
             $res['status'] = true;
             $res['case_key'] = $request['case_key'];
             $res['start_time'] = $request['start_time'];
+            $this->write_log('新增警情:'.$request['title']);
         }else{
             $res['status'] = false;
             $res['message'] = '新增失败';
@@ -338,6 +340,7 @@ class CaseController extends CommonController
         $endCase = M()->table($time_table[end($case_time)])->where('case_key="'.key($case_time).'"')->find();
         //将第一个案件的结束时间调整至最后一个案件的结束时间
         $data['end_time'] = $endCase['end_time'];
+        $data['update_time'] = date('Y-m-d H:i:s');
         reset($case_time);
         $where['case_key'] = key($case_time);
         $result = M()->table($time_table[current($case_time)])->where($where)->save($data);
@@ -398,6 +401,7 @@ class CaseController extends CommonController
         $data['areacode'] = $wjInfo['areacode'];
         $data['jyxm'] = $wjInfo['jyxm'];
         $data['areaname'] = $wjInfo['areaname'];
+        $data['update_time'] = $wjInfo['update_time'];
         $result = M()->table('case_'.date('Ym',strtotime($firstTime)))->add($data);
         if($result){
             //同步

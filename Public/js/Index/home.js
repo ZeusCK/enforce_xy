@@ -17,7 +17,7 @@ function case_sat() {
     myChart.showLoading();
     var option2 = {
         title: {
-            text: '7天内各部门未编辑视音频数据'
+            text: '7天内未编辑视音频数据'
         },
         tooltip: {},
         legend: {

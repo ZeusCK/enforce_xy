@@ -12,8 +12,8 @@ module.exports = function(){
 };
 $(function(){
     var time=new Date();
-    $('#etime').datetimebox({value:new Time(time,0).init()});
-    $('#btime').datetimebox({value:new Time(time,7).init()});
+    $('#etime').datetimebox('setValue',app.date('Y-m-d')+' 23:59:59');
+    $('#btime').datetimebox('setValue',app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
     $('#datagrid').datagrid({
         url:app.url('Log/ws_log_list'),
         title:'工作站日志',

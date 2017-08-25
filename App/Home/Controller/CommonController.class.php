@@ -490,7 +490,7 @@ class CommonController extends Controller {
         $mangerArea = session('mangerArea');
         if(is_array($mangerArea)){
             if(!empty($mangerArea)){
-                foreach ($mangerArea as &$value) {
+                foreach ($mangerArea as $key=>&$value) {
                     $value = $codeField.' like "'.$value.'%"';
                 }
                 $baseSql .= implode(' OR ',$mangerArea);
@@ -503,13 +503,12 @@ class CommonController extends Controller {
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
         }else{
-            if($baseSql == '') $baseSql = '1';
+            if($baseSql == '') $baseSql = '1 ';
             if($jybhField){
                 $jybhSql = $jybhField.' = "'.session('code').'" AND '.$codeField.' = "'.session('areacode').'"';
                 $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR ('.$jybhSql.')';
             }
         }
-        // error_log($baseSql."\r\n",3,'./error.log');
         return $baseSql;
     }
     /**
@@ -520,8 +519,6 @@ class CommonController extends Controller {
      */
     public function real_manger_area($areacode = '',$dept_role_id = 0)
     {
-        if($areatype == 0) return array($areacode);     //0直接返回交警部门的部门代码
-
         $deptroledb = D('Enforce\DeptRole');
         $where['dept_role_id'] = $dept_role_id;   //自身所管辖的部门
         $areacodes = $deptroledb->where($where)->getField('dept_list');
@@ -552,7 +549,8 @@ class CommonController extends Controller {
                 if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
             }
         }
-        return array_merge(array($areacode),$checkAreacode,$searchArr);
+        if($areacode != '') $searchArr[] = $areacode;
+        return array_merge($checkAreacode,$searchArr);
     }
     /**
      * 同步表

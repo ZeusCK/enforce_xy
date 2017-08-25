@@ -18,26 +18,8 @@ var caseInitCaseUrl = "Case/init_case"; //数据初始化
 var mediaRemoveUrl = "Media/media_remove"; //视频删除
 var DATA = {};
 var startTime;
+module.case_key = '';
 var total;
-//默认时间
-/*function Time(n) {
-  var myDate = new Date();
-  var y = myDate.getFullYear();
-  var m = (m = myDate.getMonth() + 1) < 10 ? "0" + m : m;
-  var d = (d = myDate.getDate()) < 10 ? "0" + d : d;
-  var d2 = (d2 = myDate.getDate() - 6) < 10 ? "0" + d2 : d2;
-  var hh = (hh = myDate.getHours()) < 10 ? "0" + hh : hh;
-  var mm = (mm = myDate.getMinutes()) < 10 ? "0" + mm : mm;
-  var ss = (ss = myDate.getSeconds()) < 10 ? "0" + ss : ss;
-  var shotS = y + "-" + m + "-" + d + " 00:00:00";
-  var shotE = y + "-" + m + "-" + d2 + " 00:00:00";
-  if (n == "shotS") {
-    return shotS; //当天时间
-  } else {
-    return shotE; //7天前时间
-  }
-}*/
-
 //开始查询
 module.search = function () {
   app.extra("search", {
@@ -77,6 +59,7 @@ module.exports = function (target) {
 //编辑按钮
 module.editBar = function (case_key, start_time) {
   startTime = start_time;
+  module.case_key = case_key;
   // console.log(case_key)
   $.extend($.messager.defaults, {
     ok: "编辑接处警信息",
@@ -97,70 +80,18 @@ module.editBar = function (case_key, start_time) {
           title: "视频详情",
           // singleSelect: true,
           fit: true,
-          columns: [
-            [{
-                field: "id",
-                checkbox: true
-              },
-              {
-                field: "wjbh",
-                title: "文件名称",
-                align: "center"
-              },
-              {
-                field: "source_name",
-                title: "来源",
-                align: "center"
-              },
-              {
-                field: "ccfwq_ip",
-                title: "存储服务器IP",
-                align: "center"
-              },
-              /*    {
-                      field: 'alarm_name',
-                      title: '保质期限',
-                      align: 'center'
-                  },
-                  {
-                      field: 'alarm_no',
-                      title: '剩余期限',
-                      align: 'center'
-                  }, */
-              {
-                field: "file_type_name",
-                title: "文件类型",
-                align: "center"
-              },
-              {
-                field: "start_time",
-                title: "视频开始时间",
-                width: 200,
-                align: "center"
-              },
-              {
-                field: "end_time",
-                title: "视频结束时间",
-                width: 200,
-                align: "center"
-              },
-              /*                 {
-                                      field: 'wjcd',
-                                      title: '大小（M）',
-                                      align: 'center'
-                                  }, */
-              {
-                field: "wjcd",
-                title: "时长（秒）",
-                width: 200,
-                align: "center"
-              },
-              {
-                field: "cz",
-                title: "操作",
-                width: 200,
-                align: "center",
-                formatter: function (value, row, index) {
+          columns: [[{field: "id",checkbox: true},
+              {field: "wjbh",title: "文件名称",align: "center"},
+              {field: "source_name",title: "来源",align: "center"},
+              {field: "ccfwq_ip",title: "存储服务器IP",align: "center"},
+              /*{field: 'alarm_name',title: '保质期限',align: 'center'},
+                {field: 'alarm_no',title: '剩余期限',align: 'center'}, */
+              {field: "file_type_name",title: "文件类型",align: "center"},
+              {field: "start_time",title: "视频开始时间",width: 200,align: "center"},
+              {field: "end_time",title: "视频结束时间",width: 200,align: "center"},
+              /*{field: 'wjcd',title: '大小（M）',align: 'center'}, */
+              {field: "wjcd",title: "时长（秒）",width: 200,align: "center"},
+              {field: "cz",title: "操作",width: 200,align: "center",formatter: function (value, row, index) {
                   // console.log(startTime, row.start_time);
                   if (row.start_time == startTime) {
                     return '<span style="color:red">不可操作</span>';
@@ -199,7 +130,7 @@ module.editBar = function (case_key, start_time) {
             start_time: start_time
           },
           onLoadSuccess: function (data) {
-            $("#sbh").textbox("setValue", data.rows[0].cpxh);
+            if(data.total > 0) $("#sbh").textbox("setValue", data.rows[0].cpxh);
             $("#editForm").form("load", data.info);
             if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
               $(this)
@@ -536,14 +467,6 @@ module.addvideo = function () {
       if (data.error) {
         $.messager.alert("操作提示", data.error, "info");
       }
-      $('a[name="sc"]').linkbutton({
-        plain: true,
-        iconCls: "icon icon-sc"
-      });
-      $('a[name="cf"]').linkbutton({
-        plain: true,
-        iconCls: "icon icon-cf"
-      });
       $('a[name="hb"]').linkbutton({
         plain: true,
         iconCls: "icon icon-hb"
@@ -642,36 +565,21 @@ module.slice2 = function (target) {
 
 //视频拆分
 module.pack_pop = function (target, start_time, wjbh, n) {
-  if ((n = 1)) {
-    var rows = $("#video_datagrid").datagrid("getSelections");
-    n = {
-      datagrid: "#video_datagrid",
-      url: mediaPackPopUrl,
-      linkbutton: target,
-      parsedata: function (data) {
-        data.wjbhInfo = wjbhInfo;
-      }
-    };
-  } else {
-    var rows = $("#video_datagrid2").datagrid("getSelections");
-    n = {
-      datagrid: "#video_datagrid2",
-      url: mediaPackPopUrl,
-      linkbutton: target,
-      parsedata: function (data) {
-        data.wjbhInfo = wjbhInfo;
-      }
-    };
-  }
-  var wjbhInfo = {};
-  wjbhInfo[wjbh] = start_time;
-  app.extra("add_edit", n);
+    var wjbhInfo = {};
+    wjbhInfo[wjbh] = start_time;
+    var obj = {
+        url: mediaPackPopUrl,
+        linkbutton: target,
+        parsedata: function (data) {
+            data.wjbhInfo = wjbhInfo;
+        }
+    }
+    obj.datagrid = n == 1 ? '#video_datagrid' : '#video_datagrid2';
+    app.extra("add_edit", obj);
 };
 
 //视频合并
 module.pack_merage = function (target, wjbh, start_time) {
-  var caseKey = $("#datagrid").datagrid("getSelections");
-  var rows = $("#addVideo_datagrid").datagrid("getSelections");
   var wjbhInfo = {};
   wjbhInfo[wjbh] = start_time;
   app.extra("add_edit", {
@@ -680,7 +588,7 @@ module.pack_merage = function (target, wjbh, start_time) {
     linkbutton: target,
     parsedata: function (data) {
       data.wjbhInfo = wjbhInfo;
-      data.case_key = caseKey[0].case_key;
+      data.case_key = module.case_key;
     }
   });
 };

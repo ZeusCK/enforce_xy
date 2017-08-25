@@ -1,4 +1,3 @@
-window.open(app.url('Index/home'),'执法视音频平台','height=500,width=800,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
 function login() {
 
     var username = $.trim($("#username").val());
@@ -45,7 +44,7 @@ $(function() {
     $('#info').html(info);
     $(document).keydown(function(event) { keyDownSearch(event) });
     $('#username').next('span').find('input').focus();
-
+    window.open(app.url('Index/home'),'执法视音频平台','height=500,width=800,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
     function keyDownSearch(event) {
         // 兼容FF和IE和Opera
         var e = event || window.event || arguments.callee.caller.arguments[0];
