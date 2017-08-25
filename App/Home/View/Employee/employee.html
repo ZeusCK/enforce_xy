@@ -25,6 +25,7 @@ app.tp.code = "{:session('code')}";
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
                 姓名: <input id="name"  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
+                警号: <input id="code"  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
         </form>
        <!--  <form id="importForm" method="post" enctype="multipart/form-data">
@@ -73,11 +74,20 @@ app.tp.code = "{:session('code')}";
             <div class="form_m"><div for="photo" class="form_label">照片 : </div>
                 <input class="easyui-filebox form_in"  name="photo"
                     data-options="prompt:'警员照片',buttonText:'选择照片'"></div>
-            <div class="form_m"><div for="roleid" class="form_label">所属角色 : </div>
+            <div class="form_m"><div for="roleid" class="form_label">菜单角色 : </div>
                 <select class=" easyui-combobox form_in" name="roleid" style="width: 181px;"
                     data-options="editable:false">
                     <foreach name="info['role']" item="role">
                         <option value="{$role.roleid}">{$role.rolename}</option>
+                    </foreach>
+                </select>
+            </div>
+            <div class="form_m"><div for="roleid" class="form_label">部门角色 : </div>
+                <select class=" easyui-combobox form_in" name="dept_role_id" style="width: 181px;"
+                    data-options="editable:false">
+                    <option value="0">请选择</option>
+                    <foreach name="info['dept_role']" item="dept_role">
+                        <option value="{$dept_role.dept_role_id}">{$dept_role.rolename}</option>
                     </foreach>
                 </select>
             </div>

@@ -9,99 +9,130 @@
         body {
             min-width: 1200px;
         }
+#win {
+    margin: 0 auto;
+}
+#win > .announce{
+    margin: 5px;
+    border: 5px solid #0065B6;
+    width: 98%;
+    position: relative;
+}
+#win > div > p{
+    margin: 0;
+    padding: 0;
+}
+#win > .announce >.title{
+    text-align: center;
+    font-size: 20px;
+    /*font-weight: 500;*/
+}
+#win > .announce >.content{
+    text-align: center;
+}
+#win > .announce >.date{
+    text-align: right;
+    margin-right: 20px;
+}
+#win > .announce >.areaname{
+    text-align: right;
+    margin-right: 20px;
+}
+#tabs>.tabs-panels .panel-body {
+    overflow: hidden;
+}
 
-        #tabs>.tabs-panels .panel-body {
-            overflow: hidden;
-        }
+.myMenu {
+    position: absolute;
+    left: 360px;
+    top: 0;
+    height: 80px;
+}
 
-        .myMenu {
-            position: absolute;
-            left: 360px;
-            top: 0;
-            height: 80px;
-        }
+.myMenu .nav {
+    display: inline-block;
+    height: 76px;
+    position: relative;
+    padding: 0 16px;
+    cursor: pointer;
+}
 
-        .myMenu .nav {
-            display: inline-block;
-            height: 76px;
-            position: relative;
-            padding: 0 16px;
-            cursor: pointer;
-        }
+.myMenu>.nav>.title {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    font-size: 1.2em;
+    color: #FFF;
+}
 
-        .myMenu>.nav>.title {
-            width: 100%;
-            height: 80px;
-            line-height: 80px;
-            font-size: 1.2em;
-            color: #FFF;
-        }
+.myMenu>.nav:hover {
+    border-bottom: 4px solid #00A8E9;
+    background: #aac5e7;
+}
 
-        .myMenu>.nav:hover {
-            border-bottom: 4px solid #00A8E9;
-            background: #aac5e7;
-        }
+.myMenu>.nav:hover>.title {
+    color: #fafafa;
+}
 
-        .myMenu>.nav:hover>.title {
-            color: #fafafa;
-        }
+.myMenu>.nav:hover>.nav_second {
+    display: block;
+}
 
-        .myMenu>.nav:hover>.nav_second {
-            display: block;
-        }
+.myMenu .nav_second {
+    position: absolute;
+    left: 0;
+    background: #0065b6;
+    width: 100%;
+    display: none;
+}
 
-        .myMenu .nav_second {
-            position: absolute;
-            left: 0;
-            background: #0065b6;
-            width: 100%;
-            display: none;
-        }
+.myMenu .nav_second>.title {
+    white-space: nowrap;
+    color: #FFF;
+    padding: 10px 6px;
+    font-size: 13px;
+    border-left: 2px solid transparent;
+}
 
-        .myMenu .nav_second>.title {
-            white-space: nowrap;
-            color: #FFF;
-            padding: 10px 6px;
-            font-size: 13px;
-            border-left: 2px solid transparent;
-        }
+.myMenu .nav_second>.title:hover {
+    color: #DDD;
+    border-left: 2px solid lightyellow;
+}
 
-        .myMenu .nav_second>.title:hover {
-            color: #DDD;
-            border-left: 2px solid lightyellow;
-        }
+#mb {
+    right: 14px;
+    position: absolute;
+    top: 29px;
+    color: #333;
+    width: 84px;
+    border-radius: 0;
+    background: #f6f6f7;
+}
 
-        #mb {
-            right: 14px;
-            position: absolute;
-            top: 29px;
-            color: #333;
-            width: 84px;
-            border-radius: 0;
-            background: #f6f6f7;
-        }
+.m-btn-downarrow,
+.s-btn-downarrow {
+    background: url(__PUBLIC__/plugins/jquery-easyui/themes/gray/images/menu_arrows.png) no-repeat 0 center;
+}
 
-        .m-btn-downarrow,
-        .s-btn-downarrow {
-            background: url(__PUBLIC__/plugins/jquery-easyui/themes/gray/images/menu_arrows.png) no-repeat 0 center;
-        }
+.menu-line {
+    display: none;
+}
 
-        .menu-line {
-            display: none;
-        }
+.menu-text {
+    padding-left: 10px;
+    width: 100%;
+}
 
-        .menu-text {
-            padding-left: 10px;
-            width: 100%;
-        }
-
-        #mm {
-            width: 80px !important;
-            right: 10px;
-        }
+#mm {
+    width: 80px !important;
+    right: 10px;
+} 
     </style>
 </block>
 <block name="src">
+    <script type="text/javascript">
+    app.tp.menuData = {$menuData};
+    </script>
     <script type="text/javascript" src="__PUBLIC__/js/Index/index.js"></script>
 </block>
 <block name="main">
@@ -118,7 +149,11 @@
                         <div><a style="color:#333; text-decoration:none;display: inline-block;width: 100%;" href="__ROOT__/about.php" target="_blank">关于</a></div>
                     </div>
                 </div>
+                <a class="easyui-linkbutton" style="position: absolute;top: 52px;right: 350px;" data-options="iconCls:'icon-cup'" onclick="update_online()">在线人数:<span id="online">0/0</span></a>
             </div>
+        </div>
+        <div data-options="region:'west',title:'导航菜单',split:false" style="width:200px;">
+            <div id="menuTree" ></div>
         </div>
         <div data-options="region:'center',border:false" style="background:#eee;">
             <div id="tabs" class="easyui-tabs" fit="true"></div>
@@ -129,7 +164,7 @@
     </div>
 
     <!-- 菜单S -->
-    <div class="myMenu">
+    <!-- <div class="myMenu">
         <foreach name="menus" item="menu">
             <div class="nav">
                 <div class="title">{$menu.text}</div>
@@ -142,7 +177,7 @@
                 </if>
             </div>
         </foreach>
-    </div>
+    </div> -->
     <!-- 菜单E -->
     <!--修改密码-->
     <div id="dialog" class="easyui-dialog" title="修改密码" style="width:300px;" buttons="#buttons" data-options="iconCls:'icon-pencil',modal:true,closed:true">
@@ -160,5 +195,5 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
 	$('#dialog').dialog('close')" style="width:90px">取消</a>
     </div>
-
+    <div id="win" class="easyui-window" title="公告" style="width:70%;height:60%;" data-options="closed:true"></div>
 </block>

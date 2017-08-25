@@ -34,7 +34,9 @@ class WorkStationController extends CommonController
         }
         if($request['zxzt'] != '') $where['zxzt'] = I('zxzt');
         if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
-        $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
+        if(session('user')){
+            $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
+        }
         $where = u2gs($where);
         $data = $db->getTableList($where,$page,$rows,'areacode asc');
         $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();

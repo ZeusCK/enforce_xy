@@ -21,7 +21,7 @@ function showTab(url, title, icon) {
             content: createFrame(url),
             closable: true,
             border: false,
-            iconCls: icon,
+            // iconCls: icon,
             onLoadError: function(data) {
                 var info = eval('(' + data.responseText + ')');
                 $.messager.confirm('错误提示', info.message, function(r) {
@@ -79,13 +79,13 @@ function change_password() {
         }
     });
 }
-
 function show_apply() {
     $.ajax({
         url: app.tp.ajax+'?tpUrl=Case/case_list',
         dataType: 'json',
         data:{
             hand_status:1,
+            type:1,
             show_messager:true
         },
         success: function(data) {
@@ -101,11 +101,92 @@ function show_apply() {
                 });
             }
         }
-    })
+    });
 }
-
+function menuInit(data){
+    // console.log(data);
+    $.each(data,function(i,item){
+        // 添加自定义图标
+        if(!item.children) {
+            //console.log(item) 
+            return;
+        }
+        $.each(item.children, function(i,icon){
+            if (icon.children) {
+                $.each(icon.children,function(i,m){
+                    m.iconCls = 'icon-my-shu';
+                    m.state = 'open';
+                })
+            }else{
+                icon.iconCls = 'icon-hidden';
+            }  
+        })
+        
+        $.each(item.children, function(i,m){
+            m.state = 'open';
+        })
+        /*iconCls='"+item.iconCls+"'*/
+        $('#menuTree').append("<div title='"+item.text+"'  style=\"padding:10px 0;\"> <ul id=nt" + i + ">"+item.text+"</ul></div>");
+        $('#nt'+i).tree({
+            lines: false,
+            animate: true,
+            data:item.children,
+            onClick:function(node){
+                $(node.target).children().each(function(i,m){
+                    if ($(m).hasClass('tree-hit')) {
+                        $(m).click();
+                    };
+                })
+                if(typeof(node.attributes)!='undefined'){
+                    showTab(node.attributes.url,node.text,node.iconCls);
+                }
+            }
+        }); 
+    });
+    $('#menuTree').accordion({
+        border: false,
+        // fit:true,
+        animate:true
+    });
+}
+function update_online(){
+    $.ajax({
+        url:app.tp.ajax+'?tpUrl=Index/update_emp_time',
+        success:function(data){
+            $('#online').text(data.online+'/'+data.total);
+        }
+    });
+}
+//公告显示
+function show_announce(){
+    $.ajax({
+        url:app.tp.ajax+'?tpUrl=Announce/announce_broadcast',
+        success:function(data){
+            if(data.total > 0){
+                var str = '';
+                $.each(data.rows,function(n,m){
+                    var anStr = '<div class="announce">';
+                    anStr += '<p class="title">'+m.title+'</p>';
+                    anStr += '<p class="content">' +m.content + '</p>';
+                    anStr += '<p class="date">' + m.create_time.split(' ')[0] + '</p>';
+                    anStr += '<p class="areaname">' + m.areaname + '</p>';
+                    anStr += '</div>';
+                    str += anStr;
+                });
+                $('#win').html(str);
+                $('#win').window('open');
+            } 
+        }
+    });
+}
 $(function() {
-
+    update_online();
+    setInterval(function(){
+        update_online();
+    }, 1000*60^3);
+    //公告显示
+    show_announce();
+    menuInit(app.tp.menuData);
     $('#tabs').tabs({
         tools: [{
                 iconCls: 'icon-reload',
@@ -162,10 +243,7 @@ $(function() {
         '工作站': app.url('WorkStation/showWork'),
         '未编辑': app.url('Announce/showAnnounce')
     }
-
     /*var date = new Date();
     var year = date.getFullYear();
     $("#year").html(year);*/
-
-
 });

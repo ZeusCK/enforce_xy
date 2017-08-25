@@ -24,7 +24,7 @@ class RoleController extends CommonController
             $check['rolename'] = array('like','%'.$request['rolename'].'%');
         }
         $data = $this->get_role_info($check,$page,$rows);
-        $level = ['系统','支队','大队','中队','警员','其他'];
+        $level = ['系统','市局','县局','基层','警员','其他'];
         foreach ($data['rows'] as &$value) {
             $value['level_name'] = u2g($level[$value['level']]);
         }

@@ -1,3 +1,4 @@
+window.open(app.url('Index/home'),'执法视音频平台','height=500,width=800,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');
 function login() {
 
     var username = $.trim($("#username").val());

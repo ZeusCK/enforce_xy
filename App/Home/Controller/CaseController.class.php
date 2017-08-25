@@ -83,6 +83,7 @@ class CaseController extends CommonController
         //start_time.btime 开始时间
         //start_time.etime 结束时间
         //hand_status 案件移交状态
+        //source 来源
         //type 显示类型 0 正常产看  1 申请查看
         $request = u2gs($request);
         $type = $request['type'] ? $request['type'] : 0;
@@ -103,6 +104,7 @@ class CaseController extends CommonController
         if($request['title']) $where['title'] = array('like','%'.$request['title'].'%');    //警情名称
         if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
         if($request['jyxm']) $where['jyxm'] = $request['jyxm'];      //警情类型
+        if($request['source']) $where['source'] = $request['source'];      //警情来源
         if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
         if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
@@ -136,6 +138,40 @@ class CaseController extends CommonController
         $this->saveExcel($res); //监测是否为导出
         return g2us($res);
     }
+    public function add_case($request)
+    {
+        //title       标题
+        //edit_name   采集人
+        //jyxm        上传人
+        //start_time   采集时间
+        //scsj      上传时间
+        //source    来源
+        $request['jyxm'] = session('user');
+        $request['edit_name'] = session('user');
+        $request['areacode'] = session('areacode');
+        $request['areaname'] = session('areaname');
+        $request['update_time'] = date('Y-m-d H:i:s');
+        $request['start_time'] = date('Y-m-d H:i:s');
+        $request['jybh'] = session('code');
+        $start_time = $request['start_time'];
+        $cpxh = D($this->models['pebase'])->where('jybh="'.session('code').'"')->getField('cpxh');
+        $cpxh = $cpxh ? $caxh : 'cpxhpe';
+        $request['case_key'] = date('YmdHis',strtotime($start_time)).'_'.$cpxh.'_'.session('areacode');
+        $table = date('Ym',strtotime($start_time));
+        $result = M()->table('case_'.$table)->add(u2gs($request));
+        $syncData[] = $request;
+        $this->sync('case',$syncData,'add');
+        $res = array();
+        if($result){
+            $res['status'] = true;
+            $res['case_key'] = $request['case_key'];
+            $res['start_time'] = $request['start_time'];
+        }else{
+            $res['status'] = false;
+            $res['message'] = '新增失败';
+        }
+        return  $res;
+    }
     //修改案件
     public function edit_case($request)
     {
@@ -145,6 +181,7 @@ class CaseController extends CommonController
         unset($request['case_key']);
         $request['edit_name'] = session('user');
         $request = u2gs($request);
+        $request['update_time'] = date('Y-m-d H:i:s');
         $result = M()->table('case_'.$table)->where($where)->save($request);
         //同步
         $other = $request;
@@ -211,7 +248,7 @@ class CaseController extends CommonController
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
             // error_log('查询数据表:'.'case_'.$table.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
-            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->order('start_time desc')->select();
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->order('scsj desc')->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
@@ -416,6 +453,8 @@ class CaseController extends CommonController
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
         $caseInfo = M()->table('case_'.$table)->where($caseWhere)->find();
+        if($request['video_time']['btime']) $caseWhere['start_time'][] = array('EGT',$request['video_time']['btime']);
+        if($request['video_time']['etime']) $caseWhere['start_time'][] = array('ELT',$request['video_time']['etime']);
         $data = M()->table('case_video_'.$table)->where($caseWhere)->select();
         $fileType = $this->get_val_item('dictionary','filetype');
         $video_source = $this->get_val_item('dictionary','video_source');
@@ -688,27 +727,53 @@ class CaseController extends CommonController
         $where['start_time'][] = array('ELT',$etime);
         $unWhere = $where;
         $unWhere['alarm_type'] = 0;
+        $unWhere['areacode'] = session('areacode');
+        $unWhere['jybh'] = session('code');
         $alarm_total = array();
         $unalarm_total = array();
         foreach ($months as $month) {
             if(!in_array('case_'.$month,$tables)) continue;
-            $alarms = M()->table('case_'.$month)->field("count(1) as num,DATE_FORMAT(start_time,'%Y-%m-%d') as day")->where($where)->group('day')->select();
             $unalarms = M()->table('case_'.$month)->field("count(1) as num,DATE_FORMAT(start_time,'%Y-%m-%d') as day")->where($unWhere)->group('day')->select();
-            $alarm_total = array_merge((array)$alarms,$alarm_total);
             $unalarm_total = array_merge((array)$unalarms,$unalarm_total);
         }
-        $keys = array('num','unalarms','alarms');
-        $countInfo = array_fill_keys($keys,0);
+        $countInfo = array('unalarms'=>0);
         $initInfo = array_fill_keys($dates,$countInfo);
-        foreach ($alarm_total as  $value) {
-            $initInfo[$value['day']]['num'] = (int)$value['num'];
-        }
         foreach ($unalarm_total as  $value) {
             $initInfo[$value['day']]['unalarms'] = (int)$value['num'];
         }
-        foreach ($initInfo as &$value) {
-            $value['alarms'] = $value['num']-$value['unalarms'];
-        }
         return $initInfo;
+    }
+    public function show_area_sat($request)
+    {
+        $btime = date('Y-m-d H:i:s',time()-6*24*60*60);
+        $etime = date('Y-m-d H:i:s');
+        $areadb = D($this->models['area']);
+        $areaid = session('areaid') ? session('areaid') : 0;
+        $areas = $areadb->where('fatherareaid="'.$areaid.'"')->getField('areacode,areaname');
+        if(session('areacode')){
+            $areas[session('areacode')] = u2g(session('areaname'));
+        }
+        $where[] = $this->get_manger_sql();
+        $where['start_time'][] = array('EGT',$btime);
+        $where['start_time'][] = array('ELT',$etime);
+        $where['alarm_type'] = 0;
+        $result = array();
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $tables = $this->get_dbTables();
+        ksort($areas);
+        foreach ($areas as $key=>$value) {
+            if($request['type'] == 'unlink'){
+                $where['areacode'] = $key;
+            }else{
+                $where['areacode'] = array('like',$key.'%');
+            }
+            $total = 0;
+            foreach ($months as $month) {
+                if(!in_array('case_'.$month,$tables)) continue;
+                $total = $total + M()->table('case_'.$month)->where($where)->count();
+            }
+            $result[] = array('areaname'=>g2u($value),'total'=>$total);
+        }
+        return $result;
     }
 }

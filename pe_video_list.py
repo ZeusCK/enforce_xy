@@ -153,7 +153,7 @@ class PeData:
     def db_close(self):
         self.db.close()
 if __name__ == '__main__':
-    pe_data = PeData('192.168.0.249','root','123456','enforce_xy','latin1')
+    pe_data = PeData('localhost','root','123456','enforce_xz','latin1')
     start = time.time()
     i = 0
     while time.time() - start < 3*60 :

@@ -5,6 +5,7 @@
     //根部门  用于数据的初始化
     app.tp.areacode = "{:session('areacode')}";
     app.tp.areaname = "{:session('areaname')}";
+    app.tp.user = "{:session('user')}";
   </script>
   <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
   <script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
@@ -12,44 +13,82 @@
 </block>
 <block name="main">
   <div class="easyui-layout" fit="true">
-    <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+    <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:200px;background:#eee;">
       <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
+    <div id="tab" class="easyui-tabs" style="height:30px;">
+    <div title="执法记录仪"></div>
+    <div title="公安类"></div>
+    <div title="非公安类"></div>
+</div>
       <table id="datagrid" toolbar="#toolbar"></table>
     </div>
   </div>
   <div id="toolbar">
-    <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-      <div class="search-box search-big">
-        <div class="search-text">出警人:</div>
-        <input name="jyxm" class="easyui-textbox">
-        <div class="search-text">设备号:</div>
-        <input name="cpxh" class="easyui-textbox">
-        <div class="search-text">警情编号:</div>
-        <input name="alarm_no" class="easyui-textbox">
-        <div class="search-text">警情类型:</div>
-        <input id="alarm_type" class="easyui-combobox" name="alarm_type" editable=false />
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">开始查询</a>
-      </div>
-      <div class="search-box search-big">
-        <div class="search-text">案件名称:</div>
-        <input name="case_name" class="easyui-textbox">
-        <div class="search-text">案件编号:</div>
-        <input name="case_no" class="easyui-textbox">
-        <div class="search-text">案件类型:</div>
-        <input id="case_type" class="easyui-combobox" name="case_type" editable=false />
-        <div class="search-text">案事件名称:</div>
-        <input name="alarm_name" class="easyui-textbox">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">条件重置</a>
-      </div>
-      <div class="search-box search-big">
-        <div class="search-text">采集日期:</div>
-        <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false" />
-        <div class="search-text">至:</div>
-        <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false" />
-        <a style="margin-left: 477px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
-      </div>
-    </form>
+        <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
+            <div class="search-box search-big">
+                <div class="search-text">案事件名称:</div>
+                <input name="alarm_name" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">出警人:</div>
+                <input name="jyxm" class="easyui-textbox" style="width: 100px;">
+                
+                <div class="search-text">警情编号:</div>
+                <input name="alarm_no" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">警情类型:</div>
+                <input id="alarm_type" class="easyui-combobox" name="alarm_type" editable=false style="width: 100px;"/>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">开始查询</a>
+            </div>
+            <div class="search-box search-big">
+                <div class="search-text">案件名称:</div>
+                <input name="case_name" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">案件编号:</div>
+                <input name="case_no" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">案件类型:</div>
+                <input id="case_type" class="easyui-combobox" style="width: 100px;" name="case_type" editable=false />
+                <div class="search-text">设备号:</div>
+                <input name="cpxh" class="easyui-textbox" style="width: 100px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">条件重置</a>
+            </div>
+            <div class="search-box search-big">
+                <div class="search-text">采集日期:</div>
+                <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false"/>
+                <div class="search-text">至:</div>
+                <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false"/>
+                <a style="margin:0 0 0 100px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-upload"  onclick="module.case_add()">新增警情</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
+            </div>
+        </form>
   </div>
+<div id="addDialog" class="easyui-dialog" title="上传警情" buttons="#addButtons"
+    data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+      <form id="addForm" method="post">
+            <div class="form_m"><div class="form_label">标题 : </div>
+              <input class="form_in easyui-textbox" type="text" name="title" required="true"/>
+            </div>
+            <div class="form_m"><div class="form_label">采集人 : </div>
+              <input class="form_in easyui-textbox" type="text" name="edit_name" required="true"/>
+            </div>
+            <div class="form_m"><div class="form_label">采集时间 : </div>
+              <input class="form_in easyui-datetimebox" type="text" name="start_time" required="true"/>
+            </div>
+            <div class="form_m"><div class="form_label">上传人 : </div>
+              <input class="form_in easyui-textbox" type="text" name="jyxm" required="true"/>
+            </div>
+            <div class="form_m"><div class="form_label">上传时间 : </div>
+              <input class="form_in easyui-datetimebox" type="text" name="scsj" required="true"/>
+            </div>
+            <div class="form_m"><div class="form_label">备注 : </div>
+              <input class="form_in easyui-textbox" type="text" name="remark"/>
+            </div>
+            <div class="form_m" hidden><div class="form_label">来源 : </div>
+              <input class="form_in easyui-textbox" name="source" required="true"/>
+            </div>
+      </form>
+    </div>
+    <div id="addButtons">
+      <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.uploadInfo(this)" style="width:90px">添加视频</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+            $('#addDialog').dialog('close')" style="width:90px">取消</a>
+    </div>
 </block>

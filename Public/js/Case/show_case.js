@@ -4,6 +4,7 @@ var tree = new Tree("#area_list");
 var module = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
+module.code = app.tp.code;
 module.params = {};
 var Url = "Case/case_list"; //获取数据列表
 var editUrl = "Case/play_case_info"; //编辑
@@ -18,9 +19,8 @@ var mediaRemoveUrl = "Media/media_remove"; //视频删除
 var DATA = {};
 var startTime;
 var total;
-
 //默认时间
-function Time(n) {
+/*function Time(n) {
   var myDate = new Date();
   var y = myDate.getFullYear();
   var m = (m = myDate.getMonth() + 1) < 10 ? "0" + m : m;
@@ -29,14 +29,14 @@ function Time(n) {
   var hh = (hh = myDate.getHours()) < 10 ? "0" + hh : hh;
   var mm = (mm = myDate.getMinutes()) < 10 ? "0" + mm : mm;
   var ss = (ss = myDate.getSeconds()) < 10 ? "0" + ss : ss;
-  var shotS = y + "-" + m + "-" + d + " " + hh + ":" + mm + ":" + ss;
-  var shotE = y + "-" + m + "-" + d2 + " " + hh + ":" + mm + ":" + ss;
+  var shotS = y + "-" + m + "-" + d + " 00:00:00";
+  var shotE = y + "-" + m + "-" + d2 + " 00:00:00";
   if (n == "shotS") {
     return shotS; //当天时间
   } else {
     return shotE; //7天前时间
   }
-}
+}*/
 
 //开始查询
 module.search = function () {
@@ -55,8 +55,8 @@ module.search = function () {
 module.init_search_form = function () {
   $("#searchForm").form("reset");
   //设置默认时间
-  $("#shotS").datetimebox("setValue", Time());
-  $("#shotE").datetimebox("setValue", Time("shotS"));
+  $("#shotS").datetimebox("setValue", app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+  $("#shotE").datetimebox("setValue", app.date('Y-m-d')+' 23:59:59');
 };
 
 //导出全部
@@ -95,7 +95,7 @@ module.editBar = function (case_key, start_time) {
         app.datagrid("#video_datagrid", {
           url: editUrl,
           title: "视频详情",
-          singleSelect: true,
+          // singleSelect: true,
           fit: true,
           columns: [
             [{
@@ -108,7 +108,7 @@ module.editBar = function (case_key, start_time) {
                 align: "center"
               },
               {
-                field: "source",
+                field: "source_name",
                 title: "来源",
                 align: "center"
               },
@@ -128,7 +128,7 @@ module.editBar = function (case_key, start_time) {
                       align: 'center'
                   }, */
               {
-                field: "wjlx",
+                field: "file_type_name",
                 title: "文件类型",
                 align: "center"
               },
@@ -232,11 +232,10 @@ module.editBar = function (case_key, start_time) {
             });
           },
           onSelect: function (index, data) {
-            if (data.start_time == startTime) {
-              $(".cf").linkbutton("disable");
-            } else {
-              $(".cf").linkbutton("enable");
-            }
+            module.timeCompare(this);
+          },
+          onUnselect:function(index,data){
+            module.timeCompare(this);
           }
         });
       } else {
@@ -246,7 +245,7 @@ module.editBar = function (case_key, start_time) {
         app.datagrid("#video_datagrid2", {
           url: editUrl,
           title: "视频详情",
-          singleSelect: true,
+          // singleSelect: true,
           fit: true,
           fitColumns: true,
           nowrap: true,
@@ -263,7 +262,7 @@ module.editBar = function (case_key, start_time) {
                 align: "center"
               },
               {
-                field: "source",
+                field: "source_name",
                 title: "来源",
                 align: "center"
               },
@@ -283,7 +282,7 @@ module.editBar = function (case_key, start_time) {
                       align: 'center'
                   }, */
               {
-                field: "wjlx",
+                field: "file_type_name",
                 title: "文件类型",
                 align: "center"
               },
@@ -355,18 +354,10 @@ module.editBar = function (case_key, start_time) {
           onLoadSuccess: function (data) {
             $("#editForm2").form("load", data.info);
             if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
-              $(this)
-                .parent(".datagrid-view")
-                .find("div.datagrid-view1")
-                .hide();
+              $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
               $(this).parent(".datagrid-view").children(".datagrid-view2");
-              $(this)
-                .parent(".datagrid-view")
-                .children(".datagrid-view2")
-                .css("left", 0)
-                .find("div.datagrid-body")
-                .html("没有相关记录，请重新搜索！")
-                .css({
+              $(this).parent(".datagrid-view").children(".datagrid-view2").css("left", 0)
+                .find("div.datagrid-body").html("没有相关记录，请重新搜索！").css({
                   color: "#F00",
                   "text-align": "center",
                   "font-size": "20px"
@@ -385,11 +376,10 @@ module.editBar = function (case_key, start_time) {
             });
           },
           onSelect: function (index, data) {
-            if (data.start_time == startTime) {
-              $(".cf").linkbutton("disable");
-            } else {
-              $(".cf").linkbutton("enable");
-            }
+            module.timeCompare(this);
+          },
+          onUnselect:function(index,data){
+            module.timeCompare(this);
           }
         });
       }
@@ -459,10 +449,10 @@ function DateDiff(sDate1, sDate2) {
   //sDate1和sDate2是2002-12-18格式
   var aDate, oDate1, oDate2, iDays;
   aDate = sDate1.split("-");
-  oDate1 = new Date(aDate[1] + "-" + aDate[2] + "-" + aDate[0]); //转换为12-18-2002格式
+  oDate1 = new Date(aDate[1],aDate[2],aDate[0]); //转换为12-18-2002格式
   aDate = sDate2.split("-");
   oDate2 = new Date(aDate[1] + "-" + aDate[2] + "-" + aDate[0]);
-  iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
+  iDays = Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24; //把相差的毫秒数转换为天数
   return iDays;
 }
 
@@ -588,11 +578,15 @@ module.merge = function (target) {
 //拆分警情
 module.slice = function (target) {
   var rows = $("#video_datagrid").datagrid("getSelections");
+  if(rows.length == 0) return false;
   var wjbhInfo = {};
-  $.each(rows, function (i, m) {
-    var info = {};
-    wjbhInfo[m.wjbh] = m.start_time;
-  });
+  for (var i = 0; i < rows.length; i++) {
+      if(rows[i].start_time == startTime){
+        $.messager.alert('操作提示','无法拆分采集时间与警情包相同的文件','info');
+        return false;
+      }
+      wjbhInfo[rows[i].wjbh] = rows[i].start_time;
+  }
   app.extra("add_edit", {
     datagrid: "#video_datagrid",
     url: caseSliceUrl,
@@ -603,15 +597,38 @@ module.slice = function (target) {
     }
   });
 };
-
+module.search_video = function(){
+    app.extra('search',{
+        datagrid:'#video_datagrid',
+        form:'#searchForm3',
+        parsedata:function(data){
+            data.case_key = $('#editForm > input[name="case_key"]').val();
+            data.start_time = startTime;
+        }
+    });
+}
+module.search_video2 = function(){
+    app.extra('search',{
+        datagrid:'#video_datagrid2',
+        form:'#searchForm4',
+        parsedata:function(data){
+            data.case_key = $('#editForm2 > input[name="case_key"]').val();
+            data.start_time = startTime;
+        }
+    });
+}
 //拆分案件
 module.slice2 = function (target) {
   var rows = $("#video_datagrid2").datagrid("getSelections");
+  if(rows.length == 0) return false;
   var wjbhInfo = {};
-  $.each(rows, function (i, m) {
-    var info = {};
-    wjbhInfo[m.wjbh] = m.start_time;
-  });
+  for (var i = 0; i < rows.length; i++) {
+      if(rows[i].start_time == startTime){
+        $.messager.alert('操作提示','无法拆分采集时间与警情包相同的文件','info');
+        return false;
+      }
+      wjbhInfo[rows[i].wjbh] = rows[i].start_time;
+  }
   app.extra("add_edit", {
     datagrid: "#video_datagrid2",
     url: caseSliceUrl,
@@ -712,9 +729,8 @@ $(function () {
   //警情类型下拉框
   app.combobox('#alarm_type,#edit_alarm_type',{type:'alarm_type'});
   //设置默认时间
-  $("#shotS,#shotS2").datetimebox("setValue", Time());
-  $("#shotE,#shotE2").datetimebox("setValue", Time("shotS"));
-
+  $("#shotS,#shotS2,#shotS3,#shotS4").datetimebox("setValue", app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+  $("#shotE,#shotE2,#shotE3,#shotE4").datetimebox("setValue", app.date('Y-m-d')+' 23:59:59');
   //数据表单
   app.datagrid("#datagrid", {
     url: Url,
@@ -727,26 +743,31 @@ $(function () {
         {
           field: "areaname",
           title: "单位",
+          width: 200,
           align: "center"
         },
         {
           field: "title",
           title: "标题",
+          width: 200,
           align: "center"
         },
         {
           field: "alarm_name",
           title: "案事件名称",
+          width: 200,
           align: "center"
         },
         {
           field: "alarm_no",
           title: "警情编号",
+          width: 200,
           align: "center"
         },
         {
           field: "start_time",
           title: "采集日期",
+          width: 200,
           align: "center"
         },
         {
@@ -764,6 +785,7 @@ $(function () {
         {
           field: "case_no",
           title: "案件编号",
+          width: 200,
           align: "center"
         },
         {
@@ -772,12 +794,12 @@ $(function () {
           width: 200,
           align: "center"
         },
-        /*     {
-                        field: 'update_time',
-                        title: '更新时间',
-                        width: 200,
-                        align: 'center'
-                    }, */
+        {
+          field: 'update_time',
+          title: '更新时间',
+          width: 200,
+          align: 'center'
+        }, 
         {
           field: "scsj",
           title: "上传日期",
@@ -796,7 +818,7 @@ $(function () {
           width: 220,
           align: "center",
           formatter: function (value, row, index) {
-            if (row.hand_status == 2) {
+            if (row.hand_status == 2 && row.jybh == module.code) {
               return '<a style="red">已移交</a>';
             } else {
               return (
@@ -820,13 +842,9 @@ $(function () {
       ]
     ],
     rowStyler: function (index, row) {
-      var dd1 = String(row.start_time);
-      var dd2 = dd1;
-      var dd = Time("shotS");
-      var days = DateDiff(dd, dd2);
-      return row.alarm_no == "" ?
-        days >= 3 ? (days > 5 ? "color:red" : "color:orange") : "" :
-        "";
+      var dd1 = String(row.scsj);
+      var checkTime = app.date('Y-m-d H:i:s',app.time()-3.5*24*60*60);
+      return row.alarm_type == 0 ? checkTime > dd1 ? "color:red" : "color:orange" : "" ;
     },
     onLoadSuccess: function (data) {
       if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
@@ -887,5 +905,20 @@ module.judge = function () {
     $("#hb").linkbutton("disable");
   } else {
     $("#hb").linkbutton("enable");
+  }
+};
+module.timeCompare = function (target) {
+  var rows = $(target).datagrid("getSelections");
+  if (rows.length == 0) {
+    $(".cf").linkbutton("enable");
+  }
+  var handStatus = [];
+  $.each(rows, function (i, m) {
+    handStatus.push(m.start_time);
+  });
+  if (jQuery.inArray(startTime, handStatus) > -1) {
+    $(".cf").linkbutton("disable");
+  } else {
+    $(".cf").linkbutton("enable");
   }
 };

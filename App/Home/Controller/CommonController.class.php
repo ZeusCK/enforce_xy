@@ -499,7 +499,7 @@ class CommonController extends Controller {
             }
         }
         //如果没有查询部门,或者查询部门是自身所属部门的上级,那么加上警员
-        if($areacode != '' || strpos($areacode,session('areacode') === 0)){
+        if($areacode != '' || strpos(session('areacode'),$areacode === 0)){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
         }else{
@@ -515,23 +515,17 @@ class CommonController extends Controller {
     /**
      * 根据部门编号,部门类型确定实际管理的部门
      * @param  string $areacode 部门编号
-     * @param  string $areatype 部门类型
+     * @param  string $dept_role_id 部门角色
      * @return array           实际管理的部门
      */
-    public function real_manger_area($areacode = '',$areatype = '')
+    public function real_manger_area($areacode = '',$dept_role_id = 0)
     {
-        if($areatype == 2)  return 'all';                //法制部门
-        if($areacode == '') return array();
-        if($areatype == 0) return array($areacode);     //交警部门直接返回交警部门的部门代码
-        $areadb = D('Enforce\AreaDep');
-        $where['code'] = array('NEQ','');       //有标识字段
-        $where['type'] = 1;                     //非交警部门
-        $where['areacode'] = array('like',$areacode.'%');   //自身所管辖的部门
-        $codes = $areadb->where($where)->getField('code',true); //获取关联
-        if(empty($codes)) return array($areacode);
-        $codeWhere['code'] = array('IN',$codes);
-        $codeWhere['type'] = 0;     //交警部门
-        $areacodes = $areadb->where($where)->getField('areacode',true);
+        if($areatype == 0) return array($areacode);     //0直接返回交警部门的部门代码
+
+        $deptroledb = D('Enforce\DeptRole');
+        $where['dept_role_id'] = $dept_role_id;   //自身所管辖的部门
+        $areacodes = $deptroledb->where($where)->getField('dept_list');
+        $areacodes = explode(',',$areacodes);
         //排除自己已经监管的部门
         foreach ($areacodes as $key => $value) {
             if(strpos($value,$areacode) === 0) unset($areacodes[$key]);
@@ -555,7 +549,7 @@ class CommonController extends Controller {
         $checkAreacode = array_diff($areacodes,$searchArr);
         foreach ($checkAreacode as $key => $value) {
             foreach ($searchArr as $val) {
-                if(strpos($val,$value) === 0) unset($checkAreacode[$key]);
+                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
             }
         }
         return array_merge(array($areacode),$checkAreacode,$searchArr);

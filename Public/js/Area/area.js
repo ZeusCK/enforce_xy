@@ -9,7 +9,7 @@ module.areaid = app.tp.areaid;
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.area_is_read = app.tp.area_is_read;
-module.area_type = app.tp.area_type;
+// module.area_type = app.tp.area_type;
 var searchData = {};
 //基本的搜索
 module.show = function(){
@@ -34,8 +34,8 @@ module.addBar = function(){
         }
     });
     $('#addForm').form('reset');
-
-    $('#addForm').form('load',{fatherareaid:module.areaid,areatype:module.area_type,is_read:module.area_is_read});
+    //areatype:module.area_type, 
+    $('#addForm').form('load',{fatherareaid:module.areaid,is_read:module.area_is_read});
     if(module.area_is_read == 0){
         $('#add_area_is_read').combobox('readonly',true);
     }else{
@@ -75,12 +75,12 @@ module.add = function(target){
             params = data;
         },
         success:function(data){
-            //新增部门
+            //新增部门  type:params.areatype,
             $('#datagrid').datagrid('load',{areaid:module.areaid});
             var node = $(tree.dom).tree('find',module.areaid);
             $(tree.dom).tree('append',{
                 parent: node.target,
-                data:[{id:data.add_id,text:params.areaname,type:params.areatype,areacode:params.areacode}]
+                data:[{id:data.add_id,text:params.areaname,areacode:params.areacode}]
             });
         }
     });
@@ -198,9 +198,9 @@ $(function(){
         {field:'areaname',title:'部门名称',width:200,align:'center'},
         {field:'areacode',title:'部门编号',width:200,align:'center'},
         {field:'pareaname',title:'父部门',width:200,align:'center'},
-        {field:'typename',title:'部门类型',width:200,align:'center'},
+        // {field:'typename',title:'部门类型',width:200,align:'center'},
         {field:'is_read_name',title:'部门属性',width:200,align:'center'},
-        {field:'code',title:'部门标识',width:200,align:'center'},
+        // {field:'code',title:'部门标识',width:200,align:'center'},
         {field:'rperson',title:'联系人',width:200,align:'center'},
         {field:'rphone',title:'联系方式',width:200,align:'center'}
         ]],
@@ -217,14 +217,14 @@ $(function(){
             module.areaname = node.text;
             module.areacode = node.areacode;
             module.area_is_read = node.is_read;
-            module.area_type = node.type;
+            // module.area_type = node.type;
             $('#mu_area').html(node.text);
             module.search();
         }
     });
-    app.combobox('#edit_areatype,#add_areatype',{
+    /*app.combobox('#edit_areatype,#add_areatype',{
         type:'areatype'
-    });
+    });*/
     app.combobox('#edit_area_is_read,#add_area_is_read,#area_is_read',{
         type:'is_read'
     });

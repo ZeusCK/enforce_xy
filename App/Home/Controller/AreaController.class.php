@@ -8,7 +8,8 @@ class AreaController extends CommonController
     protected $models = ['area'=>'Enforce\AreaDep',
                          'user'=>'Enforce\User',
                          'areapro'=>'Enforce\AreaPro',
-                         'employee'=>'Enforce\Employee'];
+                         'employee'=>'Enforce\Employee',
+                         'deptrole'=>'Enforce\DeptRole'];
     protected $link_tabs = ['ws_base', //工作站
                             'pe_base', //执法记录仪
                             'server_machine',  //服务器
@@ -46,12 +47,12 @@ class AreaController extends CommonController
         $order = 'areacode asc';
         $data = $db->getTableList($check,$page,$rows,$order);
         $areas = $db->getField('areaid,areaname');
-        $areaType = $this->get_val_item('dictionary','areatype');
+        // $areaType = $this->get_val_item('dictionary','areatype');
         $read_type = $this->get_val_item('dictionary','is_read');
         foreach ($data['rows'] as &$value) {
             $value['pareaname'] = array_key_exists($value['fatherareaid'], $areas) ? $areas[$value['fatherareaid']] : u2g('系统根部门');
             $value['areatype'] = $value['type'];
-            $value['typename'] = $areaType[$value['type']];
+            // $value['typename'] = $areaType[$value['type']];
             $value['is_read_name'] = u2g($read_type[$value['is_read']]);
         }
         S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
@@ -80,7 +81,8 @@ class AreaController extends CommonController
     {
         $where[] = $this->where_key_or(explode(',',$request['areacode']), 'areacode');
         $db = D($this->models['area']);
-        $where[] = $this->get_manger_sql($request['areacode'],'areacode',false);
+        $where[] = $this->get_manger_sql('','areacode',false);
+        $removeDepts = $db->where($where)->getField('areacode',true);
         $result = $db->getTableDel($where);
         if($result['status']){
             foreach ($this->link_tabs as $tab) {
@@ -92,6 +94,18 @@ class AreaController extends CommonController
                 $db_rm->where($where)->delete();
             }
             $this->write_log('删除部门,部门代码：'.$request['areacode']);
+            //更新部门角色表
+            $deptroledb = D($this->models['deptrole']);
+            $deptWhere['dept_list'] = array('NEQ','');
+            $deptRoles = $deptroledb->where($deptWhere)->getField('dept_role_id,dept_list');
+            foreach ($deptRoles as $key => $value) {
+                $roleWhere['dept_role_id'] = $key;
+                $roledepts = explode(',',$value);
+                $saveDepts = array_diff($roledepts,$removeDepts);
+                if(empty(array_diff($saveDepts,$roledepts))) continue;
+                $data['dept_list'] = implode(',', $saveDepts);
+                $deptroledb->where($roleWhere)->sace($data);
+            }
         }
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
@@ -106,6 +120,21 @@ class AreaController extends CommonController
         $result = $db->getTableEdit($where,u2gs($request));     //更新记录
 
         if($areaInfo['areacode'] != $request['areacode']){      //更新关联表及下级部门
+            //更新部门角色表
+            $deptroledb = D($this->models['deptrole']);
+            $deptWhere['dept_list'] = array('NEQ','');
+            $deptRoles = $deptroledb->where($deptWhere)->getField('dept_role_id,dept_list');
+            foreach ($deptRoles as $key => $value) {
+                $roleWhere['dept_role_id'] = $key;
+                $saveDepts = explode(',',$value);
+                //搜索如果存在
+                if(false !== $key = array_search($areaInfo['areacode'], $saveDepts)){
+                    $saveDepts[$key] = $request['areacode'];
+                    $data['dept_list'] = implode(',', $saveDepts);
+                    $deptroledb->where($roleWhere)->save($data);
+                }
+            }
+            //更新关联表
             $linkTabs = $this->link_tabs;
             $linkTabs[] = 'area_dep';   //部门区域
             // error_log('更新表'.implode(',', $linkTabs."\r\n"),3,'error.log');
@@ -158,8 +187,8 @@ class AreaController extends CommonController
             $ids = array(0);
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
             $l_arr = ['areaid','areaname','fatherareaid','areaid'];
-            //$L_attributes 额外需要保存的信息
-            $L_attributes = ['areacode','rperson','rphone','type','code','is_read'];
+            //$L_attributes 额外需要保存的信息 'type','code',
+            $L_attributes = ['areacode','rperson','rphone','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
         }else{
@@ -180,8 +209,8 @@ class AreaController extends CommonController
             $ids = array(0);
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
             $l_arr = ['areaid','areaname','fatherareaid','areaid'];
-            //$L_attributes 额外需要保存的信息
-            $L_attributes = ['areacode','rperson','rphone','type','code','is_read'];
+            //$L_attributes 额外需要保存的信息 'type','code',
+            $L_attributes = ['areacode','rperson','rphone','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
             $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
             $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
@@ -296,8 +325,8 @@ class AreaController extends CommonController
         $ids = array(0);
         //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
         $l_arr = ['areaid','areaname','fatherareaid','areaid'];
-        //$L_attributes 额外需要保存的信息
-        $L_attributes = ['areacode','rperson','rphone','type','code','is_read'];
+        //$L_attributes 额外需要保存的信息 'type', 'code',
+        $L_attributes = ['areacode','rperson','rphone','is_read'];
         $icons = ['icon-application_xp_terminal','icon-application'];
         $noclose = $db->where('fatherareaid = 0')->getField('areaid',true);
         $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
@@ -315,8 +344,8 @@ class AreaController extends CommonController
         $key_code = array();
         $name_code = array('部门名称'=>'areaname',
                            '部门编号'=>'areacode',
-                           '部门类型'=>'type',
-                           '部门标识'=>'code',
+                           // '部门类型'=>'type',
+                           // '部门标识'=>'code',
                            '联系人'=>'rperson',
                            '联系方式'=>'rphone');
         $allow = 0;

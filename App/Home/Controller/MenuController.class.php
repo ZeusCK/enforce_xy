@@ -80,6 +80,7 @@ class MenuController extends CommonController
     }
     public function dataRemove()
     {
+        
         $request = I('id');
         $db = D($this->models['menu']);
         $where['id'] = array('in',$request);

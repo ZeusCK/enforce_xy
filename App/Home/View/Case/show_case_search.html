@@ -12,7 +12,7 @@
 </block>
 <block name="main">
   <div class="easyui-layout" fit="true">
-    <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+    <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:200px;background:#eee;">
       <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -20,36 +20,37 @@
     </div>
   </div>
   <div id="toolbar">
-    <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-      <div class="search-box search-big">
-        <div class="search-text">出警人:</div>
-        <input name="jyxm" class="easyui-textbox">
-        <div class="search-text">设备号:</div>
-        <input name="cpxh" class="easyui-textbox">
-        <div class="search-text">警情编号:</div>
-        <input name="alarm_no" class="easyui-textbox">
-        <div class="search-text">警情类型:</div>
-        <input id="alarm_type" class="easyui-combobox" name="alarm_type" editable=false />
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">开始查询</a>
-      </div>
-      <div class="search-box search-big">
-        <div class="search-text">案件名称:</div>
-        <input name="case_name" class="easyui-textbox">
-        <div class="search-text">案件编号:</div>
-        <input name="case_no" class="easyui-textbox">
-        <div class="search-text">案件类型:</div>
-        <input id="case_type" class="easyui-combobox" name="case_type" editable=false />
-        <div class="search-text">案事件名称:</div>
-        <input name="alarm_name" class="easyui-textbox">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">条件重置</a>
-      </div>
-      <div class="search-box search-big">
-        <div class="search-text">采集日期:</div>
-        <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false" />
-        <div class="search-text">至:</div>
-        <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false" />
-        <a style="margin-left: 477px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
-      </div>
-    </form>
+<form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
+            <div class="search-box search-big">
+                <div class="search-text">案事件名称:</div>
+                <input name="alarm_name" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">出警人:</div>
+                <input name="jyxm" class="easyui-textbox" style="width: 100px;">
+                
+                <div class="search-text">警情编号:</div>
+                <input name="alarm_no" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">警情类型:</div>
+                <input id="alarm_type" class="easyui-combobox" name="alarm_type" editable=false style="width: 100px;"/>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">开始查询</a>
+            </div>
+            <div class="search-box search-big">
+                <div class="search-text">案件名称:</div>
+                <input name="case_name" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">案件编号:</div>
+                <input name="case_no" class="easyui-textbox" style="width: 100px;">
+                <div class="search-text">案件类型:</div>
+                <input id="case_type" class="easyui-combobox" style="width: 100px;" name="case_type" editable=false />
+                <div class="search-text">设备号:</div>
+                <input name="cpxh" class="easyui-textbox" style="width: 100px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">条件重置</a>
+            </div>
+            <div class="search-box search-big">
+                <div class="search-text">采集日期:</div>
+                <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false"/>
+                <div class="search-text">至:</div>
+                <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false"/>
+                <a style="margin-left: 175px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
+            </div>
+        </form>
   </div>
 </block>

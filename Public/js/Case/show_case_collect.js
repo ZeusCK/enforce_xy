@@ -5,12 +5,14 @@ var module = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.params = {};
+module.user = app.tp.user;
+module.source = 1;
 var Url = "Case/case_list"; //获取数据列表
 var DATA = {};
 var total;
 
 //默认时间
-function Time(n) {
+/*function Time(n) {
   var myDate = new Date();
   var y = myDate.getFullYear();
   var m = (m = myDate.getMonth() + 1) < 10 ? "0" + m : m;
@@ -26,7 +28,7 @@ function Time(n) {
   } else {
     return shotE; //7天前时间
   }
-}
+}*/
 
 //开始查询
 module.search = function() {
@@ -35,6 +37,7 @@ module.search = function() {
     form: "#searchForm",
     datagrid: "#datagrid",
     parsedata: function(data) {
+      data.source = module.source;
       data.areacode = module.areacode;
       DATA = data;
     } //解析参数
@@ -45,8 +48,8 @@ module.search = function() {
 module.init_search_form = function() {
   $("#searchForm").form("reset");
   //设置默认时间
-  $("#shotS").datetimebox("setValue", Time());
-  $("#shotE").datetimebox("setValue", Time("shotS"));
+  $("#shotS").datetimebox("setValue", app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+  $("#shotE").datetimebox("setValue", app.date('Y-m-d')+' 23:59:59');
 };
 
 //导出全部
@@ -74,7 +77,33 @@ module.upload = function(case_key, start_time) {
     start_time;
   window.open(url);
 };
-
+module.case_add = function(){
+    $('#addForm').form('reset');
+    var info = {title:app.date('Y-m-d H:i:s')+' '+module.user + ' 数据',
+                source:module.source,
+                edit_name:module.user,
+                jyxm:module.user,
+                scsj:app.date('Y-m-d H:i:s'),
+                start_time:app.date('Y-m-d H:i:s')
+                };
+    $('#addForm').form('load',info);
+    $('#addDialog').dialog('open');
+};
+module.uploadInfo = function(target){
+    app.extra('add_edit',{
+        url:'Case/add_case',
+        datagrid:'#datagrid',
+        dialog:'#addDialog',
+        form:'#addForm',
+        linkbutton:target,
+        success:function(data){
+            if(data.status){
+                var url = app.url("Case/case_upload") +"?case_key=" +data.case_key +"&start_time=" +data.start_time;
+                window.open(url);
+            }
+        }
+    });
+};
 //计算天数差的函数，通用
 function DateDiff(sDate1, sDate2) {
   //sDate1和sDate2是2002-12-18格式
@@ -83,7 +112,7 @@ function DateDiff(sDate1, sDate2) {
   oDate1 = new Date(aDate[1] + "-" + aDate[2] + "-" + aDate[0]); //转换为12-18-2002格式
   aDate = sDate2.split("-");
   oDate2 = new Date(aDate[1] + "-" + aDate[2] + "-" + aDate[0]);
-  iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
+  iDays = Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24; //把相差的毫秒数转换为天数
   return iDays;
 }
 
@@ -103,15 +132,24 @@ $(function() {
   app.combobox('#case_type,#edit_case_type',{type:'case_type'});
   //警情类型下拉框
   app.combobox('#alarm_type,#edit_alarm_type',{type:'alarm_type'});
-
+  $('#tab').tabs({
+        onSelect:function(title){
+            if(title == '执法记录仪')module.source = 1;
+            if(title == '公安类') module.source = 2;
+            if(title == '非公安类') module.source = 3;
+            module.search();
+        }
+  });
   //设置默认时间
-  $("#shotS,#shotS2").datetimebox("setValue", Time());
-  $("#shotE,#shotE2").datetimebox("setValue", Time("shotS"));
-
+  $("#shotS").datetimebox("setValue", app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+  $("#shotE").datetimebox("setValue", app.date('Y-m-d')+' 23:59:59');
   //数据表单
   app.datagrid("#datagrid", {
     url: Url,
     title: "数据采集",
+    queryParams:{
+        source:1
+    },
     columns: [
       [
         {
@@ -121,26 +159,31 @@ $(function() {
         {
           field: "areaname",
           title: "单位",
+          width: 200,
           align: "center"
         },
         {
           field: "title",
           title: "标题",
+          width: 200,
           align: "center"
         },
         {
           field: "alarm_name",
           title: "案事件名称",
+          width: 200,
           align: "center"
         },
         {
           field: "alarm_no",
           title: "警情编号",
+          width: 200,
           align: "center"
         },
         {
           field: "start_time",
           title: "采集日期",
+          width: 200,
           align: "center"
         },
         {
@@ -173,6 +216,12 @@ $(function() {
           align: "center"
         },
         {
+          field: "update_time",
+          title: "更新时间",
+          width: 200,
+          align: "center"
+        },
+        {
           field: "cz",
           title: "操作",
           width: 220,
@@ -193,14 +242,10 @@ $(function() {
         }
       ]
     ],
-    rowStyler: function(index, row) {
-      var dd1 = String(row.start_time);
-      var dd2 = dd1;
-      var dd = Time("shotS");
-      var days = DateDiff(dd, dd2);
-      return row.alarm_no == ""
-        ? days >= 3 ? (days > 5 ? "color:red" : "color:orange") : ""
-        : "";
+    rowStyler: function (index, row) {
+      var dd1 = String(row.scsj);
+      var checkTime = app.date('Y-m-d H:i:s',app.time()-3.5*24*60*60);
+      return row.alarm_type == 0 ? checkTime > dd1 ? "color:red" : "color:orange" : "" ;
     },
     onLoadSuccess: function(data) {
       if (data.total == 0 && $(this).datagrid("options").showDatagrid) {

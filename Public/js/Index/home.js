@@ -1,20 +1,27 @@
-//2017.7.10 改最新信息为工作台 by:wyl
 var things = {};
+
 things.datagridUrl = 'WorkStation/ws_base_list';
 $(function() {
     case_sat();
 });
-
 function case_sat() {
+    var search_type = $('#search_type').text();
+    if(search_type == '精确查询'){
+        $('#search_type').text('联级查询');
+        var type = 'link';
+    }else{
+        $('#search_type').text('精确查询');
+        var type = 'unlink';
+    }
     var myChart = echarts.init(document.getElementById('myChart'));
     myChart.showLoading();
     var option2 = {
         title: {
-            text: '7天内警情对接情况'
+            text: '7天内各部门未编辑视音频数据'
         },
         tooltip: {},
         legend: {
-            data: ['警情总数', '对接警情数', '未对接警情数']
+            data: ['未编辑视音频数']
         },
         xAxis: {
             data: [],
@@ -30,24 +37,19 @@ function case_sat() {
             }
         }],
         series: [{
-            name: '警情总数',
-            type: 'line',
-            data: []
-        }, {
-            name: '对接警情数',
-            type: 'line',
-            data: []
-        }, {
-            name: '未对接警情数',
-            type: 'line',
+            name: '未编辑视音频数',
+            type: 'bar',
             data: []
         }]
     };
     myChart.setOption(option2);
     $.ajax({
-        url: app.tp.ajax + '?tpUrl=Case/show_home_sat',
+        url: app.tp.ajax + '?tpUrl=Case/show_area_sat',
         type: 'POST',
         dataType: 'json',
+        data:{
+            type:type
+        },
         success: function(info) {
             myChart.hideLoading();
             var xAxis = [];
@@ -55,15 +57,15 @@ function case_sat() {
             var udata = [];
             var alldata = [];
             for (var x in info) {
-                xAxis.push(x);
-                alldata.push(info[x].num);
-                ndata.push(info[x].alarms);
-                udata.push(info[x].unalarms);
+                xAxis.push(info[x].areaname);
+                alldata.push(info[x].total);
+                /*ndata.push(info[x].alarms);
+                udata.push(info[x].unalarms);*/
             }
             option2.xAxis.data = xAxis;
             option2.series[0].data = alldata;
-            option2.series[1].data = ndata;
-            option2.series[2].data = udata;
+            /*option2.series[1].data = ndata;
+            option2.series[2].data = udata;*/
             myChart.setOption(option2);
         }
     });

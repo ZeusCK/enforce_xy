@@ -406,7 +406,10 @@ App.prototype.remove = function(params){
             var data = {};
             if(options.datagrid){               //如果有datagrid
                 var infos = $(options.datagrid).datagrid('getSelections');
-                if(infos.length == 0) return false;
+                if(infos.length == 0){
+                    App.prototype.linkbutton(options.linkbutton,'enable');
+                    return false;
+                }
                 var ids = [];
                 $.each(infos,function(n,m){
                     ids.push(m[options.idField]);
@@ -677,4 +680,28 @@ App.prototype.importExcel.defaults = {
     datagrid:null,  //相关datagrid
     success:function(data){},
     error:function(){}
+}
+App.prototype.date = function(format,time){
+    format = format || 'Y-m-d H:i:s';
+    if(time){
+        var date = new Date(parseInt(time)*1000);
+    }else{
+        var date = new Date();
+    }
+    var info = {};
+    info['Y'] = date.getFullYear();
+    info['m'] = (m = (date.getMonth() + 1)) < 10 ? '0' + m : m;
+    info['d'] = (d = date.getDate()) < 10 ? '0' + d : d;
+    info['H'] = (hh = date.getHours()) < 10 ? '0' + hh : hh;
+    info['i'] = (mm = date.getMinutes()) < 10 ? '0' + mm : mm;
+    info['s'] = (ss = date.getSeconds()) < 10 ? '0' + ss : ss;
+    var strArr = format.split('');
+    for (var i = 0; i < strArr.length; i++) {
+        strArr[i] = info[strArr[i]] || strArr[i];
+    }
+    return strArr.join('');
+}
+App.prototype.time = function(){
+    var date = new Date();
+    return parseInt(date.getTime()/1000);
 }

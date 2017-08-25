@@ -25,7 +25,7 @@ $(function() {
         uploader;
     setTimeout(function(){
         $('#caseInfo').form('load',caseInfo.info);
-    }, 1000)
+    }, 1000);
     uploader = WebUploader.create({
 
         // swf文件路径
@@ -86,7 +86,7 @@ $(function() {
     });
 
     uploader.on('all', function(type) {
-        console.log(type);
+        // console.log(type);
         if (type === 'startUpload') {
             state = 'uploading';
         } else if (type === 'stopUpload') {

@@ -23,8 +23,10 @@ class ServerController extends CommonController
         //server_ip 服务器ip
         //areacode 部门编号
         $request = u2gs($request);
-        $areaSql = $this->get_manger_sql($request['areacode'],'areacode',false).' OR areacode=""';
-        $where[] = $areaSql;
+        if(session('user')){
+            $areaSql = $this->get_manger_sql($request['areacode'],'areacode',false).' OR areacode=""';
+            $where[] = $areaSql;
+        }
         if($request['status'] != '') $where['status'] = $request['status'];
         if($request['server_ip'] != '') $where['server_ip'] = array('like','%'.$request['server_ip'].'%');
 

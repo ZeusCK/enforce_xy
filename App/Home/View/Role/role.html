@@ -32,17 +32,17 @@ app.tp.roleid = "{:session('roleid')}"
                 <select class="easyui-combobox form_in" name="level" style="width: 181px;"
                         data-options="editable:false">
                     <option value="0">系统</option>
-                    <option value="1">支队</option>
-                    <option value="2">大队</option>
-                    <option value="3">中队</option>
+                    <option value="1">市局</option>
+                    <option value="2">县局</option>
+                    <option value="3">基层</option>
                     <option value="4">警员</option>
-                    <option value="4">其他</option>
+                    <option value="5">其他</option>
                 </select>
             </div>
     	</form>
     </div>
     <div id="addButtons">
-    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="things.add()" style="width:90px">确认</a>
+    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="things.add(this)" style="width:90px">确认</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
     $('#addDialog').dialog('close')" style="width:90px">取消</a>
     </div>
@@ -60,11 +60,11 @@ app.tp.roleid = "{:session('roleid')}"
                 <select class="easyui-combobox form_in" name="level" style="width: 181px;"
                         data-options="editable:false">
                     <option value="0">系统</option>
-                    <option value="1">支队</option>
-                    <option value="2">大队</option>
-                    <option value="3">中队</option>
+                    <option value="1">市局</option>
+                    <option value="2">县局</option>
+                    <option value="3">基层</option>
                     <option value="4">警员</option>
-                    <option value="4">其他</option>
+                    <option value="5">其他</option>
                 </select>
             </div>
         </form>

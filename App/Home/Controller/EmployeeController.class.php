@@ -6,6 +6,7 @@ class EmployeeController extends CommonController
     //表的表名-自增主键
     protected $tab_id = 'empid';
     protected $models = ['role'=>'Enforce\Role',            //角色
+                         'dept_role'=>'Enforce\DeptRole',   //部门角色
                          'employee'=>'Enforce\Employee',    //警员
                          'area'=>'Enforce\AreaDep'];           //部门
     protected $actions = ['area'=>'Area',
@@ -19,12 +20,6 @@ class EmployeeController extends CommonController
     {
         $action = A($this->actions['area']);
         //如果没有
-        $areaTree = $action->tree_list();
-
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : 0;
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
         $this->assignInfo();
         $this->display($this->views['index']);
     }
@@ -87,7 +82,7 @@ class EmployeeController extends CommonController
         unset($request['page'],$request['rows'],$request['rand']);
         if(!empty($request)){
             foreach($request as $key=>$value){
-                if($key != 'areaid' && $key != 'areacode'){
+                if($key != 'areaid' && $key != 'areacode' && $key != 'code'){
                     $check[$key] = array('like','%'.u2g($value).'%');
                 }
             }
@@ -95,7 +90,8 @@ class EmployeeController extends CommonController
         $dbc = D($this->models['area']);
         $areas = $dbc->getField('areacode,areaname');
         $db = D($this->models['employee']);
-        $check[] = $this->get_manger_sql(I('areacode'),'areacode','code');
+        $check[] = $this->get_manger_sql(I('areacode'),'areacode','code').' OR areacode = ""';
+        if($request['code']) $check['code'] = $request['code'];
         $roledb = D($this->models['role']);
         $roles = $roledb->getField('roleid,rolename');
         $order = 'areacode asc,level asc';
@@ -111,6 +107,15 @@ class EmployeeController extends CommonController
         }
         $this->saveExcel($res); //监测是否为导出
         $this->ajaxReturn(g2us($res));
+    }
+    //根据部门获取具体部门的警员
+    public function get_area_emp($request)
+    {
+        $where[] = $this->get_manger_sql($request['areacode'],'areacode','code');
+        $where['areacode'] = $request['areacode'];
+        $db = D($this->models['employee']);
+        $rows = $db->where($where)->field('code,name')->select();
+        return g2us($rows);
     }
     //增加事件
     public function dataAdd()
@@ -131,7 +136,7 @@ class EmployeeController extends CommonController
                 $info = '照片保存失败，可能原因服务器权限不足，';
             }
         }
-        $request['password'] = I('code');           //登录密码 默认为警号
+        $request['password'] = '123456';           //登录密码 默认为警号
         $db = D($this->models['employee']);
         if($db->where('code ="'.$request['code'].'"')->find()){
             $result['message'] = '该警员已经录入！';
@@ -209,7 +214,7 @@ class EmployeeController extends CommonController
     {
         $db = D($this->models['employee']);
         $where['empid'] = $request['empid'];
-        $request['password'] = $request['code'];
+        $request['password'] = '123456';
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
             $this->write_log('初始化密码-'.$request['code']);
@@ -219,10 +224,26 @@ class EmployeeController extends CommonController
         }
         return $result;
     }
+    public function emp_bind($request)
+    {
+        $where['empid'] = $request['empid'];
+        $db = D($this->models['employee']);
+        if($request['action'] == 'bind'){
+            unset($request['empid']);
+            unset($request['action']);
+            $result = $db->getTableEdit($where,$request);
+        }else{
+            $data['areaname'] = $data['areacode'] = '';
+            $result = $db->getTableEdit($where,$data);
+        }
+        return $result;
+    }
     //准备前端页面数据
     public function assignInfo()
     {
         $action = A($this->actions['role']);
+        $db = D($this->models['dept_role']);
+        $info['dept_role'] = g2us($db->select());
         //警员记录
         $info['role'] = $action->get_role_info()['rows'];
         $info['role'] = g2us($info['role']);
@@ -516,11 +537,11 @@ class EmployeeController extends CommonController
                             $allow++;
                         }
                     }
-                    if($key_code[$k] == 'code') $saveData['password'] = $val;
                     if($key_code[$k] == 'roleid'){             //设置警员属性
                         $saveData[$key_code[$k]] = $role_id_name[$val];
                         continue;
                     }
+                    $saveData['password'] = '123456';
                     $saveData[$key_code[$k]] = $val;
                 }
 

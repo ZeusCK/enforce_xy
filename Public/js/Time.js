@@ -10,7 +10,7 @@ Time.prototype.init = function() {
     var hh = (hh = time.getHours()) < 10 ? '0' + hh : hh;
     var mm = (mm = time.getMinutes()) < 10 ? '0' + mm : mm;
     var ss = (ss = time.getMilliseconds() * 60 / 1000) < 10 ? '0' + ss : ss;
-    return y + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss;
+    return y + '-' + m + '-' + d + ' 00:00:00';
 };
 Time.prototype.judge = function(btime, etime) {
     var bTime = new Date(btime).getTime();

@@ -30,7 +30,9 @@ module.show = function(){
 module.search = function(){
     var name = $('#name').val();
     name = $.trim(name);
-    searchData = {areacode:module.areacode,name:name}
+    var code = $('#code').val();
+    code = $.trim(code);
+    searchData = {areacode:module.areacode,name:name,code:code};
     $('#datagrid').datagrid('load',searchData);
 }
 module.link = function(){
@@ -249,6 +251,23 @@ module.importExcel = function(target){
         linkbutton:target
     });
 }
+module.bind = function(empid,choose,code){
+    if(empid == module.empid || code == 'admin'){
+        $.messager.alert('操作提示','你无法对自身或超级管理员进行操作','info');
+        return false;
+    }
+    var action = choose ? 'bind' : 'unbind';
+    app.extra('add_edit',{
+        datagrid:'#datagrid',
+        url:'Employee/emp_bind',
+        parsedata:function(data){
+            data.action = action;
+            data.empid = empid;
+            data.areacode = module.areacode;
+            data.areaname = module.areaname;
+        }
+    })
+}
 $(function(){
     //树的初始化
     tree.loadData();
@@ -298,7 +317,14 @@ $(function(){
         {field:'rolename',title:'所属角色',width:200,align:'center'},
         {field:'remark',title:'备注',width:200,align:'center'},
         {field:'areaname',title:'所属部门',width:200,align:'center'},
-        {field:'phone',title:'电话',width:200,align:'center'}
+        {field:'phone',title:'电话',width:200,align:'center'},
+        {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
+              if(d.areacode == ''){
+                  return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind('+d.empid+',true,\''+d.code+'\')">绑定部门</span>';
+              }else{
+                  return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind('+d.empid+',false,\''+d.code+'\')">解除部门绑定</span>';
+              }
+        }}
         /*{field:'otherInfo',title:'权限信息',width:200,align:'center',formatter:function(v,r,i){
             return '点击查看';
         },styler:function(v,r,i){

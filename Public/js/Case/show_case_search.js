@@ -10,7 +10,7 @@ var DATA = {};
 var total;
 
 //默认时间
-function Time(n) {
+/*function Time(n) {
   var myDate = new Date();
   var y = myDate.getFullYear();
   var m = (m = myDate.getMonth() + 1) < 10 ? "0" + m : m;
@@ -26,7 +26,7 @@ function Time(n) {
   } else {
     return shotE; //7天前时间
   }
-}
+}*/
 
 //开始查询
 module.search = function() {
@@ -45,8 +45,8 @@ module.search = function() {
 module.init_search_form = function() {
   $("#searchForm").form("reset");
   //设置默认时间
-  $("#shotS").datetimebox("setValue", Time());
-  $("#shotE").datetimebox("setValue", Time("shotS"));
+  $("#shotS").datetimebox("setValue", app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+  $("#shotE").datetimebox("setValue", app.date('Y-m-d')+' 23:59:59');
 };
 
 //导出全部
@@ -83,7 +83,7 @@ function DateDiff(sDate1, sDate2) {
   oDate1 = new Date(aDate[1] + "-" + aDate[2] + "-" + aDate[0]); //转换为12-18-2002格式
   aDate = sDate2.split("-");
   oDate2 = new Date(aDate[1] + "-" + aDate[2] + "-" + aDate[0]);
-  iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24); //把相差的毫秒数转换为天数
+  iDays = Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24; //把相差的毫秒数转换为天数
   return iDays;
 }
 
@@ -105,8 +105,8 @@ $(function() {
   app.combobox('#alarm_type,#edit_alarm_type',{type:'alarm_type'});
 
   //设置默认时间
-  $("#shotS,#shotS2").datetimebox("setValue", Time());
-  $("#shotE,#shotE2").datetimebox("setValue", Time("shotS"));
+  $("#shotS,#shotS2").datetimebox("setValue", app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+  $("#shotE,#shotE2").datetimebox("setValue", app.date('Y-m-d')+' 23:59:59');
 
   //数据表单
   app.datagrid("#datagrid", {
@@ -121,26 +121,31 @@ $(function() {
         {
           field: "areaname",
           title: "单位",
+          width: 200,
           align: "center"
         },
         {
           field: "title",
           title: "标题",
+          width: 200,
           align: "center"
         },
         {
           field: "alarm_name",
           title: "案事件名称",
+          width: 200,
           align: "center"
         },
         {
           field: "alarm_no",
           title: "警情编号",
+          width: 200,
           align: "center"
         },
         {
           field: "start_time",
           title: "采集日期",
+          width: 200,
           align: "center"
         },
         {
@@ -158,6 +163,7 @@ $(function() {
         {
           field: "case_no",
           title: "案件编号",
+          width: 200,
           align: "center"
         },
         {
@@ -169,6 +175,12 @@ $(function() {
         {
           field: "scsj",
           title: "上传日期",
+          width: 200,
+          align: "center"
+        },
+        {
+          field: "update_time",
+          title: "更新时间",
           width: 200,
           align: "center"
         },
@@ -193,14 +205,10 @@ $(function() {
         }
       ]
     ],
-    rowStyler: function(index, row) {
-      var dd1 = String(row.start_time);
-      var dd2 = dd1;
-      var dd = Time("shotS");
-      var days = DateDiff(dd, dd2);
-      return row.alarm_no == ""
-        ? days >= 3 ? (days > 5 ? "color:red" : "color:orange") : ""
-        : "";
+    rowStyler: function (index, row) {
+      var dd1 = String(row.scsj);
+      var checkTime = app.date('Y-m-d H:i:s',app.time()-3.5*24*60*60);
+      return row.alarm_type == 0 ? checkTime > dd1 ? "color:red" : "color:orange" : "" ;
     },
     onLoadSuccess: function(data) {
       if (data.total == 0 && $(this).datagrid("options").showDatagrid) {

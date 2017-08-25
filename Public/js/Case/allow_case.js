@@ -52,7 +52,7 @@ things.search = function() {
         datagrid: '#datagrid',
         parsedata: function(data) {
             data.areacode = things.areacode;
-            data.type = 0;
+            data.type = 1;
             data.hand_status = 1;
         }
     });
@@ -76,7 +76,7 @@ $(function() {
         title: '审核视频',
         fit: true,
         queryParams: {
-            type: 0,
+            type: 1,
             hand_status: 1
         },
         columns: [

@@ -35,6 +35,23 @@ Tree.prototype.load_all_tree = function(){
         }
     });
 }
+Tree.prototype.load_dept_role = function(dept_role_id){
+    var dom = this.dom;
+    var self = this;
+    $.ajax({
+        url:app.tp.ajax+'?rand='+Math.random()+'&tpUrl=DeptRole/roleDept&dept_role_id='+dept_role_id,
+        type:'get',
+        dataType:'json',
+        success:function(data){
+            self.data = data;
+            $(dom).tree({
+                checkbox:true,
+                cascadeCheck:true,
+                data:data
+            });
+        }
+    });
+}
 //加载带有警员的树
 Tree.prototype.load_emp_tree = function(){
     this.init();

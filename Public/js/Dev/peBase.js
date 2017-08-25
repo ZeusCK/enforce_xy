@@ -17,9 +17,19 @@ module.exports = function(target){
         }
     });
 }
+module.add_edit = function(target){
+    var url= $('#dialog').dialog('options').title=='添加'? 'Dev/pe_base_add' : 'Dev/pe_base_edit';
+    app.extra('add_edit',{
+        url:url,
+        form:'#dialogForm',
+        datagrid:'#datagrid',
+        dialog:'#dialog',
+        linkbutton:target        
+    });
+}
 $(function(){
     //左侧tree的加载
-    tree.load_emp_tree();
+    tree.loadData();
     $('#pos').html(module.areaname);
     //右侧datagrid的加载
     $('#datagrid').datagrid({
@@ -58,17 +68,13 @@ $(function(){
     $('#tree').tree({
         onSelect:function(node){
             $('#pos').html(node.text);
+            module.areaname = node.text;
+            module.areacode = node.areacode;
             info = app.serializeJson('#form');
-            if(node.iconCls=='icon-user'){
-                info.jybh=node.code;
-                info.jyxm=node.text;
-                $('#datagrid').datagrid('load',info);
-                $('#jyxm').textbox('setValue',node.text);
-            }else{
-                info.areacode=node.areacode;
-                $('#datagrid').datagrid('load',info);
-            }
+            info.areacode=node.areacode;
+            $('#datagrid').datagrid('load',info);
             searchData = info;
+            
         }
     });
     //搜索按钮
@@ -79,10 +85,6 @@ $(function(){
     });
     //添加按钮
     $('#add').click(function(){
-        if(!info.jyxm){
-            $.messager.alert('操作提示','请在左侧属性菜单选择警员后添加','info');
-            return false;
-        }
         operation('添加');
     });
     //修改按钮
@@ -115,15 +117,13 @@ $(function(){
         });
     });
     //添加、修改面板的 确定按钮
-    $('#dialogOk').click(function(){
+    /*$('#dialogOk').click(function(){
         var url=$('#dialog').dialog('options').title=='添加'?app.url('Dev/pe_base_add'):app.url('Dev/pe_base_edit');
         var data=app.serializeJson('#dialogForm');
         if(data.cpxh==''){
             $.messager.alert('操作提示','产品序号为必填项！','info');
             return false;
         }
-        data.jybh=info.jybh;
-        data.jyxm=info.jyxm;
         $.ajax({
             url:url,
             data:data,
@@ -134,7 +134,7 @@ $(function(){
                 $.messager.alert('操作提示',r.message,'info');
             }
         });
-    });
+    });*/
     //添加、修改面板的 取消按钮
     $('#dialogDel').click(function(){
         $('#dialog').dialog('close');
@@ -142,7 +142,7 @@ $(function(){
 });
 function operation(title){
     if(title=='添加'){
-        $('#dialog p').html('向 '+info.jyxm+' 添加仪器');
+        $('#dialog p').html(module.areaname);
         $('#dialogForm').form('reset');
     }else{
         $('#dialog p').html('');
@@ -157,6 +157,15 @@ function operation(title){
             $('#dialogForm').form('load',rows[0]);
         }
     }
+    $('#jyxm').combobox({
+        url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
+        valueField:'name',
+        textField:'name',
+        method:'get',
+        onSelect:function(record){
+            $('#jybh').textbox('setValue',record.code);
+        }
+    });
     $('#dialog').dialog({
         title:title,
         shadow:false,

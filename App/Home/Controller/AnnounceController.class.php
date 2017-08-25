@@ -112,6 +112,6 @@ class AnnounceController extends CommonController
         $rows = array_slice($data,($page-1)*$rows,$rows);
         $res['total'] = $total;
         $res['rows'] = g2us($rows);
-        return g2us($data);
+        return $res;
     }
 }
