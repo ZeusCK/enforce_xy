@@ -1,23 +1,19 @@
 <extend name="layouts:master" />
 <block name="link">
-<link rel="stylesheet" type="text/css" href="__PUBLIC__/css/Case/play_case.css">
-<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/Case/play_case.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
 </block>
 <block name="src">
-<script type="text/javascript">
+    <script type="text/javascript">
     app.tp.data = {$data};
-</script>
-<script type="text/javascript" src="__PUBLIC__/js/Case/play_case.js"></script>
-<script type="text/javascript" src="__PUBLIC__/plugins/jquery-plugins/jquery.PrintArea.js"></script>
+    </script>
+    <script type="text/javascript" src="__PUBLIC__/js/Case/play_case.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-plugins/jquery.PrintArea.js"></script>
 </block>
 <block name="main">
     <div id="logo_video" style="background:#0065b6 url(__PUBLIC__/image/logo_video.jpg) no-repeat 105px 13px;  ">
-        <a href="javascript:void(0)" id="print" class="easyui-linkbutton"
-           iconCls="icon-print">打印</a>
-        <a href="javascript:void(0)" id="download" class="easyui-linkbutton"
-           iconCls="icon-picture_save">下载</a>
-        &nbsp;&nbsp;&nbsp;&nbsp;
-        视频无法播放？
+        <a href="javascript:void(0)" id="print" class="easyui-linkbutton" iconCls="icon-print">打印</a>
+        <a href="javascript:void(0)" id="download" class="easyui-linkbutton" iconCls="icon-picture_save">下载</a> &nbsp;&nbsp;&nbsp;&nbsp; 视频无法播放？
         <a href="__ROOT__/about.php" class="easyui-linkbutton" iconCls="icon-drive_web">下载VLC</a>
     </div>
     <div id="vedio_list">
@@ -30,20 +26,18 @@
                 <embed pluginspage="http://www.videolan.org" type="application/x-vlc-plugin"  width="100%" height="100%" mrl="__PUBLIC__/48013_20170706212052_N_20170706212236.mp4" text="Waiting for video"/>
             </div> -->
         </div>
-
         <!-- <video id="video" autoplay controls="controls" height="100%"></video> -->
         <!--<audio src="" autoplay controls="controls"></audio>-->
         <!--<img src="" alt="" style="height:100%;">-->
-        <div id="case_info" >
-            <div id="videoBox" >
+        <div id="case_info">
+            <div id="videoBox">
                 <form id="infoForm">
                     <div class="videol" style="padding-bottom: 16px;">
                         <h3><em></em><span>案件信息</span></h3>
                         <div class="item">
-                            <label >案事件名称：</label>
+                            <label>案事件名称：</label>
                             <input class="easyui-textbox" name="alarm_name" style="
                              height: 26px; border-radius: 3px;border:1px solid #ccc;">
-
                             <label>警情编号：</label>
                             <input class="easyui-textbox" name="alarm_no" style="
                              height: 26px; border-radius: 3px;border:1px solid #ccc;">
@@ -78,9 +72,6 @@
             </div>
         </div>
     </div>
-
     <div style="clear: both;"></div>
-    </div>
-
     <div style="clear: both;"></div>
 </block>

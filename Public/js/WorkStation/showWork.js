@@ -87,5 +87,7 @@ module.broadcast = function() {
     });
 }
 $(function() {
-    module.broadcast();
+	setTimeout(function(){
+		module.broadcast();
+	},1000);  
 });

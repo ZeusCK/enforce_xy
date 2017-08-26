@@ -550,7 +550,11 @@ class CommonController extends Controller {
             }
         }
         if($areacode != '') $searchArr[] = $areacode;
-        return array_merge($checkAreacode,$searchArr);
+        $return = array_merge($checkAreacode,$searchArr);
+        foreach ($return as $key => $value) {
+            if($value == '') unset($return[$key]);
+        }
+        return $return;
     }
     /**
      * 同步表

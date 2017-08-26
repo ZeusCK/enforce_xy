@@ -29,17 +29,17 @@ app.tp.area_type = "{:session('area_type')}";
     </div>
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-             <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp; -->
+             <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp; -->
                 部门名称: <input id="areaname" name="areaname" class="easyui-textbox" data-options="height:22"  style="width:168px"/>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
         </form>
         <a href="javascript:void(0)" class="easyui-linkbutton"
             data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_area">无</span></a>
         <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="javascript:
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship"  onclick="javascript:
                     $('#importForm').dialog('open')">导入</a>
     </div>
 <!-- 增加 -->

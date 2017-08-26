@@ -14,7 +14,7 @@ function case_sat() {
         var type = 'unlink';
     }
     var myChart = echarts.init(document.getElementById('myChart'));
-    myChart.showLoading();
+    //myChart.showLoading();
     var option2 = {
         title: {
             text: '7天内未编辑视音频数据'
@@ -51,7 +51,7 @@ function case_sat() {
             type:type
         },
         success: function(info) {
-            myChart.hideLoading();
+            
             var xAxis = [];
             var ndata = [];
             var udata = [];
@@ -67,6 +67,7 @@ function case_sat() {
             /*option2.series[1].data = ndata;
             option2.series[2].data = udata;*/
             myChart.setOption(option2);
+			//myChart.hideLoading();
         }
     });
 }

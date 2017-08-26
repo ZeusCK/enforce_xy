@@ -103,7 +103,7 @@ class CaseController extends CommonController
         if($request['alarm_addr']) $where['alarm_addr'] = array('like','%'.$request['alarm_addr'].'%');    //警情名称
         if($request['title']) $where['title'] = array('like','%'.$request['title'].'%');    //警情名称
         if($request['alarm_type']) $where['alarm_type'] = $request['alarm_type'];      //警情类型
-        if($request['jyxm']) $where['jyxm'] = $request['jyxm'];      //警情类型
+        if($request['jyxm']) $where['jyxm'] = array('like','%'.$request['jyxm'].'%');      //警情类型
         if($request['source']) $where['source'] = $request['source'];      //警情来源
         if($request['jybh']) $where[$jybhField] = $request['jybh'];                 //警员编号
         if($request['hand_status']) $where['hand_status'] = $request['hand_status'];    //移交状态
@@ -125,7 +125,7 @@ class CaseController extends CommonController
         $res['rows'] = array();
         foreach ($tables as $table => $start_limit) {
             // error_log('查询数据表:'.'case_'.$month.'---查询数据:'.implode(',',$start_limit)."\r\n",3,'error.log');
-            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->order('start_time desc')->select();
+            $data = M()->table('case_'.$table)->where($where)->limit(implode(',',$start_limit))->order('scsj desc')->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
         }
         $alarm_type = $this->get_val_item('dictionary', 'alarm_type');
@@ -180,8 +180,8 @@ class CaseController extends CommonController
         $where['case_key'] = $request['case_key'];
         $start_time = $request['start_time'];
         $table = date('Ym',strtotime($start_time));
-        unset($request['case_key']);
         $request['edit_name'] = session('user');
+		if($request['end_time'] == '') unset($request['end_time']);
         $request = u2gs($request);
         $request['update_time'] = date('Y-m-d H:i:s');
         $result = M()->table('case_'.$table)->where($where)->save($request);
@@ -190,7 +190,6 @@ class CaseController extends CommonController
         $other['tab_name'] = 'case_'.$table;
         $syncData[] = $other;
         $this->sync('case',$syncData,'edit');
-
         if($result){
             $res['status'] = true;
             $res['message'] = '修改案件成功';
@@ -201,6 +200,42 @@ class CaseController extends CommonController
         $this->write_log('修改案件'.$request['case_key']);
         return $res;
     }
+	public function remove_case($request){
+		$where['case_key'] = $request['case_key'];
+        $start_time = $request['start_time'];
+        $table = date('Ym',strtotime($start_time));
+        $request['edit_name'] = session('user');
+		if($request['end_time'] == '') unset($request['end_time']);
+        $request = u2gs($request);
+        $request['update_time'] = date('Y-m-d H:i:s');
+		$cases = M()->table('case_'.$table)->where($where)->select();
+        $result = M()->table('case_'.$table)->where($where)->delete();
+		foreach($cases as &$case){
+			$case['tab_name'] = 'case_'.$table;
+		}
+        //同步案件
+        $syncData = $cases;
+        $this->sync('case',$syncData,'del');
+		
+		$case_videos = M()->table('case_video_'.$table)->where($where)->select();
+        M()->table('case_video_'.$table)->where($where)->delete();
+		foreach($case_videos as &$case){
+			$case['tab_name'] = 'case_video_'.$table;
+		}
+        //同步视频
+        $syncData = $case_videos;
+        $this->sync('case',$syncData,'del');
+		
+        if($result){
+            $res['status'] = true;
+            $res['message'] = '删除警情成功';
+        }else{
+            $res['status'] = false;
+            $res['message'] = '删除警情失败';
+        }
+        $this->write_log('修改删除'.$request['case_key']);
+        return $res;
+	}
     //查看可以申请的数据
     public function show_apply_list($request)
     {
@@ -276,7 +311,8 @@ class CaseController extends CommonController
         $data['update_time'] = date('Y-m-d H:i:s');
         $data['hand_status'] = 1;   //待审核状态
         //$db = D($this->models['case']);
-        $result = M()->table($table)->where($request)->save($data);
+        $where['case_key'] = $request['case_key'];
+        $result = M()->table($table)->where($where)->save($data);
         //同步
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
@@ -286,7 +322,7 @@ class CaseController extends CommonController
         }else{
             $res['message'] = '提交申请失败';
         }
-        $info = M()->table($table)->where($request)->find();
+        $info = M()->table($table)->where($where)->find();
         $this->write_log('申请移交：'.g2u($info['title']).$res['message']);
         return $res;
     }
@@ -298,7 +334,8 @@ class CaseController extends CommonController
         $start_time = $request['start_time'];
         $table = 'case_'.date('Ym',strtotime($start_time));
         $data['hand_status'] = 2;   //初始状态
-        $result = M()->table($table)->where($request)->save($data);
+        $where['case_key'] = $request['case_key'];
+        $result = M()->table($table)->where($where)->save($data);
         //同步
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
@@ -314,11 +351,14 @@ class CaseController extends CommonController
         //start_time  案件开始时间
         $start_time = $request['start_time'];
         $table = 'case_'.date('Ym',strtotime($start_time));
-        $keys = array('alarm_no','alarm_name','alarm_addr','case_name','case_no','remark','case_qualify','case_empl','case_dept');
+        $keys = array('alarm_no','alarm_name','alarm_addr','case_name','case_no','remark','case_empl','case_dept');
         $initData = array_fill_keys($keys,'');
         $initData['alarm_type'] = 0;
         $initData['case_type'] = 0;
-        $res = M()->table($table)->where($request)->save($initData);
+        $initData['update_time'] = date('Y-m-d H:i:s');
+        // $this->ajaxReturn($request);
+        $where['case_key'] = $request['case_key'];
+        $res = M()->table($table)->where($where)->save($initData);
         //同步
         $syncData[] = array('tab_name'=>$table,'case_key'=>$request['case_key']);
         $this->sync('case',$syncData,'edit');
@@ -435,7 +475,8 @@ class CaseController extends CommonController
         //$db = D($this->models['case']);
         $start_time = $request['start_time'];
         $table = 'case_'.date('Ym',strtotime($start_time));
-        $result = M()->table($table)->where($request)->save($data);
+        $where['case_key'] = $request['case_key'];
+        $result = M()->table($table)->where($where)->save($data);
         if($result){
             if($request['action'] == 0) $res['message'] = '撤销成功';
             if($request['action'] == 1) $res['message'] = '申请已拒绝';

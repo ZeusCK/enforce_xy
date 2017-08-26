@@ -131,9 +131,9 @@ $(function(){
 
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="thisPageThings.show()">全部</a>&nbsp;&nbsp;&nbsp;
+             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="thisPageThings.show()">全部</a>&nbsp;&nbsp;&nbsp;
             {search}
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="thisPageThings.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="thisPageThings.search()">搜索</a>
         </form>
         <a href="javascript:void(0)" onclick="thisPageThings.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="thisPageThings.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>

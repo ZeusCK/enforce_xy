@@ -21,7 +21,7 @@ app.tp.areaname = "{:$areaname}";
 </div>
 <div id="toolbar">
     <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
         操作日期：<input class="easyui-datetimebox" name="btime" id="btime"  data-options="height:22,editable:false"  style="width:168px"/>
         至：<input class="easyui-datetimebox" name="etime" id="etime"  data-options="height:22,editable:false"  style="width:168px"/>
         异常数据:
@@ -31,8 +31,8 @@ app.tp.areaname = "{:$areaname}";
             <option value="2">正常</option>
             <option value="1">异常</option>
         </select>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">搜索</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports()">导出</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports()">导出</a>
         <a href="javascript:void(0)" class="easyui-linkbutton"
         data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_ser">无</span></a>

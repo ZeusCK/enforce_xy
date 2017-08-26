@@ -31,23 +31,23 @@ class DevController extends CommonController
     //执法记录仪
     public function pe_base_list()
     {
-        $request['product'] = I('product');     //生产厂家
-        $request['cpxh']    = I('cpxh');        //产品序号
-        $request['jyxm']    = I('jyxm');        //警员姓名
-        $request['status']  = I('status','');   //设备状态
-        $request['areacode'] = I('areacode');   //部门代码
-        $request['count'] = I('count',false);      //是否为统计
+        //product 生产厂家
+        //cpxh 产品序号
+        //jyxm 警员姓名
+        //status 设备状态
+        //areacode 部门代码
+        $request = I('');
+        unset($request['page'],$request['rows']);
         $page = I('page');
         $rows = I('rows');
         $db =  D($this->models['pebase']);
         //获取能显示的执法仪信息
-        $action = A($this->actions['employee']);
-        $sql = $action->get_manger_sql($request['areacode']);
-        $where[] = $sql;
-        if(I('jybh')) $where['jybh'] = I('jybh');           //警员编号
+        $sql = $this->get_manger_sql($request['areacode'],'areacode',false);
+        $where[] = $sql.' OR areacode=""';
+        if($request['jybh']) $where['jybh'] = $request['jybh'];           //警员编号
         //支持模糊搜索
         foreach ($request as $key => $value) {
-            if($value != '' && $key != 'status'){
+            if($value != '' && $key != 'status' && $key != 'jybh' && $key != 'areacode'){
                 $where[$key] = array('like','%'.$value.'%');
             }
         }
@@ -92,11 +92,8 @@ class DevController extends CommonController
     //执法记录仪
     public function pe_base_edit()
     {
-        $request['product'] = I('product');       //生产厂家
-        $where['cpxh']    = I('cpxh');            //产品序号  不可更改
-        $request['jyxm']    = I('jyxm');          //警员姓名
-        $request['standard']    = I('standard');  //设备规格
-        $request['jybh']    = I('jybh');          //警员编号
+        $where['id'] = I('id');            //产品序号  不可更改
+        $request = I('');
         $db =  D($this->models['pebase']);
         $result = $db->getTableEdit($where,u2gs($request));
         $this->ajaxReturn($result);

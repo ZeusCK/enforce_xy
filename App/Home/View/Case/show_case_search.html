@@ -31,7 +31,7 @@
                 <input name="alarm_no" class="easyui-textbox" style="width: 100px;">
                 <div class="search-text">警情类型:</div>
                 <input id="alarm_type" class="easyui-combobox" name="alarm_type" editable=false style="width: 100px;"/>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="module.search()">开始查询</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">开始查询</a>
             </div>
             <div class="search-box search-big">
                 <div class="search-text">案件名称:</div>
@@ -40,16 +40,16 @@
                 <input name="case_no" class="easyui-textbox" style="width: 100px;">
                 <div class="search-text">案件类型:</div>
                 <input id="case_type" class="easyui-combobox" style="width: 100px;" name="case_type" editable=false />
-                <div class="search-text">设备号:</div>
-                <input name="cpxh" class="easyui-textbox" style="width: 100px;">
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" plain="true" onclick="module.init_search_form()">条件重置</a>
+                <div class="search-text">警员编号:</div>
+                <input name="jybh" class="easyui-textbox" style="width: 100px;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key"  onclick="module.init_search_form()">条件重置</a>
             </div>
             <div class="search-box search-big">
                 <div class="search-text">采集日期:</div>
                 <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false"/>
                 <div class="search-text">至:</div>
                 <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false"/>
-                <a style="margin-left: 175px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
+                <a style="margin-left: 280px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
             </div>
         </form>
   </div>

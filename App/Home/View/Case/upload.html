@@ -54,73 +54,85 @@
 </block>
 <block name="main">
     <div>
-        <form id="caseInfo">
+        <!-- <form id="caseInfo">
             <div class="easyui-panel" id=aa data-options="title:'接处警信息'" style="padding-left: 4%;">
                 <div class="one-row">
                     <label class="fitem">案事件名称<span class="mark">*</span></label>：
-                    <input class="easyui-textbox" style="width: 40%" name="alarm_name" />
+                    <input class="easyui-textbox" style="width: 40%" name="alarm_name" readonly />
                     <label class="fitem">警情编号<span class="mark">*</span></label>：
-                    <input class="easyui-textbox" style="width: 40%" name="alarm_no" />
+                    <input class="easyui-textbox" style="width: 40%" name="alarm_no" readonly/>
                 </div>
                 <div class="one-row">
                     <label class="fitem">出警单位</label>：
-                    <input class="easyui-textbox" style="width: 17%" name="areaname" />
+                    <input class="easyui-textbox" style="width: 17%" name="areaname" readonly/>
                     <label class="fitem">警情类型<span class="mark">*</span></label>：
-                    <input id="alarm_type" style="width: 16%" editable=false name="alarm_type">
+                    <input id="alarm_type" style="width: 16%" editable=false name="alarm_type" readonly>
                     <label class="fitem">出警地址</label>：
-                    <input class="easyui-textbox" style="width: 40%" name="alarm_addr" />
+                    <input class="easyui-textbox" style="width: 40%" name="alarm_addr" readonly/>
                 </div>
                 <div class="one-row">
                     <label class="fitem">警号</label>：
-                    <input class="easyui-textbox" style="width: 17%" name="jybh" />
+                    <input class="easyui-textbox" style="width: 17%" name="jybh" readonly/>
                     <label class="fitem">出警人</label>：
-                    <input class="easyui-textbox" style="width: 16%" name="jyxm" />
-                    <!-- <label class="fitem">设备号</label>：<input class="easyui-textbox" style="width: 17%" name="cpbh" /> -->
+                    <input class="easyui-textbox" style="width: 16%" name="jyxm" readonly/>
+                    <label class="fitem">设备号</label>：<input class="easyui-textbox" style="width: 17%" name="cpbh" />
                 </div>
                 <div class="one-row">
                     <label class="fitem">出警开始时间</label>：
-                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="start_time" />
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="start_time" readonly/>
                     <label class="fitem" style="margin-left:23%;">警情结束时间</label>：
-                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="end_time" />
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="end_time" readonly/>
                 </div>
             </div>
             <div class="easyui-panel" data-options="title:'案件信息'" style="padding-left: 4%;">
                 <div class="one-row">
                     <label class="fitem">案件名称</label>：
-                    <input class="easyui-textbox" style="width: 40%" name="case_name" />
+                    <input class="easyui-textbox" style="width: 40%" name="case_name" readonly/>
                     <label class="fitem">案件编号</label>：
-                    <input class="easyui-textbox" style="width: 40%" name="case_no" />
+                    <input class="easyui-textbox" style="width: 40%" name="case_no" readonly/>
                 </div>
                 <div class="one-row">
                     <label class="fitem">案件类型</label>：
-                    <input id="case_type" style="width: 17%" editable=false name="case_type">
+                    <input id="case_type" style="width: 17%" editable=false name="case_type" readonly>
                     <label class="fitem">办案单位</label>：
-                    <input class="easyui-textbox" style="width: 16%" name="case_dept" />
+                    <input class="easyui-textbox" style="width: 16%" name="case_dept" readonly/>
                     <label class="fitem">办案人</label>：
-                    <input class="easyui-textbox" style="width: 17%" name="case_empl" />
+                    <input class="easyui-textbox" style="width: 17%" name="case_empl" readonly/>
                 </div>
             </div>
             <div class="easyui-panel" data-options="title:'视频信息'" style="padding-left: 4%;">
                 <div class="one-row">
                     <label class="fitem">视频标题</label>：
-                    <input class="easyui-textbox" style="width: 40%" name="title" />
+                    <input class="easyui-textbox" style="width: 40%" name="title" readonly/>
                 </div>
                 <div class="one-row">
                     <label class="fitem">采集日期</label>：
-                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="cjsj" id="cjsj" />
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 17%" name="cjsj" id="cjsj" readonly/>
                     <label class="fitem">上传日期</label>：
-                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 16%" name="scsj" />
+                    <input class="easyui-datetimebox" data-options="height:22,editable:false" style="width: 16%" name="scsj" readonly/>
                     <label class="fitem">编辑人</label>：
-                    <input class="easyui-textbox" style="width: 17%" name="edit_name" />
+                    <input class="easyui-textbox" style="width: 17%" name="edit_name" readonly/>
                 </div>
                 <div class="one-row">
-                    <!-- <input  name="start_time" type="hidden">
-                    <input  name="case_key" type="hidden"> -->
+                    <input  name="start_time" type="hidden">
+                    <input  name="case_key" type="hidden">
                     <label class="fitem">备注</label>：
-                    <textarea style="width:63%;height:60px;" name="remark"></textarea>
+                    <textarea style="width:63%;height:60px;" name="remark" readonly></textarea>
                 </div>
             </div>
         </form>
+        <div class="one-row" style="margin-left:30%">
+            <label class="fitem">视频上传</label>：
+            <div id="uploader" class="wu-example" style="display: inline-block;">
+                用来存放文件信息
+                <div class="btns">
+                    <div id="picker" class="btn">选择文件</div>
+                    <button id="plice_upload">公安类上传</button>
+                    <button id="no_plice_upload">非公安类上传</button>
+                </div>
+            </div>
+            <div id="thelist" class="uploader-list" style="margin-left:8%;width:200px;"></div>
+        </div> -->
         <div class="one-row" style="margin-left:30%">
             <label class="fitem">视频上传</label>：
             <div id="uploader" class="wu-example" style="display: inline-block;">
@@ -134,4 +146,5 @@
             <div id="thelist" class="uploader-list" style="margin-left:8%;width:200px;"></div>
         </div>
     </div>
+
 </block>

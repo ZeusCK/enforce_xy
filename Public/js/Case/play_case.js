@@ -1,4 +1,4 @@
-var bfwz;
+var bfwz = '';
 var ccwz;
 var wjbh;
 var str = '';
@@ -62,6 +62,10 @@ $(function() {
     // init_file(app.tp.wjlx,app.tp.bfwz);
     //下载文件
     $('#download').click(function() {
+        if(bfwz == ''){
+            $.messager.alert('操作提示','请选择文件后进行下载','info');
+            return false;
+        }
         var params = { action: 1, wjbh: wjbh };
         params.tpUrl = 'Media/video_action';
         $.ajax({
@@ -71,7 +75,7 @@ $(function() {
             data: params
         });
         if(file_type != 3){
-            window.open(bfwz);
+            window.open('/down_video.php?filePath='+bfwz);
         }else{
             app.downImage(bfwz);
         }

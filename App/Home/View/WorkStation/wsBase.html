@@ -21,7 +21,7 @@ app.tp.areaname = "{:session('areaname')}";
 </div>
 <div id="toolbar">
     <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
+         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
         负责人: <input class="easyui-textbox" data-options="height:22" name="hzr" style="width:168px"/>
         在线状态:
         <select class="easyui-combobox form_in" name="zxzt" style="width: 181px;" data-options="editable:false">
@@ -35,14 +35,14 @@ app.tp.areaname = "{:session('areaname')}";
           <option value="0">停用</option>
           <option value="1">启用</option>
         </select>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="things.search()">搜索</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="things.search()">搜索</a>
     </form>
     <a href="javascript:void(0)" onclick="things.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
     <a href="javascript:void(0)" onclick="things.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
     <a href="javascript:void(0)" onclick="things.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
     删除</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="things.exports(this)">导出全部</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" plain="true" onclick="javascript:
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="things.exports(this)">导出全部</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship"  onclick="javascript:
                     $('#importForm').dialog('open')">导入</a>
     <a href="javascript:void(0)" class="easyui-linkbutton"
             data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">

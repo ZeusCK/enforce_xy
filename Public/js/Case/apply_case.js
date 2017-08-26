@@ -99,8 +99,8 @@ $(function() {
             ]
         ],
         onLoadSuccess: function(data) {
-            $('a[name="play"]').linkbutton({ plain: true, iconCls: 'icon icon-arrow_undo' });
-            $('a[name="edit"]').linkbutton({ plain: true, iconCls: 'icon icon-application_key' });
+            try{$('a[name="play"]').linkbutton({ iconCls: 'icon icon-arrow_undo' });}catch(e){}
+            try{$('a[name="edit"]').linkbutton({ iconCls: 'icon icon-application_key' });}catch(e){}
             var a = $('.datagrid-cell-rownumber');
             $.each(a, function(i, m) {
                 m.style.width = '21px';

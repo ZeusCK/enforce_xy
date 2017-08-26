@@ -6,7 +6,7 @@ $(function() {
 });
 function case_sat() {
     var myChart = echarts.init(document.getElementById('myChart'));
-    myChart.showLoading();
+    // myChart.showLoading();
     var option2 = {
         title: {
             text: '7天内未编辑视音频'
@@ -40,7 +40,7 @@ function case_sat() {
         type: 'POST',
         dataType: 'json',
         success: function(info) {
-            myChart.hideLoading();
+            // myChart.hideLoading();
             var xAxis = [];
             var alldata = [];
             for (var x in info) {

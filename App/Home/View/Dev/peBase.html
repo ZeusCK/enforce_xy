@@ -55,13 +55,15 @@ app.tp.areaname = "{:session('areaname')}";
                         <input class="easyui-textbox" name="cpxh"/>
                         <label>警员姓名：</label>
                         <input class="easyui-textbox" name="jyxm"/>
+                        <label>警员编号：</label>
+                        <input class="easyui-textbox" name="jybh"/>
                         <a id="searching" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true">搜索</a>
                     </div>
                     <div>
                         <a id="add" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
                         <a id="edit" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
                         <a id="del" class="easyui-linkbutton" data-options="iconCls:'icon-delete',plain:true">删除</a>
-                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" plain="true" onclick="module.exports(this)">导出全部</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
                         <a class="easyui-linkbutton" style="float: right;" data-options="iconCls:'icon-drive'">当前位置：
                             <span id="pos">内蒙古自治区公安局</span></a>
                     </div>
@@ -72,6 +74,7 @@ app.tp.areaname = "{:session('areaname')}";
     <!--增加、修改dialog-->
     <div id="dialog" class="easyui-dialog" data-options="closed:true">
         <form id="dialogForm">
+            <input type="text" name="id" hidden="true">
             <p></p>
             <div class="form_m"><div for="jybh" class="form_label">警员编号： </div>
                 <input class="form_in easyui-textbox" type="text" name="jybh" id="jybh" required="true"/></div>

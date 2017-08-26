@@ -27,6 +27,19 @@ module.add_edit = function(target){
         linkbutton:target        
     });
 }
+module.bind = function(id, choose) {
+    var dz = choose ? module.areaname : '';
+    var areacode = choose ? module.areacode : '';
+    app.extra('add_edit', {
+        datagrid: '#datagrid',
+        url: 'Dev/pe_base_edit',
+        parsedata: function(data) {
+            data.id = id;
+            data.areaname = dz;
+            data.areacode = areacode;
+        }
+    });
+}
 $(function(){
     //左侧tree的加载
     tree.loadData();
@@ -52,7 +65,14 @@ $(function(){
             {field:'jyxm',title:'警员姓名',width:100,align:'center'},
             {field:'jybh',title:'警员编号',width:100,align:'center'},
             {field:'product',title:'生产厂家',width:100,align:'center'},
-            {field:'standard',title:'设备规格',width:100,align:'center'}
+            {field:'standard',title:'设备规格',width:100,align:'center'},
+            {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
+                if(d.areacode == ''){
+                    return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind('+d.id+',true)">绑定部门</span>';
+                }else{
+                    return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind('+d.id+',false)">解除部门绑定</span>';
+                }
+            }}
         ]],
         onLoadSuccess:function(r){
             if(r.total==0){

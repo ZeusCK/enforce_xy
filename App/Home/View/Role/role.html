@@ -10,9 +10,9 @@ app.tp.roleid = "{:session('roleid')}"
 	<table id="datagrid" toolbar="#toolbar"></table>
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter" plain="true" onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
+             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
             角色名: <input id='searchInput'  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" plain="true" onclick="things.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="things.search()">搜索</a>
         </form>
         <a href="javascript:void(0)" onclick="things.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="things.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>

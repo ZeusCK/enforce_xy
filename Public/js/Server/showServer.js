@@ -92,7 +92,9 @@ module.broadcast = function() {
     });
 }
 $(function() {
-    module.broadcast();
+	setTimeout(function(){
+		module.broadcast();
+	},1000); 
     /*setTimeout(function(){
         var chart = echarts.init(document.getElementById('chart'));
         chart.setOption(option);
