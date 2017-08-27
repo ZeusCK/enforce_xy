@@ -89,5 +89,5 @@ module.broadcast = function() {
 $(function() {
 	setTimeout(function(){
 		module.broadcast();
-	},1000);  
+	},1500);  
 });

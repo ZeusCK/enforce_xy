@@ -6,8 +6,6 @@ module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.code = app.tp.code;
 module.params = {};
-module.editType = 1; //编辑类型 1-警情编辑 2-案件编辑
-module.loadVideoDatagrid = false; //是否加载videodatagrid
 var Url = "Case/case_list"; //获取数据列表
 var editUrl = "Case/play_case_info"; //编辑
 var editSaveUrl = "Case/edit_case"; //编辑保存
@@ -18,22 +16,23 @@ var mediaPackPopUrl = "Media/pack_pop"; //视频拆分
 var mediaPackMerageUrl = "Media/pack_merage"; //视频合包
 var caseInitCaseUrl = "Case/init_case"; //数据初始化
 var mediaRemoveUrl = "Media/media_remove"; //视频删除
-var DATA = {};      //搜索时的数据
-var startTime;      //警情包开始时间
-module.case_key = '';   //警情包的关键字段
-var total;          //查询之后的总数
+var DATA = {};
+var startTime;
+module.case_key = '';
+var total;
 //开始查询
 module.search = function() {
     app.extra("search", {
         url: Url,
         form: "#searchForm",
         datagrid: "#datagrid",
-        parsedata: function(data) {     //解析参数
+        parsedata: function(data) {
             data.areacode = module.areacode;
             DATA = data;
-        } 
+        } //解析参数
     });
 };
+
 //条件重置
 module.init_search_form = function() {
     $("#searchForm").form("reset");
@@ -41,6 +40,7 @@ module.init_search_form = function() {
     $("#shotS").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
     $("#shotE").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
 };
+
 //导出全部
 module.exports = function(target) {
     var total = $("#datagrid").datagrid("getData").total;
@@ -55,11 +55,12 @@ module.exports = function(target) {
         }
     });
 };
+
 //编辑按钮
 module.editBar = function(case_key, start_time) {
     startTime = start_time;
     module.case_key = case_key;
-    
+    // console.log(case_key)
     $.extend($.messager.defaults, {
         ok: "编辑接处警信息",
         cancel: "编辑案件信息"
@@ -71,24 +72,13 @@ module.editBar = function(case_key, start_time) {
         msg: "选择编辑类型？",
         fn: function(r) {
             if (r) {
-                $('#case_panel').hide();
-                $("#case_no").textbox({ required: false });
-                $("#case_name").textbox({ required: false });
-                module.editType = 1;
-            } else {
-                $("#case_no").textbox({ required: true });
-                $("#case_name").textbox({ required: true });
-                $('#case_panel').show();
-                module.editType = 2;
-            }
-            $("#editDialog").dialog("open");
-            if (module.loadVideoDatagrid) {
-                $('#video_datagrid').datagrid('load', { case_key: case_key, start_time: start_time });
-            } else {
-                module.loadVideoDatagrid = true;
+                if (case_key) {
+                    $("#editDialog").dialog("open");
+                }
                 app.datagrid("#video_datagrid", {
                     url: editUrl,
                     title: "视频详情",
+                    // singleSelect: true,
                     fit: true,
                     columns: [
                         [{ field: "id", checkbox: true },
@@ -182,6 +172,147 @@ module.editBar = function(case_key, start_time) {
                         module.timeCompare(this);
                     }
                 });
+            } else {
+                if (case_key) {
+                    $("#editDialog2").dialog("open");
+                }
+                app.datagrid("#video_datagrid2", {
+                    url: editUrl,
+                    title: "视频详情",
+                    // singleSelect: true,
+                    fit: true,
+                    fitColumns: true,
+                    nowrap: true,
+                    pagination: true,
+                    rownumbers: true,
+                    columns: [
+                        [{
+                                field: "id",
+                                checkbox: true
+                            },
+                            {
+                                field: "wjbh",
+                                title: "文件名称",
+                                align: "center"
+                            },
+                            {
+                                field: "source_name",
+                                title: "来源",
+                                align: "center"
+                            },
+                            {
+                                field: "ccfwq_ip",
+                                title: "存储服务器IP",
+                                align: "center"
+                            },
+                            /*    {
+                                    field: 'alarm_name',
+                                    title: '保质期限',
+                                    align: 'center'
+                                },
+                                {
+                                    field: 'alarm_no',
+                                    title: '剩余期限',
+                                    align: 'center'
+                                }, */
+                            {
+                                field: "file_type_name",
+                                title: "文件类型",
+                                align: "center"
+                            },
+                            {
+                                field: "start_time",
+                                title: "视频开始时间",
+                                width: 200,
+                                align: "center"
+                            },
+                            {
+                                field: "end_time",
+                                title: "视频结束时间",
+                                width: 200,
+                                align: "center"
+                            },
+                            /*                 {
+                                                    field: 'wjcd',
+                                                    title: '大小（M）',
+                                                    align: 'center'
+                                                }, */
+                            {
+                                field: "wjcd",
+                                title: "时长（秒）",
+                                width: 200,
+                                align: "center"
+                            },
+                            {
+                                field: "cz",
+                                title: "操作",
+                                width: 200,
+                                align: "center",
+                                formatter: function(value, row, index) {
+                                    if (row.start_time == startTime) {
+                                        return '<span style="color:red">不可操作</span>';
+                                    }
+                                    if (row.source == "3" || row.source == "2") {
+                                        return (
+                                            '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
+                                            row.start_time +
+                                            "','" +
+                                            row.wjbh +
+                                            '\',\'#video_datagrid2\')" name="sc"></a><a href="javascript:void(0)" title="删除" onclick="module.pack_pop(this,\'' +
+                                            row.start_time +
+                                            "','" +
+                                            row.wjbh +
+                                            '\',1)" name="cf" ></a>'
+                                        );
+                                    } else {
+                                        return (
+                                            '<a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
+                                            row.start_time +
+                                            "','" +
+                                            row.wjbh +
+                                            '\')" name="cf" title="将文件移出警情包"></a>'
+                                        );
+                                    }
+                                }
+                            }
+                        ]
+                    ],
+                    queryParams: {
+                        case_key: case_key,
+                        start_time: start_time
+                    },
+                    onLoadSuccess: function(data) {
+                        $("#editForm2").form("load", data.info);
+                        if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
+                            $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
+                            $(this).parent(".datagrid-view").children(".datagrid-view2");
+                            $(this).parent(".datagrid-view").children(".datagrid-view2").css("left", 0)
+                                .find("div.datagrid-body").html("没有相关记录，请重新搜索！").css({
+                                    color: "#F00",
+                                    "text-align": "center",
+                                    "font-size": "20px"
+                                });
+                        }
+                        if (data.error) {
+                            $.messager.alert("操作提示", data.error, "info");
+                        }
+                        try {
+                            $('a[name="sc"]').linkbutton({
+                                iconCls: "icon icon-sc"
+                            });
+                        } catch (e) {}
+
+                        $('a[name="cf"]').linkbutton({
+                            iconCls: "icon icon-cf"
+                        });
+                    },
+                    onSelect: function(index, data) {
+                        module.timeCompare(this);
+                    },
+                    onUnselect: function(index, data) {
+                        module.timeCompare(this);
+                    }
+                });
             }
         }
     });
@@ -190,8 +321,10 @@ module.editBar = function(case_key, start_time) {
         cancel: "取消"
     });
 };
+
 //警情编辑保存
 module.edit = function(target) {
+
     var n = {
         url: editSaveUrl,
         form: "#editForm",
@@ -204,24 +337,43 @@ module.edit = function(target) {
             $.messager.alert("提示", "编辑时警情类型不可以是未编辑或请选择状态", "error");
             return false;
         }
-        if (module.editType == 2) {
-            if (params.case_type == "0" || params.case_type == "") {
-                $.messager.alert("提示", "编辑时案件类型不可以是 未知，请选择 状态", "error");
-                return false;
-            }
+    };
+    app.extra("add_edit", n);
+};
+
+//案件编辑保存
+module.edit2 = function(target) {
+    var n = {
+        url: editSaveUrl,
+        form: "#editForm2",
+        dialog: "#editDialog2",
+        datagrid: "#datagrid"
+    };
+    n.parsedata = function(params) {
+        delete params["cpxh"];
+        if (params.case_type == "0" || params.case_type == "") {
+            $.messager.alert("提示", "编辑案件类型不可以是 未知，请选择 状态", "error");
+            return false;
+        }
+        if (params.alarm_type == "0" || params.alarm_type == "") {
+            $.messager.alert("提示", "编辑时警情类型不可以是 未编辑，请选择 状态", "error");
+            return false;
         }
     };
     app.extra("add_edit", n);
 };
+
 //编辑取消
 module.editCancel = function() {
-    $("#editDialog").dialog("close");
+    $("#editDialog,#editDialog2").dialog("close");
 };
+
 //播放视频
 module.play = function(case_key, start_time) {
     var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time;
     window.open(url);
 };
+
 //计算天数差的函数，通用
 function DateDiff(sDate1, sDate2) {
     //sDate1和sDate2是2002-12-18格式
@@ -233,6 +385,7 @@ function DateDiff(sDate1, sDate2) {
     iDays = Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24; //把相差的毫秒数转换为天数
     return iDays;
 }
+
 //追加视频查询
 module.search2 = function() {
     app.extra("search", {
@@ -293,7 +446,8 @@ module.addvideo = function() {
         ],
         queryParams: app.serializeJson("#searchForm2"),
         onLoadSuccess: function(data) {
-            $("#video_datagrid").datagrid("reload");
+            try { $("#video_datagrid").datagrid("reload"); } catch (e) {}
+            try { $("#video_datagrid2").datagrid("reload"); } catch (e) {}
             if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
                 $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
                 $(this).parent(".datagrid-view").children(".datagrid-view2");
@@ -313,6 +467,7 @@ module.addvideo = function() {
                 $.messager.alert("操作提示", data.error, "info");
             }
             $('a[name="hb"]').linkbutton({
+                plain: true,
                 iconCls: "icon icon-hb"
             });
         }
@@ -374,8 +529,18 @@ module.search_video = function() {
         }
     });
 }
+module.search_video2 = function() {
+    app.extra('search', {
+        datagrid: '#video_datagrid2',
+        form: '#searchForm4',
+        parsedata: function(data) {
+            data.case_key = $('#editForm2 > input[name="case_key"]').val();
+            data.start_time = startTime;
+        }
+    });
+}
 //拆分案件
-/*module.slice2 = function(target) {
+module.slice2 = function(target) {
     var rows = $("#video_datagrid2").datagrid("getSelections");
     if (rows.length == 0) return false;
     var wjbhInfo = {};
@@ -395,10 +560,10 @@ module.search_video = function() {
             data.case_key = rows[0].case_key;
         }
     });
-};*/
+};
 
 //视频拆分
-module.pack_pop = function(target, start_time, wjbh) {
+module.pack_pop = function(target, start_time, wjbh, n) {
     var wjbhInfo = {};
     wjbhInfo[wjbh] = start_time;
     var obj = {
@@ -408,7 +573,7 @@ module.pack_pop = function(target, start_time, wjbh) {
             data.wjbhInfo = wjbhInfo;
         }
     }
-    obj.datagrid = '#video_datagrid';
+    obj.datagrid = n == 1 ? '#video_datagrid' : '#video_datagrid2';
     app.extra("add_edit", obj);
 };
 
@@ -472,8 +637,8 @@ $(function() {
     //警情类型下拉框
     app.combobox('#alarm_type,#edit_alarm_type', { type: 'alarm_type' });
     //设置默认时间
-    $("#shotS,#shotS2,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
-    $("#shotE,#shotE2,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+    $("#shotS,#shotS2,#shotS3,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+    $("#shotE,#shotE2,#shotE3,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
     //数据表单
     app.datagrid("#datagrid", {
         url: Url,

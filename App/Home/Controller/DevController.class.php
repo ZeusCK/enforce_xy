@@ -149,4 +149,66 @@ class DevController extends CommonController
         }
         return  $result;
     }
+    public function import_excel()
+    {
+        $func = A('Function');
+        $db = D($this->models['pebase']);
+        $where[] = $this->get_manger_sql('','areacode',false);
+        $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
+        $enableType = array_flip($this->get_val_item('dictionary','enable'));
+        $area_name_code = array_flip($area_code_name);
+        $code_arr = array_keys($area_code_name);
+        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+        $key_code = array();
+        $name_code = array('产品序号'=>'cpxh',
+                           '所属部门'=>'areaname',
+                           '警员姓名'=>'jyxm',
+                           '警员编号'=>'jybh',
+                           '生产厂家'=>'product',
+                           '设备规格'=>'standard',
+                           );
+        $allow = 0; //允许导入
+        $deny = 0;  //禁止导入
+        $success = 0;   //成功导入
+        $fail = 0;      //失败导入
+        if($res){
+            $data = $func->read_excel($res);
+            $header = array_shift($data);
+            foreach ($header as $key => $value) {
+                if(array_key_exists($value,$name_code)){
+                    $key_code[$key] = $name_code[$value];
+                }
+            }
+            $allData = array();
+            foreach ($data as $value) {
+                $saveData= array();
+                foreach ($value as $k => $val) {
+                    $val = $val === null ? '' : $val = trim(u2g($val));
+                    if(!array_key_exists($k,$key_code)) continue;
+                    if($key_code[$k] == 'areaname'){
+                        if(!in_array($val,$area_code_name)){
+                            $deny++;
+                            continue;
+                        }else{
+                            $saveData['areacode'] = $area_name_code[$val];
+                            $allow++;
+                        }
+                    }
+                    $saveData[$key_code[$k]] = $val;
+                }
+                $empInfo = $db->where('cpxh="'.$saveData['cpxh'].'"')->find();
+                if($empInfo){
+                    $res = $db->where('cpxh="'.$saveData['cpxh'].'"')->save($saveData);
+                }else{
+                    $res = $db->add($saveData);
+                }
+                $res ? $success++ : $fail++;
+                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+                $this->write_log($result['message']);
+            }
+        }else{
+            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+        }
+        exit(json_encode($result));
+    }
 }

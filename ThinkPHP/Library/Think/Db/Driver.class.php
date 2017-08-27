@@ -562,7 +562,7 @@ abstract class Driver {
                             $whereStr .= '('.implode(' '.$likeLogic.' ',$like).')';                          
                         }
                     }else{
-                        $whereStr .= $key.' '.$this->exp[$exp].' '.$this->parseValue($val[1]);
+                        $whereStr .= 'binary '.$key.' '.$this->exp[$exp].' '.$this->parseValue($val[1]);
                     }
                 }elseif('bind' == $exp ){ // 使用表达式
                     $whereStr .= $key.' = :'.$val[1];

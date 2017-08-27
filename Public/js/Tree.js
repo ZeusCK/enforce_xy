@@ -21,6 +21,23 @@ Tree.prototype.loadData = function (noS){
         }
     });
 }
+Tree.prototype.load_no_read_area = function (){
+    this.init();
+    var self = this;
+    var dom = this.dom;
+    var params = {};
+    params.tpUrl = 'Area/load_no_read_area';
+    $.ajax({
+        url:app.tp.ajax,
+        type:'post',
+        dataType:'json',
+        data:params,
+        success:function(data){
+            self.data = data;
+            $(dom).tree('loadData',data);
+        }
+    });
+}
 Tree.prototype.load_all_tree = function(){
     this.init();
     var dom = this.dom;

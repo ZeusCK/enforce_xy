@@ -91,7 +91,7 @@ $(function() {
                             var htmlString = '<a href="javascript:void(0)" onclick="things.applyCancel(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="play" title="撤销申请"></a>';
                         }
                         if (row.hand_status == 0) {
-                            var htmlString = '<a href="javascript:void(0)" onclick="things.apply(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="edit" title="提交申请">';
+                            var htmlString = '<a href="javascript:void(0)" onclick="things.apply(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="edit" title="提交申请"></a>';
                         }
                         return htmlString;
                     }
@@ -116,13 +116,10 @@ $(function() {
             }
         }
     });
-    tree.load_all_tree();
+    tree.load_no_read_area();
     $(tree.dom).tree({
         onClick: things.clickTree
     });
-    var t = new Date();
-    $('#shotS').datetimebox('setValue', new Time(t, 6).init());
-    $('#shotE').datetimebox('setValue', new Time(t, 0).init());
-    // $('#mu_ser').text(things.areaname);
-    // $('#tip_area').text(things.areaname);
+    $('#shotS').datetimebox('setValue', app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
+    $('#shotE').datetimebox('setValue', app.date('Y-m-d')+' 23:59:59');
 });

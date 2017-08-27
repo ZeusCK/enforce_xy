@@ -3,14 +3,14 @@ function login() {
     var username = $.trim($("#username").val());
     var password = $.trim($("#password").val());
     if (username == '') {
-        $('#info').html('用户名不能为空!');
+        $('.info').text('用户名不能为空!');
         return false;
     }
     if (password == '') {
-        $('#info').html('密码不能为空!');
+        $('.info').text('密码不能为空!');
         return false;
     }
-    $('#info').html('正在验证登陆...');
+    $('.info').text('正在验证登陆...');
     $.ajax({
         url: app.url('Index/check_login'),
         type: 'post',
@@ -21,14 +21,14 @@ function login() {
         },
         success: function(data) {
             if (data.status) {
-                $('#info').html('验证成功，正在跳转...');
+                $('.info').text('验证成功，正在跳转...');
                 window.location.href = app.url('Index/index');
             } else {
-                $('#info').html(data.message);
+                $('.info').text(data.message);
             }
         },
         error: function() {
-            $('#info').html('抱歉网络发生错误,无法登录！');
+            $('.info').html('抱歉网络发生错误,无法登录！');
         }
     });
 }
@@ -38,10 +38,9 @@ $(function() {
     });
     $('#resetButton').click(function() {
         $('#loginBox').form('clear');
-        $('#info').html('');
+        $('.info').html('');
     });
     $('#username').focus();
-    $('#info').html(info);
     $(document).keydown(function(event) { keyDownSearch(event) });
     $('#username').next('span').find('input').focus();
     window.open(app.url('Index/home'),'执法视音频平台','height=500,width=800,top=0,left=0,toolbar=no,menubar=no,scrollbars=no,resizable=no,location=no,status=no');

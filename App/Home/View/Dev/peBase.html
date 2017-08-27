@@ -64,6 +64,8 @@ app.tp.areaname = "{:session('areaname')}";
                         <a id="edit" class="easyui-linkbutton" data-options="iconCls:'icon-edit',plain:true">修改</a>
                         <a id="del" class="easyui-linkbutton" data-options="iconCls:'icon-delete',plain:true">删除</a>
                         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship"  onclick="javascript:
+                    $('#importForm').dialog('open')">导入</a>
                         <a class="easyui-linkbutton" style="float: right;" data-options="iconCls:'icon-drive'">当前位置：
                             <span id="pos">内蒙古自治区公安局</span></a>
                     </div>
@@ -91,5 +93,15 @@ app.tp.areaname = "{:session('areaname')}";
     <div id="dialogBtns">
         <a id="dialogOk" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.add_edit(this)">确定</a>
         <a id="dialogDel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true">取消</a>
+    </div>
+<form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
+        <div class="form_m">
+            <div for="rphone" class="form_label">Excel: </div> <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">
+        </div>
+    </form>
+    <div id="importButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.importExcel(this)" style="width:90px">确认</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+                    $('#importForm').dialog('close')" style="width:90px">取消</a>
     </div>
 </block>

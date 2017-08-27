@@ -192,6 +192,33 @@ class AreaController extends CommonController
         }
         $this->ajaxReturn(g2us($data_tree));
     }
+    public function load_no_read_area($request)
+    {
+        $where[] =  $this->get_manger_sql('','areacode',false);
+        $where['is_read'] = 1;
+        $data_f = D($this->models['area'])->where($where)->select();
+        if(!empty($data_f)){
+            $lc=['areaid','fatherareaid'];
+            $data_s = $this->getParentData($data_f,$this->models['area'],$lc);
+        }
+        if(!empty($data_s)){
+            $data = array_merge($data_f,$data_s);
+        }else{
+            $data = $data_f;
+        }
+        if(!empty($data)){
+            $ids = array(0);
+            //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
+            $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+            //$L_attributes 额外需要保存的信息 'type','code',
+            $L_attributes = ['areacode','rperson','rphone','is_read'];
+            $icons = ['icon-application_xp_terminal','icon-application'];
+            $data_tree = $this->formatTree($ids,$data,$l_arr,$L_attributes,'',$icons,$noclose);
+        }else{
+            $data_tree = array();
+        }
+        return g2us($data_tree);
+    }
     /**
      * 获取当前用户管理部门
      * @param boolean $new  是否最新数据 true是  false否
@@ -317,7 +344,8 @@ class AreaController extends CommonController
     public function show_all_area($request)
     {
         $db = D($this->models['area']);
-        $data = $db->select();
+        $where['is_read'] = array('NEQ',1);
+        $data = $db->where($where)->select();
         $ids = array(0);
         //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
         $l_arr = ['areaid','areaname','fatherareaid','areaid'];

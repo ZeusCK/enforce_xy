@@ -40,9 +40,18 @@ module.bind = function(id, choose) {
         }
     });
 }
+module.importExcel = function(target){
+    app.importExcel({
+        url:app.url('Dev/import_excel'),
+        form:'#importForm',
+        dialog:'#importForm',
+        datagrid:'#datagrid',
+        linkbutton:target
+    });
+}
 $(function(){
     //左侧tree的加载
-    tree.loadData();
+    tree.load_no_read_area();
     $('#pos').html(module.areaname);
     //右侧datagrid的加载
     $('#datagrid').datagrid({

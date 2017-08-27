@@ -6,6 +6,8 @@ module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.code = app.tp.code;
 module.params = {};
+module.editType = 1;                //编辑类型 1-警情编辑 2-案件编辑
+module.loadVideoDatagrid = false;   //是否加载videodatagrid
 var Url = "Case/case_list"; //获取数据列表
 var editUrl = "Case/play_case_info"; //编辑
 var editSaveUrl = "Case/edit_case"; //编辑保存
@@ -62,7 +64,6 @@ module.exports = function(target) {
 module.editBar = function(case_key, start_time) {
     startTime = start_time;
     module.case_key = case_key;
-    // console.log(case_key)
     $.extend($.messager.defaults, {
         ok: "编辑接处警信息",
         cancel: "编辑案件信息"
@@ -74,13 +75,25 @@ module.editBar = function(case_key, start_time) {
         msg: "选择编辑类型？",
         fn: function(r) {
             if (r) {
-                if (case_key) {
-                    $("#editDialog").dialog("open");
-                }
+                $('#case_panel').hide();
+                $("#case_no").textbox({ required: false });
+                $("#case_name").textbox({ required: false });
+                module.editType = 1;
+            } else {
+                $("#case_no").textbox({ required: true });
+                $("#case_name").textbox({ required: true });
+                $('#case_panel').show();
+                module.editType = 2;
+            }
+            if (case_key) {
+                $("#editDialog").dialog("open");
+            }
+            if (module.loadVideoDatagrid) {
+                $('#video_datagrid').datagrid('load', { case_key: case_key, start_time: start_time });
+            } else {
                 app.datagrid("#video_datagrid", {
                     url: editUrl,
                     title: "视频详情",
-                    // singleSelect: true,
                     fit: true,
                     columns: [
                         [{ field: "id", checkbox: true },
@@ -104,13 +117,13 @@ module.editBar = function(case_key, start_time) {
                                     if (row.start_time == startTime) {
                                         return '<span style="color:red">不可操作</span>';
                                     }
-                                    if (row.source == "1") {
+                                    if (row.source == "3" || row.source == "2") {
                                         return (
-                                            '<a href="javascript:void(0)" disabled=true onclick="module.media_remove(\'' +
+                                            '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
-                                            '\')" name="sc"></a><a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
+                                            '\',\'#video_datagrid\')" name="sc"></a><a href="javascript:void(0)" title="删除" onclick="module.pack_pop(this,\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
@@ -118,15 +131,11 @@ module.editBar = function(case_key, start_time) {
                                         );
                                     } else {
                                         return (
-                                            '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
+                                            '<a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
-                                            '\')" name="sc"></a><a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\')" name="cf" ></a>'
+                                            '\')" name="cf" title="将文件移出警情包"></a>'
                                         );
                                     }
                                 }
@@ -161,150 +170,13 @@ module.editBar = function(case_key, start_time) {
                         if (data.error) {
                             $.messager.alert("操作提示", data.error, "info");
                         }
-                        $('a[name="sc"]').linkbutton({
-                            plain: true,
-                            iconCls: "icon icon-sc"
-                        });
+                        try {
+                            $('a[name="sc"]').linkbutton({
+                                iconCls: "icon icon-sc"
+                            });
+                        } catch (e) {}
+
                         $('a[name="cf"]').linkbutton({
-                            plain: true,
-                            iconCls: "icon icon-cf"
-                        });
-                    }
-                });
-            } else {
-                if (case_key) {
-                    $("#editDialog2").dialog("open");
-                }
-                app.datagrid("#video_datagrid2", {
-                    url: editUrl,
-                    title: "视频详情",
-                    // singleSelect: true,
-                    fit: true,
-                    fitColumns: true,
-                    nowrap: true,
-                    pagination: true,
-                    rownumbers: true,
-                    columns: [
-                        [{
-                                field: "id",
-                                checkbox: true
-                            },
-                            {
-                                field: "wjbh",
-                                title: "文件名称",
-                                align: "center"
-                            },
-                            {
-                                field: "source_name",
-                                title: "来源",
-                                align: "center"
-                            },
-                            {
-                                field: "ccfwq_ip",
-                                title: "存储服务器IP",
-                                align: "center"
-                            },
-                            /*    {
-                                    field: 'alarm_name',
-                                    title: '保质期限',
-                                    align: 'center'
-                                },
-                                {
-                                    field: 'alarm_no',
-                                    title: '剩余期限',
-                                    align: 'center'
-                                }, */
-                            {
-                                field: "file_type_name",
-                                title: "文件类型",
-                                align: "center"
-                            },
-                            {
-                                field: "start_time",
-                                title: "视频开始时间",
-                                width: 200,
-                                align: "center"
-                            },
-                            {
-                                field: "end_time",
-                                title: "视频结束时间",
-                                width: 200,
-                                align: "center"
-                            },
-                            /*                 {
-                                                    field: 'wjcd',
-                                                    title: '大小（M）',
-                                                    align: 'center'
-                                                }, */
-                            {
-                                field: "wjcd",
-                                title: "时长（秒）",
-                                width: 200,
-                                align: "center"
-                            },
-                            {
-                                field: "cz",
-                                title: "操作",
-                                width: 200,
-                                align: "center",
-                                formatter: function(value, row, index) {
-                                    if (row.start_time == startTime) {
-                                        return '<span style="color:red">不可操作</span>';
-                                    }
-                                    if (row.source == "1") {
-                                        return (
-                                            '<a href="javascript:void(0)" disabled=true onclick="module.media_remove(\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\')" name="sc"></a><a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\')" name="cf" ></a>'
-                                        );
-                                    } else {
-                                        return (
-                                            '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\')" name="sc"></a><a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\')" name="cf" ></a>'
-                                        );
-                                    }
-                                }
-                            }
-                        ]
-                    ],
-                    queryParams: {
-                        case_key: case_key,
-                        start_time: start_time
-                    },
-                    onLoadSuccess: function(data) {
-                        $("#editForm2").form("load", data.info);
-                        if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
-                            $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
-                            $(this).parent(".datagrid-view").children(".datagrid-view2");
-                            $(this).parent(".datagrid-view").children(".datagrid-view2").css("left", 0)
-                                .find("div.datagrid-body").html("没有相关记录，请重新搜索！").css({
-                                    color: "#F00",
-                                    "text-align": "center",
-                                    "font-size": "20px"
-                                });
-                        }
-                        if (data.error) {
-                            $.messager.alert("操作提示", data.error, "info");
-                        }
-                        $('a[name="sc"]').linkbutton({
-                            plain: true,
-                            iconCls: "icon icon-sc"
-                        });
-                        $('a[name="cf"]').linkbutton({
-                            plain: true,
                             iconCls: "icon icon-cf"
                         });
                     },
@@ -316,6 +188,7 @@ module.editBar = function(case_key, start_time) {
                     }
                 });
             }
+
         }
     });
     $.extend($.messager.defaults, {
@@ -326,7 +199,6 @@ module.editBar = function(case_key, start_time) {
 
 //警情编辑保存
 module.edit = function(target) {
-
     var n = {
         url: editSaveUrl,
         form: "#editForm",
@@ -339,6 +211,13 @@ module.edit = function(target) {
             $.messager.alert("提示", "编辑时警情类型不可以是未编辑或请选择状态", "error");
             return false;
         }
+        if (module.editType == 2) {
+            if (params.case_type == "0" || params.case_type == "") {
+                $.messager.alert("提示", "编辑时案件类型不可以是 未知，请选择 状态", "error");
+                return false;
+            }
+        }
+
     };
     app.extra("add_edit", n);
 };
@@ -363,7 +242,7 @@ module.edit2 = function(target) {
 
 //编辑取消
 module.editCancel = function() {
-    $("#editDialog,#editDialog2").dialog("close");
+    $("#editDialog").dialog("close");
 };
 
 //播放视频
@@ -618,14 +497,13 @@ $(function() {
             module.search();
         }
     });
-
     //案件类型下拉框
     app.combobox('#case_type,#edit_case_type', { type: 'case_type' });
     //警情类型下拉框
     app.combobox('#alarm_type,#edit_alarm_type', { type: 'alarm_type' });
     //设置默认时间
-    $("#shotS,#shotS2,#shotS3,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
-    $("#shotE,#shotE2,#shotE3,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+    $("#shotS,#shotS2,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+    $("#shotE,#shotE2,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
     //数据表单
     app.datagrid("#datagrid", {
         url: Url,

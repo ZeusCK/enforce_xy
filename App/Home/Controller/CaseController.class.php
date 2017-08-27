@@ -219,12 +219,12 @@ class CaseController extends CommonController
 		
 		$case_videos = M()->table('case_video_'.$table)->where($where)->select();
         M()->table('case_video_'.$table)->where($where)->delete();
-		foreach($case_videos as &$case){
-			$case['tab_name'] = 'case_video_'.$table;
+		foreach($case_videos as &$case_video){
+			$case_video['tab_name'] = 'case_video_'.$table;
 		}
         //同步视频
         $syncData = $case_videos;
-        $this->sync('case',$syncData,'del');
+        $this->sync('case_video',$syncData,'del');
 		
         if($result){
             $res['status'] = true;
@@ -255,9 +255,43 @@ class CaseController extends CommonController
         $page = $request['page'];
         $rows = $request['rows'];
         $areacode = $request['areacode'];
-        $manger_sql = $this->get_manger_sql();
+        /*$manger_sql = $this->get_manger_sql();
+        $where[] = $manger_sql;
         $manger_sql = str_replace('OR','AND',str_replace('LIKE', 'NOT LIKE', $manger_sql));
-        $where[] = str_replace('=','!=',str_replace('or','and',str_replace('like', 'not like', $manger_sql)));
+        $where[] = str_replace('=','!=',str_replace('or','and',str_replace('like', 'not like', $manger_sql)));*/
+        $is_read_areas = D($this->models['area'])->where('is_read = 0')->select();
+        $searchArr = array();
+        //$getDepts = explode(',',$request['dept_list']);
+        foreach ($is_read_areas as $key => $value) {
+            if(isset($minLength)){
+                if($minLength < strlen($value)) continue;
+                if($minLength > strlen($value)){
+                    $searchArr = array();
+                    $searchArr[] = $value;
+                }
+                if($minLength == strlen($value)) $searchArr[] = $value;
+            }else{
+                $minLength = strlen($value);
+                $searchArr[] = $value;
+            }
+        }
+        $checkAreacode = array_diff($is_read_areas,$searchArr);
+        foreach ($checkAreacode as $key => $value) {
+            foreach ($searchArr as $val) {
+                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
+            }
+        }
+        $depts = array_merge((array)$checkAreacode,$searchArr);
+        $notLikes = array();
+        foreach ($depts as $value) {
+            if(!$value) $notLikes[] = $value;
+        }
+        foreach ($notLike as &$value) {
+            $value = 'areacode not like '.$value.'%';
+        }
+        if(!empty($notLike)){
+            $where[] = implode(' OR ',$notLike);
+        }
         if($areacode){
             $where['areacode'] = array('like',$areacode.'%');
         }

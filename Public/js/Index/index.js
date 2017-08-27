@@ -153,7 +153,7 @@ function update_online(){
     $.ajax({
         url:app.tp.ajax+'?tpUrl=Index/update_emp_time',
         success:function(data){
-            $('#online').text(data.online+'/'+data.total);
+            $('#online').html('<span style="color:red;"> '+data.online+' </span> / '+data.total);
         }
     });
 }
