@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="__PUBLIC__/css/common.css">
     <block name="link"></block>
     <!--前端规范插件-->
-    <script type="text/javascript" src="__PUBLIC__/js/App.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/App.js?v={:C('ENFORCE_VERSION')}"></script>
     <!--前段插件引入-->
-    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-easyui/jquery.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-easyui/jquery.easyui.min.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-easyui/jquery.min.js?v={:C('ENFORCE_VERSION')}"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-easyui/jquery.easyui.min.js?v={:C('ENFORCE_VERSION')}"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-easyui/locale/easyui-lang-zh_CN.js?v={:C('ENFORCE_VERSION')}"></script>
     <script>
         var app = new App();
         app.tp.start = app.time();

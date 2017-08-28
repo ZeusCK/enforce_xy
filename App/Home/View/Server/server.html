@@ -21,8 +21,8 @@
     app.tp.areacode = "{:session('areacode')}";
     app.tp.areaname = "{:session('areaname')}";
     </script>
-    <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/js/Server/server.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Server/server.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true">

@@ -6,10 +6,11 @@
     app.tp.areacode = "{:session('areacode')}";
     app.tp.areaname = "{:session('areaname')}";
     app.tp.user = "{:session('user')}";
+    app.tp.code = "{:session('code')}";
   </script>
-  <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
-  <script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
-  <script type="text/javascript" src="__PUBLIC__/js/Case/show_case_collect.js"></script>
+  <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
+  <script type="text/javascript" src="__PUBLIC__/js/Time.js?v={:C('ENFORCE_VERSION')}"></script>
+  <script type="text/javascript" src="__PUBLIC__/js/Case/show_case_collect.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
   <div class="easyui-layout" fit="true">

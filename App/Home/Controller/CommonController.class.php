@@ -499,7 +499,8 @@ class CommonController extends Controller {
             }
         }
         //如果没有查询部门,或者查询部门是自身所属部门的上级,那么加上警员
-        if($areacode != '' || strpos(session('areacode'),$areacode === 0)){
+        //如果是警员直接加上警员编号
+        if(($areacode != '' || strpos(session('areacode'),$areacode === 0)) && ($baseSql != $codeField. '= ""')){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
         }else{

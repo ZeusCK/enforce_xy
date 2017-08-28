@@ -1,8 +1,8 @@
 <extend name="layouts:master" />
 <block name="link"></block>
 <block name="src">
-<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
-<script type="text/javascript" src="__PUBLIC__/js/Menu/menu.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Menu/menu.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
         <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" iconCls="icon icon-delete"

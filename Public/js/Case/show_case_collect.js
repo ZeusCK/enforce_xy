@@ -4,6 +4,7 @@ var tree = new Tree("#area_list");
 var module = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
+module.code = app.tp.code;
 module.params = {};
 module.user = app.tp.user;
 module.source = 1;
@@ -246,7 +247,7 @@ $(function() {
                     width: 220,
                     align: "center",
                     formatter: function(value, row, index) {
-                        if (row.hand_status == 2) {
+                        if (row.hand_status == 2 && row.jybh == module.code) {
                             return '<a style="red">已移交</a>';
                         } else if (row.source != 1) {
                             return (

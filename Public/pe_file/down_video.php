@@ -18,7 +18,7 @@
     // | tip 网站根目录 不能出现在文件地址中
     // +---------------------------------------------------------------------------------------
     $path = __FILE__;
-    $path = str_replace('down.php', '', $path);
+    $path = str_replace('down_video.php', '', $path);
     $fileArr = explode(basename($path),$file_name);
     $file_path = './'.array_pop($fileArr);
     if(!file_exists($file_path)){               

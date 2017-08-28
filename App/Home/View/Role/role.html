@@ -4,7 +4,7 @@
 <script type="text/javascript">
 app.tp.roleid = "{:session('roleid')}"
 </script>
-<script type="text/javascript" src="__PUBLIC__/js/Role/role.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Role/role.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
 	<table id="datagrid" toolbar="#toolbar"></table>

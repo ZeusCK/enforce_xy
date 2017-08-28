@@ -1,7 +1,7 @@
 <extend name="layouts:master" />
 <block name="link"></block>
 <block name="src">
-<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
 <script type="text/javascript">
 app.tp.areaid = "{:session('areaid')}";
 app.tp.areacode = "{:session('areacode')}";
@@ -9,7 +9,7 @@ app.tp.areaname = "{:session('areaname')}";
 app.tp.area_is_read = "{:session('area_is_read')}";
 app.tp.area_type = "{:session('area_type')}";
 </script>
-<script type="text/javascript" src="__PUBLIC__/js/Area/area.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Area/area.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true">

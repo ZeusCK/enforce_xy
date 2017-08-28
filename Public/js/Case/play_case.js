@@ -22,12 +22,13 @@ $.each(app.tp.data.rows, function(ii, mm) {
     str += '<p tiggle="' + mm.wjbh + '" onclick="init_file(this)">' + type + mm.wjbh + '</p>';
 });
 $(function() {
-    $('.list_content').html(str);
+    $('#list_content').html(str);
     // console.log(data.info);
     $('#infoForm').form('load', data.info);
 })
 
 function init_file(params) {
+    $('#mediaBox').html(''); //清除上一次错误的信息
     $('.list_content>p').css('background', '#ededed').css('color', '#000');
     $(params).css('background', '#fff').css('color', '#0064b7');
 
@@ -41,19 +42,47 @@ function init_file(params) {
     });
     var w = $('#mediaBox').width();
     var h = $('#mediaBox').height();
-    if (file_type == '' || file_type == 0) {
-        var string = '<img src="' + app.public + 'image/video_error.jpg" alt="" style="height:' + h + 'px;">';
-    }
-    if (file_type == 2) {
-        var string = '<div class="vlc" style="width:60%;height:100%;margin-left:20%;"><embed pluginspage="http://www.videolan.org" type="application/x-vlc-plugin"  width="100%" height="100%" mrl="' + bfwz + '" text="Waiting for video"/></div>';
-    }
-    if (file_type == 3) {
-        var string = '<img src="' + bfwz + '" alt="" style="height:' + h + 'px;">';
-    }
-    if (file_type == 1) {
-        var string = '<div class="vlc" style="width:60%;height:100%;margin-left:20%;"><embed pluginspage="http://www.videolan.org" type="application/x-vlc-plugin"  width="100%" height="100%" mrl="' + bfwz + '" text="Waiting for video"/></div>';
+    if (bfwz == '') {
+        var string = '<img src="' + app.public + 'image/nofile.jpg" alt="" style="height:' + h + 'px;">';
+    } else {
+        if (file_type == '' || file_type == 0) {
+            var string = '<img src="' + app.public + 'image/video_error.jpg" alt="" style="height:' + h + 'px;">';
+        }
+        if (file_type == 2) {
+            var string = '<div class="vlc" style="width:60%;height:100%;margin-left:20%;">' +
+                '<object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" ' +
+                // 'codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab" ' +
+                'id="vlc"' +
+                'events="True">' +
+                '<param name="mrl" value="'+bfwz+'"/> ' +
+                '<param name="ShowDisplay" value="false" /> ' +
+                '<param name="AutoLoop" value="false" /> ' +
+                '<param name="AutoPlay" value="true" /> ' +
+                '<param name="Time" value="true"/> ' +
+                '</object>' +
+                '</div>';
+        }
+        if (file_type == 3) {
+            var string = '<img src="' + bfwz + '" alt="" style="height:' + h + 'px;" onerror="javascript:this.src=\'' + app.public + 'image/nofile.jpg\'">';
+        }
+        if (file_type == 1) {
+            var string = '<div class="vlc" style="width:60%;height:100%;margin-left:20%;">' +
+                '<object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" ' +
+                // 'codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab" ' +
+                'id="vlc"' +
+                'events="True">' +
+                '<param name="mrl" value="'+bfwz+'"/> ' +
+                '<param name="ShowDisplay" value="false" /> ' +
+                '<param name="AutoLoop" value="false" /> ' +
+                '<param name="AutoPlay" value="true" /> ' +
+                '<param name="Time" value="true"/> ' +
+                '</object>' +
+                '</div>';
+        }
     }
     $('#mediaBox').html(string);
+    document.getElementById('vlc').style.height = "100%";
+    document.getElementById('vlc').style.width = "100%";
 }
 var file_type = '';
 $(function() {
@@ -62,8 +91,8 @@ $(function() {
     // init_file(app.tp.wjlx,app.tp.bfwz);
     //下载文件
     $('#download').click(function() {
-        if(bfwz == ''){
-            $.messager.alert('操作提示','请选择文件后进行下载','info');
+        if (bfwz == '') {
+            $.messager.alert('操作提示', '请选择文件后进行下载', 'info');
             return false;
         }
         var params = { action: 1, wjbh: wjbh };
@@ -74,9 +103,9 @@ $(function() {
             dataType: 'json',
             data: params
         });
-        if(file_type != 3){
-            window.open('/down_video.php?filePath='+bfwz);
-        }else{
+        if (file_type != 3) {
+            window.open('/down_video.php?filePath=' + bfwz);
+        } else {
             app.downImage(bfwz);
         }
 

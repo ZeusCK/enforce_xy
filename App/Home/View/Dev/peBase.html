@@ -31,13 +31,13 @@
     </style>
 </block>
 <block name="src">
-    <script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript">
 app.tp.areacode = "{:session('areacode')}";
 app.tp.areaname = "{:session('areaname')}";
     </script>
 
-    <script type="text/javascript" src="__PUBLIC__/js/Dev/peBase.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Dev/peBase.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true" style="width: 100%;height: 100%;">

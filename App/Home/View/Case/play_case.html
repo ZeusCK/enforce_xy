@@ -1,14 +1,14 @@
 <extend name="layouts:master" />
 <block name="link">
     <link rel="stylesheet" type="text/css" href="__PUBLIC__/css/Case/play_case.css">
-    <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js?v={:C('ENFORCE_VERSION')}/css/video-js.css">
 </block>
 <block name="src">
     <script type="text/javascript">
     app.tp.data = {$data};
     </script>
-    <script type="text/javascript" src="__PUBLIC__/js/Case/play_case.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-plugins/jquery.PrintArea.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Case/play_case.js?v={:C('ENFORCE_VERSION')}"></script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-plugins/jquery.PrintArea.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div id="logo_video" style="background:#0065b6 url(__PUBLIC__/image/logo_video.jpg) no-repeat 105px 13px;  ">
@@ -18,7 +18,7 @@
     </div>
     <div id="vedio_list">
         <div class="list_title">执法记录仪视音频列表</div>
-        <div class="list_content" style="overflow-y: scroll;height: 100%;"></div>
+        <div id="list_content" class="list_content" style="overflow-y: scroll;height: 100%;"></div>
     </div>
     <div class="right" style="float: left;">
         <div class="play_vedio" id="mediaBox" style="text-align: center;width:100%;">

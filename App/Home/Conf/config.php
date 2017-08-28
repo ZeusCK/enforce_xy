@@ -18,4 +18,5 @@ return array(
     'MAP_LNG'   => '32.04',  //地图经度
     'MAP_LAT'   => '118.78',  //地图维度
     'LOAD_EXT_CONFIG' => 'model',      //模型配置
+    'ENFORCE_VERSION'=>'1.0.9.0'    //版本控制解决程序更新后会有缓存问题
 );

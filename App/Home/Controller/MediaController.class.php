@@ -108,7 +108,7 @@ class MediaController extends CommonController
         $result = M()->table($table)->where($request)->delete();
         $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
         //同步
-        $this->sync('case_video',$syncData,'edit');
+        $this->sync('case_video',$syncData,'del');
         if($result){
             $res['status'] = true;
             $res['message'] = '删除视频成功';

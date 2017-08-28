@@ -41,6 +41,10 @@ reType 返回的格式 JSON,JSONP,XML,EVAL 默认JSON
 
 使用return 返回结果
 
+> 修正mysql like查询 搜索 吴 会出现 陈 等字
+
+    select * from tablename where binary field like "%吴%"
+
 ## 未显示菜单
 
 > _____/index.php/Home/Menu    菜单管理

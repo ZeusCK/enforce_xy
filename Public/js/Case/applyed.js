@@ -31,7 +31,7 @@ module.search = function() {
         parsedata: function(data) {
             data.areacode = module.areacode;
             data.type = 1;
-            data.status = 2;
+            data.hand_status = 2;
             DATA = data;
         } //解析参数
     });

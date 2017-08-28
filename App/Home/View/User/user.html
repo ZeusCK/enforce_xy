@@ -1,11 +1,11 @@
 <extend name="layouts:master" />
 <block name="link"></block>
 <block name="src">
-<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
 <script>
 app.tp.userid = "{:session('userid')}";
 </script>
-<script type="text/javascript" src="__PUBLIC__/js/User/user.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/User/user.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
 	<table id="treegrid" toolbar="#toolbar"></table>

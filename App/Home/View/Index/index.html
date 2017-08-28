@@ -141,8 +141,9 @@
 <block name="src">
     <script type="text/javascript">
     app.tp.menuData = {$menuData};
+    app.tp.rolelevel = "{:session('rolelevel')}";
     </script>
-    <script type="text/javascript" src="__PUBLIC__/js/Index/index.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Index/index.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true">

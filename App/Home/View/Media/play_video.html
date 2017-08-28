@@ -102,7 +102,7 @@
         #footer{margin-top:10px;background: #0065b6; height: 40px; line-height: 40px;text-align: center; color: #99d2ff;}
     </style>
 
-<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js/css/video-js.css">
+<link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/video.js?v={:C('ENFORCE_VERSION')}/css/video-js.css">
 </block>
 <block name="src">
 <script type="text/javascript">
@@ -111,9 +111,9 @@ app.tp.wjlx = "{$videoInfo['wjlx']}";
 app.tp.bfwz = "{$videoInfo['bfwz']}";
 app.tp.mark = "{$videoInfo['mark']}";
 </script>
-<script src="__PUBLIC__/plugins/video.js/js/videojs-ie8.min.js"></script>
-<script src="__PUBLIC__/plugins/video.js/js/video.min.js"></script>
-<script type="text/javascript" src="__PUBLIC__/js/Media/play_video.js"></script>
+<script src="__PUBLIC__/plugins/video.js?v={:C('ENFORCE_VERSION')}/js/videojs-ie8.min.js?v={:C('ENFORCE_VERSION')}"></script>
+<script src="__PUBLIC__/plugins/video.js?v={:C('ENFORCE_VERSION')}/js/video.min.js?v={:C('ENFORCE_VERSION')}"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Media/play_video.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div id="logo_video">

@@ -80,6 +80,7 @@ function change_password() {
     });
 }
 function show_apply() {
+    if(app.tp.rolelevel == '4') return false;
     $.ajax({
         url: app.tp.ajax+'?tpUrl=Case/case_list',
         dataType: 'json',

@@ -23,9 +23,9 @@ $(function() {
         $btn = $('#ctlBtn'),
         state = 'pending',
         uploader;
-    setTimeout(function(){
+    /*setTimeout(function(){
         $('#caseInfo').form('load',caseInfo.info);
-    }, 1000);
+    }, 1000);*/
     uploader = WebUploader.create({
 
         // swf文件路径
@@ -35,10 +35,11 @@ $(function() {
         server: app.url('Media/break_point_upload'),
         // 开起分片上传。
         chunked: true,
-        // chunkSize:51200000,
+        chunkSize:2000000,
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: '#picker',
+        threads:1,
         // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
         resize: false,
         formData:{
@@ -70,7 +71,8 @@ $(function() {
 
         $li.find('p.state').text('上传中');
         $percent.css('width', percentage * 100 + '%');
-        $('.percent').html(Math.round(percentage * 100) + '%');
+        var percent = Math.round(percentage * 100) == 100 ? 99 : Math.round(percentage * 100);
+        $('.percent').html(percent + '%');
     });
 
     uploader.on('uploadSuccess', function(file) {

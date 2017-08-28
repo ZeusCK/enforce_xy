@@ -538,6 +538,14 @@ class CaseController extends CommonController
         $fileType = $this->get_val_item('dictionary','filetype');
         $video_source = $this->get_val_item('dictionary','video_source');
         foreach ($data as &$value) {
+            if(strpos($value['bfwz'],'http') === false){
+                $filePath = $value['bfwz'];
+            }else{
+                //$value = 'http://192.168.0.2/fiel/....';
+                $filePathArr = explode('/',$value['bfwz']);
+                $filePath = '../'.implode('/',array_slice($filePathArr,3));
+            }
+            if(!is_file($filePath)) $value['bfwz'] = '';
             $value['file_type_name'] = $fileType[$value['wjlx']];
             $value['source_name'] = $video_source[$value['source']];
         }

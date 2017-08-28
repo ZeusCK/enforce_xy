@@ -10,12 +10,12 @@
 </style>
 </block>
 <block name="src">
-<script type="text/javascript" src="__PUBLIC__/js/Tree.js"></script>
-<script type="text/javascript" src="__PUBLIC__/js/Time.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Time.js?v={:C('ENFORCE_VERSION')}"></script>
 <script type="text/javascript">
 app.tp.code = "{:session('code')}";
 </script>
-<script type="text/javascript" src="__PUBLIC__/js/Apply/apply.js"></script>
+<script type="text/javascript" src="__PUBLIC__/js/Apply/apply.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true">
