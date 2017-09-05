@@ -116,7 +116,7 @@ module.remove = function(target){
     var ids = [];
     if(nodes.length == 0)
         return false;
-    $.messager.confirm('重要提醒','删除会将请确定位于该部门下的 警员/执法记录仪/工作站/服务器/公告 一起删除！',function(r){
+    $.messager.confirm('重要提醒','删除会将请确定位于该单位下的 警员/执法记录仪/工作站/服务器 会解除单位属性！',function(r){
         if(r){
             $.each(nodes,function(n,m){
                 var areacode= m.areacode;
@@ -184,6 +184,9 @@ module.importExcel = function(target){
         }
     });
 }
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 //初始化表格
 $(function(){
     $('#mu_area').html(module.areaname);
@@ -202,7 +205,8 @@ $(function(){
         {field:'is_read_name',title:'部门属性',width:200,align:'center'},
         // {field:'code',title:'部门标识',width:200,align:'center'},
         {field:'rperson',title:'联系人',width:200,align:'center'},
-        {field:'rphone',title:'联系方式',width:200,align:'center'}
+        {field:'rphone',title:'联系方式',width:200,align:'center'},
+        {field:'sort',title:'排序',width:200,align:'center'},
         ]],
         queryParams:{
             areaid:module.areaid,

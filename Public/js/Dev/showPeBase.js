@@ -35,7 +35,7 @@ module.broadcast = function() {
         showDatagrid:false,
         columns: [
             [
-                { field: 'areaname', title: '所属部门', width: 200, align: 'center' },
+                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'jyxm', title: '警员姓名', width: 200, align: 'center' },
                 { field: 'jybh', title: '警员编号', width: 200, align: 'center' },
                 { field: 'cpxh', title: '产品型号', width: 200, align: 'center' },

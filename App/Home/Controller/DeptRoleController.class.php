@@ -33,14 +33,20 @@ class DeptRoleController extends CommonController
     public function dataAdd($request)
     {
         $db = D($this->models['dept_role']);
+        $request = u2gs($request);
         $where['rolename'] = $request['rolename'];
+        $request['dept_role_id'] = $this->msectime();
         if($db->checkExistence($where)){
             $result['message'] = '角色已存在！换一个吧';
             $result['status']  = true;
         }else{
-            $result = $db->getTableAdd(u2gs($request));
+            $result = $db->getTableAdd($request);
         }
-        $this->write_log('添加'.$request['rolename']);
+        if($result['status']){
+            $syncData[] = $request;
+            $this->sync('dept_role',$syncData,'add');
+            $this->write_log('添加'.g2u($request['rolename']));
+        }
         return $result;
     }
 
@@ -57,8 +63,16 @@ class DeptRoleController extends CommonController
         }else{
             $where[$this->tab_id] = array('in',$request[$this->tab_id]);
             $result = $db->getTableDel($where);
+            if($result['status']){
+                $syncData = array();
+                foreach ($roles as $value) {
+                    $syncData[] = array('dept_role_id'=>$value);
+                }
+                $this->sync('dept_role',$syncData,'del');
+                $this->write_log('删除部门角色');
+            }
         }
-        $this->write_log('删除部门角色');
+        
         return $result;
     }
 
@@ -68,6 +82,10 @@ class DeptRoleController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $result = $db->getTableEdit($where,u2gs($request));
+        if($result['status']){
+            $syncData[] = array('dept_role_id'=>$where[$this->tab_id]);
+            $this->sync('dept_role',$syncData,'edit');
+        }
         return $result;
     }
     //目标用户的权限 roleid
@@ -101,31 +119,16 @@ class DeptRoleController extends CommonController
     {
         $searchArr = array();
         $getDepts = explode(',',$request['dept_list']);
-        foreach ($getDepts as $key => $value) {
-            if(isset($minLength)){
-                if($minLength < strlen($value)) continue;
-                if($minLength > strlen($value)){
-                    $searchArr = array();
-                    $searchArr[] = $value;
-                }
-                if($minLength == strlen($value)) $searchArr[] = $value;
-            }else{
-                $minLength = strlen($value);
-                $searchArr[] = $value;
-            }
-        }
-        $checkAreacode = array_diff($getDepts,$searchArr);
-        foreach ($checkAreacode as $key => $value) {
-            foreach ($searchArr as $val) {
-                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
-            }
-        }
-        $depts = array_merge((array)$checkAreacode,$searchArr);
+        $depts = $this->parseAreacode($getDepts);
         $db = D($this->models['dept_role']);
         $saveData['dept_list'] = implode(',', $depts);
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $result = $db->getTableEdit($where,$saveData);
+        if($result['status']){
+            $syncData[] = array('dept_role_id'=>$where[$this->tab_id]);
+            $this->sync('dept_role',$syncData,'edit');
+        }
         return $result;
     }
 }

@@ -215,13 +215,13 @@ Tree.prototype.search_tree = function(info,type){
     if($.trim(info) == ''){
         var data = this.data;
         $(this.dom).tree('loadData',data);
-        $(this.dom).tree({
+        /*$(this.dom).tree({
             multiple:false,
             checkbox:false,
             onlyLeafCheck:false
-        });
+        });*/
         $('#info').remove();
-        $(this.dom).tree('collapseAll');
+        // $(this.dom).tree('collapseAll');
         return false;
     }else{
         var data = this.search_data(this.data,info,type);
@@ -234,11 +234,11 @@ Tree.prototype.search_tree = function(info,type){
             });
         }
         if(type == 1){
-            $(this.dom).tree({
+            /*$(this.dom).tree({
                 multiple:false,
                 checkbox:false,
                 onlyLeafCheck:false
-            });
+            });*/
         }
     }
     $('#info').remove();
@@ -252,5 +252,5 @@ Tree.prototype.search_tree = function(info,type){
     }
     //展开所有节点
     //$(this.dom).tree('uncheck');
-    $(this.dom).tree('expandAll');
+    // $(this.dom).tree('expandAll');
 }

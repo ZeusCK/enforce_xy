@@ -268,6 +268,9 @@ module.bind = function(empid,choose,code){
         }
     })
 }
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 $(function(){
     //树的初始化
     tree.loadData();
@@ -278,6 +281,7 @@ $(function(){
     $('#infoAreaname').html('*<span style="color:red;">'+module.areaname+'</span>*添加/修改警员！');
     var is_read_info = module.area_is_read == 0 ? '(只读)':'';
     $('#mu_ser').html(module.areaname+is_read_info);
+    app.combobox('#empl_qualify',{type:'empl_qualify'});
     $('#datagrid').datagrid({
         url:app.url('Employee/dataList'),
         method:'get',
@@ -315,8 +319,10 @@ $(function(){
         {field:'name',title:'姓名',width:200,align:'center'},
         {field:'sex',title:'性别',width:200,align:'center'},
         {field:'rolename',title:'所属角色',width:200,align:'center'},
+        {field:'dept_role_name',title:'部门角色',width:200,align:'center'},
         {field:'remark',title:'备注',width:200,align:'center'},
-        {field:'areaname',title:'所属部门',width:200,align:'center'},
+        {field:'areaname',title:'单位',width:200,align:'center'},
+        {field:'empl_qualify_name',title:'执法资格',width:200,align:'center'},
         {field:'phone',title:'电话',width:200,align:'center'},
         {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
               if(d.areacode == ''){

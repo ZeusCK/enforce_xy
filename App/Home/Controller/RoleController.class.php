@@ -45,13 +45,19 @@ class RoleController extends CommonController
         $request = I();
         $db = D($this->models['role']);
         $where['rolename'] = $request['rolename'];
+        $request = u2gs($request);
+        $request['roleid'] = $this->msectime();
         if($db->checkExistence($where)){
             $result['message'] = '角色已存在！换一个吧';
             $result['status']  = true;
         }else{
-            $result = $db->getTableAdd(u2gs($request));
+            $result = $db->getTableAdd($request);
         }
-        $this->write_log('添加'.$request['rolename']);
+        if($result['status']){
+            $syncData[] = $request;
+            $this->sync('role',$syncData,'add');
+            $this->write_log('添加'.u2g($request['rolename']));
+        }
         $this->ajaxReturn($result);
     }
 
@@ -74,8 +80,15 @@ class RoleController extends CommonController
         }else{
             $where = $this->tab_id.' in('.$request[$this->tab_id].')';
             $result = $db->getTableDel($where);
+            if($result['status']){
+                $syncData = array();
+                foreach ($roles as $value) {
+                    $syncData[] = array('roleid'=>$value);
+                }
+                $this->sync('role',$syncData,'del');
+                $this->write_log('删除角色');
+            }
         }
-        $this->write_log('删除角色');
         $this->ajaxReturn($result);
     }
 
@@ -86,6 +99,10 @@ class RoleController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $result = $db->getTableEdit($where,u2gs($request));
+        if($result['status']){
+            $syncData[] = array('roleid'=>$where[$this->tab_id]);
+            $this->sync('role',$syncData,'edit');
+        }
         $this->ajaxReturn($result);
     }
     //目标用户的权限 roleid
@@ -118,6 +135,10 @@ class RoleController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $result = $db->getTableEdit($where,$savefun);
+        if($result['status']){
+            $syncData[] = array('roleid'=>$request[$this->tab_id]);
+            $this->sync('role',$syncData,'edit');
+        }
         $this->ajaxReturn($result);
     }
 }

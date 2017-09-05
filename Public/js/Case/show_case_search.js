@@ -75,7 +75,9 @@ module.play = function(case_key, start_time) {
         start_time;
     window.open(url);
 };
-
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 //计算天数差的函数，通用
 function DateDiff(sDate1, sDate2) {
     //sDate1和sDate2是2002-12-18格式

@@ -41,8 +41,8 @@ module.search = function() {
 module.init_search_form = function() {
     $("#searchForm").form("reset");
     //设置默认时间
-    $("#shotS").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
-    $("#shotE").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+    $("#shotS,#shotS2,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+    $("#shotE,#shotE2,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
 };
 
 //导出全部
@@ -413,7 +413,7 @@ module.search_video = function() {
 }
 module.search_video2 = function() {
     app.extra('search', {
-        datagrid: '#video_datagrid2',
+        datagrid:'#video_datagrid2',
         form: '#searchForm4',
         parsedata: function(data) {
             data.case_key = $('#editForm2 > input[name="case_key"]').val();
@@ -485,6 +485,9 @@ module.init = function(case_key, start_time) {
             });
         }
     });
+};
+module.search_tree = function(value){
+    tree.search_tree(value,1);
 }
 $(function() {
     //树的初始化
@@ -517,13 +520,14 @@ $(function() {
                 { field: "case_key", title: "id", checkbox: true },
                 { field: "title", title: "标题", width: 200, align: "center" },
                 { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
-                { field: "case_name", title: "案事件名称", width: 200, align: "center" },
-                { field: "areaname", title: "出警地址", width: 200, align: "center" },
+                { field: "alarm_name", title: "案事件名称", width: 200, align: "center" },
+                // { field: "areaname", title: "出警部门", width: 200, align: "center" },
+                { field: "case_addr", title: "出警地址", width: 200, align: "center" },
                 { field: "jyxm", title: "出警人", width: 100, align: "center" },
                 { field: "start_time", title: "采集日期", width: 200, align: "center" },
                 { field: "areaname", title: "移交部门", width: 200, align: "center" },
                 { field: "jyxm", title: "移交人", width: 200, align: "center" },
-                { field: "end_time", title: "移交日期", width: 200, align: "center" },
+                { field: "apply_time", title: "移交日期", width: 200, align: "center" },
                 { field: "apply_areaname", title: "接收部门", width: 200, align: "center" },
                 { field: "apply_jyxm", title: "接收人", width: 200, align: "center" },
                 {

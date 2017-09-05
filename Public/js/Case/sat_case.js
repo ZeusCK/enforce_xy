@@ -1,7 +1,8 @@
 var column = [
     [
-        { field: 'areaname', title: '所属部门', rowspan: 2, align: 'center' },
+        { field: 'areaname', title: '单位', rowspan: 2, align: 'center' },
         { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
+        { field: 'quaempnum', title: '执法警员总数', rowspan: 2, width: 80, align: 'center' },
         { field: 'recorder', title: '执法记录仪数', rowspan: 2, width: 80, align: 'center' },
         { field: 'upload', title: '民警上传情况', colspan: 3, align: 'center' },
         { field: 'warning', title: '警情数', colspan: 9, align: 'center' },
@@ -48,6 +49,12 @@ module.search = function(data){
     }
     data.areacode = module.areacode;
     data.link = module.link;
+    var areaUncheckeds = $(tree.dom).tree('getChecked','unchecked');
+    var areas = [];
+    $.each(areaUncheckeds,function(n,m){
+        areas.push(m.areacode);
+    });
+    data.areas = areas;
     searchData = data;
     $('#treegrid').treegrid('load', data);
 }
@@ -70,12 +77,55 @@ module.exports = function(target) {
         }
     });
 }
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
+
 var column_link = {
     upload:['uploadnum','unuploadnum','uploadper'],
     collect:['wsbase_num','wsbase_online','wsbase_per'],
     'case':['administration','criminal','case_num'],
     warning:['common','major','spot','force','impede','otherdata','unmark','disuse','num']
 };
+module.selectColum = function(field){
+    if(field == 'uploadnum' || field == 'unuploadnum') return empColums;
+    if(field == 'wsbase_num' || field == 'wsbase_online') return wsColums;
+    return alarmColums;
+}
+var pass_field = ['areaname','empnum','recorder','uploadper','wsbase_per','quaempnum'];
+var wsColums = [[
+                {field:'gzz_ip',title:'工作站IP',align:'center'},
+                {field:'areaname',title:'单位', width: 200, align:'center'},
+                {field:'ztsj', title: '最后在线时间', width: 200, align: 'center' },
+                {field:'hzr', title: '负责人', width: 200, align: 'center' },
+                {field:'dh', title: '负责人电话', width: 200, align: 'center' },
+                {field:'qyztname', title: '启用状态', width: 200, align: 'center' },
+                {field:'zxztname',title:'在线状态',width:200,align:'center'}
+                ]];
+var alarmColums = [[
+                { field: "areaname", title: "单位", width: 200, align: "center" },
+                { field: "title", title: "标题", width: 200, align: "center" },
+                { field: "alarm_name", title: "案事件名称", width: 200, align: "center"},
+                { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
+                { field: "start_time", title: "采集日期", width: 200, align: "center" },
+                { field: "jyxm", title: "出警人", width: 200, align: "center" },
+                { field: "alarm_type_name", title: "警情类型", width: 200, align: "center" },
+                { field: "case_no", title: "案件编号", width: 200, align: "center" },
+                { field: "case_type_name", title: "案件类型", width: 200, align: "center" },
+                { field: "scsj", title: "上传日期", width: 200, align: "center" },
+                {field: 'source_name',title: '来源',width: 200,align: 'center'}
+                ]];
+var empColums = [[
+                // {field:'empid',title:'警员id',checkbox:true},
+                {field:'code',title:'警员警号',align:'center'},
+                {field:'name',title:'姓名',width:200,align:'center'},
+                {field:'sex',title:'性别',width:200,align:'center'},
+                {field:'empl_qualify_name',title:'执法资格',width:200,align:'center'},
+                // {field:'rolename',title:'所属角色',width:200,align:'center'},
+                // {field:'remark',title:'备注',width:200,align:'center'},
+                {field:'areaname',title:'单位',width:200,align:'center'},
+                {field:'phone',title:'电话',width:200,align:'center'}
+                ]];
 $(function() {
     //初始化时间
     var time = new Date();
@@ -85,8 +135,16 @@ $(function() {
     tree.loadData();
     //树的额外参数
     $(tree.dom).tree({
-        onClick: module.clickTree
+        checkbox:true,
+        cascadeCheck:true,
+        onClick: module.clickTree,
+        onLoadSuccess:function(node,data){
+            // console.log($(tree.dom).tree('getRoot'));
+            $(tree.dom).tree('check',$(tree.dom).tree('getRoot').target);
+        }
     });
+    // console.log($(tree.dom).tree('getRoots'));
+    // $(tree.dom).tree('check',);
     $('#mu_ser').html(module.areaname);
     app.treegrid('#treegrid', {
         url: 'Case/case_sat',
@@ -95,13 +153,26 @@ $(function() {
             link: module.link,
             rand: Math.random()
         },
+        onClickCell:function(field,row){
+            if(app.inArray(field,pass_field)) return false;
+            if(row[field] == 0) return false;
+            $('#detailDialog').dialog('open');
+            var queryParams = searchData;
+            queryParams.areacode = row.areacode;
+            queryParams.field = field;
+            app.datagrid('#detailDatagrid',{
+                url:'SatDetail/data_list',
+                queryParams:queryParams,
+                columns:module.selectColum(field)
+            });
+        },
         idField: 'areaid',
         treeField: 'areaname',
         title: '统计信息',
         columns: column
     });
     // 联级按钮切换
-    $('#link').add('#unlink').bind('click', function() {
+    /*$('#link').add('#unlink').bind('click', function() {
         $('.btns>a.activeLK').removeClass('activeLK');
         $(this).addClass('activeLK');
         if ($(this).find('.l-btn-text').html() == '精确搜索') {
@@ -110,10 +181,9 @@ $(function() {
             module.link = 'link';
         }
         module.search();
-    });
+    });*/
     $(".check").click(function(){
         var field = $(this).attr('name');
-
         if($(this)[0].checked){             //显示
             $('#treegrid').treegrid('showColumn',field);
             //点击的是总选项

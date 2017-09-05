@@ -70,12 +70,7 @@ module.exports = function(target) {
 
 //上传文件
 module.upload = function(case_key, start_time) {
-    var url =
-        app.url("Case/case_upload") +
-        "?case_key=" +
-        case_key +
-        "&start_time=" +
-        start_time;
+    var url = app.url("Case/case_upload") + "?case_key=" + case_key + "&start_time=" + start_time;
     window.open(url);
 };
 module.case_add = function() {
@@ -127,7 +122,9 @@ function DateDiff(sDate1, sDate2) {
     iDays = Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24; //把相差的毫秒数转换为天数
     return iDays;
 }
-
+module.search_tree = function(value) {
+    tree.search_tree(value, 1);
+}
 $(function() {
     //树的初始化
     tree.loadData(); //管理部门的树
@@ -145,20 +142,32 @@ $(function() {
     //警情类型下拉框
     app.combobox('#alarm_type,#edit_alarm_type', { type: 'alarm_type' });
     $('#tab').tabs({
-        onSelect: function(title) {
-            if (title == '执法记录仪') {
+        onSelect: function(title,index) {
+            if (index == 0) {
                 $('#add_case').linkbutton('disable');
                 module.source = 1;
             }
-            if (title == '公安类') {
+            if (index == 1) {
                 $('#add_case').linkbutton('enable');
                 module.source = 2;
             }
-            if (title == '非公安类') {
+            if (index == 2) {
                 $('#add_case').linkbutton('enable');
                 module.source = 3;
             }
-            module.search();
+            // console.log(index);
+            if(index == 3){
+                var width = $('#collect').width();
+                var height = $('#collect').height();
+                $('#collect').hide();
+                $('#recycleBin').width(width);
+                $('#recycleBin').height(height);
+                if($('#recycleBin').attr('src') == '') $('#recycleBin').attr('src',app.url('Case/recycle_bin'));
+
+            }else{
+                $('#collect').show();
+                module.search();
+            }
         }
     });
     //设置默认时间
@@ -249,26 +258,35 @@ $(function() {
                     formatter: function(value, row, index) {
                         if (row.hand_status == 2 && row.jybh == module.code) {
                             return '<a style="red">已移交</a>';
-                        } else if (row.source != 1) {
-                            return (
-                                '<a href="javascript:void(0)" title="上传文件" onclick="module.upload(\'' +
-                                row.case_key +
-                                "','" +
-                                row.start_time +
-                                '\')" name="upload"></a>' +
-                                '<a href="javascript:void(0)" title="删除警情" onclick="module.remove(\'' +
-                                row.case_key +
-                                "','" +
-                                row.start_time +
-                                '\')" name="remove"></a>'
-                            );
-                        } else {
-                            return '<a href="javascript:void(0)" title="上传文件" onclick="module.upload(\'' +
-                                row.case_key +
-                                "','" +
-                                row.start_time +
-                                '\')" name="upload"></a>';
-                        }
+                        } else{
+                            if (row.is_read == '0') {
+                                return '<a style="red">部门只读</a>';
+                            } else {
+                                return (
+                                    '<a href="javascript:void(0)" title="上传文件" onclick="module.upload(\'' +
+                                    row.case_key +
+                                    "','" +
+                                    row.start_time +
+                                    '\')" name="upload"></a>' +
+                                    '<a href="javascript:void(0)" title="删除警情" onclick="module.remove(\'' +
+                                    row.case_key +
+                                    "','" +
+                                    row.start_time +
+                                    '\')" name="remove"></a>'
+                                );
+                            }
+
+                        } /*else {
+                            if (row.is_read == '0') {
+                                return '<a style="red">部门只读</a>';
+                            } else {
+                                return '<a href="javascript:void(0)" title="上传文件" onclick="module.upload(\'' +
+                                    row.case_key +
+                                    "','" +
+                                    row.start_time +
+                                    '\')" name="upload"></a>';
+                            }
+                        }*/
                     }
                 }
             ]

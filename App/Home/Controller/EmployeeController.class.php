@@ -90,6 +90,8 @@ class EmployeeController extends CommonController
         $dbc = D($this->models['area']);
         $areas = $dbc->getField('areacode,areaname');
         $db = D($this->models['employee']);
+        $deptroledb = D($this->models['dept_role']);
+        $deptroles = $deptroledb->getField('dept_role_id,rolename');
         $check[] = $this->get_manger_sql(I('areacode'),'areacode','code').' OR areacode = ""';
         if($request['code']) $check['code'] = $request['code'];
         $roledb = D($this->models['role']);
@@ -101,9 +103,12 @@ class EmployeeController extends CommonController
         $total = $db->table('employee as e,role as r')->field($fields)->where($check)->order($order)->count('empid');
         $res['total'] =  $total;
         $res['rows'] =  $rows ? $rows : [];
+        $empl_qualify_type = $this->get_val_item('dictionary','empl_qualify');
         foreach ($res['rows'] as &$value){
             $value['areaname'] = array_key_exists($value['areacode'],$areas) ? $areas[$value['areacode']]  : u2g('系统根部门');
             $value['rolename'] = $roles[$value['roleid']];
+            $value['empl_qualify_name'] = $empl_qualify_type[$value['empl_qualify']];
+            $value['dept_role_name'] = array_key_exists($value['dept_role_id'],$deptroles) ? $deptroles[$value['dept_role_id']]  : u2g('无');;
         }
         $this->saveExcel($res); //监测是否为导出
         $this->ajaxReturn(g2us($res));
@@ -144,13 +149,14 @@ class EmployeeController extends CommonController
         }
         $request = u2gs($request);
         $result = $db->getTableAdd($request);
-        //做数据同步
-        $syncData[] = $request;
-        $this->sync('employee',$syncData,'add');
-
+        if($result['status']){
+            //做数据同步
+            $syncData[] = $request;
+            $this->sync('employee',$syncData,'add');
+        }
         if($result['status']) $this->add_emp_area($result['add_id']);
         if($info)  $result['message'] .= $info;
-        $this->write_log('添加'.$request['name'].'('.$request['code'].')');
+        $this->write_log('添加'.g2u($request['name']).'('.$request['code'].')');
         exit(json_encode($result));
     }
     //删除事件
@@ -169,9 +175,11 @@ class EmployeeController extends CommonController
         }
         //做数据同步
         $syncData = $db->where($where)->select();
-        $this->sync('employee',$syncData,'del');
         //删除初始表数据
         $result = $db->getTableDel($where);
+        if($result['status']){
+            $this->sync('employee',$syncData,'del');
+        }
         $info = implode(',',g2us(array_column($syncData,'name')));
         $this->write_log('删除警员-'.$info);
         $this->ajaxReturn($result);
@@ -196,16 +204,13 @@ class EmployeeController extends CommonController
         $request = u2gs($request);
         $where[$this->tab_id] = $request[$this->tab_id];
         $empInfo = $db->where('empid = '.$request['empid'])->find();
-        if($empInfo['name'] != $request['name'] || $empInfo['code'] != $request['code']){
-            $other = $request;
-            if($empInfo['code'] != $request['code']){
-                $other['old_code'] = $empInfo['code'];
-            }
-            $syncData[] = $other;
-            $this->sync('employee',$syncData,'edit');
-        }
         // error_log($roleid.'-'.$request['roleid'],3,'error.log');
         $result = $db->getTableEdit($where,$request);
+        if($result['status']){
+            $request['old_code'] = $empInfo['code'];
+            $syncData[] = $request;
+            $this->sync('employee',$syncData,'edit');
+        }
         if($empInfo['roleid'] != $request['roleid']) $this->add_emp_area($request['empid']); //如果角色ID改变那么重新计算
         $this->write_log('编辑警员-'.g2u($empInfo['name']));
         exit(json_encode($result));
@@ -215,8 +220,12 @@ class EmployeeController extends CommonController
         $db = D($this->models['employee']);
         $where['empid'] = $request['empid'];
         $request['password'] = '123456';
+        $empInfo = $db->where($where)->find();
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
+            $request['code'] = $empInfo['code'];
+            $syncData[] = $request;
+            $this->sync('employee',$syncData,'edit');
             $this->write_log('初始化密码-'.$request['code']);
             $result['message'] = '初始化密码成功';
         }else{
@@ -231,10 +240,15 @@ class EmployeeController extends CommonController
         if($request['action'] == 'bind'){
             unset($request['empid']);
             unset($request['action']);
-            $result = $db->getTableEdit($where,$request);
         }else{
             $data['areaname'] = $data['areacode'] = '';
-            $result = $db->getTableEdit($where,$data);
+        }
+        $empInfo = $db->where($where)->find();
+        $result = $db->getTableEdit($where,$request);
+        if($result['status']){
+            $request['code'] = $empInfo['code'];
+            $syncData[] = $request;
+            $this->sync('employee',$syncData,'edit');
         }
         return $result;
     }
@@ -316,7 +330,7 @@ class EmployeeController extends CommonController
         $in_fact_areas = '';
         //如果分配部门
         if($request['userarea']){
-            //用户所属部门的下级部门
+            //用户单位的下级部门
             $empid  = I('empid');
             $action = A($this->actions['area']);
             $empdb = D($this->models['employee']);
@@ -328,7 +342,7 @@ class EmployeeController extends CommonController
                 //登录用户的管理权限
                 $userareas = explode(',',session('userarea'));
                 $fontareas = explode(',',$request['userarea']);
-                //计算出 前端传值与登录用户和警员所属部门的交集等到最终的结果
+                //计算出 前端传值与登录用户和警员单位的交集等到最终的结果
                 $mangerAreas = array_intersect($fontareas,$userareas,$careas);
 
                 if(empty($mangerAreas)){
@@ -497,19 +511,26 @@ class EmployeeController extends CommonController
         $area_code_name = D($this->models['area'])->where($where)->getField('areacode,areaname');
         $area_code_read = D($this->models['area'])->where($where)->getField('areacode,is_read');
         $area_name_code = array_flip($area_code_name);
+        $empl_qualify_type = array_flip($this->get_val_item('dictionary','empl_qualify'));
+
         $role_id_name = D($this->models['role'])->getField('rolename,roleid');
         $role_id_level = D($this->models['role'])->getField('roleid,level');
+        $deptrole_name_id = D($this->models['dept_role'])->getField('rolename,dept_role_id');
+        $empl_qualify_name_value = D($this->models['dept_role'])->getField('rolename,dept_role_id');
+        // $dept_role = D($this->models['de']);
         $role_level_id = array_flip($role_id_level);
         $code_arr = array_keys($area_code_name);
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
         $name_code = array('警员警号'=>'code',
-                           '所属部门'=>'areaname',
+                           '单位'=>'areaname',
                            '姓名'=>'name',
                            '所属角色'=>'roleid',
                            '备注'=>'remark',
                            '性别'=>'sex',
-                           '电话'=>'phone');
+                           '电话'=>'phone',
+                           '部门角色'=>'dept_role_id',
+                           '执法资格'=>'empl_qualify');
         $allow = 0; //允许导入
         $deny = 0;  //禁止导入
         $success = 0;   //成功导入
@@ -523,6 +544,8 @@ class EmployeeController extends CommonController
                 }
             }
             $allData = array();
+            $syncUpdateData = array();
+            $syncAddData = array();
             foreach ($data as $value) {
                 $saveData= array();
                 foreach ($value as $k => $val) {
@@ -541,6 +564,14 @@ class EmployeeController extends CommonController
                         $saveData[$key_code[$k]] = $role_id_name[$val];
                         continue;
                     }
+                    if($key_code[$k] == 'dept_role_id'){
+                        $saveData[$key_code[$k]] = array_key_exists($val,$deptrole_name_id) ? array_key_exists($val,$deptrole_name_id) : 0;
+                        continue;
+                    }
+                    if($key_code[$k] == 'empl_qualify'){
+                        $saveData[$key_code[$k]] = array_key_exists($val,$empl_qualify_type) ? array_key_exists($val,$empl_qualify_type) : 0;
+                        continue;
+                    }
                     $saveData['password'] = '123456';
                     $saveData[$key_code[$k]] = $val;
                 }
@@ -552,15 +583,19 @@ class EmployeeController extends CommonController
                 $empInfo = $db->where('code="'.$saveData['code'].'"')->find();
                 if($empInfo){
                     $res = $db->where('code="'.$saveData['code'].'"')->save($saveData);
+                    $syncUpdateData[] = $saveData;
                 }else{
                     $res = $db->add($saveData);
+                    $syncAddData[] = $saveData;
                 }
                 $res ? $success++ : $fail++;
-                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
-                $this->write_log($result['message']);
             }
+            $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+            $this->write_log($result['message']);
+            $this->sync('employee',$syncUpdateData,'edit');
+            $this->sync('employee',$syncAddData,'add');
         }else{
-            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足，文件超过2M';
         }
         exit(json_encode($result));
     }

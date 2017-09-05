@@ -67,7 +67,7 @@ $(function() {
         columns: [
             [
                 { field: 'name', title: '警员', width: 200, align: 'center' },
-                { field: 'areaname', title: '所属部门', width: 200, align: 'center' },
+                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'num', title: '总数', width: 200, align: 'center' },
                 { field: 'video', title: '视频', width: 200, align: 'center' },
                 { field: 'vioce', title: '音频', width: 200, align: 'center' },

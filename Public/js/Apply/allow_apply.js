@@ -22,6 +22,9 @@ module.allow  = function(){
         }
     });
 }
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 $(function(){
     $('#datagrid').datagrid({
         url:module.url.datagridUrl,

@@ -15,16 +15,6 @@ class AnnounceController extends CommonController
     {
         $this->display('announce');
     }
-    public function assignInfo()
-    {
-        $action = A($this->actions['area']);
-         //如果没有
-        $areaTree = $action->tree_list();
-        $rootId = !empty($areaTree) ? $areaTree[0]['id'] : '';
-        $rootName = !empty($areaTree) ? g2u($areaTree[0]['text']) : '系统根部门';
-        $this->assign('areaid',$rootId);
-        $this->assign('areaname',$rootName);
-    }
     //显示
     public function announce_list($request)
     {
@@ -60,7 +50,7 @@ class AnnounceController extends CommonController
         if($result['status']){
             $this->write_log('新增公告:'.g2u($request['title']));
             $syncData[] = $request;
-            $this->sync('notice', $syncData, 'add');
+            $this->sync('sys_notice', $syncData, 'add');
         }
         return $result;
     }
@@ -77,9 +67,8 @@ class AnnounceController extends CommonController
         $result = D($this->models['sys_notice'])->getTableEdit($where,$request);
         if($result['status']){
             $this->write_log('修改公告:'.g2u($info['title']));
-            $request['areacode'] = $info['areacode'];
             $syncData[] = $request;
-            $this->sync('notice', $syncData, 'edit');
+            $this->sync('sys_notice', $syncData, 'edit');
         }
         return $result;
     }
@@ -92,7 +81,7 @@ class AnnounceController extends CommonController
         if($result['status']){
             $this->write_log('删除公告:'.g2u(implode(',',array_column($info,'title'))));
             $syncData = $info;
-            $this->sync('notice', $syncData, 'del');
+            $this->sync('sys_notice', $syncData, 'del');
         }
         return $result;
 

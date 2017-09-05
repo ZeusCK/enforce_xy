@@ -180,7 +180,7 @@ $(function() {
                 { field: 'wjlx_name', title: '文件类型', width: 200, align: 'center' },
                 { field: 'wjcd', title: '文件长度(s)', width: 200, align: 'center' },
                 { field: 'jyxm', title: '拍摄警员', width: 200, align: 'center' },
-                { field: 'areaname', title: '所属部门', width: 200, align: 'center' },
+                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'start_time', title: '拍摄时间', align: 'center' },
                 { field: 'end_time', title: '结束时间', align: 'center' },
                 { field: 'scsj', title: '上传时间', align: 'center' },

@@ -48,11 +48,15 @@ module.importExcel = function(target){
         datagrid:'#datagrid',
         linkbutton:target
     });
+};
+module.search_tree = function(value){
+    tree.search_tree(value,1);
 }
 $(function(){
     //左侧tree的加载
     tree.load_no_read_area();
     $('#pos').html(module.areaname);
+    app.combobox('#status,#search_status',{type:'pe_status'});
     //右侧datagrid的加载
     $('#datagrid').datagrid({
         url:app.url('Dev/pe_base_list'),
@@ -69,12 +73,14 @@ $(function(){
         toolbar:'#toolbar',
         columns:[[
             {field:'id',title:'',checkbox:true},
-            {field:'areaname',title:'所属部门'},
+            {field:'areaname',title:'单位'},
             {field:'cpxh',title:'产品序号',width:100,align:'center'},
             {field:'jyxm',title:'警员姓名',width:100,align:'center'},
             {field:'jybh',title:'警员编号',width:100,align:'center'},
             {field:'product',title:'生产厂家',width:100,align:'center'},
             {field:'standard',title:'设备规格',width:100,align:'center'},
+            {field:'status_name',title:'设备状态',width:100,align:'center'},
+            {field:'create_user',title:'创建人',width:100,align:'center'},
             {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
                 if(d.areacode == ''){
                     return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind('+d.id+',true)">绑定部门</span>';
@@ -145,6 +151,15 @@ $(function(){
             }
         });
     });
+    $('#jyxm').combobox({
+        url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
+        valueField:'name',
+        textField:'name',
+        method:'get',
+        onSelect:function(record){
+            $('#jybh').textbox('setValue',record.code);
+        }
+    });
     //添加、修改面板的 确定按钮
     /*$('#dialogOk').click(function(){
         var url=$('#dialog').dialog('options').title=='添加'?app.url('Dev/pe_base_add'):app.url('Dev/pe_base_edit');
@@ -170,9 +185,19 @@ $(function(){
     });
 });
 function operation(title){
-    if(title=='添加'){
+    if(title == '添加'){
         $('#dialog p').html(module.areaname);
-        $('#dialogForm').form('reset');
+        var info = {cpxh:'',product:'',jyxm:'',jybh:'',standard:''};
+        $('#dialogForm').form('load',info);
+        $('#jyxm').combobox({
+            url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
+            valueField:'name',
+            textField:'name',
+            method:'get',
+            onSelect:function(record){
+                $('#jybh').textbox('setValue',record.code);
+            }
+        });
     }else{
         $('#dialog p').html('');
         var rows=$('#datagrid').datagrid('getSelections');
@@ -183,18 +208,14 @@ function operation(title){
             $.messager.alert('操作提示','一次只能修改一条数据，请重新选择','info');
             return false;
         }else{
+            // $('#jyxm').combobox('options');
+            // var data = $('#jyxm').combobox('getData');
+            // data.push({code:rows[0].jybh,name:rows[0].jyxm});
+            // $('#jyxm').combobox('loadData',data);
             $('#dialogForm').form('load',rows[0]);
         }
     }
-    $('#jyxm').combobox({
-        url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
-        valueField:'name',
-        textField:'name',
-        method:'get',
-        onSelect:function(record){
-            $('#jybh').textbox('setValue',record.code);
-        }
-    });
+    
     $('#dialog').dialog({
         title:title,
         shadow:false,

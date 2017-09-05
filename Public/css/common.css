@@ -49,3 +49,6 @@
 	font-size: 14px;
 	display: inline-block;
 }
+html,body{
+	height:100%;
+}

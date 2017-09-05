@@ -26,18 +26,18 @@ class LogController extends CommonController
     {
         //获取能显示的执法仪信息
         $db = D($this->models['peLogList']);
-        $request['btime'] = I('btime',date('Y-m-d H:i:s',time()-7*24*60*60));
+        $request['btime'] = I('btime',date('Y-m-d H:i:s',time()-6*24*60*60));
         $request['etime'] = I('etime',date('Y-m-d H:i:s',time()));
         $page = I('page');
         $rows = I('rows');
         $where['rzsj'][] = array('EGT',$request['btime']);
         $where['rzsj'][] = array('ELT',$request['etime']);
+        
         $data = $db->getTableList($where,$page,$rows,'rzsj desc');
-        $peActions = ['其它','关机','开机','拍照','录像','录音','结束录像'];
-        foreach ($data['rows'] as &$value) {
-            $peAction = array_key_exists($value['comment'],$peActions) ? $peActions[$value['comment']] : '未知';
-            $value['action'] = u2g($peAction);
-        }
+        // $peActions = ['其它','关机','开机','拍照','录像','录音','结束录像'];
+        /*foreach ($data['rows'] as &$value) {
+            $value['action'] = $value['comment'];
+        }*/
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
@@ -52,11 +52,11 @@ class LogController extends CommonController
         $where['rzsj'][] = array('EGT',$request['btime']);
         $where['rzsj'][] = array('ELT',$request['etime']);
         $data = $db->getTableList($where,$page,$rows,'rzsj desc');
-        $wsActions = ['其他','开机','关机','接入记录仪','移除记录仪','采集文件'];
-        foreach ($data['rows'] as &$value) {
-            $wsAction = array_key_exists($value['comment'],$wsActions) ? $wsActions[$value['comment']] : '未知';
-            $value['action'] = u2g($wsAction);
-        }
+        // $wsActions = ['其他','开机','关机','接入记录仪','移除记录仪','采集文件'];
+        /*foreach ($data['rows'] as &$value) {
+            // $wsAction = array_key_exists($value['comment'],$wsActions) ? $wsActions[$value['comment']] : '未知';
+            $value['action'] = $value['comment'];
+        }*/
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
@@ -70,6 +70,7 @@ class LogController extends CommonController
         $rows = I('rows');
         $where['dte'][] = array('EGT',$request['btime']);
         $where['dte'][] = array('ELT',$request['etime']);
+        $where[] = $this->get_manger_sql(I('areacode'),'areacode',false);
         $data = $db->getTableList($where,$page,$rows,'dte desc');
         $this->saveExcel($data); //监测是否为导出
         $this->ajaxReturn(g2us($data));

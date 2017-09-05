@@ -1,7 +1,10 @@
 // 创建时间对象
 var judgeTime = new Time(new Date(), 0);
 var module = {};
+module.areacode = app.tp.areacode;
+module.areaname = app.tp.areaname;
 module.params = {};
+var tree = new Tree('#area_list');
 //导出
 module.exports = function(){
     var exportInfo = {};
@@ -12,7 +15,29 @@ module.exports = function(){
     exportInfo.page = 1;
     app.exportExcel(exportInfo);
 };
+module.search = function() {
+    app.extra('search', {
+        form: '#searchForm',
+        datagrid: '#datagrid',
+        parsedata:function(data){
+            if(!judgeTime.judge(data.btime, data.etime)) return false;
+            data.areacode = module.areacode;
+            searchData = data;
+        }
+    });
+};
+module.clickTree = function(node) {
+    module.areacode = node.areacode;
+    module.areaname = node.text;
+    $('#tip_area').text(node.text);
+    $('#mu_ser').text(module.areaname);
+    module.search();
+}
 $(function() {
+    tree.loadData();
+    $(tree.dom).tree({
+        onClick: module.clickTree
+    });
     var time = new Date();
     $('#etime').datetimebox('setValue',app.date('Y-m-d')+' 23:59:59');
     $('#btime').datetimebox('setValue',app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
@@ -32,6 +57,7 @@ $(function() {
         columns: [
             [
                 { field: 'id', title: 'id', checkbox: true },
+                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'name', title: '用户', width: 200, align: 'center' },
                 { field: 'cmt', title: '操作', width: 200, align: 'center' },
                 { field: 'ip', title: 'IP地址', width: 200, align: 'center' },

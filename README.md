@@ -1,4 +1,8 @@
 ﻿# 执法仪数据管理平台
+## 概述
+
+> 通过修改 ENFORCE_VERSION 的值解决缓存问题
+
 ## 前端 easyui 1.5
 > 前端使用easyui框架写的App.js
 

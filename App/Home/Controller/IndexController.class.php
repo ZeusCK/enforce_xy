@@ -23,12 +23,12 @@ class IndexController extends CommonController {
     	$menus = $action->getFunList();
         // $this->ajaxReturn(json_encode(g2us($menus)));
     	$this->assign('menuData',json_encode(g2us($menus)));
-
         $this->display();
     }
 
     public function login()
     {
+        session('[destroy]');
         $this->display('login');
     }
     //验证登陆
@@ -81,6 +81,8 @@ class IndexController extends CommonController {
                 $data['online_time'] = date('Y-m-d H:i:s');
                 $empDb->where($where)->save($data);
 
+                // header("Location: ".U('Index/index')."");
+                // $this->redirect('Index/index');
                 $result['status'] = true;
                 $result['message'] = '验证成功';
             }else{
@@ -94,7 +96,7 @@ class IndexController extends CommonController {
     public function loginOut()
     {
         $this->write_log('登出');
-        session(null);
+        session('[destroy]');
         $this->redirect('Index/login');
     }
     //更新在线时间

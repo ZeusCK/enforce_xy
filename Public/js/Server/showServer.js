@@ -9,6 +9,13 @@ var option = {
         trigger: 'item',
         formatter: "{a} <br/>{b} : {c} ({d}%)"
     },
+    label:{
+            normal:{
+                show: true,
+                formatter: '{b} : {c} ({d}%)',
+                position: 'outer'
+            }
+        },
     legend: {
         orient: 'vertical',
         left: 'left',
@@ -62,11 +69,11 @@ module.switchs = function(){
 }
 module.broadcast = function() {
     app.datagrid('#listServer', {
-        url: 'Server/server_list',
+        url: 'Server/server_sat',
         columns: [
             [
-                { field: 'server_ip', title: '服务器IP', width: 200, align: 'center' },
-                { field: 'areaname', title: '所属部门', width: 200, align: 'center' },
+                { field: 'areaname', title: '单位',  width: 200,align: 'center' },
+                { field: 'total', title: '离线数',  width: 200,align: 'center' }/*,
                 { field: 'phone', title: '联系电话', width: 200, align: 'center' },
                 {
                     field: 'status_name',
@@ -80,7 +87,7 @@ module.broadcast = function() {
                             return '<span style="color:#0a0">在线</span>';
                         }
                     }
-                }
+                }*/
             ]
         ],
         showDatagrid:false,

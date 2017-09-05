@@ -14,6 +14,13 @@ var option = {
         left: 'left',
         data: ['在线', '离线']
     },
+    label:{
+            normal:{
+                show: true,
+                formatter: '{b} : {c} ({d}%)',
+                position: 'outer'
+            }
+        },
     series: [{
         name: '工作站状态',
         type: 'pie',
@@ -55,11 +62,11 @@ module.switchs = function(){
 }
 module.broadcast = function() {
     app.datagrid('#listWorker', {
-        url: 'WorkStation/ws_base_list',
+        url: 'WorkStation/ws_sat',
         columns: [
             [
-                { field: 'areaname', title: '所属部门', align: 'center' },
-                { field: 'gzz_ip', title: '工作站IP', align: 'center' },
+                { field: 'areaname', title: '单位', width: 200,align: 'center' },
+                { field: 'total', title: '离线数', width: 200,align: 'center' }/*,
                 { field: 'fzr', title: '负责人', width: 200, align: 'center' },
                 { field: 'dh', title: '负责人电话', width: 200, align: 'center' },
                 {
@@ -74,7 +81,7 @@ module.broadcast = function() {
                             return '<span style="color:#0a0">在线</span>';
                         }
                     }
-                }
+                }*/
 
             ]
         ],

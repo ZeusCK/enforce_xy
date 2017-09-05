@@ -23,6 +23,11 @@ $.each(app.tp.data.rows, function(ii, mm) {
 });
 $(function() {
     $('#list_content').html(str);
+    setTimeout(function(){
+        if(app.tp.wjbh != ''){
+            init_file($('p[tiggle="'+app.tp.wjbh+'"]')[0]);
+        }
+    },1000);
     // console.log(data.info);
     $('#infoForm').form('load', data.info);
 })
@@ -81,8 +86,11 @@ function init_file(params) {
         }
     }
     $('#mediaBox').html(string);
-    document.getElementById('vlc').style.height = "100%";
-    document.getElementById('vlc').style.width = "100%";
+    var vlc = document.getElementById('vlc') || '';
+    if(vlc != ''){
+        document.getElementById('vlc').style.height = "100%";
+        document.getElementById('vlc').style.width = "100%";
+    }
 }
 var file_type = '';
 $(function() {

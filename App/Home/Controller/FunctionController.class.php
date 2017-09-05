@@ -156,6 +156,7 @@ class FunctionController extends CommonController {
         if(!is_dir($rootPath)) mkdir($rootPath);
         //if(!is_dir($rootPath.date('Ymd'))) mkdir($rootPath.date('Ymd'));
         $result = $upload->uploadOne($file);
+        ob_clean();     //清除报警缓存
         return $result ? $rootPath.$result['savepath'].$result['savename'] : false;  //$upload->getError();
     }
 

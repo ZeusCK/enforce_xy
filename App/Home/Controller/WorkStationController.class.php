@@ -65,8 +65,14 @@ class WorkStationController extends CommonController
         if($db->where(array('gzz_ip'=>$request['gzz_ip']))->find()){
             $this->ajaxReturn(array('status'=>false,'message'=>'该工作站已存在'));
         }
+        $request = u2gs($request);
         $result = $db->getTableAdd(u2gs($request));
-        $this->write_log('添加'.$request['gzz_ip'].':'.$request['dz']);
+        if($result['status']){
+            //同步
+            $syncData[] = $request;
+            $this->sync('ws_base',$syncData,'add');
+        }
+        $this->write_log('添加'.$request['gzz_ip'].':'.g2u($request['areaname']));
         $this->ajaxReturn($result);
     }
     //工作站
@@ -81,7 +87,15 @@ class WorkStationController extends CommonController
         $db =  D($this->models['wsbase']);
         $where['id'] = $request['id'];
         unset($request['id']);
-        $result = $db->getTableEdit($where,u2gs($request));
+        $info = $db->where($where)->find();
+        $request = u2gs($request);
+        $result = $db->getTableEdit($where,$request);
+        if($result['status']){
+            $request['old_gzz_ip'] = $info['gzz_ip'];
+            $syncData[] = $request;
+            $this->sync('ws_base',$syncData,'edit');
+        }
+        $this->write_log('修改'.$request['gzz_ip'].':'.g2u($request['areaname']));
         $this->ajaxReturn($result);
     }
     //工作站
@@ -91,6 +105,13 @@ class WorkStationController extends CommonController
         $request['gzz_ip'] = array('in',u2g($gzz_ip));
         $db =  D($this->models['wsbase']);
         $result = $db->getTableDel($request);
+        if($result['status']){
+           $info = explode(',', $request['gzz_ip']);
+           foreach ($info as $value) {
+               $syncData[] = array('gzz_ip'=>$value);
+           }
+           $this->sync('server_machine',$syncData,'del');
+        }
         $this->write_log('删除工作站:'.$gzz_ip);
         $this->ajaxReturn($result);
     }
@@ -103,18 +124,43 @@ class WorkStationController extends CommonController
         $this->ajaxReturn($data);
     }
     //工作站在线，离线统计
-    public function ws_sat()
+    public function ws_sat($request)
     {
         $db =  D($this->models['wsbase']);
-        $query[] = $this->where_key_or(explode(',',session('userarea')),'areacode').'OR areacode = ""';
+        //确定查看部门
+        $areadb = D($this->models['area']);
+        $areaid = session('areaid') ? session('areaid') : 0;
+        $areas = $areadb->where('fatherareaid="'.$areaid.'"')->getField('areacode,areaname');
+        if(session('areacode')){
+            $areas[session('areacode')] = u2g(session('areaname'));
+        }
+        $where[] = $this->get_manger_sql('','areacode',false);
+        $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();
+        $where['zxzt'] = 0;
+        //统计离线
+        foreach ($areas as $areacode => $areaname) {
+            $where['areacode'] = array('like',$areacode.'%');
+            $total = $db->where($where)->count();
+            $orderTotal[] = $total;
+            $result[] = array('areaname'=>g2u($areaname),'total'=>$total);
+        }
+        array_multisort($orderTotal,SORT_DESC,$result);
+        $data['total'] = count($result);
+        $data['rows'] = $result;
+        foreach ($show_sat as $val) {
+            if($val['zxzt'] == 0) $data['offline'] = $val['num'];
+            if($val['zxzt'] == 1) $data['online'] = $val['num'];
+        }
+        return $data;
+        /*$query[] = $this->where_key_or(explode(',',session('userarea')),'areacode').'OR areacode = ""';
         $result = $db->where($query)->field('count(id) as value,zxzt as name')->group('zxzt')->select();
         $initData = array(1=>array('value'=>0,'name'=>'在线'),0=>array('value'=>0,'name'=>'离线'));
         foreach ($result as $value) {
             $initData[$value['name']]['value']  = $value['value'];
         }
-        $this->ajaxReturn(array_values($initData));
+        $this->ajaxReturn(array_values($initData));*/
     }
-    //导入警员的excel
+    //导入excel
     public function import_excel()
     {
         $func = A('Function');
@@ -126,7 +172,7 @@ class WorkStationController extends CommonController
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
         $name_code = array('工作站IP'=>'gzz_ip',
-                           '所属部门'=>'areaname',
+                           '单位'=>'areaname',
                            '负责人'=>'fzr',
                            '负责人电话'=>'dh',
                            '启用状态'=>'qyzt');
@@ -145,6 +191,8 @@ class WorkStationController extends CommonController
             $allData = array();
             foreach ($data as $value) {
                 $saveData= array();
+                $syncUpdateData = array();
+                $syncAddData = array();
                 foreach ($value as $k => $val) {
                     $val = $val === null ? '' : $val = trim(u2g($val));
                     if(!array_key_exists($k,$key_code)) continue;
@@ -162,15 +210,19 @@ class WorkStationController extends CommonController
                 $empInfo = $db->where('gzz_ip="'.$saveData['gzz_ip'].'"')->find();
                 if($empInfo){
                     $res = $db->where('gzz_ip="'.$saveData['gzz_ip'].'"')->save($saveData);
+                    $syncUpdateData[] = $saveData;
                 }else{
                     $res = $db->add($saveData);
+                    $syncAddData[] = $saveData;
                 }
                 $res ? $success++ : $fail++;
-                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
-                $this->write_log($result['message']);
             }
+            $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+                $this->write_log($result['message']);
+            $this->sync('server_machine',$syncUpdateData,'edit');
+            $this->sync('server_machine',$syncAddData,'add');
         }else{
-            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足，文件超过2M';
         }
         exit(json_encode($result));
     }

@@ -4,6 +4,7 @@ things.areaname = app.tp.areaname;
 things.datagridUrl = 'Case/show_apply_list';
 things.editUrl = 'Case/apply_case';
 things.cancelUrl = 'Case/init_apply';
+things.jybh = app.tp.code;
 var tree = new Tree('#area_list');
 things.show = function() {
     $('#searchForm').form('reset');
@@ -67,6 +68,9 @@ things.applyCancel = function(target, case_key, start_time) {
         }
     });
 }
+things.search_tree = function(value) {
+    tree.search_tree(value, 1);
+}
 $(function() {
     app.datagrid('#datagrid', {
         url: things.datagridUrl,
@@ -76,9 +80,10 @@ $(function() {
                 { field: 'vedio_id', title: 'id', checkbox: true },
                 { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'title', title: '标题', width: 200, align: 'center' },
-                { field: 'case_name', title: '案事件名称', width: 200, align: 'center' },
+                { field: 'alarm_name', title: '案事件名称', width: 200, align: 'center' },
                 { field: 'alarm_no', title: '警情编号', width: 200, align: 'center' },
-                { field: 'areaname', title: '出警地址', width: 200, align: 'center' },
+                // { field: 'areaname', title: '出警部门', width: 200, align: 'center' },
+                { field: "case_addr", title: "出警地址", width: 200, align: "center" },
                 { field: 'jyxm', title: '出警人', width: 200, align: 'center' },
                 { field: 'start_time', title: '采集日期', width: 200, align: 'center' },
                 {
@@ -87,11 +92,18 @@ $(function() {
                     width: 100,
                     align: 'center',
                     formatter: function(value, row, index) {
-                        if (row.hand_status == 1) {
-                            var htmlString = '<a href="javascript:void(0)" onclick="things.applyCancel(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="play" title="撤销申请"></a>';
-                        }
-                        if (row.hand_status == 0) {
-                            var htmlString = '<a href="javascript:void(0)" onclick="things.apply(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="edit" title="提交申请"></a>';
+                        if (row.is_read == '0') {
+                            var htmlString = '<a style="color:red;">部门只读</a>';
+                        } else {
+                            if (row.hand_status == 1 && row.apply_jybh == things.jybh) {
+                                var htmlString = '<a href="javascript:void(0)" onclick="things.applyCancel(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="play" title="撤销申请"></a>';
+                            }
+                            if (row.hand_status == 1 && row.apply_jybh != things.jybh) {
+                                var htmlString = '<a style="color:red;">资源已被申请</a>';
+                            }
+                            if (row.hand_status == 0) {
+                                var htmlString = '<a href="javascript:void(0)" onclick="things.apply(this,\'' + row.case_key + '\',\'' + row.start_time + '\')" name="edit" title="提交申请"></a>';
+                            }
                         }
                         return htmlString;
                     }
@@ -99,8 +111,8 @@ $(function() {
             ]
         ],
         onLoadSuccess: function(data) {
-            try{$('a[name="play"]').linkbutton({ iconCls: 'icon icon-arrow_undo' });}catch(e){}
-            try{$('a[name="edit"]').linkbutton({ iconCls: 'icon icon-application_key' });}catch(e){}
+            try { $('a[name="play"]').linkbutton({ iconCls: 'icon icon-arrow_undo' }); } catch (e) {}
+            try { $('a[name="edit"]').linkbutton({ iconCls: 'icon icon-application_key' }); } catch (e) {}
             var a = $('.datagrid-cell-rownumber');
             $.each(a, function(i, m) {
                 m.style.width = '21px';
@@ -120,6 +132,6 @@ $(function() {
     $(tree.dom).tree({
         onClick: things.clickTree
     });
-    $('#shotS').datetimebox('setValue', app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
-    $('#shotE').datetimebox('setValue', app.date('Y-m-d')+' 23:59:59');
+    $('#shotS').datetimebox('setValue', app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+    $('#shotE').datetimebox('setValue', app.date('Y-m-d') + ' 23:59:59');
 });

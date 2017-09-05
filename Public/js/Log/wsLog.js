@@ -31,7 +31,7 @@ $(function(){
             {field:'id',title:'',checkbox:true},
             {field:'gzz_ip',title:'工作站',width:100,align:'center'},
             {field:'dxbh',title:'文件编号',width:100,align:'center'},
-            {field:'action',title:'日志类型',width:100,align:'center'},
+            {field:'comment',title:'日志类型',width:100,align:'center'},
             {field:'rzsj',title:'日志时间',width:100,align:'center'}
         ]],
         onLoadSuccess:function(r){

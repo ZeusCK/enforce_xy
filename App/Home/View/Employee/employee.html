@@ -14,7 +14,8 @@ app.tp.code = "{:session('code')}";
 </block>
 <block name="main">
 <div class="easyui-layout" fit="true">
-    <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+    <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+    <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
         <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -71,11 +72,13 @@ app.tp.code = "{:session('code')}";
                 <input class=" form_in easyui-textbox" type="text" name="remark"/></div>
             <div class="form_m" style="display: none"><div for="remark" class="form_label">部门 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="areacode"/></div>
+            <div class="form_m"><div for="photo" class="form_label">执法资格 : </div>
+                <input class="easyui-combobox form_in" id="empl_qualify" name="empl_qualify"></div>
             <div class="form_m"><div for="photo" class="form_label">照片 : </div>
                 <input class="easyui-filebox form_in"  name="photo"
                     data-options="prompt:'警员照片',buttonText:'选择照片'"></div>
             <div class="form_m"><div for="roleid" class="form_label">菜单角色 : </div>
-                <select class=" easyui-combobox form_in" name="roleid" style="width: 181px;"
+                <select class="easyui-combobox form_in" name="roleid" style="width: 181px;"
                     data-options="editable:false">
                     <foreach name="info['role']" item="role">
                         <option value="{$role.roleid}">{$role.rolename}</option>
@@ -132,7 +135,7 @@ app.tp.code = "{:session('code')}";
         </form>
 
         <!-- <div style="padding-top: : 10px;padding-left: 50px;">
-            <p style="color: #0E2D5F">额外管理部门，只能为自身所属部门下的部门</p>
+            <p style="color: #0E2D5F">额外管理部门，只能为自身单位下的部门</p>
             <p style="color: #0E2D5F">后端会自动排除多余的部门</p>
             <div id="manInfo">
                 <a href="javascript:void(0)" onclick="module.link()" id="link" class="easyui-linkbutton"

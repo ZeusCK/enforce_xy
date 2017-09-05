@@ -9,7 +9,7 @@ function case_sat() {
     // myChart.showLoading();
     var option2 = {
         title: {
-            text: '7天内未编辑视音频'
+            text: '未编辑视音频数据预警'
         },
         tooltip: {},
         legend: {
@@ -20,6 +20,12 @@ function case_sat() {
             axisLabel: {
                 interval: 0, //横轴信息全部显示
                 rotate: -30, //-30度角倾斜显示
+            }
+        },
+        label:{
+            normal:{
+                show: true,
+                position: 'outer'
             }
         },
         yAxis: [{

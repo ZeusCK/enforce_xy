@@ -32,6 +32,11 @@ things.editBar = function(){
         return false;
     }
     if(infos.length == 1){
+        things.select_roleid = infos[0].roleid;
+        if(things.roleid==things.select_roleid){
+            $.messager.alert('操作提示','你无法对自己进行修改,如有需求请联系上级');
+            return false;
+        }
         $('#editForm').form('load',infos[0]);
         $('#editDialog').dialog('open');
     }
@@ -67,13 +72,13 @@ things.remove = function(target){
     var infos = $('#datagrid').datagrid('getSelections');
     if(infos.length == 0) return false;
     for (var i = 0; i < infos.length; i++) {
-        if(id == things.roleid){
+        if(infos[i].roleid == things.roleid){
             $.messager.alert('删除提示','你无法删除自身,该操作只有上级用户可执行','info');
             return false;
         }
     }
     app.extra('remove',{
-        url:'Employee/dataRemove',
+        url:'Role/dataRemove',
         datagrid:'#datagrid',
         linkbutton:target,
         idField:'roleid'

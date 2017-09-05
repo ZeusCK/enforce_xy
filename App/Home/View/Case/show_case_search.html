@@ -13,7 +13,8 @@
 </block>
 <block name="main">
   <div class="easyui-layout" fit="true">
-    <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:200px;background:#eee;">
+    <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:200px;background:#eee;">
+    <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
       <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -41,7 +42,7 @@
                 <input name="case_no" class="easyui-textbox" style="width: 100px;">
                 <div class="search-text">案件类型:</div>
                 <input id="case_type" class="easyui-combobox" style="width: 100px;" name="case_type" editable=false />
-                <div class="search-text">警员编号:</div>
+                <div class="search-text">警号:</div>
                 <input name="jybh" class="easyui-textbox" style="width: 100px;">
                 <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key"  onclick="module.init_search_form()">条件重置</a>
             </div>

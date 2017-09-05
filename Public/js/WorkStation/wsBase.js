@@ -111,7 +111,9 @@ things.importExcel = function(target){
         linkbutton:target
     });
 }
-
+things.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 $(function(){
     app.datagrid('#datagrid',{
         url:things.datagridUrl,
@@ -119,7 +121,7 @@ $(function(){
         columns:[[
           {field:'id', title: 'id', checkbox: true },
           {field:'gzz_ip',title:'工作站IP',align:'center'},
-          {field:'areaname',title:'所属部门', width: 200, align:'center'},
+          {field:'areaname',title:'单位', width: 200, align:'center'},
           {field:'ztsj', title: '最后在线时间', width: 200, align: 'center' },
           {field:'hzr', title: '负责人', width: 200, align: 'center' },
           {field:'dh', title: '负责人电话', width: 200, align: 'center' },

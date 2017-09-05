@@ -120,6 +120,9 @@ module.clickTree = function(node) {
     $('#mu_ser').text(module.areaname);
     module.search();
 }
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 $(function() {
     var t = new Date();
     $('#bTime').datebox('setValue', new Time(t, 6).init());

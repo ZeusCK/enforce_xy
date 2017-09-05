@@ -64,7 +64,13 @@ class ServerController extends CommonController
         if($db->where(array('server_ip'=>$request['server_ip']))->find()){
             return  array('status'=>false,'message'=>'该服务器已存在');
         }
-        $result = $db->getTableAdd(u2gs($request));
+        $request = u2gs($request);
+        $result = $db->getTableAdd($request);
+        if($result['status']){
+            //同步
+            $syncData[] = $request;
+            $this->sync('server_machine',$syncData,'add');
+        }
         $this->write_log('添加'.$request['server_ip']);
         return $result;
     }
@@ -84,7 +90,15 @@ class ServerController extends CommonController
         $db =  D($this->models['server']);
         $where['id'] = $request['id'];
         unset($request['id']);
-        $result = $db->getTableEdit($where,u2gs($request));
+        $info = $db->where($where)->find();
+        $request = u2gs($request);
+        $result = $db->getTableEdit($where,$request);
+        if($result['status']){
+            $request['old_server_ip'] = $info['server_ip'];
+            $syncData[] = $request;
+            $this->sync('server_machine',$syncData,'edit');
+        }
+        $this->write_log('修改'.$info['server_ip']);
         return $result;
     }
     //服务器
@@ -94,6 +108,13 @@ class ServerController extends CommonController
         $where['server_ip'] = array('in',u2g($server_ip));
         $db =  D($this->models['server']);
         $result = $db->getTableDel($where);
+        if($result['status']){
+           $info = explode(',', $where['server_ip']);
+           foreach ($info as $value) {
+               $syncData[] = array('server_ip'=>$value);
+           }
+           $this->sync('server_machine',$syncData,'del');
+        }
         $this->write_log('删除服务器:'.$server_ip);
         return $result;
     }
@@ -101,13 +122,31 @@ class ServerController extends CommonController
     public function server_sat()
     {
         $db =  D($this->models['server']);
-        $query[] = $this->where_key_or(explode(',',session('userarea')),'areaid').'OR areaid = 0';
-        $result = $db->where($query)->field('count(id) as value,status as name')->group('status')->select();
-        $initData = array(1=>array('value'=>0,'name'=>'在线'),0=>array('value'=>0,'name'=>'离线'));
-        foreach ($result as $value) {
-            $initData[$value['name']]['value']  = $value['value'];
+        //确定查看部门
+        $areadb = D($this->models['area']);
+        $areaid = session('areaid') ? session('areaid') : 0;
+        $areas = $areadb->where('fatherareaid="'.$areaid.'"')->getField('areacode,areaname');
+        if(session('areacode')){
+            $areas[session('areacode')] = u2g(session('areaname'));
         }
-        $this->ajaxReturn(array_values($initData));
+        $where[] = $this->get_manger_sql('','areacode',false);
+        $show_sat = $db->where($where)->field('count(1) as num,status')->group('status')->select();
+        $where['status'] = 0;
+        //统计离线
+        foreach ($areas as $areacode => $areaname) {
+            $where['areacode'] = array('like',$areacode.'%');
+            $total = $db->where($where)->count();
+            $orderTotal[] = $total;
+            $result[] = array('areaname'=>g2u($areaname),'total'=>$total);
+        }
+        array_multisort($orderTotal,SORT_DESC,$result);
+        $data['total'] = count($result);
+        $data['rows'] = $result;
+        foreach ($show_sat as $val) {
+            if($val['status'] == 0) $data['offline'] = $val['num'];
+            if($val['status'] == 1) $data['online'] = $val['num'];
+        }
+        return $data;
     }
     //导入警员的excel
     public function import_excel()
@@ -122,7 +161,7 @@ class ServerController extends CommonController
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $key_code = array();
         $name_code = array('服务器IP'=>'server_ip',
-                           '所属部门'=>'areaname',
+                           '单位'=>'areaname',
                            '端口号'=>'server_port',
                            '品牌'=>'trademark',
                            '配置'=>'config',
@@ -169,15 +208,19 @@ class ServerController extends CommonController
                 $empInfo = $db->where('server_ip="'.$saveData['server_ip'].'"')->find();
                 if($empInfo){
                     $res = $db->where('server_ip="'.$saveData['server_ip'].'"')->save($saveData);
+                    $syncUpdateData[] = $saveData;
                 }else{
                     $res = $db->add($saveData);
+                    $syncAddData[] = $saveData;
                 }
                 $res ? $success++ : $fail++;
-                $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
-                $this->write_log($result['message']);
             }
+            $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
+            $this->write_log($result['message']);
+            $this->sync('server_machine',$syncUpdateData,'edit');
+            $this->sync('server_machine',$syncAddData,'add');
         }else{
-            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足，文件超过2M';
         }
         exit(json_encode($result));
     }

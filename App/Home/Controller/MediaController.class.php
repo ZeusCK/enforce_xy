@@ -69,13 +69,14 @@ class MediaController extends CommonController
     //显示可以合包文件
     public function show_unpack($request)
     {
-        //areaid  部门ID
+        //areacode  部门ID
         //page   页数
         //rows   条数
         $page = $request['page'];
         $rows = $request['rows'];
-        $where[] = $this->get_manger_sql();
-        $where['case_key'] = '';
+        $where[] = $this->get_manger_sql($request['areacode']);
+        $where['del_flag'] = $request['del_flag'] ? $request['del_flag'] : 0;
+        if(!isset($request['recycle'])) $where['case_key'] = '';        //回收
         $btime = $request['start_time']['btime'] ? $request['start_time']['btime'] : date('Y-m-d H:i:s',time()-6*24*60*60);
         $etime = $request['start_time']['etime'] ? $request['start_time']['etime'] : date('Y-m-d H:i:s');
         $where['start_time'][] = array('EGT',$btime);      //开始时间
@@ -91,9 +92,13 @@ class MediaController extends CommonController
         $res = array();
         $res['total'] = array_sum($total);
         $res['rows'] = array();
+        $video_source = $this->get_val_item('dictionary','video_source');
         foreach ($tables as $table => $start_limit) {
-            $data = M()->table('case_video_'.$table)->where($where)->limit(implode(',',$start_limit))->select();
+            $data = M()->table('case_video_'.$table)->where($where)->limit(implode(',',$start_limit))->order('scsj desc')->select();
             $res['rows'] = array_merge($res['rows'],(array)$data);
+        }
+        foreach ($res['rows'] as $key => &$value) {
+            $value['source_name'] = $video_source[$value['source']];
         }
         $this->saveExcel($res); //监测是否为导出
         return g2us($res);
@@ -105,10 +110,12 @@ class MediaController extends CommonController
         //start_time 文件开始时间
         $start_time = $request['start_time'];
         $table = 'case_video_'.date('Ym',strtotime($start_time));
-        $result = M()->table($table)->where($request)->delete();
+        $data['del_flag'] = $request['del_flag'] ? $request['del_flag'] : 1;
+        unset($request['del_flag'],$request['id']);
+        $result = M()->table($table)->where($request)->save($data);
         $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
         //同步
-        $this->sync('case_video',$syncData,'del');
+        $this->sync('case_video',$syncData,'edit');
         if($result){
             $res['status'] = true;
             $res['message'] = '删除视频成功';
@@ -116,6 +123,34 @@ class MediaController extends CommonController
         }else{
             $res['status'] = false;
             $res['message'] = '删除视频失败';
+        }
+        return $res;
+    }
+    //恢复视频
+    public function meida_back($request)
+    {
+        //wjbh  文件编号
+        //start_time 文件开始时间
+        $start_time = $request['start_time'];
+        $table = 'case_video_'.date('Ym',strtotime($start_time));
+        $data['del_flag'] = 0;
+        $case_key = M()->table($table)->where($request)->getField('case_key');
+        $result = M()->table($table)->where($request)->save($data);
+        if($result){
+            //同步
+            $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
+            $this->sync('case_video',$syncData,'edit');
+            $res['status'] = true;
+            $res['message'] = '恢复视频成功';
+            $this->write_log('回复'.$request['wjbh']);
+            $re = M()->table('case_'.date('Ym',strtotime($start_time)))->where('case_key="'.$case_key.'"')->save($data);
+            if($re){
+                $syncData[] = array('tab_name'=>'case_'.date('Ym',strtotime($start_time)),'case_key'=>$case_key);
+                $this->sync('case',$syncData,'edit');
+            }
+        }else{
+            $res['status'] = false;
+            $res['message'] = '恢复视频失败';
         }
         return $res;
     }
@@ -135,7 +170,7 @@ class MediaController extends CommonController
             $request['chunks'] = 1;
             $request['chunk'] = 0;
         }
-        //文件暂存pe_file目录  做超时删除
+        //文件暂存temp目录  做超时删除
         $result = $this->break_point_save($request,$savePath,$type);
         if($request['chunk'] == $request['chunks']-1){
             //将文件保存完后 移动到指定目录

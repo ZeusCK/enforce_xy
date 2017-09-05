@@ -51,8 +51,12 @@ class DevController extends CommonController
                 $where[$key] = array('like','%'.$value.'%');
             }
         }
-        if($request['status'] != '') $where['status'] = $request['status'];
+        $status_type = $this->get_val_item('dictionary','pe_status');
+        if($request['status']) $where['status'] = $request['status'];
         $data = $db->getTableList(u2gs($where),$page,$rows);
+        foreach ($data['rows'] as &$val) {
+            $val['status_name'] = $status_type[$val['status']];
+        }
         $data['disuse'] = 0;
         $data['use'] = 0;
         $data['active'] = 0;
@@ -73,6 +77,7 @@ class DevController extends CommonController
         $request['jyxm']    = I('jyxm');        //警员姓名
         $request['standard']    = I('standard'); //设备规格
         $request['jybh']    = I('jybh');        //警员编号
+        $request['create_user'] = u2g(session('user'));  //创建人
         $employeedb = D($this->models['employee']);
         $areacode = $employeedb->where('code="'.$request['jybh'].'"')->getField('areacode');
         $areadb = D($this->models['area']);
@@ -85,8 +90,14 @@ class DevController extends CommonController
             $result['message'] = '添加失败，该产品已经添加过，无法添加。';
             $this->ajaxReturn($result);
         }
-        $result = $db->getTableAdd(u2gs($request));
-        $this->write_log('添加'.$request['cpxh'].':'.$request['jyxm']);
+        $request = u2gs($request);
+        $result = $db->getTableAdd($request);
+        if($result['status']){
+            //同步
+            $syncData[] = $request;
+            $this->sync('pe_base',$syncData,'add');
+        }
+        $this->write_log('添加'.$request['cpxh'].':'.g2u($request['jyxm']));
         $this->ajaxReturn($result);
     }
     //执法记录仪
@@ -95,7 +106,14 @@ class DevController extends CommonController
         $where['id'] = I('id');            //产品序号  不可更改
         $request = I('');
         $db =  D($this->models['pebase']);
-        $result = $db->getTableEdit($where,u2gs($request));
+        $info = $db->where($where)->find();
+        $request = u2gs($request);
+        $result = $db->getTableEdit($where,$request);
+        if($result['status']){
+            $request['old_cpxh'] = $info['cpxh'];
+            $syncData[] = $request;
+            $this->sync('pe_base',$syncData,'edit');
+        }
         $this->ajaxReturn($result);
     }
 
@@ -106,6 +124,13 @@ class DevController extends CommonController
         $request['cpxh'] = array('in',u2g($cpxh));
         $db =  D($this->models['pebase']);
         $result = $db->getTableDel($request);
+        if($result['status']){
+           $info = explode(',', $request['cpxh']);
+           foreach ($info as $value) {
+               $syncData[] = array('cpxh'=>$value);
+           }
+           $this->sync('pe_base',$syncData,'del');
+        }
         $this->write_log('删除执法记录仪');
         $this->ajaxReturn($result);
     }
@@ -158,10 +183,14 @@ class DevController extends CommonController
         $enableType = array_flip($this->get_val_item('dictionary','enable'));
         $area_name_code = array_flip($area_code_name);
         $code_arr = array_keys($area_code_name);
-        $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+        try {
+            $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
+        } catch (Exception $e) {
+            $res = false;
+        }
         $key_code = array();
         $name_code = array('产品序号'=>'cpxh',
-                           '所属部门'=>'areaname',
+                           '单位'=>'areaname',
                            '警员姓名'=>'jyxm',
                            '警员编号'=>'jybh',
                            '生产厂家'=>'product',
@@ -207,7 +236,7 @@ class DevController extends CommonController
                 $this->write_log($result['message']);
             }
         }else{
-            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足，文件超过2M';
         }
         exit(json_encode($result));
     }

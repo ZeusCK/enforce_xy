@@ -240,14 +240,19 @@ App.prototype.exportExcel = function(exportInfo){
         this.linkbutton(options.linkbutton,'enable');
         return false;
     }
+    //$.extend  只会深度复制第一层的对象属性导致 options.params 的参数改变原数据也会改变
+    //由于params的参数将会影响datagrid的queryParams所以再一次进行深度复制
+    options.params = $.extend({},options.params);
     var fields = {};
     var url = '';
     //如果拥有datagrid属性
     if(options.datagrid){
-        var option = $(options.datagrid).datagrid('options');
+        var datagridOptions = $(options.datagrid).datagrid('options');
+        var option = $.extend({},datagridOptions);
     }
     if(options.treegrid){
-        var option = $(options.treegrid).treegrid('options');
+        var datagridOptions = $(options.treegrid).treegrid('options');
+        var option = $.extend({},datagridOptions);
     }
     if(option){
         options.params.page = option.pageNumber;
@@ -539,6 +544,7 @@ App.prototype.treegrid = function(target,params){
 }
 //设置表格默认属性
 App.prototype.datagrid.defaults = {
+    // nowrap:false,
     url:null,
     fitColumns: true,
     rownumbers: true,
@@ -642,7 +648,7 @@ App.prototype.combobox = function(tartget,params){
             }
 
         }
-    })
+    });
 };
 App.prototype.combobox.defaults = {
     method: "GET",

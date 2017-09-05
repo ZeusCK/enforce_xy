@@ -1,106 +1,135 @@
 <extend name="layouts:master" />
 <block name="link"></block>
 <block name="src">
-<script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
-<script type="text/javascript">
-app.tp.areaid = "{:session('areaid')}";
-app.tp.areacode = "{:session('areacode')}";
-app.tp.areaname = "{:session('areaname')}";
-app.tp.area_is_read = "{:session('area_is_read')}";
-app.tp.area_type = "{:session('area_type')}";
-</script>
-<script type="text/javascript" src="__PUBLIC__/js/Area/area.js?v={:C('ENFORCE_VERSION')}"></script>
+    <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
+    <script type="text/javascript">
+    app.tp.areaid = "{:session('areaid')}";
+    app.tp.areacode = "{:session('areacode')}";
+    app.tp.areaname = "{:session('areaname')}";
+    app.tp.area_is_read = "{:session('area_is_read')}";
+    app.tp.area_type = "{:session('area_type')}";
+    </script>
+    <script type="text/javascript" src="__PUBLIC__/js/Area/area.js?v={:C('ENFORCE_VERSION')}"></script>
 </block>
 <block name="main">
     <div class="easyui-layout" fit="true">
-        <div data-options="region:'west',title:'所有部门',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
-            <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" iconCls="icon icon-delete"
-                style="background-color: #00A8E9;">部门删除</a>
-            <a href="javascript:void(0)" onclick="module.link()" class="easyui-linkbutton" iconCls="icon icon-link"
-                style="background-color: #00A8E9;">部门联级</a>
-            <a href="javascript:void(0)" onclick="module.unlink()" class="easyui-linkbutton" iconCls="icon icon-link_break"
-                style="background-color: #00A8E9;">部门精确</a>
+        <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
+            <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" iconCls="icon icon-delete" style="background-color: #00A8E9;">部门删除</a>
+            <a href="javascript:void(0)" onclick="module.link()" class="easyui-linkbutton" iconCls="icon icon-link" style="background-color: #00A8E9;">部门联级</a>
+            <a href="javascript:void(0)" onclick="module.unlink()" class="easyui-linkbutton" iconCls="icon icon-link_break" style="background-color: #00A8E9;">部门精确</a>
             <div id="pointInfo" style="color: #00A8E9;margin: 5px 0;">部门精确，精准删除整体部门</div>
+            <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
             <ul id="area_list"></ul>
         </div>
-       <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
-           <table id="datagrid" toolbar="#toolbar"></table>
-       </div>
+        <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
+            <table id="datagrid" toolbar="#toolbar"></table>
+        </div>
     </div>
     <div id="toolbar">
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
-             <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp; -->
-                部门名称: <input id="areaname" name="areaname" class="easyui-textbox" data-options="height:22"  style="width:168px"/>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
+            <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp; -->
+            部门名称:
+            <input id="areaname" name="areaname" class="easyui-textbox" data-options="height:22" style="width:168px" />
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search()">搜索</a>
         </form>
-        <a href="javascript:void(0)" class="easyui-linkbutton"
-            data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_area">无</span></a>
         <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
         <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship"  onclick="javascript:
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" onclick="module.exports(this)">导出全部</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" onclick="javascript:
                     $('#importForm').dialog('open')">导入</a>
     </div>
-<!-- 增加 -->
-    <div id="addDialog" class="easyui-dialog" title="添加部门" buttons="#addButtons"
-    data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
-        <p style="color: #0E2D5F;margin-left: 20px;"><sapn id="infoAreaname"></span></p>
-    	<form id="addForm" method="post">
-            <div class="form_m"><div for="areaname" class="form_label">部门名称 : </div>
-                <input class="form_in easyui-textbox" type="text" name="areaname" required="true"/></div>
-            <div class="form_m" style="position: relative;"><div for="areacode" class="form_label">部门编号 : </div>
-                <div class="easyui-tooltip" title='请输入01-99的两位字符' position="bottom" style="width:179px;display:inline-block;">
-                   <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeAdd" style="width:179px"/>
-                </div>
-                </div>
-            <div class="form_m"><div for="rperson" class="form_label">联系人 : </div>
-                <input class="form_in easyui-textbox" type="text" name="rperson"/></div>
-            <div class="form_m"><div for="rphone" class="form_label">联系方式 : </div>
-                <input class="form_in easyui-textbox" type="text" name="rphone"/></div>
-            <div class="form_m" style="display: none"><div for="fatherareaid" class="form_label">上级部门 : </div>
-                <input class="form_in easyui-textbox" type="text" name="fatherareaid">
+    <!-- 增加 -->
+    <div id="addDialog" class="easyui-dialog" title="添加部门" buttons="#addButtons" data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+        <p style="color: #0E2D5F;margin-left: 20px;">
+            <sapn id="infoAreaname">
+                </span>
+        </p>
+        <form id="addForm" method="post">
+            <div class="form_m">
+                <div for="areaname" class="form_label">部门名称 : </div>
+                <input class="form_in easyui-textbox" type="text" name="areaname" required="true" />
             </div>
-    	</form>
-    </div>
-    <div id="addButtons">
-    	<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
-            $('#addDialog').dialog('close')" style="width:90px">取消</a>
-    </div>
-<!-- 修改 -->
-    <div id="editDialog" class="easyui-dialog" title="修改部门" buttons="#editButtons"
-            data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
-        <form id="editForm" method="post">
-            <div class="form_m" style="display: none"><div for="areaid" class="form_label">部门id : </div>
-                <input class=" form_in easyui-textbox" type="text" name="areaid"/></div>
-            <div class="form_m"><div for="areaname" class="form_label">部门名称 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="areaname" required="true"/></div>
-            <div class="form_m"><div for="areacode" class="form_label">部门编号 : </div>
-                <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeEdit" style="width:179px;"/>
-            <div class="form_m"><div for="rperson" class="form_label">联系人 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="rperson"/></div>
-            <div class="form_m"><div for="rphone" class="form_label">联系方式 : </div>
-                <input class=" form_in easyui-textbox" type="text" name="rphone"/></div>
-            <div class="form_m" style="display: none"><div for="fatherareaid" class="form_label">上级部门 : </div>
+            <div class="form_m" style="position: relative;">
+                <div for="areacode" class="form_label">部门编号 : </div>
+                <div class="easyui-tooltip" title='请输入01-99的两位字符' position="bottom" style="width:179px;display:inline-block;">
+                    <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeAdd" style="width:179px" />
+                </div>
+            </div>
+            <div class="form_m">
+                <div for="rperson" class="form_label">联系人 : </div>
+                <input class="form_in easyui-textbox" type="text" name="rperson" />
+            </div>
+            <div class="form_m">
+                <div for="rphone" class="form_label">联系方式 : </div>
+                <input class="form_in easyui-textbox" type="text" name="rphone" />
+            </div>
+            <div class="form_m">
+                <div for="sort" class="form_label">排序 : </div>
+                <input class=" form_in easyui-textbox" type="text" name="sort" />
+            </div>
+            <div class="form_m" style="display: none">
+                <div for="fatherareaid" class="form_label">上级部门 : </div>
                 <input class="form_in easyui-textbox" type="text" name="fatherareaid">
             </div>
         </form>
     </div>
-    <div id="editButtons">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">确认</a>
+    <div id="addButtons">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.add(this)" style="width:90px">确认</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
-                    $('#editDialog').dialog('close')" style="width:90px">取消</a>
+            $('#addDialog').dialog('close')" style="width:90px">取消</a>
     </div>
-    <form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
-        <div class="form_m"><div for="rphone" class="form_label">部门属性: </div><input class="easyui-combobox form_in" id="area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;"></div>
-        <div class="form_m">
-            <div for="rphone" class="form_label">Excel: </div> <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">
+    <!-- 修改 -->
+    <div id="editDialog" class="easyui-dialog" title="修改部门" buttons="#editButtons" data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
+        <form id="editForm" method="post">
+            <div class="form_m" style="display: none">
+                <div for="areaid" class="form_label">部门id : </div>
+                <input class=" form_in easyui-textbox" type="text" name="areaid" />
+            </div>
+            <div class="form_m">
+                <div for="areaname" class="form_label">部门名称 : </div>
+                <input class=" form_in easyui-textbox" type="text" name="areaname" required="true" />
+            </div>
+            <div class="form_m">
+                <div for="areacode" class="form_label">部门编号 : </div>
+                <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeEdit" style="width:179px;" />
+                <div class="form_m">
+                    <div for="rperson" class="form_label">联系人 : </div>
+                    <input class=" form_in easyui-textbox" type="text" name="rperson" />
+                </div>
+                <div class="form_m">
+                    <div for="rphone" class="form_label">联系方式 : </div>
+                    <input class=" form_in easyui-textbox" type="text" name="rphone" />
+                </div>
+                <div class="form_m">
+                    <div for="sort" class="form_label">排序 : </div>
+                    <input class=" form_in easyui-textbox" type="text" name="sort" />
+                </div>
+                <div class="form_m" style="display: none">
+                    <div for="fatherareaid" class="form_label">上级部门 : </div>
+                    <input class="form_in easyui-textbox" type="text" name="fatherareaid">
+                </div>
+        </form>
         </div>
-    </form>
-    <div id="importButtons">
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.importExcel(this)" style="width:90px">确认</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+        <div id="editButtons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.edit(this)" style="width:90px">确认</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
+                    $('#editDialog').dialog('close')" style="width:90px">取消</a>
+        </div>
+        <form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
+            <div class="form_m">
+                <div for="rphone" class="form_label">部门属性: </div>
+                <input class="easyui-combobox form_in" id="area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;">
+            </div>
+            <div class="form_m">
+                <div for="rphone" class="form_label">Excel: </div>
+                <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">
+            </div>
+        </form>
+        <div id="importButtons">
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" onclick="module.importExcel(this)" style="width:90px">确认</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript:
                     $('#importForm').dialog('close')" style="width:90px">取消</a>
-    </div>
+        </div>
 </block>

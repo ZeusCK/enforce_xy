@@ -59,7 +59,6 @@ module.exports = function(target) {
 module.editBar = function(case_key, start_time) {
     startTime = start_time;
     module.case_key = case_key;
-
     $.extend($.messager.defaults, {
         ok: "编辑接处警信息",
         cancel: "编辑案件信息"
@@ -108,31 +107,31 @@ module.editBar = function(case_key, start_time) {
                                 width: 200,
                                 align: "center",
                                 formatter: function(value, row, index) {
-                                    // console.log(startTime, row.start_time);
+                                    var str = '<a href="javascript:void(0)" title="打开文件" onclick="module.playOne(\'' + row.case_key + "','" + startTime + '\',\''+row.wjbh+'\')" name="play"></a>';
                                     if (row.start_time == startTime) {
-                                        return '<span style="color:red">不可操作</span>';
+                                        str += '<a href="javascript:void(0)" onclick="module.media_remove(\'' +row.start_time +"','" +row.wjbh +'\',\'#video_datagrid\')" name="sc"></a>';
+                                        // str += '<span style="color:red">不可操作</span>';
+                                        return str;
                                     }
-                                    if (row.source == "3" || row.source == "2") {
-                                        return (
-                                            '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
+                                    // if (row.source == "3" || row.source == "2") {
+                                        str += '<a href="javascript:void(0)" title="删除" onclick="module.media_remove(\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
-                                            '\',\'#video_datagrid\')" name="sc"></a><a href="javascript:void(0)" title="删除" onclick="module.pack_pop(this,\'' +
+                                            '\',\'#video_datagrid\')" name="sc"></a><a href="javascript:void(0)" title="移出警情包" onclick="module.pack_pop(this,\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
-                                            '\',1)" name="cf" ></a>'
-                                        );
-                                    } else {
-                                        return (
+                                            '\',1)" name="cf" ></a>';
+                                    /*} else {
+                                        str +=
                                             '<a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
-                                            '\')" name="cf" title="将文件移出警情包"></a>'
-                                        );
-                                    }
+                                            '\')" name="cf" title="将文件移出警情包"></a>';
+                                    }*/
+                                    return str;
                                 }
                             }
                         ]
@@ -142,7 +141,7 @@ module.editBar = function(case_key, start_time) {
                         start_time: start_time
                     },
                     onLoadSuccess: function(data) {
-                        if (data.total > 0) $("#sbh").textbox("setValue", data.rows[0].cpxh);
+                        if (data.total > 0) $("#sbh").val(data.rows[0].cpxh);
                         $("#editForm").form("load", data.info);
                         if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
                             $(this)
@@ -174,6 +173,7 @@ module.editBar = function(case_key, start_time) {
                         $('a[name="cf"]').linkbutton({
                             iconCls: "icon icon-cf"
                         });
+                        try { $('a[name="play"]').linkbutton({ iconCls: "icon icon-bofang" }); } catch (e) {}
                     },
                     onSelect: function(index, data) {
                         module.timeCompare(this);
@@ -222,6 +222,13 @@ module.play = function(case_key, start_time) {
     var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time;
     window.open(url);
 };
+module.playOne = function(case_key, start_time,wjbh) {
+    var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time +'&wjbh='+wjbh;
+    window.open(url);
+};
+module.search_tree = function(value){
+    tree.search_tree(value,1);
+}
 //计算天数差的函数，通用
 function DateDiff(sDate1, sDate2) {
     //sDate1和sDate2是2002-12-18格式
@@ -454,7 +461,6 @@ module.media_remove = function(start_time, wjbh, datagrid) {
         }
     });
 };
-
 $(function() {
     //树的初始化
     tree.loadData(); //管理部门的树
@@ -478,12 +484,18 @@ $(function() {
     app.datagrid("#datagrid", {
         url: Url,
         title: "数据编辑",
+        onClickCell:function(rowIndex, field, value){
+            if(field != 'cz' && field != 'id'){
+                $.messager.alert('提示信息',value,'info');
+            }
+        },
+        // checkOnSelect:false,
         columns: [
             [
                 { field: "id", checkbox: true },
                 { field: "areaname", title: "单位", width: 200, align: "center" },
                 { field: "title", title: "标题", width: 200, align: "center" },
-                { field: "alarm_name", title: "案事件名称", width: 200, align: "center" },
+                { field: "alarm_name", title: "案事件名称", width: 200, align: "center"},
                 { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
                 { field: "start_time", title: "采集日期", width: 200, align: "center" },
                 { field: "jyxm", title: "出警人", width: 200, align: "center" },
@@ -492,17 +504,19 @@ $(function() {
                 { field: "case_type_name", title: "案件类型", width: 200, align: "center" },
                 { field: 'update_time', title: '更新时间', width: 200, align: 'center' },
                 { field: "scsj", title: "上传日期", width: 200, align: "center" },
-                /*{field: 'source',title: '来源',width: 200,align: 'center'}, */
+                {field: 'source_name',title: '来源',width: 200,align: 'center'},
                 {
                     field: "cz",
                     title: "操作",
                     width: 220,
-                    align: "center",
+                    align: "left",
                     formatter: function(value, row, index) {
                         if (row.hand_status == 2 && row.jybh == module.code) {
                             return '<a style="red">已移交</a>';
                         } else {
-                            if (row.hand_status == 2) {
+                            if(row.is_read == '0'){
+                                return '<a href="javascript:void(0)" title="打开文件" onclick="module.play(\'' + row.case_key + "','" + row.start_time + '\')" name="play"></a><a style="red">只读</a>';
+                            }else if (row.hand_status == 2) {
                                 return '<a href="javascript:void(0)" title="打开文件" onclick="module.play(\'' + row.case_key + "','" + row.start_time + '\')" name="play"></a>' +
                                     '<a href="javascript:void(0)" title="编辑文件" onclick="module.editBar(\'' + row.case_key + "','" + row.start_time + '\')" name="edit" ></a>';
                             } else {
@@ -550,7 +564,6 @@ $(function() {
         }
     });
 });
-
 //判断hand_status是否为2
 module.judge = function() {
     var rows = $("#datagrid").datagrid("getSelections");
@@ -559,10 +572,12 @@ module.judge = function() {
         return false;
     }
     var handStatus = [];
+    var is_reads = [];
     $.each(rows, function(i, m) {
         handStatus.push(m.hand_status);
+        is_reads.push(m.is_read);
     });
-    if (jQuery.inArray("2", handStatus) > -1) {
+    if (jQuery.inArray("2", handStatus) > -1 || $.inArray('0',is_reads) > -1) {
         $("#hb").linkbutton("disable");
     } else {
         $("#hb").linkbutton("enable");

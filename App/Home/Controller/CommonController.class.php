@@ -28,7 +28,7 @@ class CommonController extends Controller {
             $odrData = array();
             foreach ($datas as $key=>$data) {
                 if($id == $data[$l_arr[2]]){
-                    $odrData[] = $data[$l_arr[3]];
+                    $odrData[] = (int)$data[$l_arr[3]];
                     $nextIds[] = $data[$l_arr[0]];
                     $doTree['id'] = $data[$l_arr[0]];
                     if(!empty($check_arr)){
@@ -61,7 +61,7 @@ class CommonController extends Controller {
                     }
                     $formatTree[] = $doTree;
                     //对于生成的菜单在进行排序
-                    array_multisort($odrData,SORT_DESC,$formatTree);
+                    array_multisort($odrData,SORT_ASC,$formatTree);
                     $doTree = '';
                 }
             }
@@ -259,6 +259,10 @@ class CommonController extends Controller {
     {
         $data['dte'] = date('Y-m-d H:i:s');
         $data['name'] = u2g(session('user'));
+        $data['key'] = date('YmdHis').'_'.session('code').'_'.session('areacode');
+        $data['code'] = session('code');
+        $data['areacode'] = session('areacode');
+        $data['areaname'] = u2g(session('areaname'));
         $module = !$this->logContent ? '未知模块' : $this->logContent;
         $data['module'] = u2g($module);
         $ip = get_client_ip();
@@ -266,6 +270,8 @@ class CommonController extends Controller {
         $data['cmt'] = u2g($action);
         $db = D('Enforce\SysLog');
         $db->add($data);
+        $syncData[] = $data;
+        $this->sync('sys_log',$syncData,'add');
     }
     /**
      * where条件拼接
@@ -286,10 +292,9 @@ class CommonController extends Controller {
     /**
      * 根据数据生成excel保存到服务器 返回保存地址
      * @param  array $rows  数据
-     * @param  string $sysContent 系统日志
      * @return string        文件地址
      */
-    public function saveExcel($datas,$sysContent)
+    public function saveExcel($datas)
     {
         $dir = './Public/download';     //需要删除的目录
         if(!is_dir($dir))   mkdir($dir);
@@ -312,11 +317,11 @@ class CommonController extends Controller {
             }
             //导出Excel表格
             Vendor('PHPExcel.PHPExcel');
-            Vendor('PHPExcel.PHPExcel.Writer.Excel2007');
+            Vendor('PHPExcel.PHPExcel.Writer.Excel5');
             /* 实例化类 */
             $objPHPExcel = new \PHPExcel();
-            /* 设置输出的excel文件为2007兼容格式 */
-            $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+            /* 设置输出的excel文件为2005兼容格式 */
+            $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
             /* 设置当前的sheet */
             $objPHPExcel->setActiveSheetIndex(0);
             $objActSheet = $objPHPExcel->getActiveSheet();
@@ -355,10 +360,10 @@ class CommonController extends Controller {
                 }
                 $i++;
             }
-            $id = session('id');
+            $id = session('code');
             $dateDir = './Public/download/'.date('Ymd');
             if(!is_dir($dateDir))   mkdir($dateDir);
-            $url = $dateDir."/repWork_".$excelFileName."{$id}.xlsx";
+            $url = $dateDir."/repWork_".$excelFileName."{$id}.xls";
             try
             {
                 $objWriter->save($url);
@@ -419,7 +424,8 @@ class CommonController extends Controller {
     //获取本机ip地址
     public function get_local_ip()
     {
-        return DIRECTORY_SEPARATOR === '/' ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
+        return $_SERVER['SERVER_ADDR'];
+        // DIRECTORY_SEPARATOR === '/' ? $_SERVER['SERVER_ADDR'] : gethostbyname(gethostname());
     }
     /**
      * 获取基础信息
@@ -464,6 +470,7 @@ class CommonController extends Controller {
         $needTotal = $page*$rows;  //需要的记录数
         $queryArray = array();
         $total = 0;
+        krsort($totalArr);
         foreach ($totalArr as $key => $value) {
             $lastTotal = $total;
             $total = $total + $value;
@@ -479,7 +486,7 @@ class CommonController extends Controller {
     /**
      * 根据部门编号,警员编号获取查询条件
      * @param  int $areacode 部门编号
-     * @param  string $idField 有关部门字段
+     * @param  string $codeField 有关部门字段
      * @param  string/false $jybhField 有关警员字段 或者不进行关联
      * @return string         筛选之后的sql语句
      */
@@ -498,7 +505,7 @@ class CommonController extends Controller {
                 $baseSql .= $codeField. '= ""';
             }
         }
-        //如果没有查询部门,或者查询部门是自身所属部门的上级,那么加上警员
+        //如果没有查询部门,或者查询部门是自身单位的上级,那么加上警员
         //如果是警员直接加上警员编号
         if(($areacode != '' || strpos(session('areacode'),$areacode === 0)) && ($baseSql != $codeField. '= ""')){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
@@ -529,33 +536,14 @@ class CommonController extends Controller {
             if(strpos($value,$areacode) === 0) unset($areacodes[$key]);
         }
         if(empty($areacodes)) return array($areacode);
+        $searchArr = $this->parseAreacode($areacodes);
 
-        $searchArr = array();
-        foreach ($areacodes as $key => $value) {
-            if(isset($minLength)){
-                if($minLength < strlen($value)) continue;
-                if($minLength > strlen($value)){
-                    $searchArr = array();
-                    $searchArr[] = $value;
-                }
-                if($minLength == strlen($value)) $searchArr[] = $value;
-            }else{
-                $minLength = strlen($value);
-                $searchArr[] = $value;
-            }
-        }
-        $checkAreacode = array_diff($areacodes,$searchArr);
-        foreach ($checkAreacode as $key => $value) {
-            foreach ($searchArr as $val) {
-                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
-            }
-        }
         if($areacode != '') $searchArr[] = $areacode;
-        $return = array_merge($checkAreacode,$searchArr);
-        foreach ($return as $key => $value) {
-            if($value == '') unset($return[$key]);
+        $searchArr = array_unique($searchArr);
+        foreach ($searchArr as $key => $value) {
+            if($value == '') unset($searchArr[$key]);
         }
-        return $return;
+        return $searchArr;
     }
     /**
      * 同步表
@@ -567,16 +555,31 @@ class CommonController extends Controller {
     public function sync($table,$data,$op)
     {
         /*try {*/
-            $database = C('DB_NAME');
+            $database = C('SYNC_DB_NAME');
             $syncTables = array('employee'=>$database.'.sync_employee',
                                 'case'=>$database.'.sync_case',
                                 'case_video'=>$database.'.sync_case_video',
-                                'notice'=>$database.'.sync_notice',);
+                                'sys_notice'=>$database.'.sync_notice',
+                                'sys_log'=>$database.'.sync_sys_log',
+                                'pe_base'=>$database.'.sync_pe_base',
+                                'ws_base'=>$database.'.sync_ws_base',
+                                'server_machine'=>$database.'.sync_server_machine',
+                                'area_dep'=>$database.'.sync_area_dep',
+                                'dept_role'=>$database.'.sync_dept_role',
+                                'role'=>$database.'.sync_role',
+                                );
             $syncFields = array(
-                'employee'=>array('areacode'=>'','name'=>'','code'=>'','old_code'=>''),
+                'employee'=>array('code'=>'','old_code'=>''),
+                'pe_base'=>array('cpxh'=>'','old_cpxh'=>''),
+                'ws_base'=>array('gzz_ip'=>'','old_gzz_ip'=>''),
+                'server_machine'=>array('server_ip'=>'','old_server_ip'=>''),
                 'case'=>array('tab_name'=>'','case_key'=>''),
                 'case_video'=>array('tab_name'=>'','wjbh'=>''),
-                'notice'=>array('title'=>'','areacode'=>''),
+                'sys_notice'=>array('title'=>''),
+                'sys_log'=>array('key'=>''),
+                'area_dep'=>array('areacode'=>'','old_areacode'=>''),
+                'dept_role'=>array('dept_role_id'=>''),
+                'role'=>array('roleid'=>''),
                 );
             $ops = array('add'=>1,'del'=>2,'edit'=>3);
             foreach ($data as &$value) {
@@ -584,7 +587,7 @@ class CommonController extends Controller {
                 $value['status'] = $ops[$op];
                 $value['update_time'] = $this->msectime();
             }
-            D($syncTables[$table])->addAll($data);
+            if(!empty($data)) D($syncTables[$table])->addAll($data);
         /*} catch (Exception $e) {
 
         }*/
@@ -597,5 +600,34 @@ class CommonController extends Controller {
     {
         list($msec, $sec) = explode(' ', microtime());
         return (int)$sec.str_pad((int)($msec*1000),3,"0",STR_PAD_LEFT);
+    }
+    /**
+     * 解析最小部门代码
+     * ['1215','121516','121416','12141617']  返回 ['1215','121416']
+     * @param  array $areacodes 部门代码
+     * @return array            解析出最顶级的部门代码
+     */
+    public function parseAreacode($areacodes)
+    {
+        $minLength = strlen(reset($areacodes));
+        $searchArr = array(current($areacodes));
+        foreach ($areacodes as $key => $value) {
+            if($minLength < strlen($value)) continue;
+            if($minLength > strlen($value)){
+                $minLength = strlen($value);
+                $searchArr = array();
+                $searchArr[] = $value;
+            }
+            if($minLength == strlen($value)) $searchArr[] = $value;
+        }
+        $searchArr = array_unique($searchArr);
+        $checkAreacode = array_diff($areacodes,$searchArr);
+        foreach ($checkAreacode as $key => $value) {
+            foreach ($searchArr as $val) {
+                if(strpos($value,$val) === 0) unset($checkAreacode[$key]);
+            }
+        }
+        if(!empty($checkAreacode)) $searchArr = array_merge($searchArr,$this->parseAreacode($checkAreacode));
+        return $searchArr;
     }
 }

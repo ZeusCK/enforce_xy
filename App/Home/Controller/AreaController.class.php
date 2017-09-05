@@ -13,7 +13,7 @@ class AreaController extends CommonController
     protected $link_tabs = ['ws_base', //工作站
                             'pe_base', //执法记录仪
                             'server_machine',  //服务器
-                            'sys_notice',    //公告
+                            // 'sys_notice',    //公告
                             'employee'];    //警员
     //控制器
     protected $actions = ['user'=>'User'];
@@ -40,7 +40,7 @@ class AreaController extends CommonController
         $check[] = $this->get_manger_sql($request['areacode'],'areacode',false);
         $data['total'] = 0;
         $data['rows'] = array();
-        $order = 'areacode asc';
+        $order = 'CONVERT(areacode,SIGNED) asc,sort asc';
         $data = $db->getTableList($check,$page,$rows,$order);
         $areas = $db->getField('areaid,areaname');
         // $areaType = $this->get_val_item('dictionary','areatype');
@@ -68,8 +68,15 @@ class AreaController extends CommonController
             return $result;
         }
         unset($request['areatype']);
-        $result = $db->getTableAdd(u2gs($request));
-        if(!$result['status']) $result['message'] = '请确保部门代码的唯一性';
+        $request = u2gs($request);
+        $result = $db->getTableAdd($request);
+        if($result['status']){
+            $syncData[] = $request;
+            $this->sync('area_dep',$syncData,'add');
+            $this->write_log('新增部门'.g2u($request['areaname']).':'.g2u($request['areacode']));
+        }else{
+            $result['message'] = '请确保部门代码的唯一性';
+        }
         return $result;
     }
 
@@ -82,26 +89,30 @@ class AreaController extends CommonController
         $result = $db->getTableDel($where);
         if($result['status']){
             foreach ($this->link_tabs as $tab) {
-                if($tab == 'employee'){
-                    $syncData = $db_rm->where($where)->select();
-                    $this->sync('employee',$syncData,'del');
-                }
                 $db_rm = D()->table($tab);
                 $db_rm->where($where)->delete();
+                //同步
+                $data['areacode'] = '';
+                $data['areaname'] = '';
+                $syncData = $db_rm->where($where)->save($data);
+                $this->sync($key,$syncData,'edit');
             }
             $this->write_log('删除部门,部门代码：'.$request['areacode']);
             //更新部门角色表
             $deptroledb = D($this->models['deptrole']);
             $deptWhere['dept_list'] = array('NEQ','');
             $deptRoles = $deptroledb->where($deptWhere)->getField('dept_role_id,dept_list');
+            $syncDeptRoleData = array();
             foreach ($deptRoles as $key => $value) {
                 $roleWhere['dept_role_id'] = $key;
                 $roledepts = explode(',',$value);
                 $saveDepts = array_diff($roledepts,$removeDepts);
                 if(empty(array_diff($saveDepts,$roledepts))) continue;
                 $data['dept_list'] = implode(',', $saveDepts);
-                $deptroledb->where($roleWhere)->sace($data);
+                $deptroledb->where($roleWhere)->save($data);
+                $syncDeptRoleData[] = array('id'=>$key);
             }
+            $this->sync('dept_role',$syncDeptRoleData,'edit');
         }
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
@@ -113,47 +124,73 @@ class AreaController extends CommonController
         $where[$this->tab_id] = $request[$this->tab_id];
         unset($request[$this->tab_id]);
         $areaInfo = $db->where($where)->find();
-        $result = $db->getTableEdit($where,u2gs($request));     //更新记录
-
-        if($areaInfo['areacode'] != $request['areacode']){      //更新关联表及下级部门
+        $request = u2gs($request);
+        $result = $db->getTableEdit($where,$request);     //更新记录
+        $request['old_areacode'] = $areaInfo['areacode'];
+        //同步
+        $syncAreaData[] = $request;
+        $this->sync('area_dep',$syncAreaData,'edit');
+        if($result['status']){
+            if($areaInfo['areacode'] == session('areacode')){
+                session_start();
+                session('areacode',$request['areacode']);
+            }
+            if($areaInfo['areacode'] != $request['areacode']){      //更新关联表及下级部门
             //更新部门角色表
-            $deptroledb = D($this->models['deptrole']);
-            $deptWhere['dept_list'] = array('NEQ','');
-            $deptRoles = $deptroledb->where($deptWhere)->getField('dept_role_id,dept_list');
-            foreach ($deptRoles as $key => $value) {
-                $roleWhere['dept_role_id'] = $key;
-                $saveDepts = explode(',',$value);
-                //搜索如果存在
-                if(false !== $key = array_search($areaInfo['areacode'], $saveDepts)){
-                    $saveDepts[$key] = $request['areacode'];
-                    $data['dept_list'] = implode(',', $saveDepts);
-                    $deptroledb->where($roleWhere)->save($data);
-                }
-            }
-            //更新关联表
-            $linkTabs = $this->link_tabs;
-            $linkTabs[] = 'area_dep';   //部门区域
-            // error_log('更新表'.implode(',', $linkTabs."\r\n"),3,'error.log');
-            foreach ($linkTabs as &$tab) {
-                $tab = C('DB_NAME').'.'.$tab;
-                $strLen = strlen($request['areacode']);
-                //更新所有符合条件的部门代码
-                $sql = 'UPDATE '.$tab.' SET `areacode`=CONCAT("'.$request['areacode'].'",RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.')) WHERE `areacode` like "'.$areaInfo['areacode'].'%"';
-                if($tab == C('DB_NAME').'.employee'){
-                    //同步数据
-                    $syncData = D($this->models['employee'])->where('`userarea` like "'.$areaInfo['areacode'].'%"')->select();
-                    foreach ($syncData as $key => &$value) {
-                        $value['areacode'] = substr_replace($value['areacode'],$request['areacode'],0,$strLen);
+                $deptroledb = D($this->models['deptrole']);
+                $deptWhere['dept_list'] = array('NEQ','');
+                $deptRoles = $deptroledb->where($deptWhere)->getField('dept_role_id,dept_list');
+                foreach ($deptRoles as $key => $value) {
+                    $roleWhere['dept_role_id'] = $key;
+                    $saveDepts = explode(',',$value);
+                    $syncDeptRoleData = array();
+                    //搜索如果存在
+                    if(false !== $key = array_search($areaInfo['areacode'], $saveDepts)){
+                        $saveDepts[$key] = $request['areacode'];
+                        $data['dept_list'] = implode(',', $saveDepts);
+                        $deptroledb->where($roleWhere)->save($data);
+                        $syncDeptRoleData[] = array('id'=>$key);
                     }
-                    $this->sync('employee',$syncData,'edit');
-                    // error_log('同步employee'."\r\n",3,'error.log');
-                    M()->execute('UPDATE '.$tab.' SET `userarea`=CONCAT("'.$request['areacode'].'",RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.')) WHERE `userarea` like "'.$areaInfo['areacode'].'%"');
+                    $this->sync('dept_role',$syncDeptRoleData,'edit');
                 }
-                M()->execute($sql);
-                // error_log('更新表sql'.$sql."\r\n",3,'error.log');
-            }
+                //更新关联表
+                $linkTabs = $this->link_tabs;
+                $linkTabs[] = 'area_dep';   //部门区域
+                // error_log('更新表'.implode(',', $linkTabs."\r\n"),3,'error.log');
+                foreach ($linkTabs as $tab) {
+                    // $tab = C('DB_NAME').'.'.$tab;
+                    $strLen = strlen($request['areacode']);
+                     //同步数据
+                    $syncData = D()->table($tab)->where('`areacode` like "'.$areaInfo['areacode'].'%"') ->select();
+                    if($tab == 'area_dep'){
+                        foreach ($syncData as &$areaData) {
+                            $areaData['old_areacode'] = $areaData['areacode'];
+                            // $areaData['areacode'] = substr_replace($areaData['areacode'],$request['areacode'],0,$strLen);
+                            if($areaData['old_areacode'] == session('areacode')){
+                                session_start();
+                                session('areacode',$areaData['areacode']);
+                            }
+                        }
+                    }
+                    //更新所有符合条件的部门代码
+                    $sql = 'UPDATE '.$tab.' SET `areacode`=CONCAT("'.$request['areacode'].'",RIGHT(`areacode`,char_length(`areacode`)-'.$strLen.')) WHERE `areacode` like "'.$areaInfo['areacode'].'%"';
+                    // error_log('sql:'.$sql."\r\n",3,'sql.log');
+                    M()->execute($sql);
+                    if($tab == 'employee'){
+                        foreach ($syncData as $areaData) {
+                            $areaData['areacode'] = substr_replace($areaData['areacode'],$request['areacode'],0,$strLen);
+                        }
+                        // error_log('同步employee'."\r\n",3,'error.log');
+                        M()->execute('UPDATE '.$tab.' SET `userarea`=CONCAT("'.$request['areacode'].'",RIGHT(`userarea`,char_length(`areacode`)-'.$strLen.')) WHERE `userarea` like "'.$areaInfo['areacode'].'%"');
+                    }
+                    //更新
+                    $this->sync($tab,$syncData,'edit');
+                    // error_log('更新表sql'.$sql."\r\n",3,'error.log');
+                }
         }
         $this->write_log('更新部门:'.g2u($areaInfo['areaname']));
+        }
+        
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
     }
@@ -182,7 +219,7 @@ class AreaController extends CommonController
         if(!empty($data)){
             $ids = array(0);
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
-            $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+            $l_arr = ['areaid','areaname','fatherareaid','sort'];
             //$L_attributes 额外需要保存的信息 'type','code',
             $L_attributes = ['areacode','rperson','rphone','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
@@ -194,7 +231,7 @@ class AreaController extends CommonController
     }
     public function load_no_read_area($request)
     {
-        $where[] =  $this->get_manger_sql('','areacode',false);
+        //$where[] =  $this->get_manger_sql('','areacode',false);
         $where['is_read'] = 1;
         $data_f = D($this->models['area'])->where($where)->select();
         if(!empty($data_f)){
@@ -209,7 +246,7 @@ class AreaController extends CommonController
         if(!empty($data)){
             $ids = array(0);
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
-            $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+            $l_arr = ['areaid','areaname','fatherareaid','sort'];
             //$L_attributes 额外需要保存的信息 'type','code',
             $L_attributes = ['areacode','rperson','rphone','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
@@ -231,7 +268,7 @@ class AreaController extends CommonController
             $data = $this->all_user_area();
             $ids = array(0);
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
-            $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+            $l_arr = ['areaid','areaname','fatherareaid','sort'];
             //$L_attributes 额外需要保存的信息 'type','code',
             $L_attributes = ['areacode','rperson','rphone','is_read'];
             $icons = ['icon-application_xp_terminal','icon-application'];
@@ -348,7 +385,7 @@ class AreaController extends CommonController
         $data = $db->where($where)->select();
         $ids = array(0);
         //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
-        $l_arr = ['areaid','areaname','fatherareaid','areaid'];
+        $l_arr = ['areaid','areaname','fatherareaid','sort'];
         //$L_attributes 额外需要保存的信息 'type', 'code',
         $L_attributes = ['areacode','rperson','rphone','is_read'];
         $icons = ['icon-application_xp_terminal','icon-application'];
@@ -423,7 +460,7 @@ class AreaController extends CommonController
             $result['message'] = '允许导入：'.$allow.'<br>'.'禁止导入：'.$deny.'<br>'.'成功导入：'.$success.'<br>'.'导入失败：'.$fail.'<br>';
             $this->write_log($result['message']);
         }else{
-            $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足';
+             $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足，文件超过2M';
         }
         exit(json_encode($result));
     }
