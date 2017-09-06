@@ -84,10 +84,10 @@
     <div class="easyui-layout" fit="true">
         <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
             <!-- <div class="btns">
-                <a id="link" class="easyui-linkbutton activeLK">联级搜索</a>
-                <a id="unlink" class="easyui-linkbutton">精确搜索</a>
+                <a id="link" class="easyui-linkbutton activeLK">联级开始查询</a>
+                <a id="unlink" class="easyui-linkbutton">精确开始查询</a>
             </div> -->
-            <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
+            <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:module.search_tree" style="width: 100%;"></input>
             <ul id="area_list"></ul>
         </div>
         <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -100,8 +100,8 @@
             <input id="btime" class="easyui-datebox" type="text" name="start_time[btime]" data-options="editable:false">
             <label>结束日期:</label>
             <input id="etime" class="easyui-datebox" type="text" name="start_time[etime]" data-options="editable:false">
-            <a class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
-            <a class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出</a>
+            <a class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">开始查询</a>
+            <a class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
             <a class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_ser">无</span></a>
         </form>

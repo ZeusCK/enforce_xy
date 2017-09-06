@@ -14,7 +14,7 @@
 <block name="main">
   <div class="easyui-layout" fit="true">
     <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:200px;background:#eee;">
-    <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
+    <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:module.search_tree" style="width: 100%;"></input>
       <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -51,7 +51,7 @@
                 <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false"/>
                 <div class="search-text">至:</div>
                 <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false"/>
-                <a style="margin-left: 280px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
+                <a style="margin-left: 260px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
             </div>
         </form>
   </div>

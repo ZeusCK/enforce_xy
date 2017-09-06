@@ -42,7 +42,7 @@ class ServerController extends CommonController
             if($val['status'] == 0) $data['offline'] = $val['num'];
             if($val['status'] == 1) $data['online'] = $val['num'];
         }
-        $this->saveExcel($data);
+        $this->saveExcel($data,'服务器');
         return g2us($data);
     }
     //服务器
@@ -94,7 +94,11 @@ class ServerController extends CommonController
         $request = u2gs($request);
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
-            $request['old_server_ip'] = $info['server_ip'];
+            if($request['server_ip']){
+                $request['old_server_ip'] = $info['server_ip']; 
+            }else{
+                $request['server_ip'] = $info['server_ip'];
+            }
             $syncData[] = $request;
             $this->sync('server_machine',$syncData,'edit');
         }
@@ -130,18 +134,23 @@ class ServerController extends CommonController
             $areas[session('areacode')] = u2g(session('areaname'));
         }
         $where[] = $this->get_manger_sql('','areacode',false);
+        $where['areacode'] = array('neq',''); 
         $show_sat = $db->where($where)->field('count(1) as num,status')->group('status')->select();
         $where['status'] = 0;
         //统计离线
         foreach ($areas as $areacode => $areaname) {
             $where['areacode'] = array('like',$areacode.'%');
             $total = $db->where($where)->count();
-            $orderTotal[] = $total;
-            $result[] = array('areaname'=>g2u($areaname),'total'=>$total);
+            if($total != 0){
+                $result[] = array('areaname'=>g2u($areaname),'total'=>$total);
+                $orderTotal[] = $total;
+            }
         }
         array_multisort($orderTotal,SORT_DESC,$result);
         $data['total'] = count($result);
-        $data['rows'] = $result;
+        $data['rows'] = $data['total'] == 0 ? array() : $result;
+        $data['offline'] = 0;
+        $data['online'] = 0;
         foreach ($show_sat as $val) {
             if($val['status'] == 0) $data['offline'] = $val['num'];
             if($val['status'] == 1) $data['online'] = $val['num'];

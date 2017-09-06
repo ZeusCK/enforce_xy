@@ -15,7 +15,7 @@ app.tp.code = "{:session('code')}";
 <block name="main">
 <div class="easyui-layout" fit="true">
     <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
-    <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
+    <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:module.search_tree" style="width: 100%;"></input>
         <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -27,7 +27,7 @@ app.tp.code = "{:session('code')}";
              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
                 姓名: <input id="name"  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
                 警号: <input id="code"  class="easyui-textbox" data-options="height:22"  style="width:168px"/>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">开始查询</a>
         </form>
        <!--  <form id="importForm" method="post" enctype="multipart/form-data">
            <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'">
@@ -37,14 +37,14 @@ app.tp.code = "{:session('code')}";
         <a href="javascript:void(0)" class="easyui-linkbutton"
             data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_ser">无</span></a>
-        <a href="javascript:void(0)" onclick="module.infoBar(1)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
-        <a href="javascript:void(0)" onclick="module.infoBar(2)" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+        <a href="javascript:void(0)" onclick="module.infoBar(1)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false">添加</a>
+        <a href="javascript:void(0)" onclick="module.infoBar(2)" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:false">修改</a>
+        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:false">
         删除</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship"  onclick="javascript:
                     $('#importForm').dialog('open')">导入</a>
-        <a href="javascript:void(0)" onclick="module.allowAreaBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:true">权限分配</a>
+        <a href="javascript:void(0)" onclick="module.allowAreaBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:false">权限分配</a>
     </div>
 <!-- 增加 -->
     <div id="dialog" class="easyui-dialog" title="添加" buttons="#addButtons"

@@ -44,7 +44,10 @@ module.init_search_form = function() {
     $("#shotS,#shotS2,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
     $("#shotE,#shotE2,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
 };
-
+module.playOne = function(case_key, start_time,wjbh) {
+    var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time +'&wjbh='+wjbh;
+    window.open(url);
+};
 //导出全部
 module.exports = function(target) {
     var total = $("#datagrid").datagrid("getData").total;
@@ -113,13 +116,13 @@ module.editBar = function(case_key, start_time) {
                                 width: 200,
                                 align: "center",
                                 formatter: function(value, row, index) {
+                                    var str = '<a href="javascript:void(0)" title="打开文件" onclick="module.playOne(\'' + row.case_key + "','" + startTime + '\',\''+row.wjbh+'\')" name="play"></a>';
                                     // console.log(startTime, row.start_time);
                                     if (row.start_time == startTime) {
-                                        return '<span style="color:red">不可操作</span>';
+                                        str += '<span style="color:red">不可操作</span>';
                                     }
                                     if (row.source == "3" || row.source == "2") {
-                                        return (
-                                            '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
+                                            str += '<a href="javascript:void(0)" onclick="module.media_remove(\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
@@ -128,16 +131,15 @@ module.editBar = function(case_key, start_time) {
                                             "','" +
                                             row.wjbh +
                                             '\',1)" name="cf" ></a>'
-                                        );
                                     } else {
-                                        return (
+                                        str +=
                                             '<a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
                                             row.start_time +
                                             "','" +
                                             row.wjbh +
                                             '\')" name="cf" title="将文件移出警情包"></a>'
-                                        );
                                     }
+                                    return str;
                                 }
                             }
                         ]
@@ -170,6 +172,7 @@ module.editBar = function(case_key, start_time) {
                         if (data.error) {
                             $.messager.alert("操作提示", data.error, "info");
                         }
+                        $('a[name="play"]').linkbutton({iconCls: "icon icon-bofang"});
                         try {
                             $('a[name="sc"]').linkbutton({
                                 iconCls: "icon icon-sc"

@@ -38,7 +38,7 @@ class LogController extends CommonController
         /*foreach ($data['rows'] as &$value) {
             $value['action'] = $value['comment'];
         }*/
-        $this->saveExcel($data); //监测是否为导出
+        $this->saveExcel($data,'执法记录仪日志'); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
     //工作站日志
@@ -57,7 +57,7 @@ class LogController extends CommonController
             // $wsAction = array_key_exists($value['comment'],$wsActions) ? $wsActions[$value['comment']] : '未知';
             $value['action'] = $value['comment'];
         }*/
-        $this->saveExcel($data); //监测是否为导出
+        $this->saveExcel($data,'工作站日志'); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
     //系统日志
@@ -72,7 +72,7 @@ class LogController extends CommonController
         $where['dte'][] = array('ELT',$request['etime']);
         $where[] = $this->get_manger_sql(I('areacode'),'areacode',false);
         $data = $db->getTableList($where,$page,$rows,'dte desc');
-        $this->saveExcel($data); //监测是否为导出
+        $this->saveExcel($data,'系统日志'); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
 }

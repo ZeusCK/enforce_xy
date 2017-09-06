@@ -66,7 +66,7 @@ class DevController extends CommonController
             if($value['status'] == 1) $data['use'] = $value['num'];
             if($value['status'] == 2) $data['active'] = $value['num'];
         }
-        $this->saveExcel($data); //监测是否为导出
+        $this->saveExcel($data,'执法记录仪'); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
     //执法记录仪
@@ -110,7 +110,11 @@ class DevController extends CommonController
         $request = u2gs($request);
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
-            $request['old_cpxh'] = $info['cpxh'];
+            if($request['cpxh']){
+                $request['old_cpxh'] = $info['cpxh']; 
+            }else{
+                $request['cpxh'] = $info['cpxh'];
+            }
             $syncData[] = $request;
             $this->sync('pe_base',$syncData,'edit');
         }

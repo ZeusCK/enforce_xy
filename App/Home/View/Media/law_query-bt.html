@@ -76,7 +76,7 @@
                     <option value="2">警员</option>
                     <option value="1">部门</option>
                 </select>
-                <input id="keyWord" data-options="height:22"  style="width:168px" placeholder="按回车键搜索"/>
+                <input id="keyWord" data-options="height:22"  style="width:168px" placeholder="按回车键开始查询"/>
             </div>
             <div id="checkedMsg"></div>
             <ul id="area_list"></ul>
@@ -114,8 +114,8 @@
                     <option value="">全部</option>
                     <option value="1">典型案例</option>
                 </select>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search(this)">搜索</a>
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search(this)">开始查询</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
             </div>
             <div class="search-box search-big">
                 <div class="search-text">异常数据:</div>
@@ -170,8 +170,8 @@
             </div>
         </form>
         <div id="editBtns">
-            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.editOk()">确定</a>
-            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
+            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok' onclick="module.editOk()">确定</a>
+            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel' onclick="module.editCancel()">取消</a>
         </div>
     </div>
 </block>

@@ -13,7 +13,7 @@ app.tp.areaname = "{:session('areaname')}";
 <block name="main">
 <div class="easyui-layout" fit="true">
     <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
-    <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:things.search_tree" style="width: 100%;"></input>
+    <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:things.search_tree" style="width: 100%;"></input>
         <ul id="area_list"></ul>
     </div>
     <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -36,11 +36,11 @@ app.tp.areaname = "{:session('areaname')}";
           <option value="0">停用</option>
           <option value="1">启用</option>
         </select>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="things.search()">搜索</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="things.search()">开始查询</a>
     </form>
-    <a href="javascript:void(0)" onclick="things.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
-    <a href="javascript:void(0)" onclick="things.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-    <a href="javascript:void(0)" onclick="things.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+    <a href="javascript:void(0)" onclick="things.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false">添加</a>
+    <a href="javascript:void(0)" onclick="things.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:false">修改</a>
+    <a href="javascript:void(0)" onclick="things.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:false">
     删除</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="things.exports(this)">导出全部</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship"  onclick="javascript:

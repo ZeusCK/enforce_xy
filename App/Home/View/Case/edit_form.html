@@ -48,9 +48,9 @@
             </div>
         </form>
         <div id="editBtns">
-            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="  module.edit(this)">确定</a>
-            <a id="hb" class="easyui-linkbutton" data-options="iconCls:'icon-hb',plain:true" onclick="  module.addvideo()">追加视频</a>
-            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
+            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:false" onclick="  module.edit(this)">确定</a>
+            <a id="hb" class="easyui-linkbutton" data-options="iconCls:'icon-hb',plain:false" onclick="  module.addvideo()">追加视频</a>
+            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:false" onclick="module.editCancel()">取消</a>
         </div>
     </div>
     <div data-options="region:'center'" style="background:#eee;">
@@ -59,8 +59,8 @@
                     <div class="search-text">采集时间:</div>
                     <input class="easyui-datetimebox" name="video_time[btime]" data-options="editable:false" id="shotS4" /> -
                     <input class="easyui-datetimebox" name="video_time[etime]" data-options="editable:false" id="shotE4" />
-                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search_video()">查询</a>
-                    <a class="easyui-linkbutton cf" data-options="iconCls:'icon-cf',plain:true" onclick="module.slice(this)">拆分为警情包</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search_video()">开始查询</a>
+                    <a class="easyui-linkbutton cf" data-options="iconCls:'icon-cf',plain:false" onclick="module.slice(this)">拆分为警情包</a>
                 </div>
             </form>
         <table id="video_datagrid"></table>

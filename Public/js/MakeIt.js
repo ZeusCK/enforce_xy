@@ -10,8 +10,8 @@
         var vReadOnly = obj.getAttribute('readonly');
         var vEnabled = obj.getAttribute('enabled');
         //处理null值情况
-        vReadOnly = (vReadOnly == null) ? false : vReadOnly;
-        vEnabled = (vEnabled == null) ? true : vEnabled;
+        vReadOnly = (vReadOnly == null) ? false : true;
+        vEnabled = (vEnabled == null) ? true : false;
 
         //当敲Backspace键时，事件源类型为密码或单行、多行文本的，
         //并且readonly属性为true或enabled属性为false的，则退格键失效
@@ -30,10 +30,11 @@
             return false;
         }
     }
-    //禁止后退键 作用于Firefox、Opera
-    document.onkeypress = banBackSpace;
     //禁止后退键 作用于IE、Chrome
     document.onkeydown = banBackSpace;
+    //禁止后退键 作用于Firefox、Opera
+    document.onkeypress = banBackSpace;
+    
     
     //在easyui 渲染完之前显示  增强用户视觉效果
     //获取浏览器页面可见高度和宽度

@@ -110,7 +110,7 @@ class EmployeeController extends CommonController
             $value['empl_qualify_name'] = $empl_qualify_type[$value['empl_qualify']];
             $value['dept_role_name'] = array_key_exists($value['dept_role_id'],$deptroles) ? $deptroles[$value['dept_role_id']]  : u2g('无');;
         }
-        $this->saveExcel($res); //监测是否为导出
+        $this->saveExcel($res,'警员'); //监测是否为导出
         $this->ajaxReturn(g2us($res));
     }
     //根据部门获取具体部门的警员

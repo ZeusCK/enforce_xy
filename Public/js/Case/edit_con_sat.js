@@ -40,11 +40,11 @@ module.search = function(data){
     $('#datagrid').datagrid('load', data);
 }
 module.clickTree = function(node) {
-    var chs = $(tree.dom).tree('getChildren',node.target);
+    /*var chs = $(tree.dom).tree('getChildren',node.target);
     if(chs.length == 0){
         $.messager.alert('操作提示','该部门没有子部门无法进行统计','info');
         return false;
-    }
+    }*/
     module.areacode = node.areacode;
     module.areaname = node.text;
     $('#mu_ser').html(module.areaname);
@@ -53,6 +53,7 @@ module.clickTree = function(node) {
 module.exports = function(target) {
     app.extra('export',{
         datagrid:'#datagrid',
+        autoRowHeight:false,
         params:searchData,
         linkbutton:target,
         parseFileds:function(field){

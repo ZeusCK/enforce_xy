@@ -52,7 +52,7 @@ class AreaController extends CommonController
             $value['is_read_name'] = $read_type[$value['is_read']];
         }
         S('update'.$this->models['area'],null);     //更改部门后的加载，防止缓存失效
-        $this->saveExcel($data); //监测是否为导出
+        $this->saveExcel($data,'部门详情'); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
 
@@ -463,5 +463,10 @@ class AreaController extends CommonController
              $result['message'] = '文件上传失败，可能原因文件类型不对，服务器权限不足，文件超过2M';
         }
         exit(json_encode($result));
+    }
+    public function ztree()
+    {
+        $info = D($this->models['area'])->field('areaid as id,fatherareaid as pId,areaname as name')->select();
+        $this->ajaxReturn(g2us($info));
     }
 }

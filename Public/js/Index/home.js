@@ -71,10 +71,11 @@ module.switchs = function(){
 module.broadcast = function() {
     app.datagrid('#listServer', {
         url: 'Server/server_sat',
+        fitColumns:false,
         columns: [
             [
-                { field: 'areaname', title: '单位',  width: 200,align: 'center' },
-                { field: 'total', title: '离线数',  width: 200,align: 'center' }/*,
+                { field: 'areaname', title: '单位',  width: '50%',align: 'center' },
+                { field: 'total', title: '离线数',  width: '50%',align: 'center' }/*,
                 { field: 'phone', title: '联系电话', width: 200, align: 'center' },
                 {
                     field: 'status_name',
@@ -169,10 +170,11 @@ module2.switchs = function(){
 module2.broadcast = function() {
     app.datagrid('#listWorker', {
         url: 'WorkStation/ws_sat',
+        fitColumns:false,
         columns: [
             [
-                { field: 'areaname', title: '单位', width: 200,align: 'center' },
-                { field: 'total', title: '离线数', width: 200,align: 'center' }/*,
+                { field: 'areaname', title: '单位', width: '50%',align: 'center' },
+                { field: 'total', title: '离线数', width: '50%',align: 'center' }/*,
                 { field: 'fzr', title: '负责人', width: 200, align: 'center' },
                 { field: 'dh', title: '负责人电话', width: 200, align: 'center' },
                 {
@@ -218,7 +220,6 @@ module2.broadcast = function() {
 things.datagridUrl = 'WorkStation/ws_base_list';
 $(function() {
     var h = $('body').height()-$('#charts').height();
-    console.log(h);
     $('#server').height(h);
     $('#worker').height(h);
     try{
@@ -242,7 +243,7 @@ function case_sat() {
     //myChart.showLoading();
     var option2 = {
         title: {
-            text: '编辑视音频数据预警'
+            text: '视音频数据预警'
         },
         tooltip: {},
         legend: {

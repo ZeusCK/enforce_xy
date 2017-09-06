@@ -86,7 +86,7 @@
                     <option value="2">警员</option>
                     <option value="1">部门</option>
                 </select>
-                <input id="keyWord" data-options="height:22" style="width:168px" placeholder="按回车键搜索" />
+                <input id="keyWord" data-options="height:22" style="width:168px" placeholder="按回车键开始查询" />
             </div>
             <div id="checkedMsg"></div>
             <ul id="area_list"></ul>
@@ -103,9 +103,9 @@
                 <div class="search-text">至:</div>
                 <input id="shotE" class="easyui-datetimebox" data-options="height:22,editable:false" name="start_time[etime]" style="width:168px" />
                 <div class="search-text" style="text-align: right;width: 268px;">
-                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">开始查询</a>
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key"  onclick="module.init_search_form()">重置</a>
-                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports()">导出</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports()">导出全部</a>
                 </div>
             </div>
             <div class="search-box search-big">
@@ -169,8 +169,8 @@
             </div>
         </form>
         <div id="editBtns">
-            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok',plain:true" onclick="module.editOk()">确定</a>
-            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel',plain:true" onclick="module.editCancel()">取消</a>
+            <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok' onclick="module.editOk()">确定</a>
+            <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel' onclick="module.editCancel()">取消</a>
         </div>
     </div>
     <div id="caseDialog" class="easyui-dialog" title="案件编辑" data-options="modal:true,closed:true" style="width: 90%;">

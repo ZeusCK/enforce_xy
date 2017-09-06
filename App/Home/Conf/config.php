@@ -19,7 +19,7 @@ return array(
     //地图相关 南京 118.78 32.04
     'MAP_LNG'   => '32.04',  //地图经度
     'MAP_LAT'   => '118.78',  //地图维度
-    'ENFORCE_VERSION'=>'1.0.0.13',    //版本控制解决程序更新后会有缓存问题
+    'ENFORCE_VERSION'=>'1.0.0.14',    //版本控制解决程序更新后会有缓存问题
     'SYNC_DB_HOST'=>'localhost',     //同步主机  暂时没有用
     'SYNC_DB_NAME'=>'enforce_xz'     //同步数据库 
 );

@@ -50,7 +50,7 @@ class WorkStationController extends CommonController
             if($val['zxzt'] == 0) $data['offline'] = $val['num'];
             if($val['zxzt'] == 1) $data['online'] = $val['num'];
         }
-        $this->saveExcel($data); //监测是否为导出
+        $this->saveExcel($data,'工作站'); //监测是否为导出
         $this->ajaxReturn(g2us($data));
     }
     //工作站
@@ -91,7 +91,11 @@ class WorkStationController extends CommonController
         $request = u2gs($request);
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
-            $request['old_gzz_ip'] = $info['gzz_ip'];
+            if($request['gzz_ip']){
+                $request['old_gzz_ip'] = $info['gzz_ip']; 
+            }else{
+                $request['gzz_ip'] = $info['gzz_ip'];
+            }
             $syncData[] = $request;
             $this->sync('ws_base',$syncData,'edit');
         }
@@ -135,18 +139,23 @@ class WorkStationController extends CommonController
             $areas[session('areacode')] = u2g(session('areaname'));
         }
         $where[] = $this->get_manger_sql('','areacode',false);
+        $where['areacode'] = array('neq',''); 
         $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();
         $where['zxzt'] = 0;
         //统计离线
         foreach ($areas as $areacode => $areaname) {
             $where['areacode'] = array('like',$areacode.'%');
             $total = $db->where($where)->count();
-            $orderTotal[] = $total;
-            $result[] = array('areaname'=>g2u($areaname),'total'=>$total);
+            if($total != 0){
+                $result[] = array('areaname'=>g2u($areaname),'total'=>$total);
+                $orderTotal[] = $total;
+            }
         }
         array_multisort($orderTotal,SORT_DESC,$result);
         $data['total'] = count($result);
-        $data['rows'] = $result;
+        $data['rows'] = $data['total'] == 0 ? array() : $result;
+        $data['offline'] = 0;
+        $data['online'] = 0;
         foreach ($show_sat as $val) {
             if($val['zxzt'] == 0) $data['offline'] = $val['num'];
             if($val['zxzt'] == 1) $data['online'] = $val['num'];

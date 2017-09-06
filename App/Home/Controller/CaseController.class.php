@@ -164,7 +164,7 @@ class CaseController extends CommonController
             $row['is_read'] = $areaInfos[$row['areacode']];
             $row['source_name'] = $video_source[$row['source']];
         }
-        $this->saveExcel($res); //监测是否为导出
+        $this->saveExcel($res,$title='警情详情'); //监测是否为导出
         return g2us($res);
     }
     public function add_case($request)
@@ -570,6 +570,107 @@ class CaseController extends CommonController
         $res['info'] = $caseInfo;
         return g2us($res);
     }
+    //民警案件统计
+    public function case_emp_sat($request)
+    {
+        //----------------
+        //基础where条件
+        //----------------
+        $areacode = $request['areacode'];
+        // $areacode = '41150101';
+        $where[] = $this->get_manger_sql($areacode,'areacode',false);
+        //查询时间
+        //---------------------
+        $btime = $request['start_time']['btime'] ? $request['start_time']['btime'].' 00:00:00' : date('Y-m-d',time()-6*24*60*60).' 00:00:00'; //开始时间
+        $etime = $request['start_time']['etime'] ? $request['start_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59'; //结束时间
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $total = array();
+        $tables = $this->get_dbTables();
+        //统计时间段
+        $where['start_time'][] = array('EGT',$btime);      //开始时间
+        $where['start_time'][] = array('ELT',$etime); //结束时间
+        $empdb = D($this->models['employee']);
+        $emps = $empdb->where('areacode="'.$areacode.'"')->getField('code,name');
+        //-----------------
+        //统计案件数和警情数
+        //------------------
+        $caseNUm = array();
+        foreach ($months as $month) {
+            if(!in_array('case_'.$month,$tables)) continue;
+            $case = M()->table('case_'.$month)->field('jybh,count(1) as num,alarm_type,case_type')->where($where)->group('jybh,alarm_type,case_type')->select();
+            $caseNUm = array_merge((array)$case,$caseNUm);
+        }
+        //------------------
+        //数据初始化阶段
+        //------------------
+        $areaAction = A($this->actions['area']);
+        $initInfos = $empdb->where($where)->field('empid as areaid,code as jybh,name as jyxm,"0" as _parentId')->select();
+        $keys = array('common','major','impede',
+                      'force','spot','otherdata','disuse','unmark','num','criminal','administration','case_num');
+        $keys2 = array('empnum','quaempnum','recorder','uploadnum','unuploadnum','uploadper',
+                      'wsbase_num','wsbase_online','wsbase_per');
+        $initData = array_fill_keys($keys,0);
+        $initData2 = array_fill_keys($keys2,'-');
+        $data = array();
+        foreach ($initInfos as $key=> $value) {
+            $data[$value['jybh']] = array_merge($value,$initData,$initData2);
+        }
+        //--------------------
+        //解析数据
+        //------------------
+        $mark = 'jybh';
+        //---------------
+        //解析案件数
+        //---------------
+        $fields = array('num'=>'num');
+        $paress = array(
+            'alarm_type'=>array(
+                'field'=>'num',
+                'info'=>array(
+                    'unmark'=>0,    //未编辑
+                    'common'=>1,    //一般
+                    'major'=>2,     //重大
+                    'impede'=>3,    //妨碍
+                    'force'=>4,     //强制
+                    'spot'=>5,      //现场
+                    'disuse'=>6,    //无效
+                    'otherdata'=>7, //其他
+                    )
+                ),
+            'case_type'=>array(
+                'field'=>'num',
+                'info'=>array(
+                    'criminal'=>2,  //刑事
+                    'administration'=>1, //行政
+                    )
+                )
+
+            );
+        
+        $data = $this->pares_data($data,$caseNUm,$fields,$mark,$paress);
+        krsort($data);
+        //---------------
+        //最后数据处理
+        //---------------
+        //显示数据
+        $areaInfo = D($this->models['area'])->where('areacode="'.$areacode.'"')->find();
+        $arr = array('areaid'=>0,'areaname'=>u2g('合计'),'areacode'=>$areaInfo['areacode']);
+        $area = array_merge($arr,$initData,$initData2);
+        foreach ($data as $key=> &$value) {
+            $value['case_num'] = $value['administration'] + $value['criminal'];     //案件数
+            $value['areaname'] = $value['jyxm'];
+            foreach ($keys as $k) {
+                $area[$k] += $value[$k];
+            }
+            unset($value['jyxm']);
+        }
+        $data[] = $area;
+        $rows = array_values($data);
+        $total = count($rows);
+        $this->saveExcel(compact('total','rows'));
+        $rows = g2us($rows);
+        $this->ajaxReturn(compact('total','rows'));
+    }
     //案件统计
     public function case_sat($request)
     {
@@ -577,6 +678,13 @@ class CaseController extends CommonController
         //基础where条件
         //----------------
         $areacode = $request['areacode'] ? $request['areacode'] : session('areacode');
+        $areadb = D($this->models['area']);
+        $areaInfo = $areadb->where('areacode="'.$areacode.'"')->find();
+        $show = $areadb->where('fatherareaid="'.$areaInfo['areaid'].'"')->getField('areacode',true);
+        if(empty($show)){
+            $request['areacode'] = $request['areacode'] ? $request['areacode'] : session('areacode');
+            return $this->case_emp_sat($request);
+        }
         $manger_sql = $this->get_manger_sql($areacode);
         $where[] = $manger_sql;
         $emWhere[] = $this->get_manger_sql($areacode,'areacode','code');
@@ -640,8 +748,7 @@ class CaseController extends CommonController
         //------------------
         //数据初始化阶段
         //------------------
-        $areaAction = A($this->actions['area']);
-        $areadb = D($this->models['area']);
+
         $initInfos = $areadb->field('areaid,areacode,areaname,fatherareaid as _parentId')->select();
         $keys = array('empnum','quaempnum','recorder','uploadnum','unuploadnum','uploadper','common','major','impede',
                       'force','spot','otherdata','disuse','unmark','num','criminal','administration','case_num',
@@ -740,14 +847,11 @@ class CaseController extends CommonController
         //最后数据处理
         //---------------
         //显示数据
-        $areaInfo = $areadb->where('areacode="'.$areacode.'"')->find();
-        $show = $areadb->where('fatherareaid="'.$areaInfo['areaid'].'"')->getField('areacode',true);
         $areacodes = array();
         if(!empty($show)) $areacodes = $show;
         $areacodes[] = $areacode;
         foreach ($data as $key=> &$value) {
-            if(in_array($key,$unselectAreas)) $value = array_merge($value,$initData);
-            if(!in_array($value['areacode'],$areacodes)){
+            if(!in_array($value['areacode'],$areacodes) || (in_array($value['areacode'],$unselectAreas) && $value['areacode'] != $areacode)){
                 unset($data[$key]);
                 continue;
             }
@@ -759,9 +863,9 @@ class CaseController extends CommonController
         }
         $rows = array_values($data);
         $total = count($rows);
-        $this->saveExcel(compact('total','rows'));
+        $this->saveExcel(compact('total','rows'),$title="公安岗情");
         $rows = g2us($rows);
-        $this->ajaxReturn(compact('total','rows'));
+        return compact('total','rows');
     }
     /**
      * 分析数据
@@ -829,6 +933,43 @@ class CaseController extends CommonController
         }
         return $data;
     }
+    //基层管理员
+    public function home_emp_sat($request)
+    {
+        $btime = date('Y-m-d H:i:s',time()-9.5*24*60*60);
+        $etime = date('Y-m-d H:i:s',time()-3.5*24*60*60);
+        $empdb = D($this->models['employee']);
+        $areacode = $request['areacode'] ? $request['areacode'] : session('areacode');
+        $emps = $empdb->where('areacode="'.$areacode.'"')->getField('code,name');
+        /*if(session('areacode')){
+            $areas[session('areacode')] = u2g(session('areaname'));
+        }*/
+        $where[] = $this->get_manger_sql();
+        $where['start_time'][] = array('EGT',$btime);
+        $where['start_time'][] = array('ELT',$etime);
+        $where['del_flag'] = $request['del_flag'] ? $request['del_flag'] : 0;
+        $unwhere = $where;
+        $where['alarm_type'] = 0;
+        $unwhere['alarm_type'] = array('NEQ',0);
+        $result = array();
+        $months = $this->get_twoDates($btime, $etime, 'Ym', '+1 month');
+        $tables = $this->get_dbTables();
+        foreach ($emps as $key=>$value) {
+            $where['jybh'] = $key;
+            $unwhere['jybh'] = $key;
+            $total = 0;
+            $untotal = 0;
+            foreach ($months as $month) {
+                if(!in_array('case_'.$month,$tables)) continue;
+                $total = $total + M()->table('case_'.$month)->where($where)->count();
+                $untotal = $unTotal + M()->table('case_'.$month)->where($unwhere)->count();
+            }
+            $all[] = $total + $untotal;
+            $result[] = array('name'=>g2u($value),'total'=>$total,'untotal'=>$untotal,'all'=>$total + $untotal);
+        }
+        array_multisort($all,SORT_DESC,$result);
+        return $result;
+    }
     /*********************
      * 首页统计
      *********************/
@@ -884,6 +1025,7 @@ class CaseController extends CommonController
         ksort($areas);
         foreach ($areas as $key=>$value) {
             $where['areacode'] = array('like',$key.'%');
+            $unwhere['areacode'] = array('like',$key.'%');
             $total = 0;
             $untotal = 0;
             foreach ($months as $month) {
@@ -920,6 +1062,11 @@ class CaseController extends CommonController
         $where['del_flag'] = $request['del_flag'] ? $request['del_flag'] : 0;
         $areaInfo = $areadb->where('areacode="'.$areacode.'"')->find();
         $showAreas = $areadb->where('fatherareaid="'.$areaInfo['areaid'].'"')->getField('areacode,areaname');
+        $emp = false;
+        if(empty($showAreas)){
+            $showAreas = D($this->models['employee'])->where('areacode="'.$areacode.'"')->getField('code as jybh,name as jyxm');
+            $emp = true;
+        }
         // $this->ajaxReturn(g2us($showAreas));
         $keys = array('upload','unmark','markTotal','common','major','impede',
                       'force','spot','otherdata','disuse','criminal','administration','uploadediter');
@@ -928,7 +1075,11 @@ class CaseController extends CommonController
         foreach ($showAreas as $key => $val) {
             // echo 'areacode:'.$key.'--areaname:'.g2u($value)."<br>";
             $initData = array_fill_keys($keys,0);
-            $where['areacode'] = array('like',$key.'%');
+            if($emp){
+                $where['jybh'] = $key;
+            }else{
+                $where['areacode'] = array('like',$key.'%');
+            }
             $caseWhere = $where;
             $caseWhere['case_type'] = array('NEQ',0);
             $alarmData = array();
@@ -1096,17 +1247,18 @@ class CaseController extends CommonController
             $j++;
         }
         $id = session('code');
-        $dateDir = './Public/download/'.date('Ymd');
+        $dateDir = './Public/download/'.date('Ymd').'/'.date('His').$id;
+        if(!is_dir('./Public/download/'.date('Ymd')))   mkdir('./Public/download/'.date('Ymd'));
         if(!is_dir($dateDir))   mkdir($dateDir);
         $excelFileName = date('YmdHis').rand(10,99);
-        $url = $dateDir."/repWork_".$excelFileName."{$id}.xls";
+        $url = $dateDir."/".u2g($title).'.xls';
         try
         {
             $objWriter->save($url);
             $url = substr($url, 1);
             $host = $this->get_local_ip().$_SERVER['SERVER_PORT'];
                     //gethostbyname('');
-            $res = __ROOT__.$url;
+            $res = __ROOT__.$dateDir."/".$title.'.xls';;
         }
         catch(Exception $e)
         {

@@ -153,16 +153,26 @@ $(function() {
             link: module.link,
             rand: Math.random()
         },
+        autoRowHeight:false,
         onClickCell:function(field,row){
             if(app.inArray(field,pass_field)) return false;
-            if(row[field] == 0) return false;
+            if(row[field] == 0 || row[field] == '-') return false;
             $('#detailDialog').dialog('open');
-            var queryParams = searchData;
-            queryParams.areacode = row.areacode;
-            queryParams.field = field;
+            var query = searchData;
+            if(row.areacode){
+                query.areacode = row.areacode;
+                delete query.jybh;
+            }
+            if(row.jybh){
+                query.jybh = row.jybh;
+                delete query.areacode;
+            }
+            query.field = field;
+
             app.datagrid('#detailDatagrid',{
                 url:'SatDetail/data_list',
-                queryParams:queryParams,
+                queryParams:query,
+                autoRowHeight:false,
                 columns:module.selectColum(field)
             });
         },

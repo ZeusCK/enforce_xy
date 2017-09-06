@@ -9,7 +9,7 @@ thisPageThings.addUrl = "{:$url['addUrl']}";
 thisPageThings.editUrl = "{:$url['editUrl']}";
 thisPageThings.removeUrl = "{:$url['removeUrl']}";
 thisPageThings.checkClick = true;
-//基本的搜索
+//基本的开始查询
 thisPageThings.show = function(){
     $('#searchForm').form('reset');
     $('#datagrid').datagrid('load',{
@@ -95,7 +95,7 @@ thisPageThings.remove = function(){
         }
     });
 }
-//搜索事件
+//开始查询事件
 thisPageThings.search = function(){
 {js_search}
     $('#datagrid').datagrid('load',{
@@ -133,11 +133,11 @@ $(function(){
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="thisPageThings.show()">全部</a>&nbsp;&nbsp;&nbsp;
             {search}
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="thisPageThings.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="thisPageThings.search()">开始查询</a>
         </form>
-        <a href="javascript:void(0)" onclick="thisPageThings.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
-        <a href="javascript:void(0)" onclick="thisPageThings.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <a href="javascript:void(0)" onclick="thisPageThings.remove()" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+        <a href="javascript:void(0)" onclick="thisPageThings.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false">添加</a>
+        <a href="javascript:void(0)" onclick="thisPageThings.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:false">修改</a>
+        <a href="javascript:void(0)" onclick="thisPageThings.remove()" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:false">
         删除</a>
     </div>
 <!-- 增加 -->

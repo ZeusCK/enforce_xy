@@ -18,7 +18,7 @@
             <a href="javascript:void(0)" onclick="module.link()" class="easyui-linkbutton" iconCls="icon icon-link" style="background-color: #00A8E9;">部门联级</a>
             <a href="javascript:void(0)" onclick="module.unlink()" class="easyui-linkbutton" iconCls="icon icon-link_break" style="background-color: #00A8E9;">部门精确</a>
             <div id="pointInfo" style="color: #00A8E9;margin: 5px 0;">部门精确，精准删除整体部门</div>
-            <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
+            <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:module.search_tree" style="width: 100%;"></input>
             <ul id="area_list"></ul>
         </div>
         <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -30,12 +30,12 @@
             <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp; -->
             部门名称:
             <input id="areaname" name="areaname" class="easyui-textbox" data-options="height:22" style="width:168px" />
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search()">开始查询</a>
         </form>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'" style="float: right;color:#0E5AB9;">
         当前部门：<span id="mu_area">无</span></a>
-        <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
-        <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
+        <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false">添加</a>
+        <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:false">修改</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" onclick="module.exports(this)">导出全部</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" onclick="javascript:
                     $('#importForm').dialog('open')">导入</a>

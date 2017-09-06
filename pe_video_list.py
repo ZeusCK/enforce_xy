@@ -13,7 +13,7 @@ class PeData:
         sql = """
         SELECT e.code,name,e.areacode,areaname
         FROM employee as e ,area_dep as a
-        WHERE a.areacode=e.areacode
+        WHERE a.areacode=e.areacode AND e.code='123123'
         """
          # 执行sql语句
         try:

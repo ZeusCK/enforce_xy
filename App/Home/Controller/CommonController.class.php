@@ -292,10 +292,12 @@ class CommonController extends Controller {
     /**
      * 根据数据生成excel保存到服务器 返回保存地址
      * @param  array $rows  数据
+     * @param  string $title  标题
      * @return string        文件地址
      */
-    public function saveExcel($datas)
+    public function saveExcel($datas,$title='repWork')
     {
+        
         $dir = './Public/download';     //需要删除的目录
         if(!is_dir($dir))   mkdir($dir);
         $this->del_dir($dir);
@@ -325,6 +327,20 @@ class CommonController extends Controller {
             /* 设置当前的sheet */
             $objPHPExcel->setActiveSheetIndex(0);
             $objActSheet = $objPHPExcel->getActiveSheet();
+            $cellActive = $objActSheet->mergeCells('A1:'.end($abcArr).'1')->getStyle('A1');
+            $cellActive->applyFromArray(
+                array(
+                    'font' => array (
+                        'bold' => true
+                    ),
+                    'alignment' => array(
+                        'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_CENTER,
+                        'vertical'=>\PHPExcel_Style_Alignment::VERTICAL_CENTER
+                    )
+                )
+            );
+            $objActSheet->setCellValue('A1',$title.'       统计时间'.date('n月j日'));
+            $title = u2g($title);
             /*设置宽度*/
             foreach ($abcArr as $abc) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($abc)->setWidth(15);
@@ -344,12 +360,12 @@ class CommonController extends Controller {
             $cola = array();
             //设置投行标题
             foreach ($abcArr as $key => $abc) {
-                $objActSheet->setCellValue($abc.'1',$cols[$key]);
+                $objActSheet->setCellValue($abc.'2',$cols[$key]);
                 $cola[$abc] = $colks[$key];
             }
             //填充数据
             $data = $rows;
-            $i = 2;
+            $i = 3;
             foreach($data as $value)
             {
                 /* excel文件内容 */
@@ -361,16 +377,17 @@ class CommonController extends Controller {
                 $i++;
             }
             $id = session('code');
-            $dateDir = './Public/download/'.date('Ymd');
+            $dateDir = './Public/download/'.date('Ymd').'/'.date('His').$id;
+            if(!is_dir('./Public/download/'.date('Ymd')))   mkdir('./Public/download/'.date('Ymd'));
             if(!is_dir($dateDir))   mkdir($dateDir);
-            $url = $dateDir."/repWork_".$excelFileName."{$id}.xls";
+            $url = $dateDir."/".$title.".xls";
             try
             {
                 $objWriter->save($url);
                 $url = substr($url, 1);
                 $host = $this->get_local_ip().$_SERVER['SERVER_PORT'];
                         //gethostbyname('');
-                $res = __ROOT__.$url;
+                $res = __ROOT__.$dateDir."/".g2u($title).".xls";;
             }
             catch(Exception $e)
             {

@@ -10,13 +10,13 @@
         <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
              <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="module.show()">全部</a>&nbsp;&nbsp;&nbsp;
             角色名: <input id='searchInput'  name="rolename" class="easyui-textbox" data-options="height:22"  style="width:168px"/>
-            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">搜索</a>
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">开始查询</a>
         </form>
-        <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true">添加</a>
-        <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:true">修改</a>
-        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:true">
+        <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false">添加</a>
+        <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:false">修改</a>
+        <a href="javascript:void(0)" onclick="module.remove(this)" class="easyui-linkbutton" data-options="iconCls:'icon icon-delete',plain:false">
         删除</a>
-        <a href="javascript:void(0)" onclick="module.allowDeptBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:true">权限分配</a>
+        <a href="javascript:void(0)" onclick="module.allowDeptBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-basket_put',plain:false">权限分配</a>
     </div>
 <!-- 增加 -->
     <div id="addDialog" class="easyui-dialog" title="添加角色" buttons="#addButtons"

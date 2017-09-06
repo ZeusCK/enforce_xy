@@ -26,7 +26,7 @@
         padding: 5px 0;
     }
 
-    #ok,
+    /* #ok,
     #cancel,
     #hb,
     #sx,
@@ -35,7 +35,7 @@
     #hb2,
     #sx2 {
         border: 1px solid #eee;
-    }
+    } */
 
     .l-btn-plain {
         padding: 0;
@@ -64,7 +64,7 @@
 <block name="main">
     <div class="easyui-layout" fit="true">
         <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:200px;background:#eee;">
-        <input class="easyui-searchbox" data-options="prompt:'搜索部门',searcher:module.search_tree" style="width: 100%;"></input>
+        <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:module.search_tree" style="width: 100%;"></input>
             <ul id="area_list"></ul>
         </div>
         <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
@@ -78,17 +78,14 @@
                 <input name="title" class="easyui-textbox">
                 <div class="search-text">警情编号:</div>
                 <input name="alarm_no" class="easyui-textbox">
-                <div class="search-text">案事件名称:</div>
-                <input name="case_name" class="easyui-textbox">
-                
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">开始查询</a>
             </div>
             <div class="search-box search-big">
                 <div class="search-text">出警地址:</div>
                 <input name="areaname" class="easyui-textbox">
                 <div class="search-text">出警人:</div>
                 <input class="easyui-textbox" name="jyxm">
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search"  onclick="module.search()">查询</a>
-                
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key"  onclick="module.init_search_form()">条件重置</a>
             </div>
             <div class="search-box search-big">
                 <div class="search-text">
@@ -98,15 +95,15 @@
                 <input class="easyui-datetimebox" name="apply[btime]" id="applyS" data-options="editable:false">
                 <div class="search-text">至:</div>
                 <input class="easyui-datetimebox" name="apply[etime]" id="applyE" data-options="editable:false">
-                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key"  onclick="module.init_search_form()">清空</a>
+                
             </div>
             <div class="search-box search-big">
                 <div class="search-text">采集日期:</div>
-                <input class="easyui-datetimebox" name="start[btime]" id="shotS" data-options="editable:false">
+                <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" data-options="editable:false">
                 <div class="search-text">至:</div>
-                <input class="easyui-datetimebox" name="start[etime]" id="shotE" data-options="editable:false">
-                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon icon-drive'">
-                当前部门：<span id="mu_area">{:session('areaname')}</span></a>
+                <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" data-options="editable:false">
+                <div class="search-text">案事件名称:</div>
+                <input name="case_name" class="easyui-textbox">
             </div>
         </form>
     </div>
@@ -177,7 +174,7 @@
                             <label class="fitem">上传日期</label>：
                             <input class="easyui-datetimebox" data-options="height:22,editable:false" name="scsj" readonly/>
                             <label class="fitem">备注</label>：
-                            <input class="easyui-textbox" data-options="height:22,editable:false" name="remark" />
+                            <input class="easyui-textbox" data-options="height:22" name="remark" />
                         </div>
                     </div>
                     <div class="one-row" style="text-align: center;">
@@ -193,7 +190,7 @@
                         <div class="search-text">采集时间:</div>
                         <input class="easyui-datetimebox" name="video_time[btime]" data-options="editable:false" id="shotS4" /> -
                         <input class="easyui-datetimebox" name="video_time[etime]" data-options="editable:false" id="shotE4" />
-                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search_video()">查询</a>
+                        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search_video()">开始查询</a>
                         <a class="easyui-linkbutton cf" data-options="iconCls:'icon-cf'" onclick="module.slice(this)">拆分为警情包</a>
                     </div>
                 </form> -->
@@ -208,7 +205,7 @@
                     <div class="search-text">采集日期:</div>
                     <input class="easyui-datetimebox" name="start_time[btime]" id="shotS2" data-options="editable:false" /> -
                     <input class="easyui-datetimebox" name="start_time[etime]" id="shotE2" data-options="editable:false" />
-                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search2()">查询</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search2()">开始查询</a>
                 </div>
             </form>
         </div>

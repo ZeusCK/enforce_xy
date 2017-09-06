@@ -27,7 +27,7 @@ class AnnounceController extends CommonController
         $where['create_time'][] = array('ELT',$request['create_time']['etime'] ? $request['create_time']['etime'].' 23:59:59' : date('Y-m-d').' 23:59:59');
         $db = D($this->models['sys_notice']);
         $data = $db->getTableList($where,$request['page'],$request['rows'],'create_time desc');
-        $this->saveExcel($data);
+        $this->saveExcel($data,'公安详情');
         return g2us($data);
     }
     //增加
