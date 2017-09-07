@@ -56,7 +56,7 @@ $(function(){
     //左侧tree的加载
     tree.load_no_read_area();
     $('#pos').html(module.areaname);
-    app.combobox('#status,#search_status',{type:'pe_status'});
+    app.combobox('#status',{type:'pe_status'});
     //右侧datagrid的加载
     $('#datagrid').datagrid({
         url:app.url('Dev/pe_base_list'),
@@ -80,6 +80,7 @@ $(function(){
             {field:'product',title:'生产厂家',width:100,align:'center'},
             {field:'standard',title:'设备规格',width:100,align:'center'},
             {field:'status_name',title:'设备状态',width:100,align:'center'},
+            {field:'create_time',title:'创建时间',width:100,align:'center'},
             {field:'create_user',title:'创建人',width:100,align:'center'},
             {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
                 if(d.areacode == ''){
@@ -109,7 +110,6 @@ $(function(){
             info.areacode=node.areacode;
             $('#datagrid').datagrid('load',info);
             searchData = info;
-            
         }
     });
     //搜索按钮
@@ -185,37 +185,54 @@ $(function(){
     });
 });
 function operation(title){
+
     if(title == '添加'){
-        $('#dialog p').html(module.areaname);
-        var info = {cpxh:'',product:'',jyxm:'',jybh:'',standard:''};
-        $('#dialogForm').form('load',info);
         $('#jyxm').combobox({
-            url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
-            valueField:'name',
-            textField:'name',
-            method:'get',
-            onSelect:function(record){
-                $('#jybh').textbox('setValue',record.code);
-            }
-        });
+                url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
+                valueField:'name',
+                textField:'name',
+                method:'get',
+                onSelect:function(record){
+                    $('#jybh').textbox('setValue',record.code);
+                },
+                onLoadSuccess:function(){
+                    var info = {cpxh:'',product:'',jyxm:'',jybh:'',standard:''};
+                    $('#dialogForm').form('load',info);
+                }
+            });
+        $('#dialog p').html(module.areaname);
     }else{
         $('#dialog p').html('');
-        var rows=$('#datagrid').datagrid('getSelections');
-        if(rows==null || rows.length == 0){
+        var rows = $('#datagrid').datagrid('getSelections');
+        if(rows == null || rows.length == 0){
             $.messager.alert('操作提示','请选择所要修改内容，仅限一条','info');
             return false;
         }else if(rows.length>1){
             $.messager.alert('操作提示','一次只能修改一条数据，请重新选择','info');
             return false;
         }else{
+            $('#jyxm').combobox({
+                url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+module.areacode,
+                valueField:'name',
+                textField:'name',
+                method:'get',
+                loadFilter:function(data){
+                    data.push({name:rows[0].jyxm,code:rows[0].jybh});
+                    return data;
+                },
+                onSelect:function(record){
+                    $('#jybh').textbox('setValue',record.code);
+                },
+                onLoadSuccess:function(){
+                    $('#dialogForm').form('load',rows[0]);
+                }
+            });
             // $('#jyxm').combobox('options');
             // var data = $('#jyxm').combobox('getData');
             // data.push({code:rows[0].jybh,name:rows[0].jyxm});
             // $('#jyxm').combobox('loadData',data);
-            $('#dialogForm').form('load',rows[0]);
         }
     }
-    
     $('#dialog').dialog({
         title:title,
         shadow:false,

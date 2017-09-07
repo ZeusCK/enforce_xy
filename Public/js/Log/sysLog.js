@@ -17,7 +17,7 @@ module.exports = function(){
 };
 module.search = function() {
     app.extra('search', {
-        form: '#searchForm',
+        form: '#form',
         datagrid: '#datagrid',
         parsedata:function(data){
             if(!judgeTime.judge(data.btime, data.etime)) return false;

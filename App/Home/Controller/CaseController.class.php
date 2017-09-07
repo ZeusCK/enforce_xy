@@ -1007,8 +1007,11 @@ class CaseController extends CommonController
         $btime = date('Y-m-d H:i:s',time()-9.5*24*60*60);
         $etime = date('Y-m-d H:i:s',time()-3.5*24*60*60);
         $areadb = D($this->models['area']);
-        $areaid = session('areaid') ? session('areaid') : 0;
-        $areas = $areadb->where('fatherareaid="'.$areaid.'"')->getField('areacode,areaname');
+        $areacode = session('areacode') ? session('areacode') : C('DEFAULT_AREACODE');
+        $areaInfo =  $areadb->where('areacode="'.$areacode.'"')->getField('areaid,areaname');
+        reset($areaInfo);
+        $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
+        // $areas[$areacode] = current($areaInfo);
         /*if(session('areacode')){
             $areas[session('areacode')] = u2g(session('areaname'));
         }*/

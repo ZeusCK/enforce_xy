@@ -127,6 +127,7 @@ $(function(){
           {field:'dh', title: '负责人电话', width: 200, align: 'center' },
           {field:'qyztname', title: '启用状态', width: 200, align: 'center' },
           {field:'zxztname',title:'在线状态',width:200,align:'center'},
+          {field:'create_time',title:'创建时间',width:200,align:'center'},
           {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
                 if(d.areacode == ''){
                     return '<span style="color:#0E2D5F;cursor:pointer;" onClick="things.bind('+d.id+',true)">绑定部门</span>';

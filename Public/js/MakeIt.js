@@ -9,9 +9,10 @@
         //获取作为判断条件的事件类型
         var vReadOnly = obj.getAttribute('readonly');
         var vEnabled = obj.getAttribute('enabled');
-        //处理null值情况
-        vReadOnly = (vReadOnly == null) ? false : true;
-        vEnabled = (vEnabled == null) ? true : false;
+        // console.log(vReadOnly,vEnabled);
+        
+        vReadOnly = !vReadOnly ? false : true;
+        vEnabled = !vEnabled ? true : false;
 
         //当敲Backspace键时，事件源类型为密码或单行、多行文本的，
         //并且readonly属性为true或enabled属性为false的，则退格键失效

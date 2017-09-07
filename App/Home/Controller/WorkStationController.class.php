@@ -65,6 +65,8 @@ class WorkStationController extends CommonController
         if($db->where(array('gzz_ip'=>$request['gzz_ip']))->find()){
             $this->ajaxReturn(array('status'=>false,'message'=>'该工作站已存在'));
         }
+        // $request['create_user'] = session('user');
+        $request['create_time'] = date('Y-m-d H:i:s');
         $request = u2gs($request);
         $result = $db->getTableAdd(u2gs($request));
         if($result['status']){
@@ -133,11 +135,11 @@ class WorkStationController extends CommonController
         $db =  D($this->models['wsbase']);
         //确定查看部门
         $areadb = D($this->models['area']);
-        $areaid = session('areaid') ? session('areaid') : 0;
-        $areas = $areadb->where('fatherareaid="'.$areaid.'"')->getField('areacode,areaname');
-        if(session('areacode')){
-            $areas[session('areacode')] = u2g(session('areaname'));
-        }
+        $areacode = session('areacode') ? session('areacode') : C('DEFAULT_AREACODE');
+        $areaInfo =  $areadb->where('areacode="'.$areacode.'"')->getField('areaid,areaname');
+        reset($areaInfo);
+        $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
+        $areas[$areacode] = current($areaInfo);
         $where[] = $this->get_manger_sql('','areacode',false);
         $where['areacode'] = array('neq',''); 
         $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();

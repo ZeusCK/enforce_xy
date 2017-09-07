@@ -72,12 +72,9 @@ class DevController extends CommonController
     //执法记录仪
     public function pe_base_add()
     {
-        $request['product'] = I('product');     //生产厂家
-        $request['cpxh']    = I('cpxh');        //产品序号  必填
-        $request['jyxm']    = I('jyxm');        //警员姓名
-        $request['standard']    = I('standard'); //设备规格
-        $request['jybh']    = I('jybh');        //警员编号
-        $request['create_user'] = u2g(session('user'));  //创建人
+        $request    = I('');        //警员编号
+        unset($request['id']);
+        $request['create_user'] = session('user');  //创建人
         $employeedb = D($this->models['employee']);
         $areacode = $employeedb->where('code="'.$request['jybh'].'"')->getField('areacode');
         $areadb = D($this->models['area']);

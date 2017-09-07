@@ -49,9 +49,14 @@ class LogController extends CommonController
         $request['etime'] = I('etime',date('Y-m-d H:i:s',time()));
         $page = I('page');
         $rows = I('rows');
-        $where['rzsj'][] = array('EGT',$request['btime']);
-        $where['rzsj'][] = array('ELT',$request['etime']);
-        $data = $db->getTableList($where,$page,$rows,'rzsj desc');
+        $where['opt_time'][] = array('EGT',$request['btime']);
+        $where['opt_time'][] = array('ELT',$request['etime']);
+        
+        $where[] = $this->get_manger_sql(I('areacode'),'areacode',false);
+        if(I('name')) $where['name'] = u2g(I('name'));
+        if(I('comment')) $where['comment'] = array('like','%'.u2g(I('comment')).'%');
+        if(I('cpxh')) $where['cpxh'] = u2g(I('cpxh'));
+        $data = $db->getTableList($where,$page,$rows,'opt_time desc');
         // $wsActions = ['其他','开机','关机','接入记录仪','移除记录仪','采集文件'];
         /*foreach ($data['rows'] as &$value) {
             // $wsAction = array_key_exists($value['comment'],$wsActions) ? $wsActions[$value['comment']] : '未知';
@@ -64,12 +69,14 @@ class LogController extends CommonController
     public function sys_log_list()
     {
         $db = D($this->models['sysLog']);
-        $request['btime'] = I('btime',date('Y-m-d H:i:s',time()-7*24*60*60));
+        $request['btime'] = I('btime',date('Y-m-d H:i:s',time()-6*24*60*60));
         $request['etime'] = I('etime',date('Y-m-d H:i:s',time()));
         $page = I('page');
         $rows = I('rows');
         $where['dte'][] = array('EGT',$request['btime']);
         $where['dte'][] = array('ELT',$request['etime']);
+        if(I('name')) $where['name'] = u2g(I('name'));
+        if(I('cmt')) $where['cmt'] = array('like','%'.u2g(I('cmt')).'%');
         $where[] = $this->get_manger_sql(I('areacode'),'areacode',false);
         $data = $db->getTableList($where,$page,$rows,'dte desc');
         $this->saveExcel($data,'系统日志'); //监测是否为导出

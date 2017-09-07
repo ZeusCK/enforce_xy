@@ -5,7 +5,8 @@ class EmployeeController extends CommonController
 {
     //表的表名-自增主键
     protected $tab_id = 'empid';
-    protected $models = ['role'=>'Enforce\Role',            //角色
+    protected $models = ['pebase'=>'Enforce\PeBase',        //执法记录仪
+                         'role'=>'Enforce\Role',            //角色
                          'dept_role'=>'Enforce\DeptRole',   //部门角色
                          'employee'=>'Enforce\Employee',    //警员
                          'area'=>'Enforce\AreaDep'];           //部门
@@ -147,6 +148,7 @@ class EmployeeController extends CommonController
             $result['message'] = '该警员已经录入！';
             exit(json_encode($result));
         }
+        $request['create_user'] = session('user');
         $request = u2gs($request);
         $result = $db->getTableAdd($request);
         if($result['status']){
@@ -237,18 +239,31 @@ class EmployeeController extends CommonController
     {
         $where['empid'] = $request['empid'];
         $db = D($this->models['employee']);
+        $request = u2gs($request);
         if($request['action'] == 'bind'){
             unset($request['empid']);
             unset($request['action']);
         }else{
-            $data['areaname'] = $data['areacode'] = '';
+            $request['areaname'] = $request['areacode'] = '';
         }
         $empInfo = $db->where($where)->find();
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
             $request['code'] = $empInfo['code'];
+            //执法记录仪一起变更
+            $pedb = D($this->models['pebase']);
+            $pewhere['jybh'] = $empInfo['code'];
+            $peData['areacode'] = $request['areacode'];
+            $peData['areaname'] = $request['areaname'];
+            $cpxh = $pedb->where($pewhere)->getField('cpxh');
+            $pedb->where($pewhere)->save($peData);
+            //警员
             $syncData[] = $request;
             $this->sync('employee',$syncData,'edit');
+            //执法
+            $peData['cpxh'] = $cpxh;
+            $syncPeData[] = $peData;
+            $this->sync('pe_base',$syncPeData,'edit');
         }
         return $result;
     }

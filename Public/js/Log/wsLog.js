@@ -1,5 +1,7 @@
+var judgeTime = new Time(new Date(), 0);
 var module = {};
 module.params = {};
+var tree = new Tree('#area_list');
 //导出
 module.exports = function(){
     var exportInfo = {};
@@ -10,7 +12,29 @@ module.exports = function(){
     exportInfo.page = 1;
     app.exportExcel(exportInfo);
 };
+module.clickTree = function(node) {
+    module.areacode = node.areacode;
+    module.areaname = node.text;
+    $('#tip_area').text(node.text);
+    $('#mu_ser').text(module.areaname);
+    module.search();
+}
+module.search = function() {
+    app.extra('search', {
+        form: '#form',
+        datagrid: '#datagrid',
+        parsedata:function(data){
+            if(!judgeTime.judge(data.btime, data.etime)) return false;
+            data.areacode = module.areacode;
+            searchData = data;
+        }
+    });
+};
 $(function(){
+    tree.loadData();
+    $(tree.dom).tree({
+        onClick: module.clickTree
+    });
     var time=new Date();
     $('#etime').datetimebox('setValue',app.date('Y-m-d')+' 23:59:59');
     $('#btime').datetimebox('setValue',app.date('Y-m-d',app.time()-6*24*60*60)+' 00:00:00');
@@ -29,10 +53,13 @@ $(function(){
         toolbar:'#toolbar',
         columns:[[
             {field:'id',title:'',checkbox:true},
+            {field:'areaname',title:'单位',width:100,align:'center'},
             {field:'gzz_ip',title:'工作站',width:100,align:'center'},
-            {field:'dxbh',title:'文件编号',width:100,align:'center'},
-            {field:'comment',title:'日志类型',width:100,align:'center'},
-            {field:'rzsj',title:'日志时间',width:100,align:'center'}
+            {field:'cpxh',title:'设备号',width:100,align:'center'},
+            {field:'name',title:'警员姓名',width:100,align:'center'},
+            {field:'type',title:'操作类型',width:100,align:'center'},
+            {field:'comment',title:'操作内容',width:100,align:'center'},
+            {field:'opt_time',title:'日志时间',width:100,align:'center'}
         ]],
         onLoadSuccess:function(r){
             if(r.total==0){
@@ -43,7 +70,7 @@ $(function(){
             }
         }
     });
-    $('#searching').click(function(){
+    /*$('#searching').click(function(){
         var data=app.serializeJson('#form');
         //if(data.btime>data.etime){
         //    $.messager.alert('操作提示','初始时间不能大于结束时间，请重新选择','info');
@@ -56,6 +83,6 @@ $(function(){
         $('#datagrid').datagrid({
             queryParams:data
         });
-    });
+    });*/
 });
 

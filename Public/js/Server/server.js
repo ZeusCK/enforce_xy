@@ -154,6 +154,8 @@ $(function() {
                 { field: 'db_pwd', title: '数据库密码', width: 200, align: 'center' },
                 { field: 'phone', title: '联系电话', width: 200, align: 'center' },
                 { field: 'remark', title: '备注', width: 200, align: 'center' },
+                {field:'create_user',title:'创建人',width:200,align:'center'},
+                {field:'create_time',title:'创建时间',width:200,align:'center'},
                 {
                     field: 'status_name',
                     title: '状态',

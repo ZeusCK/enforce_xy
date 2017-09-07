@@ -324,6 +324,7 @@ $(function(){
         {field:'areaname',title:'单位',width:200,align:'center'},
         {field:'empl_qualify_name',title:'执法资格',width:200,align:'center'},
         {field:'phone',title:'电话',width:200,align:'center'},
+        {field:'create_user',title:'创建人',width:200,align:'center'},
         {field:'handle',title:'操作',align:'center',formatter:function(v,d,i){
               if(d.areacode == ''){
                   return '<span style="color:#0E2D5F;cursor:pointer;" onClick="module.bind('+d.empid+',true,\''+d.code+'\')">绑定部门</span>';
