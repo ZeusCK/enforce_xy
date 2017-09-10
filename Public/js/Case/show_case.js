@@ -196,7 +196,8 @@ module.edit = function(target) {
         url: editSaveUrl,
         form: "#editForm",
         dialog: "#editDialog",
-        datagrid: "#datagrid"
+        datagrid: "#datagrid",
+        linkbutton:target
     };
     n.parsedata = function(params) {
         delete params["cpxh"];
@@ -263,16 +264,19 @@ module.addvideo = function() {
                 {
                     field: "areaname",
                     title: "部门",
+                    width: 200,
                     align: "center"
                 },
                 {
                     field: "wjbh",
                     title: "文件编号",
+                    width: 200,
                     align: "center"
                 },
                 {
                     field: "start_time",
                     title: "开始时间",
+                    width: 200,
                     align: "center"
                 },
                 {

@@ -206,7 +206,8 @@ module.edit = function(target) {
         url: editSaveUrl,
         form: "#editForm",
         dialog: "#editDialog",
-        datagrid: "#datagrid"
+        datagrid: "#datagrid",
+        linkbutton:target
     };
     n.parsedata = function(params) {
         delete params["cpxh"];

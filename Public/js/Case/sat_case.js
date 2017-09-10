@@ -1,6 +1,6 @@
 var column = [
     [
-        { field: 'areaname', title: '单位', rowspan: 2, align: 'center' },
+        { field: 'areaname', title: '单位', rowspan: 2, width: 200,align: 'center' },
         { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
         { field: 'quaempnum', title: '执法警员总数', rowspan: 2, width: 80, align: 'center' },
         { field: 'recorder', title: '执法记录仪数', rowspan: 2, width: 80, align: 'center' },

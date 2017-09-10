@@ -1,26 +1,26 @@
 var column = [
     [
-        { field: 'areaname', title: '单位', rowspan: 3, align: 'center' },
-        { field: 'upload', title: '已上传数据', rowspan: 3, align: 'center' },
-        { field: 'unmark', title: '未编辑数据', rowspan: 3, align: 'center' },
+        { field: 'areaname', title: '单位', rowspan: 3,width: 200, align: 'center' },
+        { field: 'upload', title: '已上传数据', rowspan: 3,width: 80, align: 'center' },
+        { field: 'unmark', title: '未编辑数据', rowspan: 3,width: 80, align: 'center' },
         { field: 'mark', title: '已编辑数据', colspan: 10, align: 'center' },
-        { field: 'uploadediter', title: '上传编辑率', rowspan: 3, align: 'center' }
+        { field: 'uploadediter', title: '上传编辑率', rowspan: 3, width: 80,align: 'center' }
     ],
     [
-        { field: 'markTotal', title: '合计', rowspan: 2, align: 'center' },
+        { field: 'markTotal', title: '合计', rowspan: 2, width: 80,align: 'center' },
         { field: 'alarm', title: '警情', colspan: 6, align: 'center' },
         { field: 'case', title: '案件', colspan: 2, align: 'center' },
-        { field: 'disuse', title: '无效数据', rowspan: 2, align: 'center' }
+        { field: 'disuse', title: '无效数据', rowspan: 2, width: 80,align: 'center' }
     ],
     [
-        { field: 'common', title: '一般警情',  align: 'center' },
-        { field: 'major', title: '重大警情',  align: 'center' },
-        { field: 'spot', title: '当场盘问检查',  align: 'center' },
-        { field: 'force', title: '行政强制执行',  align: 'center' },
-        { field: 'impede', title: '阻碍民警执法妨碍公务',  align: 'center' },
-        { field: 'otherdata', title: '其他数据',  align: 'center' },
-        { field: 'administration', title: '行政案件',  align: 'center' },
-        { field: 'criminal', title: '刑事案件',  align: 'center' }
+        { field: 'common', title: '一般警情', width: 80, align: 'center' },
+        { field: 'major', title: '重大警情', width: 80, align: 'center' },
+        { field: 'spot', title: '当场盘问检查', width: 80, align: 'center' },
+        { field: 'force', title: '行政强制执行', width: 80, align: 'center' },
+        { field: 'impede', title: '阻碍民警执法妨碍公务', width: 80, align: 'center' },
+        { field: 'otherdata', title: '其他数据', width: 80, align: 'center' },
+        { field: 'administration', title: '行政案件', width: 80, align: 'center' },
+        { field: 'criminal', title: '刑事案件',width: 80,  align: 'center' }
     ]
 ];
 

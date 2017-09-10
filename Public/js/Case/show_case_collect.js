@@ -230,6 +230,7 @@ $(function() {
                 {
                     field: "case_no",
                     title: "案件编号",
+                    width: 200,
                     align: "center"
                 },
                 {
