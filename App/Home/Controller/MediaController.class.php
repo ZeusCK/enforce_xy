@@ -138,15 +138,15 @@ class MediaController extends CommonController
         $result = M()->table($table)->where($request)->save($data);
         if($result){
             //同步
-            $syncData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
-            $this->sync('case_video',$syncData,'edit');
+            $syncVideoData[] = array('tab_name'=>$table,'wjbh'=>$request['wjbh']);
+            $this->sync('case_video',$syncVideoData,'edit');
             $res['status'] = true;
             $res['message'] = '恢复视频成功';
-            $this->write_log('回复'.$request['wjbh']);
+            $this->write_log('恢复'.$request['wjbh']);
             $re = M()->table('case_'.date('Ym',strtotime($start_time)))->where('case_key="'.$case_key.'"')->save($data);
             if($re){
-                $syncData[] = array('tab_name'=>'case_'.date('Ym',strtotime($start_time)),'case_key'=>$case_key);
-                $this->sync('case',$syncData,'edit');
+                $syncCaseData[] = array('tab_name'=>'case_'.date('Ym',strtotime($start_time)),'case_key'=>$case_key);
+                $this->sync('case',$syncCaseData,'edit');
             }
         }else{
             $res['status'] = false;
