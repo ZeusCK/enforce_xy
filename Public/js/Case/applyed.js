@@ -68,6 +68,7 @@ module.exports = function(target) {
 //编辑按钮
 module.editBar = function(case_key, start_time) {
     if(module.loadEdit){
+        $('#editEasy').show();
         $.parser.parse('#editEasy');
         $("#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
         $("#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
@@ -292,6 +293,7 @@ module.search2 = function() {
 //追加视频
 module.addvideo = function() {
     if(module.loadVideo){
+        $('#video').show();
         $.parser.parse('#video');
         $("#shotS2").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
         $("#shotE2").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
