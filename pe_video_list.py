@@ -13,7 +13,7 @@ class PeData:
         sql = """
         SELECT e.code,name,e.areacode,areaname
         FROM employee as e ,area_dep as a
-        WHERE a.areacode=e.areacode AND e.code='123123'
+        WHERE a.areacode=e.areacode
         """
          # 执行sql语句
         try:
@@ -153,7 +153,7 @@ class PeData:
     def db_close(self):
         self.db.close()
 if __name__ == '__main__':
-    pe_data = PeData('localhost','root','123456','enforce_xz','latin1')
+    pe_data = PeData('192.168.0.14','root','123456','enforce_xy','latin1')
     start = time.time()
     i = 0
     while time.time() - start < 3*60 :

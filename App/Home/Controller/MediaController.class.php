@@ -164,7 +164,7 @@ class MediaController extends CommonController
         $tempPath = $rootPath.'temp/';
         if(!is_dir($tempPath)) mkdir($tempPath);
 
-        //$this->del_dir($tempPath);      //删除超时文件
+        $this->del_dir($tempPath);      //删除超时文件
         $savePath = $tempPath.date('Ymd').'/';
         if(!isset($request['chunks'])){
             $request['chunks'] = 1;

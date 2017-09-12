@@ -549,6 +549,7 @@ App.prototype.datagrid.defaults = {
     fitColumns: true,
     rownumbers: true,
     fit: true,
+    autoRowHeight:false,
     pageSize:'20',
     pagination: true,
     queryParams:{},

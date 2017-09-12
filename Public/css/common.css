@@ -52,3 +52,13 @@
 html,body{
 	height:100%;
 }
+.l-btn-left{
+	margin: -4px -1px;
+}
+.datagrid-cell{
+	height: 22px;
+	line-height: 18px;
+}
+.l-btn{
+	padding: 2px 0;
+}

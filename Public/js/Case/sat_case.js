@@ -1,35 +1,4 @@
-var column = [
-    [
-        { field: 'areaname', title: '单位', rowspan: 2, width: 200,align: 'center' },
-        { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
-        { field: 'quaempnum', title: '执法警员总数', rowspan: 2, width: 80, align: 'center' },
-        { field: 'recorder', title: '执法记录仪数', rowspan: 2, width: 80, align: 'center' },
-        { field: 'upload', title: '民警上传情况', colspan: 3, align: 'center' },
-        { field: 'warning', title: '警情数', colspan: 9, align: 'center' },
-        { field: 'case', title: '案件数', colspan: 3, align: 'center' },
-        { field: 'collect', title: '采集站情况', colspan: 3, align: 'center' }
-    ],
-    [
-        { field: 'uploadnum', title: '上传警员数', width: 80, align: 'center' },
-        { field: 'unuploadnum', title: '未上传民警数', width: 80, align: 'center' },
-        { field: 'uploadper', title: '警员上传率', width: 80, align: 'center' },
-        { field: 'common', title: '一般警情', width: 80, align: 'center' },
-        { field: 'major', title: '重大警情', width: 80, align: 'center' },
-        { field: 'spot', title: '当场盘问检查', width: 80, align: 'center' },
-        { field: 'force', title: '行政强制执行', width: 80, align: 'center' },
-        { field: 'impede', title: '阻碍民警执法妨碍公务', width: 80, align: 'center' },
-        { field: 'otherdata', title: '其他数据', width: 80, align: 'center' },
-        { field: 'unmark', title: '未编辑数据', width: 80, align: 'center' },
-        { field: 'disuse', title: '无效数据', width: 80, align: 'center' },
-        { field: 'num', title: '合计', width: 80, align: 'center' },
-        { field: 'administration', title: '行政案件', width: 80, align: 'center' },
-        { field: 'criminal', title: '刑侦案件', width: 80, align: 'center' },
-        { field: 'case_num', title: '合计', width: 80, align: 'center' },
-        { field: 'wsbase_num', title: '采集站数', width: 80, align: 'center' },
-        { field: 'wsbase_online', title: '连接数', width: 80, align: 'center' },
-        { field: 'wsbase_per', title: '连接率', width: 80, align: 'center' }
-    ]
-];
+
 
 
 
@@ -92,6 +61,44 @@ module.selectColum = function(field){
     if(field == 'wsbase_num' || field == 'wsbase_online') return wsColums;
     return alarmColums;
 }
+module.titleInfo = function(v,r,i){
+    if(v != '0' && v != '-'){
+        return '<span title="'+v+'" style="cursor:pointer;">'+v+'</span>';
+    }
+    return v;
+}
+var column = [
+    [
+        { field: 'areaname', title: '单位', rowspan: 2, width: 200,align: 'center' },
+        { field: 'empnum', title: '警员总数', rowspan: 2, width: 80, align: 'center' },
+        { field: 'quaempnum', title: '执法警员总数', rowspan: 2, width: 80, align: 'center' },
+        { field: 'recorder', title: '执法记录仪数', rowspan: 2, width: 80, align: 'center' },
+        { field: 'upload', title: '民警上传情况', colspan: 3, align: 'center' },
+        { field: 'warning', title: '警情数', colspan: 9, align: 'center' },
+        { field: 'case', title: '案件数', colspan: 3, align: 'center' },
+        { field: 'collect', title: '采集站情况', colspan: 3, align: 'center' }
+    ],
+    [
+        { field: 'uploadnum', title: '上传警员数', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'unuploadnum', title: '未上传民警数', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'uploadper', title: '警员上传率', width: 80, align: 'center' },
+        { field: 'common', title: '一般警情', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'major', title: '重大警情', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'spot', title: '当场盘问检查', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'force', title: '行政强制执行', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'impede', title: '阻碍民警执法妨碍公务', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'otherdata', title: '其他数据', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'unmark', title: '未编辑数据', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'disuse', title: '无效数据', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'num', title: '合计', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'administration', title: '行政案件', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'criminal', title: '刑侦案件', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'case_num', title: '合计', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'wsbase_num', title: '采集站数', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'wsbase_online', title: '连接数', width: 80, align: 'center',formatter:module.titleInfo },
+        { field: 'wsbase_per', title: '连接率', width: 80, align: 'center' }
+    ]
+];
 var pass_field = ['areaname','empnum','recorder','uploadper','wsbase_per','quaempnum'];
 var wsColums = [[
                 {field:'gzz_ip',title:'工作站IP',align:'center'},

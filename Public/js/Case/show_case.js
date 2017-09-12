@@ -22,6 +22,8 @@ var DATA = {}; //搜索时的数据
 var startTime; //警情包开始时间
 module.case_key = ''; //警情包的关键字段
 var total; //查询之后的总数
+module.loadEdit = true;         //需要加载edit
+module.loadVideo = true;        //需要加载video
 //开始查询
 module.search = function() {
     app.extra("search", {
@@ -57,6 +59,12 @@ module.exports = function(target) {
 };
 //编辑按钮
 module.editBar = function(case_key, start_time) {
+    if(module.loadEdit){
+        $.parser.parse('#editEasy');
+        $("#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+        $("#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+        module.loadEdit = false;
+    }
     startTime = start_time;
     module.case_key = case_key;
     $.extend($.messager.defaults, {
@@ -89,6 +97,7 @@ module.editBar = function(case_key, start_time) {
                     url: editUrl,
                     title: "视频详情",
                     fit: true,
+                    autoRowHeight:false,
                     columns: [
                         [{ field: "id", checkbox: true },
                             { field: "wjbh", title: "文件名称", align: "center" },
@@ -249,9 +258,14 @@ module.search2 = function() {
         datagrid: "#addVideo_datagrid"
     });
 };
-
 //追加视频
 module.addvideo = function() {
+    if(module.loadVideo){
+        $.parser.parse('#video');
+        $("#shotS2").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+        $("#shotE2").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+        module.loadVideo = false;
+    }
     $("#addVideo").dialog("open");
     app.datagrid("#addVideo_datagrid", {
         url: addVideoUrl,
@@ -466,6 +480,7 @@ module.media_remove = function(start_time, wjbh, datagrid) {
     });
 };
 $(function() {
+    $.parser.parse('#init');
     //树的初始化
     tree.loadData(); //管理部门的树
     $("#area_list").tree({
@@ -482,33 +497,34 @@ $(function() {
     //警情类型下拉框
     app.combobox('#alarm_type,#edit_alarm_type', { type: 'alarm_type' });
     //设置默认时间
-    $("#shotS,#shotS2,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
-    $("#shotE,#shotE2,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+    $("#shotS").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+    $("#shotE").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
     //数据表单
     app.datagrid("#datagrid", {
         url: Url,
         title: "数据编辑",
-        onClickCell:function(rowIndex, field, value){
+       /* onClickCell:function(rowIndex, field, value){
             if(field != 'cz' && field != 'id'){
                 $.messager.alert('提示信息',value,'info');
             }
-        },
+        },*/
+
         // checkOnSelect:false,
         columns: [
             [
                 { field: "id", checkbox: true },
-                { field: "areaname", title: "单位", width: 200, align: "center" },
-                { field: "title", title: "标题", width: 200, align: "center" },
-                { field: "alarm_name", title: "案事件名称", width: 200, align: "center"},
-                { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
-                { field: "start_time", title: "采集日期", width: 200, align: "center" },
-                { field: "jyxm", title: "出警人", width: 200, align: "center" },
-                { field: "alarm_type_name", title: "警情类型", width: 200, align: "center" },
-                { field: "case_no", title: "案件编号", width: 200, align: "center" },
-                { field: "case_type_name", title: "案件类型", width: 200, align: "center" },
-                { field: 'update_time', title: '更新时间', width: 200, align: 'center' },
-                { field: "scsj", title: "上传日期", width: 200, align: "center" },
-                {field: 'source_name',title: '来源',width: 200,align: 'center'},
+                { field: "areaname", title: "单位", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "title", title: "标题", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "alarm_name", title: "案事件名称", width: 200, align: "center",formatter:module.titleInfo},
+                { field: "alarm_no", title: "警情编号", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "start_time", title: "采集日期", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "jyxm", title: "出警人", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "alarm_type_name", title: "警情类型", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "case_no", title: "案件编号", width: 200, align: "center",formatter:module.titleInfo },
+                { field: "case_type_name", title: "案件类型", width: 200, align: "center",formatter:module.titleInfo },
+                { field: 'update_time', title: '更新时间', width: 200, align: 'center',formatter:module.titleInfo },
+                { field: "scsj", title: "上传日期", width: 200, align: "center",formatter:module.titleInfo },
+                {field: 'source_name',title: '来源',width: 200,align: 'center',formatter:module.titleInfo},
                 {
                     field: "cz",
                     title: "操作",
@@ -603,3 +619,6 @@ module.timeCompare = function(target) {
         $(".cf").linkbutton("enable");
     }
 };
+module.titleInfo = function(v,r,i){
+    return '<span title="'+v+'">'+v+'</span>';
+}

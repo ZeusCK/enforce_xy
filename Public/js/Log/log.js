@@ -21,12 +21,12 @@ module.test = function(){
             },
             view: {
                 expandSpeed: ""
-            }/*,
+            },
             callback: {
-                beforeExpand: beforeExpand,
-                onAsyncSuccess: onAsyncSuccess,
-                onAsyncError: onAsyncError
-            }*/
+                onClick:function(e,id,node,flag){
+                    console.log(node,flag);
+                }
+            }
         };
         $.fn.zTree.init($("#area_list"), setting);
 }

@@ -165,4 +165,31 @@ class DemoController extends CommonController
         echo substr_replace('1111','2',0,strlen('2'));
         echo $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0];
     }
+    public function qwe()
+    {
+        $s = 'Y';
+        echo ++$s."<br>";
+
+        echo $s++;
+/*        $s = 'YY';
+        $n = 2;
+        $words = str_split($s);
+        dump($words);
+        $other = array();
+        $count = count($words);
+for($i=0;$i<$count;$i++){
+  if($words[$i] == " ") {
+    //if space
+    continue;
+  }
+  else{
+    for($y=0;$y<$n;$y++)
+        // echo $words[$i]."<br>";
+      $other[$i] = ++$words[$i];
+  }
+}
+$ans = join("", $other);
+
+print("$ans\n");*/
+    }
 }

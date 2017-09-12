@@ -22,6 +22,8 @@ var DATA = {};
 var startTime;
 module.case_key = '';
 var total;
+module.loadEdit = true;         //需要加载edit
+module.loadVideo = true;        //需要加载video
 //开始查询
 module.search = function() {
     app.extra("search", {
@@ -65,6 +67,12 @@ module.exports = function(target) {
 
 //编辑按钮
 module.editBar = function(case_key, start_time) {
+    if(module.loadEdit){
+        $.parser.parse('#editEasy');
+        $("#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+        $("#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+        module.loadEdit = false;
+    }
     startTime = start_time;
     module.case_key = case_key;
     $.extend($.messager.defaults, {
@@ -283,6 +291,12 @@ module.search2 = function() {
 
 //追加视频
 module.addvideo = function() {
+    if(module.loadVideo){
+        $.parser.parse('#video');
+        $("#shotS2").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+        $("#shotE2").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+        module.loadVideo = false;
+    }
     $("#addVideo").dialog("open");
     app.datagrid("#addVideo_datagrid", {
         url: addVideoUrl,
@@ -494,6 +508,7 @@ module.search_tree = function(value){
     tree.search_tree(value,1);
 }
 $(function() {
+    $.parser.parse('#init');
     //树的初始化
     tree.loadData(); //管理部门的树
     $("#area_list").tree({
@@ -509,8 +524,8 @@ $(function() {
     //警情类型下拉框
     app.combobox('#alarm_type,#edit_alarm_type', { type: 'alarm_type' });
     //设置默认时间
-    $("#shotS,#shotS2,#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
-    $("#shotE,#shotE2,#shotE4").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
+    $("#shotS").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
+    $("#shotE").datetimebox("setValue", app.date('Y-m-d') + ' 23:59:59');
     //数据表单
     app.datagrid("#datagrid", {
         url: Url,

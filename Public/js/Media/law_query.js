@@ -55,7 +55,7 @@ module.search = function(emmet) {
     if($('#label_type').combobox('getValue')==1||$('#label_type').combobox('getValue')==0){
         $('.datagrid-view>.datagrid-view1').show();
         $('.datagrid-view>.datagrid-view2').show();
-        $('#myP').remove(); 
+        $('#myP').remove();
         $('#datagrid').datagrid('load', data);
         $(emmet).linkbutton('enable');
     }else{
@@ -63,7 +63,7 @@ module.search = function(emmet) {
         module.ajaxSerach(data);
         $(emmet).linkbutton('enable');
     }
-    
+
 };
 module.ajaxSerach=function(params){
     $.ajax({
@@ -76,11 +76,11 @@ module.ajaxSerach=function(params){
                 var bfwz=app.public+'image/video_error.jpg';
                 for(var i=0;i<20;i++){
                     string+='<div class="photo">'+
-                    '<div class="title">哈是的覅水电费</div>'+
+                    '<div class="title"></div>'+
                     '<img src="'+bfwz+'" width="320px" height="240px">'+
                     '<div class="imgInfo">'+
                     '<div>包头市交管支队:安锐(020004)</div>'+
-                    '<div>时间的记得加女的是</div>'+
+                    '<div></div>'+
                     '</div>'+
                     '</div>';
                 }
@@ -127,7 +127,7 @@ module.ajaxSerach=function(params){
             string += '</div>';
             $('.datagrid-view>.datagrid-view1').hide();
             $('.datagrid-view>.datagrid-view2').hide();
-            $('.datagrid-view').append(string);  
+            $('.datagrid-view').append(string);
         }
     })
 };
@@ -262,7 +262,7 @@ module.case_add=function(){
             }
         });
     }
-    
+
 };
 module.case_close = function() {
     $('#caseDialog').dialog('close');

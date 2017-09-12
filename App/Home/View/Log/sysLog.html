@@ -24,7 +24,7 @@
 <div class="easyui-layout" fit="true">
         <div data-options="region:'west',title:'单位',iconCls:'icon-drive',split:false" style="width:20%;background:#eee;">
         <input class="easyui-searchbox" data-options="prompt:'开始查询部门',searcher:module.search_tree" style="width: 100%;"></input>
-            <ul id="area_list"></ul>
+           <ul id="area_list"></ul>
         </div>
         <div data-options="region:'center',border:false,iconCls:'icon-film'" style="width:60%;background:#eee;">
             <table id="datagrid" toolbar="#toolbar"></table>
@@ -39,7 +39,7 @@
             警员姓名：<input class="easyui-textbox" name="name"/>
             操作内容：<input class="easyui-textbox" name="cmt"/>
             <a class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:false" onclick="module.search(this)">开始查询</a>
-            <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a> -->
+            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
         </form>
     </div>
 </block>
