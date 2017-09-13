@@ -342,7 +342,6 @@ class CommonController extends Controller {
                 )
             );
             $objActSheet->setCellValue('A1',$title.'       统计时间'.date('n月j日'));
-            $title = u2g($title);
             /*设置宽度*/
             foreach ($abcArr as $abc) {
                 $objPHPExcel->getActiveSheet()->getColumnDimension($abc)->setWidth(15);
@@ -383,9 +382,9 @@ class CommonController extends Controller {
             if(!is_dir('./Public/download/'.date('Ymd')))   mkdir('./Public/download/'.date('Ymd'));
             if(!is_dir($dateDir))   mkdir($dateDir);
             if(DIRECTORY_SEPARATOR === '/'){
-                $url = $dateDir."/".g2u($title).".xls";
-            }else{
                 $url = $dateDir."/".$title.".xls";
+            }else{
+                $url = $dateDir."/".u2g($title).".xls";
             }
             try
             {
@@ -393,7 +392,7 @@ class CommonController extends Controller {
                 $url = substr($url, 1);
                 $host = $this->get_local_ip().$_SERVER['SERVER_PORT'];
                         //gethostbyname('');
-                $res = __ROOT__.$dateDir."/".g2u($title).".xls";
+                $res = __ROOT__.$dateDir."/".$title.".xls";
             }
             catch(Exception $e)
             {
