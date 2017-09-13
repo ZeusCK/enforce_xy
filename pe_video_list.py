@@ -146,7 +146,7 @@ class PeData:
            self.db.commit()
            print('插入成功')
         except:
-           #  如果发生错误则回滚
+           # 如果发生错误则回滚
            self.db.rollback()
            print('获取工作站信息发生错误')
            return False
