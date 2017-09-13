@@ -382,14 +382,18 @@ class CommonController extends Controller {
             $dateDir = './Public/download/'.date('Ymd').'/'.date('His').$id;
             if(!is_dir('./Public/download/'.date('Ymd')))   mkdir('./Public/download/'.date('Ymd'));
             if(!is_dir($dateDir))   mkdir($dateDir);
-            $url = $dateDir."/".$title.".xls";
+            if(DIRECTORY_SEPARATOR === '/'){
+                $url = $dateDir."/".g2u($title).".xls";
+            }else{
+                $url = $dateDir."/".$title.".xls";
+            }
             try
             {
                 $objWriter->save($url);
                 $url = substr($url, 1);
                 $host = $this->get_local_ip().$_SERVER['SERVER_PORT'];
                         //gethostbyname('');
-                $res = __ROOT__.$dateDir."/".g2u($title).".xls";;
+                $res = __ROOT__.$dateDir."/".g2u($title).".xls";
             }
             catch(Exception $e)
             {

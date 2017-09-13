@@ -34,7 +34,7 @@ class CaseController extends CommonController
             $this->redirect('Index/login');
             exit;
         }
-        
+
     }
     //案件编辑
     public function show_case()
@@ -254,7 +254,7 @@ class CaseController extends CommonController
         //同步视频
         $syncData = $case_videos;
         $this->sync('case_video',$syncData,'edit');
-		
+
         if($result){
             $res['status'] = true;
             $res['message'] = '删除警情成功';
@@ -646,7 +646,7 @@ class CaseController extends CommonController
                 )
 
             );
-        
+
         $data = $this->pares_data($data,$caseNUm,$fields,$mark,$paress);
         krsort($data);
         //---------------
@@ -1101,7 +1101,7 @@ class CaseController extends CommonController
                 if($value['alarm_type'] == '2') $initData['major'] += $value['num'];
                 if($value['alarm_type'] == '3') $initData['impede'] += $value['num'];
                 if($value['alarm_type'] == '4') $initData['force'] += $value['num'];
-                if($value['alarm_type'] == '5') $initData['spot'] += $value['num'];    
+                if($value['alarm_type'] == '5') $initData['spot'] += $value['num'];
                 if($value['alarm_type'] == '6') $initData['otherdata'] += $value['num'];
                 if($value['alarm_type'] == '7') $initData['disuse'] += $value['num'];
                 if($value['alarm_type'] == '0') $initData['unmark'] += $value['num'];
@@ -1254,7 +1254,11 @@ class CaseController extends CommonController
         if(!is_dir('./Public/download/'.date('Ymd')))   mkdir('./Public/download/'.date('Ymd'));
         if(!is_dir($dateDir))   mkdir($dateDir);
         $excelFileName = date('YmdHis').rand(10,99);
-        $url = $dateDir."/".u2g($title).'.xls';
+        if(DIRECTORY_SEPARATOR === '/'){
+            $url = $dateDir."/".$title.".xls";
+        }else{
+            $url = $dateDir."/".u2g($title).'.xls';
+        }
         try
         {
             $objWriter->save($url);
