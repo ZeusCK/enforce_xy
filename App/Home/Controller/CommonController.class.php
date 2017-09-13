@@ -297,7 +297,7 @@ class CommonController extends Controller {
      */
     public function saveExcel($datas,$title='repWork')
     {
-        
+
         $dir = './Public/download';     //需要删除的目录
         if(!is_dir($dir))   mkdir($dir);
         $this->del_dir($dir);
@@ -319,7 +319,9 @@ class CommonController extends Controller {
             }
             //导出Excel表格
             Vendor('PHPExcel.PHPExcel');
-            Vendor('PHPExcel.PHPExcel.Writer.Excel5');
+            /*Vendor('PHPExcel.PHPExcel.Writer.Excel5');
+            Vendor('PHPExcel.PHPExcel.Style.Alignment');
+            Vendor('PHPExcel.PHPExcel.Cell.DataType');*/
             /* 实例化类 */
             $objPHPExcel = new \PHPExcel();
             /* 设置输出的excel文件为2005兼容格式 */
@@ -371,7 +373,7 @@ class CommonController extends Controller {
                 /* excel文件内容 */
                 $j = 'A';
                 foreach ($value as $key=>$val) {
-                    $objActSheet->setCellValue($j.$i,$value[$cola[$j]]);
+                    $objActSheet->setCellValueExplicit($j.$i,$value[$cola[$j]], \PHPExcel_Cell_DataType::TYPE_STRING);
                     $j++;
                 }
                 $i++;

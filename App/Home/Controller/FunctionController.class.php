@@ -105,9 +105,10 @@ class FunctionController extends CommonController {
     /**
      * 将excel数据读入数组中
      * @param  string $filepath excel文件路径
+     * @param  boolean $header 是否有标题头
      * @return array           数组
      */
-    public function read_excel($filepath)
+    public function read_excel($filepath,$header=true)
     {
         if(!$filepath) return array();
         //导入Excel表格
@@ -124,7 +125,8 @@ class FunctionController extends CommonController {
         //获取最高行
         $hrow = $objWorksheet->getHighestRow();
         $allData = array();
-        for ($j = 1; $j <= $hrow; $j++) {
+        $startRow = $header ? 2 : 1;
+        for ($j = $startRow; $j <= $hrow; $j++) {
             $oneRowData = array();
             for ($k = 'A'; $k <= $hcolumn; $k++) {
                 $cell = $objWorksheet->getCell($k.$j)->getValue();
