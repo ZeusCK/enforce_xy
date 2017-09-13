@@ -389,10 +389,7 @@ class CommonController extends Controller {
             try
             {
                 $objWriter->save($url);
-                $url = substr($url, 1);
-                $host = $this->get_local_ip().$_SERVER['SERVER_PORT'];
-                        //gethostbyname('');
-                $res = __ROOT__.$dateDir."/".$title.".xls";
+                $res = __ROOT__.substr($dateDir, 1)."/".$title.".xls";
             }
             catch(Exception $e)
             {
