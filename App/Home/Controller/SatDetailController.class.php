@@ -34,7 +34,7 @@ class SatDetailController extends CommonController
         $sql = '';
         if($request['areas']){
             foreach ($request['areas'] as &$area) {
-                $area = 'areacode != "'.$area.'"'; 
+                $area = 'areacode != "'.$area.'"';
             }
             $sql = implode(' AND ', $request['areas']);
         }
@@ -166,8 +166,10 @@ class SatDetailController extends CommonController
             $emWhere['code'] = array('in',$selects);
             $rows = $employeedb->where($emWhere)->order('areacode desc')->select();
         }
+        $empl_qualify_type = $this->get_val_item('dictionary','empl_qualify');
         foreach ($rows as &$value) {
             $value['areaname'] = $areas[$value['areacode']];
+            $value['empl_qualify_name'] = $empl_qualify_type[$value['empl_qualify']];
         }
         $data = compact('total','rows');
         return g2us($data);
