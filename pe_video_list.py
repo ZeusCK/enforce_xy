@@ -161,5 +161,5 @@ if __name__ == '__main__':
         time.sleep(random.randrange(1,4))
         i = i+1
     pe_data.db_close()
-    #1
+    #11
     print('3分钟'+str(i)+'条数据插入完毕')
