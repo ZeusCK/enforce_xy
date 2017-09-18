@@ -75,11 +75,11 @@ module.play = function(case_key, start_time) {
         start_time;
     window.open(url);
 };
-module.search_tree = function(value){
-    tree.search_tree(value,1);
+module.search_tree = function(value) {
+    tree.search_tree(value, 1);
 }
-module.titleInfo = function(v,r,i){
-    return '<span title="'+v+'">'+v+'</span>';
+module.titleInfo = function(v, r, i) {
+    return '<span title="' + v + '">' + v + '</span>';
 }
 //计算天数差的函数，通用
 function DateDiff(sDate1, sDate2) {
@@ -127,68 +127,74 @@ $(function() {
                     field: "areaname",
                     title: "单位",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "title",
                     title: "标题",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "alarm_name",
                     title: "案事件名称",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "alarm_no",
                     title: "警情编号",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "start_time",
                     title: "采集日期",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "jyxm",
                     title: "出警人",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "alarm_type_name",
                     title: "警情类型",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "case_no",
                     title: "案件编号",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "case_type_name",
                     title: "案件类型",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
                 {
                     field: "scsj",
                     title: "上传日期",
                     width: 200,
-                    align: "center",formatter:module.titleInfo
+                    align: "center",
+                    formatter: module.titleInfo
                 },
-                {
-                    field: "update_time",
-                    title: "更新时间",
-                    width: 200,
-                    align: "center",formatter:module.titleInfo
-                },
+                { field: "update_time", title: "更新时间", width: 200, align: "center", formatter: module.titleInfo },
+                { field: 'source_name', title: '来源', width: 200, align: 'center', formatter: module.titleInfo },
                 {
                     field: "cz",
                     title: "操作",

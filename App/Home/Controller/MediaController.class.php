@@ -181,7 +181,7 @@ class MediaController extends CommonController
             $web_path = D($this->models['ftpdir'])->where('enable = 1 AND is_ftp_dir = 1')->getField('web_path');
             $where['jybh'] = session('code');
             $cpxh = D($this->models['pebase'])->where($where)->getField('cpxh');
-            $cpxh = $cpxh ? $caxh : 'cpxhpe';
+            $cpxh = $cpxh ? $cpxh : 'cpxhpe';
             $wjbh = $cpxh.'_'.session('code').'_'.date('YmdHis').'.'.$type;
             $web_path = $web_path ? $web_path :'/pe_file/';
             if(!is_dir($rootPath.$web_path)) mkdir($rootPath.$web_path);

@@ -36,11 +36,13 @@ class ServerController extends CommonController
         $statusType = $this->get_val_item('dictionary', 'status');
         foreach ($data['rows'] as &$value) {
             $value['status_name'] = $statusType[$value['status']];
+            $value['config_name'] = $statusType[$value['status']];
         }
         $data['offline'] = $data['online'] = 0;
         foreach ($show_sat as $val) {
             if($val['status'] == 0) $data['offline'] = $val['num'];
             if($val['status'] == 1) $data['online'] = $val['num'];
+
         }
         $this->saveExcel($data,'服务器');
         return g2us($data);
@@ -97,7 +99,7 @@ class ServerController extends CommonController
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
             if($request['server_ip']){
-                $request['old_server_ip'] = $info['server_ip']; 
+                $request['old_server_ip'] = $info['server_ip'];
             }else{
                 $request['server_ip'] = $info['server_ip'];
             }
@@ -136,7 +138,7 @@ class ServerController extends CommonController
         $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
         $areas[$areacode] = current($areaInfo);
         $where[] = $this->get_manger_sql('','areacode',false);
-        $where['areacode'] = array('neq',''); 
+        $where['areacode'] = array('neq','');
         $show_sat = $db->where($where)->field('count(1) as num,status')->group('status')->select();
         $where['status'] = 0;
         //统计离线

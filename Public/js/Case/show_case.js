@@ -153,6 +153,7 @@ module.editBar = function(case_key, start_time) {
                     onLoadSuccess: function(data) {
                         if (data.total > 0) $("#sbh").val(data.rows[0].cpxh);
                         $("#editForm").form("load", data.info);
+                        app.loadInfo('#editForm',data.info);
                         if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
                             $(this)
                                 .parent(".datagrid-view")

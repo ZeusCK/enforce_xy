@@ -712,3 +712,12 @@ App.prototype.time = function(){
     var date = new Date();
     return parseInt(date.getTime()/1000);
 }
+//载入不可变动的信息
+App.prototype.loadInfo = function(container,data){
+    var appInfos = $(container +' .app-info');
+    $.each(appInfos,function(n,m){
+        var name = $(m).attr('name');
+        var info = data[name] || '';
+        $(m).text(info);
+    });
+}

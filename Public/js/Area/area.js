@@ -34,7 +34,7 @@ module.addBar = function(){
         }
     });
     $('#addForm').form('reset');
-    //areatype:module.area_type, 
+    //areatype:module.area_type,
     $('#addForm').form('load',{fatherareaid:module.areaid,is_read:module.area_is_read});
     if(module.area_is_read == 0){
         $('#add_area_is_read').combobox('readonly',true);
@@ -76,7 +76,7 @@ module.add = function(target){
         },
         success:function(data){
             //新增部门  type:params.areatype,
-            $('#datagrid').datagrid('load',{areaid:module.areaid});
+            $('#datagrid').datagrid('load',{areacode:module.areacode});
             var node = $(tree.dom).tree('find',module.areaid);
             $(tree.dom).tree('append',{
                 parent: node.target,
@@ -131,7 +131,7 @@ module.remove = function(target){
                     data.areacode = ids;
                 },
                 success:function(data){
-                    $('#datagrid').datagrid('load',{areaid:module.areaid});
+                    $('#datagrid').datagrid('load',{areacode:module.areacode});
                     tree.loadData(true);
                 }
             });
@@ -209,7 +209,7 @@ $(function(){
         {field:'sort',title:'排序',width:200,align:'center'},
         ]],
         queryParams:{
-            areaid:module.areaid,
+            areacode:module.areacode,
             rand:Math.random()
         }
     });

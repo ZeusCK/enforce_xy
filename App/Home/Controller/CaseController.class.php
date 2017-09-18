@@ -1142,7 +1142,7 @@ class CaseController extends CommonController
     }
     /**
      * 编辑情况统计表
-     * @param  array $showData 搜索的数据
+     * @param  array $data 搜索的数据
      * @param  date $btime    搜索开始时间
      * @param  date $etime    搜索结束时间
      * @param  string $areaname 搜索部门

@@ -88,6 +88,7 @@ class DevController extends CommonController
             $this->ajaxReturn($result);
         }
         $request = u2gs($request);
+        $request['create_time'] = date('Y-m-d H:i:s');
         $result = $db->getTableAdd($request);
         if($result['status']){
             //同步
@@ -108,7 +109,7 @@ class DevController extends CommonController
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
             if($request['cpxh']){
-                $request['old_cpxh'] = $info['cpxh']; 
+                $request['old_cpxh'] = $info['cpxh'];
             }else{
                 $request['cpxh'] = $info['cpxh'];
             }

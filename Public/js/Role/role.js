@@ -1,7 +1,7 @@
 var things = {};
 things.datagridUrl = app.url('Role/dataList');
-things.addUrl = app.url('Role/dataAdd');
-things.editUrl = app.url('Role/dataEdit');
+things.addUrl = 'Role/dataAdd';
+things.editUrl = 'Role/dataEdit';
 things.removeUrl = app.url('Role/dataRemove');
 things.menuListUrl = app.url('Menu/dataList');
 things.roleMenuUrl = app.url('Role/roleMenu');
@@ -41,13 +41,20 @@ things.editBar = function(){
         $('#editDialog').dialog('open');
     }
 }
-things.change_info = function(form,url,dialog){
-    var params = app.serializeJson(form);
+things.change_info = function(form,url,dialog,target){
+    /*var params = app.serializeJson(form);
     if(!$(form).form('validate')){
         $.messager.alert('操作提示','有未满足条件的选项，无法提交','info');
         return false;
-    }
-    $.ajax({
+    }*/
+    app.extra('add_edit',{
+        form:form,
+        url:url,
+        datagrid:'#datagrid',
+        dialog:dialog,
+        linkbutton:target
+    })
+    /*$.ajax({
         url:url,
         type:'post',
         dataType:'json',
@@ -60,13 +67,13 @@ things.change_info = function(form,url,dialog){
             $(dialog).dialog('close');
             $.messager.alert('操作提示','网络故障','info');
         }
-    });
+    });*/
 }
-things.add = function(){
-    things.change_info('#addForm',things.addUrl,'#addDialog');
+things.add = function(target){
+    things.change_info('#addForm',things.addUrl,'#addDialog',target);
 }
-things.edit = function(){
-    things.change_info('#editForm',things.editUrl,'#editDialog');
+things.edit = function(target){
+    things.change_info('#editForm',things.editUrl,'#editDialog',target);
 }
 things.remove = function(target){
     var infos = $('#datagrid').datagrid('getSelections');

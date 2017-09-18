@@ -39,9 +39,9 @@
                 </div>
                 <div class="one-row">
                     <label class="fitem">采集日期</label>：
-                    <input class="easyui-datetimebox" data-options="height:22,editable:false" name="start_time" readonly/>
+                    <input class="easyui-datetimebox" data-options="height:22" name="start_time" readonly/>
                     <label class="fitem">上传日期</label>：
-                    <input class="easyui-datetimebox" data-options="height:22,editable:false" name="scsj" readonly/>
+                    <input class="easyui-datetimebox" data-options="height:22" name="scsj" readonly/>
                     <label class="fitem">备注</label>：
                     <input class="easyui-textbox" data-options="height:22,editable:false" name="remark" />
                 </div>
@@ -57,8 +57,8 @@
         <form id="searchForm3" method="post" novalidate>
                 <div class="search-box search-big">
                     <div class="search-text">采集时间:</div>
-                    <input class="easyui-datetimebox" name="video_time[btime]" data-options="editable:false" id="shotS4" /> -
-                    <input class="easyui-datetimebox" name="video_time[etime]" data-options="editable:false" id="shotE4" />
+                    <input class="easyui-datetimebox" name="video_time[btime]" id="shotS4" /> -
+                    <input class="easyui-datetimebox" name="video_time[etime]" id="shotE4" />
                     <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="module.search_video()">开始查询</a>
                     <a class="easyui-linkbutton cf" data-options="iconCls:'icon-cf',plain:false" onclick="module.slice(this)">拆分为警情包</a>
                 </div>

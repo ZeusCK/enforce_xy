@@ -24,6 +24,7 @@ app.tp.areaname = "{:session('areaname')}";
     <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
          <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
         负责人: <input class="easyui-textbox" data-options="height:22" name="hzr" style="width:168px"/>
+        IP: <input class="easyui-textbox" data-options="height:22" name="gzz_ip" style="width:168px"/>
         在线状态:
         <select class="easyui-combobox form_in" name="zxzt" style="width: 181px;" data-options="editable:false">
           <option value="">全部</option>
@@ -60,7 +61,7 @@ data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
     </div>
     <div class="form_m">
       <div for="name" class="form_label">负责人:</div>
-      <input class="easyui-validatebox form_in easyui-textbox" type="text" name="hzr" />
+      <input class="easyui-validatebox form_in easyui-textbox" type="text" name="fzr" />
     </div>
     <div class="form_m">
       <div for="name" class="form_label">负责人电话:</div>
@@ -68,10 +69,9 @@ data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
     </div>
     <div class="form_m">
       <div for="type" class="form_label">启用状态:</div>
-      <select class="easyui-combobox form_in" name="qyzt" style="width: 181px;"
-              data-options="editable:false">
-          <option value="0">未启用</option>
+      <select class="easyui-combobox form_in" name="qyzt" style="width: 181px;" data-options="editable:false">
           <option value="1">启用</option>
+          <option value="0">未启用</option>
       </select>
     </div>
   </form>
@@ -91,7 +91,7 @@ data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
         </div>
         <div class="form_m">
           <div for="name" class="form_label">负责人:</div>
-          <input class="easyui-validatebox form_in easyui-textbox" type="text" name="hzr" />
+          <input class="easyui-validatebox form_in easyui-textbox" type="text" name="fzr" />
         </div>
         <div class="form_m">
           <div for="name" class="form_label">负责人电话:</div>
@@ -99,10 +99,9 @@ data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
         </div>
         <div class="form_m">
           <div for="type" class="form_label">启用状态:</div>
-          <select class="easyui-combobox form_in" name="qyzt" style="width: 181px;"
-                  data-options="editable:false">
-              <option value="0">未启用</option>
+          <select class="easyui-combobox form_in" name="qyzt" style="width: 181px;" data-options="editable:false">
               <option value="1">启用</option>
+              <option value="0">未启用</option>
           </select>
         </div>
     </form>

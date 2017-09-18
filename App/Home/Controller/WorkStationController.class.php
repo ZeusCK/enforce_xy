@@ -19,10 +19,7 @@ class WorkStationController extends CommonController
     //工作站
     public function ws_base_list()
     {
-        $request['hzr'] = u2g(I('hzr'));        //负责人
-        $request['zxzt'] = I('zxzt');        //在线状态,0:不在线，1：在线
-        $request['qyzt'] = I('qyzt');
-        $request['areacode'] = I('areacode');
+        $request = u2g(I(''));
         $page = I('page');
         $rows = I('rows');
         $db =  D($this->models['wsbase']);
@@ -68,7 +65,7 @@ class WorkStationController extends CommonController
         // $request['create_user'] = session('user');
         $request['create_time'] = date('Y-m-d H:i:s');
         $request = u2gs($request);
-        $result = $db->getTableAdd(u2gs($request));
+        $result = $db->getTableAdd($request);
         if($result['status']){
             //同步
             $syncData[] = $request;
@@ -94,7 +91,7 @@ class WorkStationController extends CommonController
         $result = $db->getTableEdit($where,$request);
         if($result['status']){
             if($request['gzz_ip']){
-                $request['old_gzz_ip'] = $info['gzz_ip']; 
+                $request['old_gzz_ip'] = $info['gzz_ip'];
             }else{
                 $request['gzz_ip'] = $info['gzz_ip'];
             }
@@ -141,7 +138,7 @@ class WorkStationController extends CommonController
         $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
         $areas[$areacode] = current($areaInfo);
         $where[] = $this->get_manger_sql('','areacode',false);
-        $where['areacode'] = array('neq',''); 
+        $where['areacode'] = array('neq','');
         $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();
         $where['zxzt'] = 0;
         //统计离线

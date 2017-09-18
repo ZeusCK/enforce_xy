@@ -123,7 +123,7 @@ $(function(){
           {field:'gzz_ip',title:'工作站IP',align:'center'},
           {field:'areaname',title:'单位', width: 200, align:'center'},
           {field:'ztsj', title: '最后在线时间', width: 200, align: 'center' },
-          {field:'hzr', title: '负责人', width: 200, align: 'center' },
+          {field:'fzr', title: '负责人', width: 200, align: 'center' },
           {field:'dh', title: '负责人电话', width: 200, align: 'center' },
           {field:'qyztname', title: '启用状态', width: 200, align: 'center' },
           {field:'zxztname',title:'在线状态',width:200,align:'center'},

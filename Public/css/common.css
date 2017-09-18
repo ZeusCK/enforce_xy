@@ -62,3 +62,13 @@ html,body{
 .l-btn{
 	padding: 2px 0;
 }
+.app-info{
+	text-align: start;
+    height: 22px;
+    line-height: 22px;
+    width: 147px;
+    border: 1px solid #D3D3D3;
+    background-color: #eee;
+    display: inline-block;
+    border-radius: 5px 5px 5px 5px;
+}

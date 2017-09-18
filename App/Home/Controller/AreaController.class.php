@@ -40,7 +40,7 @@ class AreaController extends CommonController
         $check[] = $this->get_manger_sql($request['areacode'],'areacode',false);
         $data['total'] = 0;
         $data['rows'] = array();
-        $order = 'CONVERT(areacode,SIGNED) asc,sort asc';
+        $order = 'sort asc,CONVERT(areacode,SIGNED) asc';
         $data = $db->getTableList($check,$page,$rows,$order);
         $areas = $db->getField('areaid,areaname');
         // $areaType = $this->get_val_item('dictionary','areatype');
@@ -89,11 +89,12 @@ class AreaController extends CommonController
         $result = $db->getTableDel($where);
         if($result['status']){
             foreach ($this->link_tabs as $tab) {
+                $data = array();
                 $db_rm = D()->table($tab);
-                $db_rm->where($where)->delete();
+                // $db_rm->where($where)->delete();
                 //同步
                 $data['areacode'] = '';
-                $data['areaname'] = '';
+                if($tab != 'employee') $data['areaname'] = '';
                 $syncData = $db_rm->where($where)->save($data);
                 $this->sync($key,$syncData,'edit');
             }
@@ -190,7 +191,7 @@ class AreaController extends CommonController
         }
         $this->write_log('更新部门:'.g2u($areaInfo['areaname']));
         }
-        
+
         S('update'.$this->models['area'],true);     //设置部门缓存更新
         return $result;
     }

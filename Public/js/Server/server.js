@@ -147,7 +147,7 @@ $(function() {
                 { field: 'areaname', title: '单位', align: 'center' },
                 { field: 'server_port', title: '端口号', align: 'center' },
                 { field: 'trademark', title: '品牌', width: 200, align: 'center' },
-                { field: 'config', title: '配置', width: 200, align: 'center' },
+                { field: 'config_name', title: '配置', width: 200, align: 'center' },
                 { field: 'account', title: '帐号', width: 200, align: 'center' },
                 { field: 'password', title: '密码', width: 200, align: 'center' },
                 { field: 'db_user', title: '数据库账号', width: 200, align: 'center' },
