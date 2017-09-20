@@ -34,7 +34,6 @@ class CaseController extends CommonController
             $this->redirect('Index/login');
             exit;
         }
-
     }
     //案件编辑
     public function show_case()
@@ -117,7 +116,10 @@ class CaseController extends CommonController
         $rows = $request['rows'] ? $request['rows'] : 20;
         $areacode = $request['areacode'] ? $request['areacode'] : '';       //查询部门
         $manger_sql = $this->get_manger_sql($areacode,$idField,$jybhField);
-        $where[] = $manger_sql;
+        if($type == 0){
+            //加上移交的警情
+            $where[] = '('.$manger_sql.') OR ('.$this->get_manger_sql($areacode,'apply_areacode','apply_jybh').')';
+        }
         $where['del_flag'] = $request['del_flag'] ? $request['del_flag'] : 0;
         if($request['case_no']) $where['case_no'] = array('like','%'.$request['case_no'].'%');    //案件编号
         if($request['case_name']) $where['case_name'] = array('like','%'.$request['case_name'].'%');    //案件名称
@@ -356,7 +358,7 @@ class CaseController extends CommonController
         $data['apply_jyxm'] = u2g(session('user'));
         $data['apply_areacode'] = session('areacode');
         $data['apply_areaname'] = u2g(session('areaname'));
-        $data['update_time'] = date('Y-m-d H:i:s');
+        $data['apply_time'] = $data['update_time'] = date('Y-m-d H:i:s');
         $data['hand_status'] = 1;   //待审核状态
         //$db = D($this->models['case']);
         $where['case_key'] = $request['case_key'];

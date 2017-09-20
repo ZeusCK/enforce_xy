@@ -126,14 +126,14 @@
                             <label class="fitem" style="margin-left:0">警情类型<span class="mark">*</span></label>:
                             <input id="edit_alarm_type" style="width: 160px;" class="easyui-combobox" name="alarm_type" editable="false" required="true" />
                         </div>
-                        <div class="one-row">
+                        <!-- <div class="one-row">
                             <label class="fitem">警号</label>：
                             <span class="app-info" name="jybh"></span>
                             <label class="fitem" style="margin-left:0">出警人</label>：
                             <span class="app-info" name="jyxm"></span>
                             <label class="fitem" style="margin-left:0">设备号</label>：
                             <input class="easyui-textbox" id="sbh" style="" readonly name="cpxh" />
-                        </div>
+                        </div> -->
                         <div class="one-row">
                             <label class="fitem" style="margin-left:0">出警地址</label>：
                             <input class="easyui-textbox" style="" name="alarm_addr" />
@@ -150,14 +150,16 @@
                             <input class="easyui-textbox" id="case_name" name="case_name" required="true" />
                             <label class="fitem">案件编号<span class="mark">*</span></label>：
                             <input class="easyui-textbox" id="case_no" name="case_no" required="true" />
+                             <label class="fitem">案件类型<span class="mark">*</span></label>:
+                            <input id="edit_case_type" style="width: 160px;" class="easyui-combobox" name="case_type" required="true" editable=false />
                         </div>
                         <div class="one-row">
-                            <label class="fitem">案件类型<span class="mark">*</span></label>:
-                            <input id="edit_case_type" style="width: 160px;" class="easyui-combobox" name="case_type" required="true" editable=false />
                             <label class="fitem">办案单位</label>：
                             <input class="easyui-textbox" name="areaname" />
                             <label class="fitem">办案人</label>：
                             <input class="easyui-textbox" name="jyxm" />
+                            <label class="fitem">执法资格</label>：
+                            <input class="easyui-textbox" name="" />
                         </div>
                     </div>
                     <div>
@@ -178,8 +180,8 @@
                         </div>
                     </div>
                     <div class="one-row" style="text-align: center;">
-                        <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="  module.edit(this)">确定</a>
-                        <a id="hb" class="easyui-linkbutton" data-options="iconCls:'icon-hb'" onclick="  module.addvideo()">追加视频</a>
+                        <a id="ok" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="module.edit(this)">确定</a>
+                        <a id="hb" class="easyui-linkbutton" data-options="iconCls:'icon-hb'" onclick="module.addvideo()">追加视频</a>
                         <a id="cancel" class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="module.editCancel()">取消</a>
                     </div>
                 </form>

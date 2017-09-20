@@ -83,7 +83,7 @@ class EmployeeController extends CommonController
         unset($request['page'],$request['rows'],$request['rand']);
         if(!empty($request)){
             foreach($request as $key=>$value){
-                if($key != 'areaid' && $key != 'areacode' && $key != 'code'){
+                if($key != 'areaid' && $key != 'areacode' && $key != 'code' && $key != 'roleid' && $key != 'dept_role_id'){
                     $check[$key] = array('like','%'.u2g($value).'%');
                 }
             }
@@ -95,6 +95,8 @@ class EmployeeController extends CommonController
         $deptroles = $deptroledb->getField('dept_role_id,rolename');
         $check[] = $this->get_manger_sql(I('areacode'),'areacode','code').' OR areacode = ""';
         if($request['code']) $check['code'] = $request['code'];
+        if($request['roleid']) $check['e.roleid'] = $request['roleid'];
+        if($request['dept_role_id']) $check['e.dept_role_id'] = $request['dept_role_id'];
         $roledb = D($this->models['role']);
         $roles = $roledb->getField('roleid,rolename');
         $order = 'areacode asc,level asc';

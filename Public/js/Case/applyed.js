@@ -111,7 +111,10 @@ module.editBar = function(case_key, start_time) {
                         [{ field: "id", checkbox: true },
                             { field: "wjbh", title: "文件名称", align: "center" },
                             { field: "source_name", title: "来源", align: "center" },
-                            { field: "ccfwq_ip", title: "存储服务器IP", align: "center" },
+                            // { field: "ccfwq_ip", title: "存储服务器IP", align: "center" },
+                            { field: "jyxm", title: "警员姓名", width: 200, align: "center" },
+                            { field: "jybh", title: "警号", width: 200, align: "center" },
+                            { field: "cpxh", title: "设备号", width: 200, align: "center" },
                             /*{field: 'alarm_name',title: '保质期限',align: 'center'},
                               {field: 'alarm_no',title: '剩余期限',align: 'center'}, */
                             { field: "file_type_name", title: "文件类型", align: "center" },
@@ -160,6 +163,7 @@ module.editBar = function(case_key, start_time) {
                     onLoadSuccess: function(data) {
                         if (data.total > 0) $("#sbh").textbox("setValue", data.rows[0].cpxh);
                         $("#editForm").form("load", data.info);
+                        app.loadInfo('#editForm',data.info);
                         if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
                             $(this)
                                 .parent(".datagrid-view")

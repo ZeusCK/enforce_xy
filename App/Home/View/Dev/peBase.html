@@ -98,6 +98,12 @@ app.tp.areaname = "{:session('areaname')}";
                 <input class="form_in easyui-textbox" type="text" name="standard" required="true"/></div>
             <div class="form_m"><div for="standard" class="form_label">设备状态： </div>
                 <input class="form_in easyui-combobox" id="status" type="text" name="status"/></div>
+            <div class="form_m">
+                <div for="pe_type" class="form_label">设备种类 : </div>
+                <select class=" easyui-combobox form_in" name="pe_type" style="width: 181px;" data-options="editable:false">
+                    <option value="1">执法记录仪</option>
+                </select>
+            </div>
         </form>
     </div>
     <div id="dialogBtns">

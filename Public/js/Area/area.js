@@ -11,6 +11,17 @@ module.areaname = app.tp.areaname;
 module.area_is_read = app.tp.area_is_read;
 // module.area_type = app.tp.area_type;
 var searchData = {};
+//验证num是否是01~99的字符
+module.checkNum = function(num){
+    var nums = num.split('');
+    if(nums.length != 2) return false;
+    nums[0] = parseInt(nums[0]);
+    nums[1] = parseInt(nums[1]);
+    if(0 > nums[0] || 9 < nums[0] || isNaN(nums[0])) return false;
+    if(0 > nums[1] || 9 < nums[1] || isNaN(nums[1])) return false;
+    if(0 == nums[0] && 0 == nums[1]) return false;
+    return true;
+}
 //基本的搜索
 module.show = function(){
     $('#searchForm').form('reset');
@@ -52,14 +63,15 @@ module.editBar = function(){
         return false;
     }
     if(infos.length == 1){
+        var info = $.extend({},infos[0]);
         $('#codetext_1').html(infos[0].areacode.substring(0,infos[0].areacode.length-2));
-        infos[0].areacode=infos[0].areacode.substring(infos[0].areacode.length-2,infos[0].areacode.length);
+        info.areacode = infos[0].areacode.substring(infos[0].areacode.length-2,infos[0].areacode.length);
         if(infos[0].is_read == 0){
             $('#edit_area_is_read').combobox('readonly',true);
         }else{
             $('#edit_area_is_read').combobox('readonly',false);
         }
-        $('#editForm').form('load',infos[0]);
+        $('#editForm').form('load',info);
         $('#editDialog').dialog('open');
     }
 }
@@ -71,6 +83,10 @@ module.add = function(target){
         url:module.addUrl,
         linkbutton:target,
         parsedata:function(data){
+            if(!module.checkNum(data.areacode)){
+                $.messager.alert('提示信息','请输入01~99的两位字符','info');
+                return false;
+            }
             data.areacode=$('#codetext').html()+data.areacode;
             params = data;
         },
@@ -93,6 +109,10 @@ module.edit = function(target){
         url:module.editUrl,
         linkbutton:target,
         parsedata:function(data){
+            if(!module.checkNum(data.areacode)){
+                $.messager.alert('提示信息','请输入01~99的两位字符','info');
+                return false;
+            }
             data.areacode=$('#codetext_1').html()+data.areacode;
             params = data;
         },
