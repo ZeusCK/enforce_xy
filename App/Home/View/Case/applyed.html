@@ -150,14 +150,17 @@
                             <input class="easyui-textbox" id="case_name" name="case_name" required="true" />
                             <label class="fitem">案件编号<span class="mark">*</span></label>：
                             <input class="easyui-textbox" id="case_no" name="case_no" required="true" />
-                        </div>
-                        <div class="one-row">
                             <label class="fitem">案件类型<span class="mark">*</span></label>:
                             <input id="edit_case_type" style="width: 160px;" class="easyui-combobox" name="case_type" required="true" editable=false />
+                        </div>
+                        <div class="one-row">
+
                             <label class="fitem">办案单位</label>：
                             <input class="easyui-textbox" name="areaname" />
                             <label class="fitem">办案人</label>：
                             <input class="easyui-textbox" name="jyxm" />
+                            <label class="fitem">执法资格</label>：
+                            <span class="app-oinfo" name="empl_qualify">{:session('empl_qualify')}</span>
                         </div>
                     </div>
                     <div>
@@ -166,7 +169,7 @@
                             <label class="fitem">视频标题</label>：
                             <input class="easyui-textbox" name="title" />
                             <label class="fitem">编辑人</label>：
-                            <span class="app-info" name="edit_name">{:session('user')}</span>
+                            <span class="app-oinfo" name="edit_name">{:session('user')}</span>
                         </div>
                         <div class="one-row">
                             <label class="fitem">采集日期</label>：

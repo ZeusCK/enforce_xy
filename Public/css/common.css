@@ -62,7 +62,7 @@ html,body{
 .l-btn{
 	padding: 2px 0;
 }
-.app-info{
+.app-info,.app-oinfo{
 	text-align: start;
     height: 22px;
     line-height: 22px;
