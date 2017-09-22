@@ -578,7 +578,7 @@ $(function() {
                 { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
                 { field: "alarm_name", title: "案事件名称", width: 200, align: "center" },
                 // { field: "areaname", title: "出警部门", width: 200, align: "center" },
-                { field: "case_addr", title: "出警地址", width: 200, align: "center" },
+                { field: "alarm_addr", title: "出警地址", width: 200, align: "center" },
                 { field: "jyxm", title: "出警人", width: 100, align: "center" },
                 { field: "start_time", title: "采集日期", width: 200, align: "center" },
                 { field: "areaname", title: "移交部门", width: 200, align: "center" },
