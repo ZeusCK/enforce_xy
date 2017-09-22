@@ -155,13 +155,12 @@
                             <input id="edit_case_type" style="width: 160px;" class="easyui-combobox" name="case_type" required="true" editable=false />
                         </div>
                         <div class="one-row">
-
                             <label class="fitem">办案单位</label>：
-                            <input class="easyui-textbox" name="areaname" />
+                            <span onclick="module.show_case_tree()"><input class="easyui-textbox" name="case_dept" id="case_dept"/></span>
                             <label class="fitem">办案人</label>：
-                            <input class="easyui-textbox" name="jyxm" />
+                            <input class="easyui-combobox" name="case_empl" style="width: 160px;" id="case_empl"/>
                             <label class="fitem">执法资格</label>：
-                            <span class="app-oinfo" name="empl_qualify">{:session('empl_qualify')}</span>
+                            <span class="app-oinfo" name="empl_qualify" id="empl_qualify"></span>
                         </div>
                     </div>
                     <div>

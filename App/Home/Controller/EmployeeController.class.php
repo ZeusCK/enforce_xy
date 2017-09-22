@@ -122,7 +122,11 @@ class EmployeeController extends CommonController
         $where[] = $this->get_manger_sql($request['areacode'],'areacode','code');
         $where['areacode'] = $request['areacode'];
         $db = D($this->models['employee']);
-        $rows = $db->where($where)->field('code,name')->select();
+        $rows = $db->where($where)->field('code,name,empl_qualify')->select();
+        $empl_qualify_type = $this->get_val_item('dictionary','empl_qualify');
+        foreach ($rows as &$value) {
+            $value['empl_qualify'] = $empl_qualify_type[$value['empl_qualify']];
+        }
         return g2us($rows);
     }
     //增加事件

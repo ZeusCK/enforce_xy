@@ -1,5 +1,5 @@
 function Tree(dom){
-    this.dom = dom;
+    this.dom = dom || '';
     this.data = null;
 }
 //加载管理的部门 noS使用缓存  true不使用 false使用
@@ -131,6 +131,34 @@ Tree.prototype.show_tp_tree = function(){
             $(dom).tree('loadData',data);
         }
     });
+}
+//ztree数据
+Tree.prototype.zTree_area = function(target, params) {
+    var options = $.extend({},Tree.prototype.zTree_area.defaluts,params);
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onClick: function(e,j,n,f){
+                options.onClick(n);
+            }
+        }
+    }
+    $.ajax({
+        url: app.tp.ajax + '?rand=' + Math.random() + '&tpUrl='+options.url,
+        type: 'get',
+        dataType: 'json',
+        success: function(data) {
+            $.fn.zTree.init($(target), setting, data);
+        }
+    });
+}
+Tree.prototype.zTree_area.defaluts = {
+    url:'',
+    onClick:function(n){}
 }
 Tree.prototype.init = function(){
     $(this.dom).tree({

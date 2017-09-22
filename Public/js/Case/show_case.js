@@ -22,8 +22,9 @@ var DATA = {}; //搜索时的数据
 var startTime; //警情包开始时间
 module.case_key = ''; //警情包的关键字段
 var total; //查询之后的总数
-module.loadEdit = true;         //需要加载edit
-module.loadVideo = true;        //需要加载video
+module.loadEdit = true; //需要加载edit
+module.loadVideo = true; //需要加载video
+module.loadCaseTree = true; //需要加载case_d
 //开始查询
 module.search = function() {
     app.extra("search", {
@@ -59,7 +60,7 @@ module.exports = function(target) {
 };
 //编辑按钮
 module.editBar = function(case_key, start_time) {
-    if(module.loadEdit){
+    if (module.loadEdit) {
         $('#editEasy').show();
         $.parser.parse('#editEasy');
         $("#shotS4").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
@@ -98,7 +99,7 @@ module.editBar = function(case_key, start_time) {
                     url: editUrl,
                     title: "视频详情",
                     fit: true,
-                    autoRowHeight:false,
+                    autoRowHeight: false,
                     columns: [
                         [{ field: "id", checkbox: true },
                             { field: "wjbh", title: "文件名称", width: 200, align: "center" },
@@ -119,22 +120,22 @@ module.editBar = function(case_key, start_time) {
                                 width: 200,
                                 align: "center",
                                 formatter: function(value, row, index) {
-                                    var str = '<a href="javascript:void(0)" title="打开文件" onclick="module.playOne(\'' + row.case_key + "','" + startTime + '\',\''+row.wjbh+'\')" name="play"></a>';
+                                    var str = '<a href="javascript:void(0)" title="打开文件" onclick="module.playOne(\'' + row.case_key + "','" + startTime + '\',\'' + row.wjbh + '\')" name="play"></a>';
                                     if (row.start_time == startTime) {
-                                        str += '<a href="javascript:void(0)" onclick="module.media_remove(\'' +row.start_time +"','" +row.wjbh +'\',\'#video_datagrid\')" name="sc"></a>';
+                                        str += '<a href="javascript:void(0)" onclick="module.media_remove(\'' + row.start_time + "','" + row.wjbh + '\',\'#video_datagrid\')" name="sc"></a>';
                                         // str += '<span style="color:red">不可操作</span>';
                                         return str;
                                     }
                                     // if (row.source == "3" || row.source == "2") {
-                                        str += '<a href="javascript:void(0)" title="删除" onclick="module.media_remove(\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\',\'#video_datagrid\')" name="sc"></a><a href="javascript:void(0)" title="移出警情包" onclick="module.pack_pop(this,\'' +
-                                            row.start_time +
-                                            "','" +
-                                            row.wjbh +
-                                            '\',1)" name="cf" ></a>';
+                                    str += '<a href="javascript:void(0)" title="删除" onclick="module.media_remove(\'' +
+                                        row.start_time +
+                                        "','" +
+                                        row.wjbh +
+                                        '\',\'#video_datagrid\')" name="sc"></a><a href="javascript:void(0)" title="移出警情包" onclick="module.pack_pop(this,\'' +
+                                        row.start_time +
+                                        "','" +
+                                        row.wjbh +
+                                        '\',1)" name="cf" ></a>';
                                     /*} else {
                                         str +=
                                             '<a href="javascript:void(0)" onclick="module.pack_pop(this,\'' +
@@ -155,18 +156,11 @@ module.editBar = function(case_key, start_time) {
                     onLoadSuccess: function(data) {
                         // if (data.total > 0) $("#sbh").val(data.rows[0].cpxh);
                         $("#editForm").form("load", data.info);
-                        app.loadInfo('#editForm',data.info);
+                        app.loadInfo('#editForm', data.info);
                         if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
-                            $(this)
-                                .parent(".datagrid-view")
-                                .find("div.datagrid-view1")
-                                .hide();
+                            $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
                             $(this).parent(".datagrid-view").children(".datagrid-view2");
-                            $(this)
-                                .parent(".datagrid-view")
-                                .children(".datagrid-view2")
-                                .css("left", 0)
-                                .find("div.datagrid-body")
+                            $(this).parent(".datagrid-view").children(".datagrid-view2").css("left", 0).find("div.datagrid-body")
                                 .html("没有相关记录，请重新搜索！")
                                 .css({
                                     color: "#F00",
@@ -174,15 +168,12 @@ module.editBar = function(case_key, start_time) {
                                     "font-size": "20px"
                                 });
                         }
-                        if (data.error) {
-                            $.messager.alert("操作提示", data.error, "info");
-                        }
+                        if (data.error) $.messager.alert("操作提示", data.error, "info");
                         try {
                             $('a[name="sc"]').linkbutton({
                                 iconCls: "icon icon-sc"
                             });
                         } catch (e) {}
-
                         $('a[name="cf"]').linkbutton({
                             iconCls: "icon icon-cf"
                         });
@@ -210,7 +201,7 @@ module.edit = function(target) {
         form: "#editForm",
         dialog: "#editDialog",
         datagrid: "#datagrid",
-        linkbutton:target
+        linkbutton: target
     };
     n.parsedata = function(params) {
         delete params["cpxh"];
@@ -236,13 +227,45 @@ module.play = function(case_key, start_time) {
     var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time;
     window.open(url);
 };
-module.playOne = function(case_key, start_time,wjbh) {
-    var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time +'&wjbh='+wjbh;
+module.playOne = function(case_key, start_time, wjbh) {
+    var url = app.url("Case/play_case") + "?case_key=" + case_key + "&start_time=" + start_time + '&wjbh=' + wjbh;
     window.open(url);
 };
-module.search_tree = function(value){
-    tree.search_tree(value,1);
-}
+module.search_tree = function(value) {
+    tree.search_tree(value, 1);
+};
+//加载警员
+module.loadCaseEmpl = function(areacode){
+    $('#case_empl').combobox({
+        url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+areacode,
+        valueField:'name',
+        textField:'name',
+        method:'get',
+        onSelect:function(record){
+            $('#empl_qualify').text(record.empl_qualify);
+        }
+    });
+};
+//点击办案单位
+module.show_case_tree = function(){
+    if(module.loadCaseTree){
+        $('#case_div').show();
+        $.parser.parse('#case_div');
+        tree.zTree_area('#case_tree',{
+            url:'Area/ztree_area',
+            onClick:function(n){
+                console.log(n);
+                $('#case_dept').textbox('setValue',n.name);
+                $('#case_empl').textbox('setValue','');
+                module.loadCaseEmpl(n.areacode);
+                $('#case_tree_dia').dialog('close');
+            }
+        });
+        module.loadCaseTree = false;
+    }
+    $('#case_tree_dia').dialog('open');
+};
+
 //计算天数差的函数，通用
 function DateDiff(sDate1, sDate2) {
     //sDate1和sDate2是2002-12-18格式
@@ -264,7 +287,7 @@ module.search2 = function() {
 };
 //追加视频
 module.addvideo = function() {
-    if(module.loadVideo){
+    if (module.loadVideo) {
         $('#video').show();
         $.parser.parse('#video');
         $("#shotS2").datetimebox("setValue", app.date('Y-m-d', app.time() - 6 * 24 * 60 * 60) + ' 00:00:00');
@@ -508,28 +531,28 @@ $(function() {
     app.datagrid("#datagrid", {
         url: Url,
         title: "数据编辑",
-       /* onClickCell:function(rowIndex, field, value){
-            if(field != 'cz' && field != 'id'){
-                $.messager.alert('提示信息',value,'info');
-            }
-        },*/
+        /* onClickCell:function(rowIndex, field, value){
+             if(field != 'cz' && field != 'id'){
+                 $.messager.alert('提示信息',value,'info');
+             }
+         },*/
 
         // checkOnSelect:false,
         columns: [
             [
                 { field: "id", checkbox: true },
-                { field: "areaname", title: "单位", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "title", title: "标题", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "alarm_name", title: "案事件名称", width: 200, align: "center",formatter:module.titleInfo},
-                { field: "alarm_no", title: "警情编号", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "start_time", title: "采集日期", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "jyxm", title: "出警人", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "alarm_type_name", title: "警情类型", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "case_no", title: "案件编号", width: 200, align: "center",formatter:module.titleInfo },
-                { field: "case_type_name", title: "案件类型", width: 200, align: "center",formatter:module.titleInfo },
-                { field: 'update_time', title: '更新时间', width: 200, align: 'center',formatter:module.titleInfo },
-                { field: "scsj", title: "上传日期", width: 200, align: "center",formatter:module.titleInfo },
-                {field: 'source_name',title: '来源',width: 200,align: 'center',formatter:module.titleInfo},
+                { field: "areaname", title: "单位", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "title", title: "标题", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "alarm_name", title: "案事件名称", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "alarm_no", title: "警情编号", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "start_time", title: "采集日期", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "jyxm", title: "出警人", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "alarm_type_name", title: "警情类型", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "case_no", title: "案件编号", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "case_type_name", title: "案件类型", width: 200, align: "center", formatter: module.titleInfo },
+                { field: 'update_time', title: '更新时间', width: 200, align: 'center', formatter: module.titleInfo },
+                { field: "scsj", title: "上传日期", width: 200, align: "center", formatter: module.titleInfo },
+                { field: 'source_name', title: '来源', width: 200, align: 'center', formatter: module.titleInfo },
                 {
                     field: "cz",
                     title: "操作",
@@ -539,9 +562,9 @@ $(function() {
                         if (row.hand_status == 2 && row.jybh == module.code) {
                             return '<a style="red">已移交</a>';
                         } else {
-                            if(row.is_read == '0'){
+                            if (row.is_read == '0') {
                                 return '<a href="javascript:void(0)" title="打开文件" onclick="module.play(\'' + row.case_key + "','" + row.start_time + '\')" name="play"></a><a style="red">只读</a>';
-                            }else if (row.hand_status == 2) {
+                            } else if (row.hand_status == 2) {
                                 return '<a href="javascript:void(0)" title="打开文件" onclick="module.play(\'' + row.case_key + "','" + row.start_time + '\')" name="play"></a>' +
                                     '<a href="javascript:void(0)" title="编辑文件" onclick="module.editBar(\'' + row.case_key + "','" + row.start_time + '\')" name="edit" ></a>';
                             } else {
@@ -602,7 +625,7 @@ module.judge = function() {
         handStatus.push(m.hand_status);
         is_reads.push(m.is_read);
     });
-    if (jQuery.inArray("2", handStatus) > -1 || $.inArray('0',is_reads) > -1) {
+    if (jQuery.inArray("2", handStatus) > -1 || $.inArray('0', is_reads) > -1) {
         $("#hb").linkbutton("disable");
     } else {
         $("#hb").linkbutton("enable");
@@ -624,6 +647,6 @@ module.timeCompare = function(target) {
         $(".cf").linkbutton("enable");
     }
 };
-module.titleInfo = function(v,r,i){
-    return '<span title="'+v+'">'+v+'</span>';
+module.titleInfo = function(v, r, i) {
+    return '<span title="' + v + '">' + v + '</span>';
 }

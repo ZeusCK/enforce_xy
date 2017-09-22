@@ -1,5 +1,6 @@
 <extend name="layouts:master" />
 <block name="link">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/jquery-plugins/zTree/css/zTreeStyle/zTreeStyle.css?v={:C('ENFORCE_VERSION')}">
     <style>
     .mark {
         color: red;
@@ -57,6 +58,7 @@
     app.tp.code = "{:session('code')}";
     $.parser.auto = false;
     </script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-plugins/zTree/js/jquery.ztree.all.min.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Time.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Case/show_case.js?v={:C('ENFORCE_VERSION')}"></script>
@@ -155,11 +157,11 @@
                         </div>
                         <div class="one-row">
                             <label class="fitem">办案单位</label>：
-                            <input class="easyui-textbox" name="areaname" />
+                            <span onclick="module.show_case_tree()"><input class="easyui-textbox" name="case_dept" id="case_dept"/></span>
                             <label class="fitem">办案人</label>：
-                            <input class="easyui-textbox" name="jyxm" />
+                            <input class="easyui-combobox" name="case_empl" style="width: 160px;" id="case_empl"/>
                             <label class="fitem">执法资格</label>：
-                            <span class="app-oinfo" name="empl_qualify">{:session('empl_qualify')}</span>
+                            <span class="app-oinfo" name="empl_qualify" id="empl_qualify"></span>
                         </div>
                     </div>
                     <div>
@@ -211,6 +213,11 @@
                 </form>
             </div>
             <table id="addVideo_datagrid" toolbar="#toolbar2"></table>
+        </div>
+    </div>
+    <div id="case_div" style="display: none;">
+        <div id="case_tree_dia" title="单位" class="easyui-dialog" style="width: 400px;height:500px" data-options="modal:true,closed: true">
+            <ul id="case_tree" class="ztree"></ul>
         </div>
     </div>
 </block>

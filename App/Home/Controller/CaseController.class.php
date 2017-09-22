@@ -554,6 +554,12 @@ class CaseController extends CommonController
         $data = M()->table('case_video_'.$table)->where($caseWhere)->select();
         $fileType = $this->get_val_item('dictionary','filetype');
         $video_source = $this->get_val_item('dictionary','video_source');
+        //警员执法资格
+        $empl_qualify_type = $this->get_val_item('dictionary','empl_qualify');
+        if($caseInfo['case_empl']){
+            $empl_qualify = D($this->models['employee'])->where('name="'.$caseInfo['case_empl'].'"')->getField('empl_qualify');
+        }
+        $caseInfo['empl_qualify'] = $empl_qualify_type[$empl_qualify] ? $empl_qualify_type[$empl_qualify] : '';
         foreach ($data as &$value) {
             if(strpos($value['bfwz'],'http') === false){
                 $filePath = $value['bfwz'];

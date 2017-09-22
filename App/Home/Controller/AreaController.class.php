@@ -196,7 +196,7 @@ class AreaController extends CommonController
         return $result;
     }
     //获取自身展示部门
-    public function all_user_area($type)
+    public function all_user_area()
     {
         $db = D($this->models['area']);
         $where = $this->get_manger_sql('','areacode',false). 'OR areacode="'.session('areacode').'"';
@@ -212,11 +212,21 @@ class AreaController extends CommonController
         }
         return $data;
     }
+    //前端ztree插件数据
+    public function ztree_area($request)
+    {
+        $data = $this->all_user_area();
+        foreach ($data as &$value) {
+            $value['id'] = $value['areaid'];
+            $value['name'] = $value['areaname'];
+            $value['pId'] = $value['fatherareaid'];
+        }
+        return g2us($data);
+    }
     //显示未绑定的交警部门的树
     public function show_tp_tree()
     {
-        $type = 1;
-        $data = $this->all_user_area($type);
+        $data = $this->all_user_area();
         if(!empty($data)){
             $ids = array(0);
             //$l_arr 保存菜单的一些信息  0-id  1-text 2-iconCls 3-fid 4-odr
@@ -338,7 +348,6 @@ class AreaController extends CommonController
         $db = D($this->models['area']);
         $where['areaid'] = $areaid;
         $data = $db->where($where)->select();
-
         $l_arr = [0=>'areaid',1=>'fatherareaid'];
         $info_f = $this->getParentData($data,$this->models['area'],$l_arr);
         if(!$no_self) $info_f = array_merge($data,$info_f);
@@ -402,7 +411,7 @@ class AreaController extends CommonController
         $is_read = I('is_read');
         $res = $func->save_upload($_FILES['file'],array('xls','xlsx'));
         $db = D($this->models['area']);
-        $areaType = array_flip($this->get_val_item('dictionary','areatype'));
+        // $areaType = array_flip($this->get_val_item('dictionary','areatype'));
         $key_code = array();
         $name_code = array('部门名称'=>'areaname',
                            '部门编号'=>'areacode',
@@ -427,19 +436,10 @@ class AreaController extends CommonController
             foreach ($data as $value) {
                 $saveData= array();
                 foreach ($value as $k => $val) {
-                    if($val === null){
-                        $val = '';
-                    }else{
-                        $val = u2g($val);
-                    }
+                    $val = $val === null ? '' : u2g($val);
                     if(!array_key_exists($k,$key_code)) continue;
-                    if($key_code[$k] == 'type'){             //
-                        $saveData[$key_code[$k]] = $areaType[$val];
-                    }else{
-                        $saveData[$key_code[$k]] = $val;
-                    }
+                    // $saveData[$key_code[$k]] = $key_code[$k] == 'type' ? $areaType[$val] : $val;
                     if($key_code[$k] == 'areacode') $sortItem[] = $val;
-
                 }
                 $allData[] = $saveData;
             }

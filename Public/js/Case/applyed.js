@@ -379,7 +379,37 @@ module.addvideo = function() {
         }
     });
 };
-
+//加载警员
+module.loadCaseEmpl = function(areacode){
+    $('#case_empl').combobox({
+        url:app.tp.ajax+'?tpUrl=Employee/get_area_emp&areacode='+areacode,
+        valueField:'name',
+        textField:'name',
+        method:'get',
+        onSelect:function(record){
+            $('#empl_qualify').text(record.empl_qualify);
+        }
+    });
+};
+//点击办案单位
+module.show_case_tree = function(){
+    if(module.loadCaseTree){
+        $('#case_div').show();
+        $.parser.parse('#case_div');
+        tree.zTree_area('#case_tree',{
+            url:'Area/ztree_area',
+            onClick:function(n){
+                console.log(n);
+                $('#case_dept').textbox('setValue',n.name);
+                $('#case_empl').textbox('setValue','');
+                module.loadCaseEmpl(n.areacode);
+                $('#case_tree_dia').dialog('close');
+            }
+        });
+        module.loadCaseTree = false;
+    }
+    $('#case_tree_dia').dialog('open');
+};
 //合并警情
 module.merge = function(target) {
     var rows = $("#datagrid").datagrid("getSelections");
