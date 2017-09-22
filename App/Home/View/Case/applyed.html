@@ -1,5 +1,6 @@
 <extend name="layouts:master" />
 <block name="link">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/plugins/jquery-plugins/zTree/css/zTreeStyle/zTreeStyle.css?v={:C('ENFORCE_VERSION')}">
     <style>
     .mark {
         color: red;
@@ -57,6 +58,7 @@
     app.tp.code = "{:session('code')}";
     $.parser.auto = false;
     </script>
+    <script type="text/javascript" src="__PUBLIC__/plugins/jquery-plugins/zTree/js/jquery.ztree.all.min.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Time.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript" src="__PUBLIC__/js/Case/applyed.js?v={:C('ENFORCE_VERSION')}"></script>
