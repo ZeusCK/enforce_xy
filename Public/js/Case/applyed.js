@@ -24,6 +24,7 @@ module.case_key = '';
 var total;
 module.loadEdit = true;         //需要加载edit
 module.loadVideo = true;        //需要加载video
+module.loadCaseTree = true; //需要加载case_div
 //开始查询
 module.search = function() {
     app.extra("search", {
