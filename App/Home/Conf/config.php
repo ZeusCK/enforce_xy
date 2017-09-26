@@ -6,7 +6,7 @@ return array(
     'URL_CASE_INSENSITIVE'=>false, //URL访问不再区分大小写
     //连接数据库
     'DB_TYPE'   => 'mysql', // 设置数据库类型
-    'DB_HOST'   => 'localhost', // 设置主机 192.168.0.241
+    'DB_HOST'   => 'localhost', // 设置主机
     'DB_NAME'   => 'enforce_xz', // 设置数据库
     'DB_USER'   => 'root', // 设置用户名
     'DB_PWD'    => '123456', // 设置密码
@@ -19,7 +19,7 @@ return array(
     //地图相关 南京 118.78 32.04
     'MAP_LNG'   => '32.04',  //地图经度
     'MAP_LAT'   => '118.78',  //地图维度
-    'ENFORCE_VERSION'=>'1.0.0.36',    //版本控制解决程序更新后会有缓存问题
+    'ENFORCE_VERSION'=>'1.0.0.40',    //版本控制解决程序更新后会有缓存问题
     'SYNC_DB_HOST'=>'localhost',     //同步主机  暂时没有用
     'SYNC_DB_NAME'=>'enforce_xz',     //同步数据库
     'DEFAULT_AREACODE'=>'4115'      //默认部门代码

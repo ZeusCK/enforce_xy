@@ -254,7 +254,7 @@ module.show_case_tree = function(){
         tree.zTree_area('#case_tree',{
             url:'Area/ztree_area',
             onClick:function(n){
-                console.log(n);
+                // console.log(n);
                 $('#case_dept').textbox('setValue',n.name);
                 $('#case_empl').textbox('setValue','');
                 module.loadCaseEmpl(n.areacode);

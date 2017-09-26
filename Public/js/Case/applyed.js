@@ -400,7 +400,7 @@ module.show_case_tree = function(){
         tree.zTree_area('#case_tree',{
             url:'Area/ztree_area',
             onClick:function(n){
-                console.log(n);
+                // console.log(n);
                 $('#case_dept').textbox('setValue',n.name);
                 $('#case_empl').textbox('setValue','');
                 module.loadCaseEmpl(n.areacode);
@@ -574,10 +574,10 @@ $(function() {
         columns: [
             [
                 { field: "case_key", title: "id", checkbox: true },
+                { field: "areaname", title: "出警部门", width: 200, align: "center" },
                 { field: "title", title: "标题", width: 200, align: "center" },
                 { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
                 { field: "alarm_name", title: "案事件名称", width: 200, align: "center" },
-                // { field: "areaname", title: "出警部门", width: 200, align: "center" },
                 { field: "alarm_addr", title: "出警地址", width: 200, align: "center" },
                 { field: "jyxm", title: "出警人", width: 100, align: "center" },
                 { field: "start_time", title: "采集日期", width: 200, align: "center" },

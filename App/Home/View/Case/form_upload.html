@@ -1,0 +1,57 @@
+<extend name="layouts:master" />
+<block name="link">
+    <style>
+    #keyWord {
+        display: inline-block;
+        line-height: 14px;
+        vertical-align: middle;
+    }
+
+    #files {
+        margin-left: 10px;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    #checkedMsg {
+        margin-left: 5px;
+        margin-bottom: 10px;
+        color: #00438a;
+        font-weight: bold;
+    }
+
+    .mark {
+        color: red;
+    }
+
+    .one-row {
+        margin: 20px 0;
+    }
+
+    .fitem {
+        width: 6%;
+        text-align: right;
+        display: inline-block;
+    }
+
+    #picker {
+        padding: 0 2px!important;
+    }
+
+    .easyui-panel {
+        border-bottom: 0;
+    }
+    </style>
+</block>
+<block name="src">
+    <script type="text/javascript">
+        app.tp.data = {$data};
+    </script>
+</block>
+<block name="main">
+    <form action="{:U('Media/form_upload')}" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">上传</button>
+    </form>
+</block>

@@ -322,13 +322,13 @@ $(function() {
         columns: [
             [
                 { field: 'empid', title: '警员id', checkbox: true },
+                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'code', title: '警员警号', align: 'center' },
                 { field: 'name', title: '姓名', width: 200, align: 'center' },
                 { field: 'sex', title: '性别', width: 200, align: 'center' },
                 { field: 'rolename', title: '所属角色', width: 200, align: 'center' },
                 { field: 'dept_role_name', title: '部门角色', width: 200, align: 'center' },
                 { field: 'remark', title: '备注', width: 200, align: 'center' },
-                { field: 'areaname', title: '单位', width: 200, align: 'center' },
                 { field: 'empl_qualify_name', title: '执法资格', width: 200, align: 'center' },
                 { field: 'phone', title: '电话', width: 200, align: 'center' },
                 { field: 'create_user', title: '创建人', width: 200, align: 'center' },

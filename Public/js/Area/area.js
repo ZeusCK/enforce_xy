@@ -222,7 +222,7 @@ $(function(){
         {field:'areacode',title:'部门编号',width:200,align:'center'},
         {field:'pareaname',title:'父部门',width:200,align:'center'},
         // {field:'typename',title:'部门类型',width:200,align:'center'},
-        {field:'is_read_name',title:'部门属性',width:200,align:'center'},
+        // {field:'is_read_name',title:'部门属性',width:200,align:'center'},
         // {field:'code',title:'部门标识',width:200,align:'center'},
         {field:'rperson',title:'联系人',width:200,align:'center'},
         {field:'rphone',title:'联系方式',width:200,align:'center'},
@@ -249,7 +249,7 @@ $(function(){
     /*app.combobox('#edit_areatype,#add_areatype',{
         type:'areatype'
     });*/
-    app.combobox('#edit_area_is_read,#add_area_is_read,#area_is_read',{
+    /*app.combobox('#edit_area_is_read,#add_area_is_read,#area_is_read',{
         type:'is_read'
-    });
+    });*/
 });

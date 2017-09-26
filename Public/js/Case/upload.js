@@ -27,10 +27,8 @@ $(function() {
         $('#caseInfo').form('load',caseInfo.info);
     }, 1000);*/
     uploader = WebUploader.create({
-
         // swf文件路径
         swf: app.public+'plugins/webuploader/Uploader.swf',
-
         // 文件接收服务端。
         server: app.url('Media/break_point_upload'),
         // 开起分片上传。
@@ -47,8 +45,6 @@ $(function() {
             start_time:caseInfo.info.start_time
         }
     });
-
-
     // 当有文件被添加进队列的时候
     uploader.on('fileQueued', function(file) {
         $list.append('<div id="' + file.id + '" class="item">' +

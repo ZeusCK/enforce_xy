@@ -133,9 +133,9 @@ $(function() {
         columns: [
             [
                 { field: 'id', title: 'id', width: 200, checkbox: true },
+                { field: 'areaname', title: '单位', width: 200, align: 'center'},
                 { field: 'title', title: '公告标题', width: 200, align: 'center'},
                 { field: 'content', title: '公告内容', width: 400, align: 'center'},
-                { field: 'areaname', title: '单位', width: 200, align: 'center'},
                 { field: 'create_time', title: '发布日期', width: 200, align: 'center'},
                 { field: 'start_time', title: '开始日期', width: 200, align: 'center'},
                 { field: 'end_time', title: '结束日期', width: 200, align: 'center' }

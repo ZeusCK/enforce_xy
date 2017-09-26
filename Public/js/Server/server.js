@@ -143,8 +143,8 @@ $(function() {
         columns: [
             [
                 { field: 'id', title: 'id', checkbox: true },
-                { field: 'server_ip', title: '服务器IP', align: 'center' },
                 { field: 'areaname', title: '单位', align: 'center' },
+                { field: 'server_ip', title: '服务器IP', align: 'center' },
                 { field: 'server_port', title: '端口号', align: 'center' },
                 { field: 'trademark', title: '品牌', width: 200, align: 'center' },
                 { field: 'config_name', title: '配置', width: 200, align: 'center' },

@@ -238,6 +238,23 @@ class MediaController extends CommonController
         }
         return $result;
     }
+    public function form_upload()
+    {
+        // $result = array('chunk'=>'','chunks'=>'','message'=>'');
+        // $name = md5($request['name']);
+        // if(!is_dir($savePath)) mkdir($savePath);
+        $file = $_FILES['file'];
+        if($file['error']==0){      //上传成功
+            if(!move_uploaded_file($file['tmp_name'],'./temp/')){
+                $result['status'] = 'f';
+            }else{
+                $result['status'] = 's';
+            }
+        }else{
+            $result['status'] = 'f';
+        }
+        echo $result['status'];
+    }
     /**
      * 获取文件类型
      * @param  string $type 文件后缀
