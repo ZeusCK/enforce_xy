@@ -39,7 +39,7 @@ class AnnounceController extends CommonController
         //end_time  结束日期  默认一周 不能为空
         $request['start_time'] = $request['start_time'].' 00:00:00';
         $request['end_time'] = $request['end_time'].' 23:59:59';
-        $request['areacode'] = session('areacode'); //创建单位
+        $request['areacode'] = session('userarea'); //创建单位
         $request['areaname'] = session('areaname');
         $request['create_time'] = date('Y-m-d H:i:s');  //创建时间
         $request['creater_name'] = session('user');
@@ -94,7 +94,7 @@ class AnnounceController extends CommonController
         $where['end_time'] = array('EGT',date('Y-m-d H:i:s'));      //结束时间大于当前时间
         $data = $db->where($where)->order('create_time desc')->select();
         foreach ($data as $key => $value) {
-            if(strpos(session('areacode'),$value['areacode']) !== 0) unset($data[$key]);
+            if(strpos(session('userarea'),$value['areacode']) !== 0) unset($data[$key]);
         }
         $data = array_values($data);
         $total = count($data);

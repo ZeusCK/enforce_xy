@@ -73,7 +73,7 @@
 <block name="src">
     <script type="text/javascript">
         //根部门  用于数据的初始化
-        app.tp.areacode = "{:session('areacode')}";
+        app.tp.areacode = "{:session('userarea')}";
         app.tp.areaname = "{:session('areaname')}";
     </script>
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
@@ -106,8 +106,9 @@
         当前部门：<span id="mu_ser">无</span></a>
         </form>
         <fieldset>
-            <legend>统计项:</legend>
-            <div class="count">
+            <legend>统计项:<span style="cursor:pointer;" id="expend" title="统计项展开/折叠">↓↓</span></legend>
+            <div id="counts" style="display: none;">
+                <div class="count">
                 <div>
                     <input class="check" id="upload" type="checkbox" name="upload" value="upload" checked="checked">
                     <label for="upload">民警上传情况</label>
@@ -121,7 +122,6 @@
                 <label for="warning">警情</label>
             </div>
             <div class="count">
-
                 <div>
                     <input class="check" id="common" type="checkbox" name="common" value="common" checked="checked">
                     <label for="common">一般警情</label>
@@ -169,6 +169,8 @@
                     <label for="criminal">刑事案件</label>
                 </div>
             </div>
+            </div>
+            
         </fieldset>
     </div>
     <div id="detailDialog" class="easyui-dialog" title="明细" data-options="resizable:true,modal:true,closed:true" style="width: 100%;height: 100%">

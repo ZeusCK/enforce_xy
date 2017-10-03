@@ -75,7 +75,12 @@ class IndexController extends CommonController {
                 session('rolelevel',$roleData['level']);    //角色级别
                 session('code',I('username'));          //警员编号
                 session('empid',$res['empid']);         //警员ID
-                session('userarea',$res['userarea']);   //管理部门
+                if($res['userarea'] == ''){
+                    session('userarea',$res['areacode']);   //管理部门
+                }else{
+                    session('userarea',$res['userarea']);   //管理部门
+                }
+                
                 $empl_qualify = ['无','初级','中级','高级'];
                 session('empl_qualify',$empl_qualify[$res['empl_qualify']]);  //执法资格
                 //更新在线时间

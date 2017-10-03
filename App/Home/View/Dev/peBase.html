@@ -33,7 +33,7 @@
 <block name="src">
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript">
-app.tp.areacode = "{:session('areacode')}";
+app.tp.areacode = "{:session('userarea')}";
 app.tp.areaname = "{:session('areaname')}";
     </script>
 
@@ -96,12 +96,7 @@ app.tp.areaname = "{:session('areaname')}";
                 <input class="form_in easyui-textbox" type="text" name="cpxh" required="true"/></div>
             <div class="form_m"><div for="standard" class="form_label">设备规格： </div>
                 <input class="form_in easyui-textbox" type="text" name="standard" required="true"/></div>
-            <div class="form_m"><div for="type" class="form_label">设备规格： </div>
-               <select class=" easyui-combobox form_in" name="type" style="width: 181px;" data-options="editable:false">
-                    <option value="1">执法记录仪</option>
-                </select>
-            </div>
-            <div class="form_m"><div for="status" class="form_label">设备状态： </div>
+            <div class="form_m"><div for="standard" class="form_label">设备状态： </div>
                 <input class="form_in easyui-combobox" id="status" type="text" name="status"/></div>
             <div class="form_m">
                 <div for="pe_type" class="form_label">设备种类 : </div>

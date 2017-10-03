@@ -44,6 +44,7 @@ module.addBar = function(){
             $('#areacodeAdd').textbox('setValue',data.areacode);
         }
     });
+
     $('#addForm').form('reset');
     //areatype:module.area_type,
     $('#addForm').form('load',{fatherareaid:module.areaid,is_read:module.area_is_read});
@@ -52,7 +53,7 @@ module.addBar = function(){
     }else{
         $('#add_area_is_read').combobox('readonly',false);
     }
-    $('#infoAreaname').html('*'+module.areaname+'*添加新的子级部门');
+    $('#infoAreaname').text('*'+module.areaname+'*添加新的子级部门');
     $('#addDialog').dialog('open');
 }
 //打开编辑dialog
@@ -219,7 +220,7 @@ $(function(){
         columns:[[
         {field:'areaid',title:'部门id',hidden:true},
         {field:'areaname',title:'部门名称',width:200,align:'center'},
-        {field:'areacode',title:'部门编号',width:200,align:'center'},
+        {field:'zddm',title:'部门编号',width:200,align:'center'},
         {field:'pareaname',title:'父部门',width:200,align:'center'},
         // {field:'typename',title:'部门类型',width:200,align:'center'},
         // {field:'is_read_name',title:'部门属性',width:200,align:'center'},
@@ -249,7 +250,7 @@ $(function(){
     /*app.combobox('#edit_areatype,#add_areatype',{
         type:'areatype'
     });*/
-    /*app.combobox('#edit_area_is_read,#add_area_is_read,#area_is_read',{
+    app.combobox('#edit_area_is_read,#add_area_is_read,#area_is_read',{
         type:'is_read'
-    });*/
+    });
 });

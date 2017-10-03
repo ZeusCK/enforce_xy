@@ -197,7 +197,7 @@ class MediaController extends CommonController
             $data['case_key'] = $case_key;
             $data['jybh'] = session('code');
             $data['jyxm'] = u2g(session('user'));
-            $data['areacode'] = session('areacode');
+            $data['areacode'] = session('userarea');
             $data['areaname'] = u2g(session('areaname'));
             $data['cpxh'] = $cpxh;
             $data['ccfwq_ip'] = $this->get_local_ip();
@@ -237,23 +237,6 @@ class MediaController extends CommonController
             $result['status'] = false;
         }
         return $result;
-    }
-    public function form_upload()
-    {
-        // $result = array('chunk'=>'','chunks'=>'','message'=>'');
-        // $name = md5($request['name']);
-        // if(!is_dir($savePath)) mkdir($savePath);
-        $file = $_FILES['file'];
-        if($file['error']==0){      //上传成功
-            if(!move_uploaded_file($file['tmp_name'],'./temp/')){
-                $result['status'] = 'f';
-            }else{
-                $result['status'] = 's';
-            }
-        }else{
-            $result['status'] = 'f';
-        }
-        echo $result['status'];
     }
     /**
      * 获取文件类型

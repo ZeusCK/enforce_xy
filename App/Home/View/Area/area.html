@@ -4,7 +4,7 @@
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
     <script type="text/javascript">
     app.tp.areaid = "{:session('areaid')}";
-    app.tp.areacode = "{:session('areacode')}";
+    app.tp.areacode = "{:session('userarea')}";
     app.tp.areaname = "{:session('areaname')}";
     app.tp.area_is_read = "{:session('area_is_read')}";
     app.tp.area_type = "{:session('area_type')}";
@@ -37,25 +37,26 @@
         <a href="javascript:void(0)" onclick="module.addBar()" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:false">添加</a>
         <a href="javascript:void(0)" onclick="module.editBar()" class="easyui-linkbutton" data-options="iconCls:'icon icon-edit',plain:false">修改</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go" onclick="module.exports(this)">导出全部</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" onclick="javascript:
-                    $('#importForm').dialog('open')">导入</a>
+        <!-- <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-table_relationship" onclick="javascript:
+                    $('#importForm').dialog('open')">导入</a> -->
     </div>
     <!-- 增加 -->
     <div id="addDialog" class="easyui-dialog" title="添加部门" buttons="#addButtons" data-options="iconCls:'icon-add',resizable:true,modal:true,closed:true">
-        <p style="color: #0E2D5F;margin-left: 20px;">
-            <sapn id="infoAreaname">
-                </span>
-        </p>
+        <p style="color: #0E2D5F;margin-left: 20px;" id="infoAreaname"></p>
         <form id="addForm" method="post">
             <div class="form_m">
                 <div for="areaname" class="form_label">部门名称 : </div>
                 <input class="form_in easyui-textbox" type="text" name="areaname" required="true" />
             </div>
-            <div class="form_m">
+            <div class="form_m" style="display: none;">
                 <div for="areacode" class="form_label">部门编号 : </div>
                 <div class="easyui-tooltip" title='请输入01-99的两位字符' position="bottom" style="width:179px;display:inline-block;">
                     <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeAdd" style="width:179px" />
                 </div>
+            </div>
+            <div class="form_m">
+                <div for="zddm" class="form_label">部门编码 : </div>
+                <input class="form_in easyui-textbox" type="text" name="zddm" />
             </div>
             <div class="form_m">
                 <div for="rperson" class="form_label">联系人 : </div>
@@ -91,27 +92,32 @@
                 <div for="areaname" class="form_label">部门名称 : </div>
                 <input class=" form_in easyui-textbox" type="text" name="areaname" required="true" />
             </div>
-            <div class="form_m">
+            <div class="form_m" style="display: none;">
                 <div for="areacode" class="form_label">部门编号 : </div>
                 <div class="easyui-tooltip" title='请输入01-99的两位字符' position="bottom" style="width:179px;display:inline-block;">
                     <input class="form_in easyui-textbox" type="text" name="areacode" id="areacodeEdit" style="width:179px;" />
                 </div>
-                <div class="form_m">
-                    <div for="rperson" class="form_label">联系人 : </div>
-                    <input class=" form_in easyui-textbox" type="text" name="rperson" />
-                </div>
-                <div class="form_m">
-                    <div for="rphone" class="form_label">联系方式 : </div>
-                    <input class=" form_in easyui-textbox" type="text" name="rphone" />
-                </div>
-                <div class="form_m">
-                    <div for="sort" class="form_label">排序 : </div>
-                    <input class=" form_in easyui-textbox" type="text" name="sort" />
-                </div>
-                <div class="form_m" style="display: none">
-                    <div for="fatherareaid" class="form_label">上级部门 : </div>
-                    <input class="form_in easyui-textbox" type="text" name="fatherareaid">
-                </div>
+            </div>
+            <div class="form_m">
+                <div for="zddm" class="form_label">部门编码 : </div>
+                <input class="form_in easyui-textbox" type="text" name="zddm" />
+            </div>    
+            <div class="form_m">
+                <div for="rperson" class="form_label">联系人 : </div>
+                <input class=" form_in easyui-textbox" type="text" name="rperson" />
+            </div>
+            <div class="form_m">
+                <div for="rphone" class="form_label">联系方式 : </div>
+                <input class=" form_in easyui-textbox" type="text" name="rphone" />
+            </div>
+            <div class="form_m">
+                <div for="sort" class="form_label">排序 : </div>
+                <input class=" form_in easyui-textbox" type="text" name="sort" />
+            </div>
+            <div class="form_m" style="display: none">
+                <div for="fatherareaid" class="form_label">上级部门 : </div>
+                <input class="form_in easyui-textbox" type="text" name="fatherareaid">
+            </div>
         </form>
         </div>
         <div id="editButtons">
@@ -120,10 +126,10 @@
                     $('#editDialog').dialog('close')" style="width:90px">取消</a>
         </div>
         <form id="importForm" class="easyui-dialog" method="post" title="导入" enctype="multipart/form-data" buttons="#importButtons" data-options="resizable:true,modal:true,closed:true" style="padding: 2px 2px;">
-            <!-- <div class="form_m">
+            <div class="form_m">
                 <div for="rphone" class="form_label">部门属性: </div>
                 <input class="easyui-combobox form_in" id="area_is_read" type="" name="is_read" data-options="height:22,editable:false,panelHeight:68" style="width: 180px;">
-            </div> -->
+            </div>
             <div class="form_m">
                 <div for="rphone" class="form_label">Excel: </div>
                 <input class="easyui-filebox" name="file" data-options="buttonText:'选择文件'" style="width: 180px;">

@@ -1,7 +1,3 @@
-
-
-
-
 //树的实例化
 var tree = new Tree('#area_list');
 // 创建时间对象
@@ -11,6 +7,7 @@ var searchData = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.link = 'link';
+module.showCounts = false;
 module.search = function(data){
     var data = app.serializeJson('#searchForm');
     if (!judgeTime.judge(data.btime, data.etime)) {
@@ -134,6 +131,15 @@ var empColums = [[
                 {field:'phone',title:'电话',width:200,align:'center'}
                 ]];
 $(function() {
+    $('#expend').click(function(){
+        if(module.showCounts){
+            $('#counts').hide();
+            module.showCounts = false;
+        }else{
+            $('#counts').show();
+            module.showCounts = true;
+        }
+    })
     //初始化时间
     var time = new Date();
     $('#etime').datebox({ value: new Time(time, 0).init() });

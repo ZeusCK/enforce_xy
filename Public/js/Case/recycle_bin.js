@@ -66,6 +66,7 @@ module.back = function(wjbh, start_time) {
     app.extra('add_edit', {
         url: 'Media/meida_back',
         datagrid: '#datagrid',
+        checkData:false,
         parsedata: function(data) {
             data.wjbh = wjbh;
             data.start_time = start_time;

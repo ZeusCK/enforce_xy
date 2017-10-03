@@ -53,7 +53,7 @@
 <block name="src">
     <script type="text/javascript">
     //根部门  用于数据的初始化
-    app.tp.areacode = "{:session('areacode')}";
+    app.tp.areacode = "{:session('userarea')}";
     app.tp.areaname = "{:session('areaname')}";
     app.tp.code = "{:session('code')}";
     $.parser.auto = false;
@@ -92,7 +92,7 @@
                             <input name="case_no" class="easyui-textbox" style="width: 100px;">
                             <div class="search-text">案件类型:</div>
                             <input id="case_type" class="easyui-combobox" style="width: 100px;" name="case_type" editable=false />
-                            <div class="search-text">警员编号:</div>
+                            <div class="search-text">警号:</div>
                             <input name="jybh" class="easyui-textbox" style="width: 100px;">
                             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-page_white_key" onclick="module.init_search_form()">条件重置</a>
                         </div>

@@ -3,7 +3,7 @@
 <block name="src">
   <script type="text/javascript">
     //根部门  用于数据的初始化
-    app.tp.areacode = "{:session('areacode')}";
+    app.tp.areacode = "{:session('userarea')}";
     app.tp.areaname = "{:session('areaname')}";
     app.tp.code = "{:session('code')}";
   </script>
@@ -51,7 +51,7 @@
                 <input class="easyui-datetimebox" name="start_time[btime]" id="shotS" />
                 <div class="search-text">至:</div>
                 <input class="easyui-datetimebox" name="start_time[etime]" id="shotE" />
-                <a style="margin-left: 260px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
+                <a style="margin-left: 250px;margin-right: 22px;" href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-book_go"  onclick="module.exports(this)">导出全部</a>
             </div>
         </form>
   </div>

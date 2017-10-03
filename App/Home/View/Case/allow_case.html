@@ -35,7 +35,7 @@
 <block name="src">
     <script type="text/javascript">
         //根部门  用于数据的初始化
-        app.tp.areacode = "{:session('areacode')}";
+        app.tp.areacode = "{:session('userarea')}";
         app.tp.areaname = "{:session(areaname)}";
     </script>
     <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>

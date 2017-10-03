@@ -72,7 +72,6 @@ class DeptRoleController extends CommonController
                 $this->write_log('删除部门角色');
             }
         }
-        
         return $result;
     }
 

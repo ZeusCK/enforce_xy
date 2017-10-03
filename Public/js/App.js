@@ -411,7 +411,7 @@ App.prototype.remove = function(params){
             var data = {};
             if(options.datagrid){               //如果有datagrid
                 var infos = $(options.datagrid).datagrid('getSelections');
-                if(infos.length == 0){
+                if(infos.length == 0 && options.checkData){
                     App.prototype.linkbutton(options.linkbutton,'enable');
                     return false;
                 }
@@ -466,6 +466,7 @@ App.prototype.remove.defaults = {
     queryParam:false,          //更新datagrid时额外参数
     linkbutton:false,  //相关按钮
     dialog:false,      //dialog
+    checkData:true,    //是否监测删除是datagrid的选择项
     parsedata:function(data){}, //分析数据
     error:function(data){},     //错误方法
     success:function(data){}   //成功方法
@@ -552,6 +553,7 @@ App.prototype.datagrid.defaults = {
     autoRowHeight:false,
     pageSize:'20',
     pagination: true,
+    // pagePosition:'top',
     queryParams:{},
     showDatagrid:true,  //是否显示datagrid表格 自定义属性
     otherView:function(data){}, //自定义属性,显示的信息 当showDatagrid 为false时生效

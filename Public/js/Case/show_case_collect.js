@@ -105,6 +105,7 @@ module.remove = function(case_key, start_time) {
     app.extra('remove', {
         url: 'Case/remove_case',
         datagrid: '#datagrid',
+        checkData:false,
         parsedata: function(data) {
             data.case_key = case_key;
             data.start_time = start_time;

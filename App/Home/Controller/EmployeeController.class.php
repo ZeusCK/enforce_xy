@@ -450,8 +450,15 @@ class EmployeeController extends CommonController
         $roleInfo = $roledb->where('roleid='.$empInfo['roleid'])->find();
         if($roleInfo['level'] == 4){     //警员
             $data = array('userarea'=>'');
-        }else{          //其他
+        }
+        if($roleInfo['level'] == 3){    //基层
             $data = array('userarea'=>$empInfo['areacode']);
+        }                      
+        if($roleInfo['level'] == 2){    //县局
+            $data = array('userarea'=>substr($empInfo['areacode'], 0,6));
+        }
+        if($roleInfo['level'] == 1){    //市局
+            $data = array('userarea'=>substr($empInfo['areacode'], 0,4));
         }
         return $empdb->where('empid='.$empid)->save($data) ? true : false;
     }
@@ -606,6 +613,7 @@ class EmployeeController extends CommonController
                     $res = $db->where('code="'.$saveData['code'].'"')->save($saveData);
                     $syncUpdateData[] = $saveData;
                 }else{
+                    $saveData['create_time'] = date('Y-m-d H:i:s');
                     $res = $db->add($saveData);
                     $syncAddData[] = $saveData;
                 }

@@ -111,7 +111,6 @@ module.editBar = function(case_key, start_time) {
                     columns: [
                         [{ field: "id", checkbox: true },
                             { field: "wjbh", title: "文件名称", align: "center" },
-                            { field: "source_name", title: "来源", align: "center" },
                             // { field: "ccfwq_ip", title: "存储服务器IP", align: "center" },
                             { field: "jyxm", title: "警员姓名", width: 200, align: "center" },
                             { field: "jybh", title: "警号", width: 200, align: "center" },
@@ -123,6 +122,7 @@ module.editBar = function(case_key, start_time) {
                             { field: "end_time", title: "视频结束时间", width: 200, align: "center" },
                             /*{field: 'wjcd',title: '大小（M）',align: 'center'}, */
                             { field: "wjcd", title: "时长（秒）", width: 200, align: "center" },
+                            { field: "source_name", title: "来源", align: "center" },
                             {
                                 field: "cz",
                                 title: "操作",
@@ -400,7 +400,7 @@ module.show_case_tree = function(){
         tree.zTree_area('#case_tree',{
             url:'Area/ztree_area',
             onClick:function(n){
-                // console.log(n);
+                console.log(n);
                 $('#case_dept').textbox('setValue',n.name);
                 $('#case_empl').textbox('setValue','');
                 module.loadCaseEmpl(n.areacode);
@@ -544,6 +544,9 @@ module.init = function(case_key, start_time) {
 module.search_tree = function(value){
     tree.search_tree(value,1);
 }
+module.titleInfo = function(v, r, i) {
+    return '<span title="' + v + '">' + v + '</span>';
+}
 $(function() {
     $.parser.parse('#init');
     //树的初始化
@@ -574,18 +577,18 @@ $(function() {
         columns: [
             [
                 { field: "case_key", title: "id", checkbox: true },
-                { field: "areaname", title: "出警部门", width: 200, align: "center" },
-                { field: "title", title: "标题", width: 200, align: "center" },
-                { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
-                { field: "alarm_name", title: "案事件名称", width: 200, align: "center" },
-                { field: "alarm_addr", title: "出警地址", width: 200, align: "center" },
-                { field: "jyxm", title: "出警人", width: 100, align: "center" },
-                { field: "start_time", title: "采集日期", width: 200, align: "center" },
-                { field: "areaname", title: "移交部门", width: 200, align: "center" },
-                { field: "jyxm", title: "移交人", width: 200, align: "center" },
-                { field: "apply_time", title: "移交日期", width: 200, align: "center" },
-                { field: "apply_areaname", title: "接收部门", width: 200, align: "center" },
-                { field: "apply_jyxm", title: "接收人", width: 200, align: "center" },
+                { field: "title", title: "标题", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "alarm_no", title: "警情编号", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "alarm_name", title: "案事件名称", width: 200, align: "center", formatter: module.titleInfo },
+                // { field: "areaname", title: "出警部门", width: 200, align: "center" },
+                { field: "alarm_addr", title: "出警地址", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "jyxm", title: "出警人", width: 100, align: "center", formatter: module.titleInfo },
+                { field: "start_time", title: "采集日期", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "areaname", title: "移交部门", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "jyxm", title: "移交人", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "apply_time", title: "移交日期", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "apply_areaname", title: "接收部门", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "apply_jyxm", title: "接收人", width: 200, align: "center", formatter: module.titleInfo },
                 {
                     field: "hand_status",
                     title: "移交状态",

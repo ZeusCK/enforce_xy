@@ -19,7 +19,7 @@ class WorkStationController extends CommonController
     //工作站
     public function ws_base_list()
     {
-        $request = u2g(I(''));
+        $request = u2gs(I(''));
         $page = I('page');
         $rows = I('rows');
         $db =  D($this->models['wsbase']);
@@ -29,12 +29,11 @@ class WorkStationController extends CommonController
                 $where[$key] = array('like','%'.$value.'%');
             }
         }
-        if($request['zxzt'] != '') $where['zxzt'] = I('zxzt');
-        if($request['qyzt'] != '') $where['qyzt'] = I('qyzt');
+        if($request['zxzt'] != '') $where['zxzt'] = $request['zxzt'];
+        if($request['qyzt'] != '') $where['qyzt'] = $request['qyzt'];
         if(session('user')){
             $where[] = $this->get_manger_sql($request['areacode'],'areacode',false). ' OR areacode=""';
         }
-        $where = u2gs($where);
         $data = $db->getTableList($where,$page,$rows,'areacode asc');
         $show_sat = $db->where($where)->field('count(1) as num,zxzt')->group('zxzt')->select();
         foreach ($data['rows'] as &$value) {
@@ -132,7 +131,7 @@ class WorkStationController extends CommonController
         $db =  D($this->models['wsbase']);
         //确定查看部门
         $areadb = D($this->models['area']);
-        $areacode = session('areacode') ? session('areacode') : C('DEFAULT_AREACODE');
+        $areacode = session('userarea') ? session('userarea') : C('DEFAULT_AREACODE');
         $areaInfo =  $areadb->where('areacode="'.$areacode.'"')->getField('areaid,areaname');
         reset($areaInfo);
         $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
@@ -220,6 +219,7 @@ class WorkStationController extends CommonController
                     $res = $db->where('gzz_ip="'.$saveData['gzz_ip'].'"')->save($saveData);
                     $syncUpdateData[] = $saveData;
                 }else{
+                    $saveData['create_time'] = date('Y-m-d H:i:s');
                     $res = $db->add($saveData);
                     $syncAddData[] = $saveData;
                 }

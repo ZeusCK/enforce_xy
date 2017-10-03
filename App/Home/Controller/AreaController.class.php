@@ -40,7 +40,7 @@ class AreaController extends CommonController
         $check[] = $this->get_manger_sql($request['areacode'],'areacode',false);
         $data['total'] = 0;
         $data['rows'] = array();
-        $order = 'sort asc,CONVERT(areacode,SIGNED) asc';
+        $order = 'CONVERT(areacode,SIGNED) asc,sort asc';
         $data = $db->getTableList($check,$page,$rows,$order);
         $areas = $db->getField('areaid,areaname');
         // $areaType = $this->get_val_item('dictionary','areatype');
@@ -132,7 +132,7 @@ class AreaController extends CommonController
         $syncAreaData[] = $request;
         $this->sync('area_dep',$syncAreaData,'edit');
         if($result['status']){
-            if($areaInfo['areacode'] == session('areacode')){
+            if($areaInfo['areacode'] == session('userarea')){
                 session_start();
                 session('areacode',$request['areacode']);
             }
@@ -167,7 +167,7 @@ class AreaController extends CommonController
                         foreach ($syncData as &$areaData) {
                             $areaData['old_areacode'] = $areaData['areacode'];
                             // $areaData['areacode'] = substr_replace($areaData['areacode'],$request['areacode'],0,$strLen);
-                            if($areaData['old_areacode'] == session('areacode')){
+                            if($areaData['old_areacode'] == session('userarea')){
                                 session_start();
                                 session('areacode',$areaData['areacode']);
                             }
@@ -199,7 +199,7 @@ class AreaController extends CommonController
     public function all_user_area()
     {
         $db = D($this->models['area']);
-        $where = $this->get_manger_sql('','areacode',false). 'OR areacode="'.session('areacode').'"';
+        $where = $this->get_manger_sql('','areacode',false). 'OR areacode="'.session('userarea').'"';
         $data_f = $db->where($where)->select();
         if(!empty($data_f)){
             $lc=['areaid','fatherareaid'];
@@ -242,7 +242,7 @@ class AreaController extends CommonController
     }
     public function load_no_read_area($request)
     {
-        //$where[] =  $this->get_manger_sql('','areacode',false);
+        $where[] =  $this->get_manger_sql('','areacode',false);
         $where['is_read'] = 1;
         $data_f = D($this->models['area'])->where($where)->select();
         if(!empty($data_f)){

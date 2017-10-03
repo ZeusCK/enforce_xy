@@ -4,7 +4,7 @@
 <script type="text/javascript">
 //根部门  用于数据的初始化
 app.tp.areaid = "{:session('areaid')}";
-app.tp.areacode = "{:session('areacode')}";
+app.tp.areacode = "{:session('userarea')}";
 app.tp.areaname = "{:session('areaname')}";
 </script>
 <script type="text/javascript" src="__PUBLIC__/js/Tree.js?v={:C('ENFORCE_VERSION')}"></script>
@@ -23,7 +23,7 @@ app.tp.areaname = "{:session('areaname')}";
 <div id="toolbar">
     <form id="searchForm" method="post" style="margin-top: 3px;" novalidate>
          <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon icon-filter"  onclick="things.show()">全部</a>&nbsp;&nbsp;&nbsp;
-        负责人: <input class="easyui-textbox" data-options="height:22" name="hzr" style="width:168px"/>
+        负责人: <input class="easyui-textbox" data-options="height:22" name="fzr" style="width:168px"/>
         IP: <input class="easyui-textbox" data-options="height:22" name="gzz_ip" style="width:168px"/>
         在线状态:
         <select class="easyui-combobox form_in" name="zxzt" style="width: 181px;" data-options="editable:false">

@@ -73,6 +73,9 @@ things.empty = function() {
 things.search_tree = function(value){
     tree.search_tree(value,1);
 }
+things.titleInfo = function(v, r, i) {
+    return '<span title="' + v + '">' + v + '</span>';
+}
 $(function() {
     app.datagrid('#datagrid', {
         url: things.datagridUrl,
@@ -85,18 +88,18 @@ $(function() {
         columns: [
             [
                 { field: 'case_key', title: 'id', checkbox: true },
-                { field: 'areaname', title: '单位', width: 200, align: 'center' },
-                { field: 'title', title: '标题', width: 200, align: 'center' },
-                { field: 'alarm_no', title: '警情编号', align: 'center' },
-                { field: 'alarm_name', title: '案事件名称', width: 200, align: 'center' },
-                { field: "case_addr", title: "出警地址", width: 200, align: "center" },
-                { field: 'jyxm', title: '出警人', align: 'center' },
-                { field: 'start_time', title: '采集日期', width: 200, align: 'center' },
-                { field: 'areaname', title: '移交部门', width: 200, align: 'center' },
-                { field: 'jyxm', title: '移交人', align: 'center' },
-                { field: 'end_time', title: '移交日期', width: 200, align: 'center' },
-                { field: 'apply_areaname', title: '接收部门', width: 200, align: 'center' },
-                { field: 'apply_jyxm', title: '接收人', width: 200, align: 'center' },
+                { field: 'title', title: '标题', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'alarm_no', title: '警情编号', align: 'center', formatter: things.titleInfo },
+                { field: 'alarm_name', title: '案事件名称', width: 200, align: 'center', formatter: things.titleInfo },
+                // { field: 'areaname', title: '出警部门', width: 200, align: 'center' },
+                { field: "case_addr", title: "出警地址", width: 200, align: "center", formatter: things.titleInfo },
+                { field: 'jyxm', title: '出警人', align: 'center', formatter: things.titleInfo },
+                { field: 'start_time', title: '采集日期', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'areaname', title: '移交部门', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'jyxm', title: '移交人', align: 'center', formatter: things.titleInfo },
+                { field: 'end_time', title: '移交日期', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'apply_areaname', title: '接收部门', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'apply_jyxm', title: '接收人', width: 200, align: 'center', formatter: things.titleInfo },
                 {
                     field: 'hand_status',
                     title: '移交状态',

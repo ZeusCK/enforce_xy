@@ -259,9 +259,9 @@ class CommonController extends Controller {
     {
         $data['dte'] = date('Y-m-d H:i:s');
         $data['name'] = u2g(session('user'));
-        $data['key'] = date('YmdHis').'_'.session('code').'_'.session('areacode');
+        $data['key'] = date('YmdHis').'_'.session('code').'_'.session('userarea');
         $data['code'] = session('code');
-        $data['areacode'] = session('areacode');
+        $data['areacode'] = session('userarea');
         $data['areaname'] = u2g(session('areaname'));
         $module = !$this->logContent ? '未知模块' : $this->logContent;
         $data['module'] = u2g($module);
@@ -526,13 +526,13 @@ class CommonController extends Controller {
         }
         //如果没有查询部门,或者查询部门是自身单位的上级,那么加上警员
         //如果是警员直接加上警员编号
-        if(($areacode != '' || strpos(session('areacode'),$areacode === 0)) && ($baseSql != $codeField. '= ""')){
+        if(($areacode != '' || strpos(session('userarea'),$areacode === 0)) && ($baseSql != $codeField. '= ""')){
             $areacodeSql = $codeField.' like "'.$areacode.'%"';
             $baseSql = $baseSql == '' ? $areacodeSql : '('.$baseSql.') AND '.$areacodeSql;
         }else{
             if($baseSql == '') $baseSql = '1 ';
             if($jybhField){
-                $jybhSql = $jybhField.' = "'.session('code').'" AND '.$codeField.' = "'.session('areacode').'"';
+                $jybhSql = $jybhField.' = "'.session('code').'" AND '.$codeField.' = "'.session('userarea').'"';
                 $baseSql = $baseSql == '' ? $jybhSql : $baseSql.' OR ('.$jybhSql.')';
             }
         }

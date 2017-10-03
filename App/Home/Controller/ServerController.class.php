@@ -132,7 +132,7 @@ class ServerController extends CommonController
         $db =  D($this->models['server']);
         //确定查看部门
         $areadb = D($this->models['area']);
-        $areacode = session('areacode') ? session('areacode') : C('DEFAULT_AREACODE');
+        $areacode = session('userarea') ? session('userarea') : C('DEFAULT_AREACODE');
         $areaInfo =  $areadb->where('areacode="'.$areacode.'"')->getField('areaid,areaname');
         reset($areaInfo);
         $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
@@ -223,6 +223,7 @@ class ServerController extends CommonController
                     $res = $db->where('server_ip="'.$saveData['server_ip'].'"')->save($saveData);
                     $syncUpdateData[] = $saveData;
                 }else{
+                    $saveData['create_time'] = date('Y-m-d H:i:s');
                     $res = $db->add($saveData);
                     $syncAddData[] = $saveData;
                 }

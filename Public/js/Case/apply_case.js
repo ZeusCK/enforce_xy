@@ -71,6 +71,9 @@ things.applyCancel = function(target, case_key, start_time) {
 things.search_tree = function(value) {
     tree.search_tree(value, 1);
 }
+things.titleInfo = function(v, r, i) {
+    return '<span title="' + v + '">' + v + '</span>';
+}
 $(function() {
     app.datagrid('#datagrid', {
         url: things.datagridUrl,
@@ -78,14 +81,14 @@ $(function() {
         columns: [
             [
                 { field: 'vedio_id', title: 'id', checkbox: true },
-                { field: 'areaname', title: '单位', width: 200, align: 'center' },
-                { field: 'title', title: '标题', width: 200, align: 'center' },
-                { field: 'alarm_name', title: '案事件名称', width: 200, align: 'center' },
-                { field: 'alarm_no', title: '警情编号', width: 200, align: 'center' },
+                { field: 'areaname', title: '单位', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'title', title: '标题', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'alarm_name', title: '案事件名称', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'alarm_no', title: '警情编号', width: 200, align: 'center', formatter: things.titleInfo },
                 // { field: 'areaname', title: '出警部门', width: 200, align: 'center' },
-                { field: "case_addr", title: "出警地址", width: 200, align: "center" },
-                { field: 'jyxm', title: '出警人', width: 200, align: 'center' },
-                { field: 'start_time', title: '采集日期', width: 200, align: 'center' },
+                { field: "case_addr", title: "出警地址", width: 200, align: "center", formatter: things.titleInfo },
+                { field: 'jyxm', title: '出警人', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'start_time', title: '采集日期', width: 200, align: 'center', formatter: things.titleInfo },
                 {
                     field: 'aa',
                     title: '操作',

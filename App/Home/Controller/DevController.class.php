@@ -231,6 +231,7 @@ class DevController extends CommonController
                 if($empInfo){
                     $res = $db->where('cpxh="'.$saveData['cpxh'].'"')->save($saveData);
                 }else{
+                    $saveData['create_time'] = date('Y-m-d H:i:s');
                     $res = $db->add($saveData);
                 }
                 $res ? $success++ : $fail++;

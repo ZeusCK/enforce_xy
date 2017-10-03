@@ -103,7 +103,6 @@ module.editBar = function(case_key, start_time) {
                     columns: [
                         [{ field: "id", checkbox: true },
                             { field: "wjbh", title: "文件名称", width: 200, align: "center" },
-                            { field: "source_name", title: "来源", width: 200, align: "center" },
                             { field: "jyxm", title: "警员姓名", width: 200, align: "center" },
                             { field: "jybh", title: "警号", width: 200, align: "center" },
                             { field: "cpxh", title: "设备号", width: 200, align: "center" },
@@ -114,6 +113,7 @@ module.editBar = function(case_key, start_time) {
                             { field: "end_time", title: "视频结束时间", width: 200, align: "center" },
                             /*{field: 'wjcd',title: '大小（M）',align: 'center'}, */
                             { field: "wjcd", title: "时长（秒）", width: 200, align: "center" },
+                            { field: "source_name", title: "来源", width: 200, align: "center" },
                             {
                                 field: "cz",
                                 title: "操作",
@@ -254,7 +254,7 @@ module.show_case_tree = function(){
         tree.zTree_area('#case_tree',{
             url:'Area/ztree_area',
             onClick:function(n){
-                // console.log(n);
+                console.log(n);
                 $('#case_dept').textbox('setValue',n.name);
                 $('#case_empl').textbox('setValue','');
                 module.loadCaseEmpl(n.areacode);

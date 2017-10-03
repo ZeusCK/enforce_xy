@@ -108,6 +108,9 @@ class CaseController extends CommonController
         //source 来源
         //type 显示类型 0 正常产看  1 申请查看
         //show_messager 首页公告  取60天数据
+        foreach ($request as &$info) {
+            $info = trim($info);
+        }
         $request = u2gs($request);
         $type = $request['type'] ? $request['type'] : 0;
         $jybhField = $type == 0 ? 'jybh' : 'apply_jybh';
@@ -179,7 +182,7 @@ class CaseController extends CommonController
         //source    来源
         $request['jyxm'] = session('user');
         $request['edit_name'] = session('user');
-        $request['areacode'] = session('areacode');
+        $request['areacode'] = session('userarea');
         $request['areaname'] = session('areaname');
         $request['update_time'] = date('Y-m-d H:i:s');
         $request['start_time'] = date('Y-m-d H:i:s');
@@ -187,7 +190,7 @@ class CaseController extends CommonController
         $start_time = $request['start_time'];
         $cpxh = D($this->models['pebase'])->where('jybh="'.session('code').'"')->getField('cpxh');
         $cpxh = $cpxh ? $caxh : 'cpxhpe';
-        $request['case_key'] = date('YmdHis',strtotime($start_time)).'_'.$cpxh.'_'.session('areacode');
+        $request['case_key'] = date('YmdHis',strtotime($start_time)).'_'.$cpxh.'_'.session('userarea');
         $table = date('Ym',strtotime($start_time));
         $result = M()->table('case_'.$table)->add(u2gs($request));
         $request['tab_name'] = 'case_'.$table;
@@ -356,7 +359,7 @@ class CaseController extends CommonController
         $table = 'case_'.date('Ym',strtotime($start_time));
         $data['apply_jybh'] = session('code');
         $data['apply_jyxm'] = u2g(session('user'));
-        $data['apply_areacode'] = session('areacode');
+        $data['apply_areacode'] = session('userarea');
         $data['apply_areaname'] = u2g(session('areaname'));
         $data['apply_time'] = $data['update_time'] = date('Y-m-d H:i:s');
         $data['hand_status'] = 1;   //待审核状态
@@ -685,12 +688,12 @@ class CaseController extends CommonController
         //----------------
         //基础where条件
         //----------------
-        $areacode = $request['areacode'] ? $request['areacode'] : session('areacode');
+        $areacode = $request['areacode'] ? $request['areacode'] : session('userarea');
         $areadb = D($this->models['area']);
         $areaInfo = $areadb->where('areacode="'.$areacode.'"')->find();
         $show = $areadb->where('fatherareaid="'.$areaInfo['areaid'].'"')->getField('areacode',true);
         if(empty($show)){
-            $request['areacode'] = $request['areacode'] ? $request['areacode'] : session('areacode');
+            $request['areacode'] = $request['areacode'] ? $request['areacode'] : session('userarea');
             return $this->case_emp_sat($request);
         }
         $manger_sql = $this->get_manger_sql($areacode);
@@ -947,10 +950,10 @@ class CaseController extends CommonController
         $btime = date('Y-m-d H:i:s',time()-9.5*24*60*60);
         $etime = date('Y-m-d H:i:s',time()-3.5*24*60*60);
         $empdb = D($this->models['employee']);
-        $areacode = $request['areacode'] ? $request['areacode'] : session('areacode');
+        $areacode = $request['areacode'] ? $request['areacode'] : session('userarea');
         $emps = $empdb->where('areacode="'.$areacode.'"')->getField('code,name');
-        /*if(session('areacode')){
-            $areas[session('areacode')] = u2g(session('areaname'));
+        /*if(session('userarea')){
+            $areas[session('userarea')] = u2g(session('areaname'));
         }*/
         $where[] = $this->get_manger_sql();
         $where['start_time'][] = array('EGT',$btime);
@@ -994,7 +997,7 @@ class CaseController extends CommonController
         $where['del_flag'] = $request['del_flag'] ? $request['del_flag'] : 0;
         $unWhere = $where;
         $unWhere['alarm_type'] = 0;
-        $unWhere['areacode'] = session('areacode');
+        $unWhere['areacode'] = session('userarea');
         $unWhere['jybh'] = session('code');
         $alarm_total = array();
         $unalarm_total = array();
@@ -1015,13 +1018,13 @@ class CaseController extends CommonController
         $btime = date('Y-m-d H:i:s',time()-9.5*24*60*60);
         $etime = date('Y-m-d H:i:s',time()-3.5*24*60*60);
         $areadb = D($this->models['area']);
-        $areacode = session('areacode') ? session('areacode') : C('DEFAULT_AREACODE');
+        $areacode = session('userarea') ? session('userarea') : C('DEFAULT_AREACODE');
         $areaInfo =  $areadb->where('areacode="'.$areacode.'"')->getField('areaid,areaname');
         reset($areaInfo);
         $areas = $areadb->where('fatherareaid="'.key($areaInfo).'"')->getField('areacode,areaname');
         // $areas[$areacode] = current($areaInfo);
-        /*if(session('areacode')){
-            $areas[session('areacode')] = u2g(session('areaname'));
+        /*if(session('userarea')){
+            $areas[session('userarea')] = u2g(session('areaname'));
         }*/
         $where[] = $this->get_manger_sql();
         $where['start_time'][] = array('EGT',$btime);
@@ -1057,7 +1060,7 @@ class CaseController extends CommonController
          //----------------
         //基础where条件
         //----------------
-        $areacode = $request['areacode'] ? $request['areacode'] : session('areacode');
+        $areacode = $request['areacode'] ? $request['areacode'] : session('userarea');
         $where[] = $this->get_manger_sql($areacode,'areacode',false);
         //---------------------
         //查询时间
