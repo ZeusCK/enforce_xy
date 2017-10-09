@@ -7,7 +7,7 @@ return array(
     //连接数据库
     'DB_TYPE'   => 'mysql', // 设置数据库类型
     'DB_HOST'   => 'localhost', // 设置主机 192.168.0.241
-    'DB_NAME'   => 'enforce_xy', // 设置数据库
+    'DB_NAME'   => 'enforce_xz', // 设置数据库
     'DB_USER'   => 'root', // 设置用户名
     'DB_PWD'    => '123456', // 设置密码
     'DB_PORT'   => 3306, // 设置端口
@@ -21,6 +21,6 @@ return array(
     'MAP_LAT'   => '118.78',  //地图维度
     'ENFORCE_VERSION'=>'1.0.0.39',    //版本控制解决程序更新后会有缓存问题 1.0.0.37 现场版本
     'SYNC_DB_HOST'=>'localhost',     //同步主机  暂时没有用
-    'SYNC_DB_NAME'=>'enforce_xy',     //同步数据库
+    'SYNC_DB_NAME'=>'enforce_xz',     //同步数据库
     'DEFAULT_AREACODE'=>'4115'      //默认部门代码
 );
