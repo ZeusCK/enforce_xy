@@ -94,7 +94,7 @@ $(function() {
                 // { field: 'areaname', title: '出警部门', width: 200, align: 'center' },
                 { field: "case_addr", title: "出警地址", width: 200, align: "center", formatter: things.titleInfo },
                 { field: 'jyxm', title: '出警人', align: 'center', formatter: things.titleInfo },
-                { field: 'start_time', title: '采集日期', width: 200, align: 'center', formatter: things.titleInfo },
+                { field: 'start_time', title: '拍摄日期', width: 200, align: 'center', formatter: things.titleInfo },
                 { field: 'areaname', title: '移交部门', width: 200, align: 'center', formatter: things.titleInfo },
                 { field: 'jyxm', title: '移交人', align: 'center', formatter: things.titleInfo },
                 { field: 'end_time', title: '移交日期', width: 200, align: 'center', formatter: things.titleInfo },

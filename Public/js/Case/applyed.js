@@ -583,7 +583,7 @@ $(function() {
                 // { field: "areaname", title: "出警部门", width: 200, align: "center" },
                 { field: "alarm_addr", title: "出警地址", width: 200, align: "center", formatter: module.titleInfo },
                 { field: "jyxm", title: "出警人", width: 100, align: "center", formatter: module.titleInfo },
-                { field: "start_time", title: "采集日期", width: 200, align: "center", formatter: module.titleInfo },
+                { field: "start_time", title: "拍摄日期", width: 200, align: "center", formatter: module.titleInfo },
                 { field: "areaname", title: "移交部门", width: 200, align: "center", formatter: module.titleInfo },
                 { field: "jyxm", title: "移交人", width: 200, align: "center", formatter: module.titleInfo },
                 { field: "apply_time", title: "移交日期", width: 200, align: "center", formatter: module.titleInfo },

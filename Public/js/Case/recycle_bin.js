@@ -116,7 +116,7 @@ $(function() {
                 { field: "id", checkbox: true },
                 { field: "areaname", title: "单位", width: 200, align: "center" },
                 { field: "wjbh", title: "标题", width: 200, align: "center" },
-                { field: "start_time", title: "采集日期", width: 200, align: "center" },
+                { field: "start_time", title: "拍摄日期", width: 200, align: "center" },
                 { field: "jyxm", title: "出警人", width: 200, align: "center" },
                 { field: "scsj", title: "上传日期", width: 200, align: "center" },
                 { field: 'source_name', title: '来源', width: 200, align: 'center' },

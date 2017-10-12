@@ -153,7 +153,7 @@ $(function() {
                 },
                 {
                     field: "start_time",
-                    title: "采集日期",
+                    title: "拍摄日期",
                     width: 200,
                     align: "center",
                     formatter: module.titleInfo

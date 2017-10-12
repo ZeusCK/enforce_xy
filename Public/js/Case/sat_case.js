@@ -111,7 +111,7 @@ var alarmColums = [[
                 { field: "title", title: "标题", width: 200, align: "center" },
                 { field: "alarm_name", title: "案事件名称", width: 200, align: "center"},
                 { field: "alarm_no", title: "警情编号", width: 200, align: "center" },
-                { field: "start_time", title: "采集日期", width: 200, align: "center" },
+                { field: "start_time", title: "拍摄日期", width: 200, align: "center" },
                 { field: "jyxm", title: "出警人", width: 200, align: "center" },
                 { field: "alarm_type_name", title: "警情类型", width: 200, align: "center" },
                 { field: "case_no", title: "案件编号", width: 200, align: "center" },
