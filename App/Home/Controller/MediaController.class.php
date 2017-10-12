@@ -157,7 +157,9 @@ class MediaController extends CommonController
     //为了确保数据的完整准确 不要 session_write_close()
     public function break_point_upload()
     {
-        $request = I('');
+        // $request = I('');
+        // $this->ajaxReturn($request);
+        exit;
         $type = trim(strrchr($request['name'], '.'),'.');
 
         $rootPath = explode(str_replace('/','',__ROOT__),__FILE__)[0];   //保存路径
@@ -204,9 +206,17 @@ class MediaController extends CommonController
             $data['bfwz'] = 'http://'.$data['ccfwq_ip'].':'.$_SERVER['SERVER_PORT'].$web_path.'pedata/'.$cpxh.'/'.date('Ymd').'/'.$data['wjbh'];
             $data['source'] = $source;
             $table = 'case_video_'.date('Ym',strtotime($start_time));
-            $res = M()->table($table)->add($data);
+            M()->table($table)->add($data);
             $syncData[] = array('wjbh'=>$data['wjbh'],'tab_name'=>$table);
             $this->sync('case_video',$syncData,'add');
+            //将非初始状态的数据恢复
+            $case_data['del_flag'] = 0;
+            $case_table = 'case_'.date('Ym',strtotime($start_time));
+            $res = M()->table($case_table)->where('case_key="'.$case_key.'"')->save($case_data);
+            if($res){
+                $syncCaseData[] = array('case_key'=>$case_key,'tab_name'=>$case_table);
+                $this->sync('case_video',$syncCaseData,'edit');
+            }
         }
         $this->ajaxReturn($result);
     }

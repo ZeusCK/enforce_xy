@@ -2,7 +2,7 @@ var caseInfo = app.tp.data;
 var source = 2;
 $(function() {
     //案件类型下拉框
-    var caseTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=case_type";
+    /*var caseTypeUrl = app.tp.ajax + "?tpUrl=Function/dic_val_item&type=case_type";
     $("#case_type").combobox({
         method: "GET",
         url: caseTypeUrl,
@@ -18,7 +18,7 @@ $(function() {
         valueField: "value",
         textField: "item"
     });
-    $('#cjsj').datetimebox('setValue',caseInfo.info.start_time);
+    $('#cjsj').datetimebox('setValue',caseInfo.info.start_time);*/
     var $list = $('#thelist'),
         $btn = $('#ctlBtn'),
         state = 'pending',
@@ -27,21 +27,23 @@ $(function() {
         $('#caseInfo').form('load',caseInfo.info);
     }, 1000);*/
     uploader = WebUploader.create({
-
         // swf文件路径
         swf: app.public+'plugins/webuploader/Uploader.swf',
-
         // 文件接收服务端。
         server: app.url('Media/break_point_upload'),
         // 开起分片上传。
-        chunked: true,
-        chunkSize:2000000,
+        // chunked: true,
+        // chunkSize:30*1024*1024,
+        prepareNextFile:true,
+        compress:false,
         // 选择文件的按钮。可选。
         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: '#picker',
-        threads:1,
+        threads:true,
+        duplicate: true,
         // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
         resize: false,
+        // fileSingleSizeLimit:524288000,
         formData:{
             case_key:caseInfo.info.case_key,
             start_time:caseInfo.info.start_time
@@ -80,6 +82,7 @@ $(function() {
     });
 
     uploader.on('uploadError', function(file,reason) {
+        console.log(reason);
         $('#' + file.id).find('p.state').text('上传出错');
     });
 

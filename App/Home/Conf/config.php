@@ -19,7 +19,7 @@ return array(
     //地图相关 南京 118.78 32.04
     'MAP_LNG'   => '32.04',  //地图经度
     'MAP_LAT'   => '118.78',  //地图维度
-    'ENFORCE_VERSION'=>'1.0.0.39',    //版本控制解决程序更新后会有缓存问题 1.0.0.37 现场版本
+    'ENFORCE_VERSION'=>'1.0.0.40',    //版本控制解决程序更新后会有缓存问题 1.0.0.37 现场版本
     'SYNC_DB_HOST'=>'localhost',     //同步主机  暂时没有用
     'SYNC_DB_NAME'=>'enforce_xz',     //同步数据库
     'DEFAULT_AREACODE'=>'4115'      //默认部门代码

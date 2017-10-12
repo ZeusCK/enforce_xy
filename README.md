@@ -54,3 +54,9 @@ reType 返回的格式 JSON,JSONP,XML,EVAL 默认JSON
 > _____/index.php/Home/Menu    菜单管理
 
 > _____/index.php/Home/Dictionary  字典管理
+
+## 大文件上传
+
+ie不要进行切片,并且将php.ini中的上传限制取消 ```post_max_size=```
+
+html5的浏览器进行切片上传即可

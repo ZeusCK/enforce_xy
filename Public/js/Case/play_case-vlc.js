@@ -54,33 +54,43 @@ function init_file(params) {
             var string = '<img src="' + app.public + 'image/video_error.jpg" alt="" style="height:' + h + 'px;">';
         }
         if (file_type == 2) {
-            var string = '<div class="APlayer" style="width:60%;height:100%;margin-left:20%;">' +
-                '<object id="APlayer" width="416" height="239" classid="CLSID:23A860E9-0C41-4E01-9206-D3FC0E413645" VIEWASTEXT></object>' +
+            var string = '<div class="vlc" style="width:60%;height:100%;margin-left:20%;">' +
+                '<object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" ' +
+                // 'codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab" ' +
+                'id="vlc"' +
+                'events="True">' +
+                '<param name="mrl" value="'+bfwz+'"/> ' +
+                '<param name="ShowDisplay" value="false" /> ' +
+                '<param name="AutoLoop" value="false" /> ' +
+                '<param name="AutoPlay" value="true" /> ' +
+                '<param name="Time" value="true"/> ' +
+                '</object>' +
                 '</div>';
         }
         if (file_type == 3) {
             var string = '<img src="' + bfwz + '" alt="" style="height:' + h + 'px;" onerror="javascript:this.src=\'' + app.public + 'image/nofile.jpg\'">';
         }
         if (file_type == 1) {
-            var string = '<div class="APlayer" style="width:60%;height:100%;margin-left:20%;">' +
-                '<object id="APlayer" width="416" height="239" classid="CLSID:23A860E9-0C41-4E01-9206-D3FC0E413645" VIEWASTEXT></object>' +
+            var string = '<div class="vlc" style="width:60%;height:100%;margin-left:20%;">' +
+                '<object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" ' +
+                // 'codebase="http://downloads.videolan.org/pub/videolan/vlc/latest/win32/axvlc.cab" ' +
+                'id="vlc"' +
+                'events="True">' +
+                '<param name="mrl" value="'+bfwz+'"/> ' +
+                '<param name="ShowDisplay" value="false" /> ' +
+                '<param name="AutoLoop" value="false" /> ' +
+                '<param name="AutoPlay" value="true" /> ' +
+                '<param name="Time" value="true"/> ' +
+                '</object>' +
                 '</div>';
         }
     }
     $('#mediaBox').html(string);
-    var player = document.getElementById('APlayer');
-    if(player != ''){
-        document.getElementById('APlayer').style.height = "100%";
-        document.getElementById('APlayer').style.width = "100%";
+    var vlc = document.getElementById('vlc') || '';
+    if(vlc != ''){
+        document.getElementById('vlc').style.height = "100%";
+        document.getElementById('vlc').style.width = "100%";
     }
-    var Aplayer = player.GetAPlayerObject();
-        if (Aplayer != null) {
-            // if (player.GetState() == 0) {
-                Aplayer.setConfig(201, "3");
-                Aplayer.setConfig(1102, "1");
-                Aplayer.Open(bfwz);
-            // }
-        }
 }
 var file_type = '';
 $(function() {

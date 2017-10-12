@@ -187,6 +187,7 @@ class CaseController extends CommonController
         $request['update_time'] = date('Y-m-d H:i:s');
         $request['start_time'] = date('Y-m-d H:i:s');
         $request['jybh'] = session('code');
+        $request['del_flag'] = 2;   //新增的默认为完全删除状态
         $start_time = $request['start_time'];
         $cpxh = D($this->models['pebase'])->where('jybh="'.session('code').'"')->getField('cpxh');
         $cpxh = $cpxh ? $caxh : 'cpxhpe';

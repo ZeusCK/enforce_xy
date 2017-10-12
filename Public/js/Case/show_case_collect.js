@@ -167,7 +167,6 @@ $(function() {
                 $('#recycleBin').width(width);
                 $('#recycleBin').height(height);
                 if($('#recycleBin').attr('src') == '') $('#recycleBin').attr('src',app.url('Case/recycle_bin'));
-
             }else{
                 $('#collect').show();
                 module.search();
@@ -181,6 +180,7 @@ $(function() {
     app.datagrid("#datagrid", {
         url: Url,
         title: "数据采集",
+        fitColumns: false,
         queryParams: {
             source: 1
         },
@@ -192,74 +192,74 @@ $(function() {
                 {
                     field: "areaname",
                     title: "单位",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "title",
                     title: "标题",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "alarm_name",
                     title: "案事件名称",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "alarm_no",
                     title: "警情编号",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "start_time",
                     title: "采集日期",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "jyxm",
                     title: "出警人",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "alarm_type_name",
                     title: "警情类型",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "case_no",
                     title: "案件编号",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "case_type_name",
                     title: "案件类型",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "scsj",
                     title: "上传日期",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "update_time",
                     title: "更新时间",
-                    width: 200,
+                    // width: 200,
                     align: "center",formatter:module.titleInfo
                 },
                 {
                     field: "cz",
                     title: "操作",
-                    width: 220,
-                    align: "center",
+                    width: 75,
+                    align: "left",
                     formatter: function(value, row, index) {
                         if (row.hand_status == 2 && row.jybh == module.code) {
                             return '<a style="red">已移交</a>';
@@ -303,19 +303,16 @@ $(function() {
         },
         onLoadSuccess: function(data) {
             if (data.total == 0 && $(this).datagrid("options").showDatagrid) {
-                $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
-                $(this).parent(".datagrid-view").children(".datagrid-view2");
-                $(this)
-                    .parent(".datagrid-view")
-                    .children(".datagrid-view2")
-                    .css("left", 0)
+                // $(this).parent(".datagrid-view").find("div.datagrid-view1").hide();
+                // $(this).parent(".datagrid-view").children(".datagrid-view2");
+                /*$(this).parent(".datagrid-view").children(".datagrid-view2").css("left", 0)
                     .find("div.datagrid-body")
                     .html("没有相关记录，请重新搜索！")
                     .css({
                         color: "#F00",
                         "text-align": "center",
                         "font-size": "20px"
-                    });
+                    });*/
             }
             if (data.error) {
                 $.messager.alert("操作提示", data.error, "info");
