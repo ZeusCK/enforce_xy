@@ -191,13 +191,38 @@ module.allowAreaBar = function() {
         checkbox:true
     });*/
     if (module.code == 'admin') $('#initPwd').show();
-
+    // $('input[name=bindingip]').val('1');
     $('#areaInfo').hide();
+    $('#two').hide();
+    $('#one').show();
     $('#manInfo').show();
     $('#otherInfoForm').form('load', rowData);
     $("#clientip").combobox('readonly', false);
     $("#bindingip").textbox('readonly', false);
     $('#menu_sure').show();
+    $('#otherdialog').dialog('open');
+}
+//额外部门管理
+module.additionalDepartmentsBar = function () {
+    var rowData = $('#datagrid').datagrid('getSelections');
+    if (rowData.length != 1) {
+        $.messager.alert('操作提示', '请选择一个警员进行权限分配', 'info');
+        return false;
+    }
+    rowData = rowData[0];
+    if (module.code == rowData.code) {
+        $.messager.alert('操作提示', '你无法为自己分配权限，如有需求请联系上级!', 'info');
+        return false;
+    }
+    if (rowData.login == 0) {
+        $.messager.alert('操作提示', '你无法为只读部门的警员进行权限分配。', 'info');
+        return false;
+    }
+    var empid = rowData.empid;
+    if (module.code == 'admin') $('#initPwd').show();
+    
+    $('#one').hide();
+    $('#two').show();
     $('#otherdialog').dialog('open');
 }
 module.initPwd = function(target) {
@@ -221,7 +246,6 @@ module.initPwd = function(target) {
     });
 }
 module.allowOther = function() {
-    var params = app.serializeJson('#otherInfoForm');
     /*var areas = $(managerTree.dom).tree('getChecked');
     if(areas.length>0){
         var ids=[];
@@ -233,7 +257,7 @@ module.allowOther = function() {
     }else{
         params.userarea = '';
     }*/
-    $.ajax({
+   /*  $.ajax({
         type: 'post',
         url: app.url('Employee/save_other_info'),
         data: params,
@@ -246,7 +270,13 @@ module.allowOther = function() {
                 rand: Math.random()
             });
         }
-    });
+    }); */
+    app.extra('add_edit', {
+        datagrid: '#datagrid',
+        url: 'Employee/save_other_info',
+        dialog:'#otherdialog',
+        form: '#otherInfoForm'
+    })
 }
 module.importExcel = function(target) {
     app.importExcel({

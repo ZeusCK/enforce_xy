@@ -377,6 +377,7 @@ class EmployeeController extends CommonController
         $data['userarea'] = $in_fact_areas;
         $data['bindingip'] = $request['bindingip'];
         $data['clientip'] = $request['clientip'];
+        $data['dept_role_id'] = $request['dept_role_id'];
         $where['empid'] = $request['empid'];
         $result = $db->getTableEdit($where,$data);
         if(isset($message)) $result['message'] .= $message;
