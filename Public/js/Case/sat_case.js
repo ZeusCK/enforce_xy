@@ -7,7 +7,7 @@ var searchData = {};
 module.areacode = app.tp.areacode;
 module.areaname = app.tp.areaname;
 module.link = 'link';
-module.showCounts = false;
+module.showCounts = true;
 module.search = function(data){
     var data = app.serializeJson('#searchForm');
     if (!judgeTime.judge(data.btime, data.etime)) {
@@ -131,7 +131,10 @@ var empColums = [[
                 {field:'phone',title:'电话',width:200,align:'center'}
                 ]];
 $(function() {
+    $('#expend').html('↑↑');
     $('#expend').click(function(){
+        var showCountsData = module.showCounts;
+        showCountsData == true ? $('#expend').html('↓↓') : $('#expend').html('↑↑');
         if(module.showCounts){
             $('#counts').hide();
             module.showCounts = false;
